@@ -18,7 +18,7 @@ pub const RELEASE_KEYS: [&str; 1] = ["CZjICHekgJUNVH5SxLFzmH5jVQ1weVpcKyMmG3Tpiw
 
 /// The public half of the official catalog's key (internal/release.CatalogKey). The catalog is
 /// signed in its context (CATALOG_CONTEXT), and its signature is published as SIG_SUFFIX.
-pub const CATALOG_KEY: &str = "Z4QfL07dI/IRReSe6Gr76UcxxPoy4i2GiClBv8RcNuo=";
+pub const CATALOG_KEY: &str = "bTylRn1kzD3tpQpXos7wRRryVaJ/wLQoFAdUywwtR/k=";
 
 /// What a catalog's signature covers before its bytes (internal/release.CatalogContext): a
 /// signature made for another kind of document never passes for the catalog.
