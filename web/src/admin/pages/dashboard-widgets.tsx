@@ -19,6 +19,8 @@ export type WidgetType = "stat" | "traffic" | "shares" | "server" | "attention" 
 export type WidgetConfig = {
   /** stat: which counter of the overview to show. */
   metric?: "online" | "active" | "traffic" | "expiring";
+  /** traffic/shares: the period the chart opens with. */
+  range?: "24h" | "7d" | "30d";
 };
 
 export type WidgetInstance = {
@@ -124,8 +126,8 @@ export function StatWidget({ config }: { config?: WidgetConfig }) {
   }
 }
 
-export function TrafficWidget() {
-  const [range, setRange] = useState<Range>("24h");
+export function TrafficWidget({ config }: { config?: WidgetConfig } = {}) {
+  const [range, setRange] = useState<Range>(config?.range ?? "24h");
   const traffic = useServerTraffic(range);
   const stale = traffic.isPlaceholderData;
   const points = useMemo(() => buckets(traffic.data?.points ?? [], range), [traffic.data, range]);
@@ -282,9 +284,9 @@ export function ServerWidget() {
   );
 }
 
-export function SharesWidget() {
+export function SharesWidget({ config }: { config?: WidgetConfig } = {}) {
   const nodes = useNodes();
-  const [range, setRange] = useState<Range>("24h");
+  const [range, setRange] = useState<Range>(config?.range ?? "24h");
   const several = (nodes.data?.length ?? 0) >= 2;
   const shares = useNodeShares(range, several);
   if (!several) return null;
@@ -537,8 +539,8 @@ export function AuditWidget() {
 
 export const WIDGETS: Record<WidgetType, { w: number; h: number; minW: number; minH: number; title: () => string; component: (config?: WidgetConfig) => React.ReactNode }> = {
   stat: { w: 3, h: 2, minW: 3, minH: 2, title: () => t("dashboard.builder.widgetStat"), component: (config) => <StatWidget config={config} /> },
-  traffic: { w: 8, h: 5, minW: 6, minH: 4, title: () => t("dashboard.traffic"), component: () => <TrafficWidget /> },
-  shares: { w: 4, h: 5, minW: 4, minH: 4, title: () => t("dashboard.nodeTraffic"), component: () => <SharesWidget /> },
+  traffic: { w: 8, h: 5, minW: 6, minH: 4, title: () => t("dashboard.traffic"), component: (config) => <TrafficWidget config={config} /> },
+  shares: { w: 4, h: 5, minW: 4, minH: 4, title: () => t("dashboard.nodeTraffic"), component: (config) => <SharesWidget config={config} /> },
   server: { w: 4, h: 6, minW: 4, minH: 4, title: () => t("shell.server"), component: () => <ServerWidget /> },
   attention: { w: 4, h: 5, minW: 4, minH: 4, title: () => t("dashboard.attention"), component: () => <AttentionWidget /> },
   top: { w: 4, h: 4, minW: 3, minH: 3, title: () => t("dashboard.top"), component: () => <TopWidget /> },

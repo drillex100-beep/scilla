@@ -1,4 +1,4 @@
-import { Copy, GripVertical, Plus, RotateCcw, Trash2 } from "lucide-react";
+import { Copy, Download, GripVertical, Plus, RotateCcw, SlidersHorizontal, Trash2, Upload } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSaveDashboardLayout } from "../../api/hooks";
 import { useDashboardLayout } from "../../api/hooks";
@@ -6,7 +6,7 @@ import { Button, Skeleton } from "../../components/ui";
 import { useToast } from "../../components/toast";
 import { t } from "../../i18n";
 import { useMediaQuery } from "../../lib/media";
-import { DEFAULT_LAYOUT, GRID_COLS, ROW_GAP, ROW_H, WIDGETS, WIDGET_TYPES, type WidgetInstance, type WidgetType } from "./dashboard-widgets";
+import { DEFAULT_LAYOUT, GRID_COLS, ROW_GAP, ROW_H, STAT_METRICS, WIDGETS, WIDGET_TYPES, defaultMetric, type StatMetric, type WidgetConfig, type WidgetInstance, type WidgetType } from "./dashboard-widgets";
 
 const MAX_ROWS = 60;
 
@@ -99,6 +99,39 @@ export function DashboardBuilder() {
     commit(DEFAULT_LAYOUT.map((w) => ({ ...w })));
   };
 
+  const configure = (id: string, config: WidgetConfig | undefined) => {
+    if (widgets === null) return;
+    commit(widgets.map((w) => (w.id === id ? { ...w, config } : w)));
+  };
+
+  const exportLayout = () => {
+    if (widgets === null) return;
+    const blob = new Blob([JSON.stringify({ version: 1, widgets }, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "scilla-dashboard.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const importLayout = (file: File) => {
+    file.text().then((text) => {
+      try {
+        const parsed = JSON.parse(text) as { widgets?: unknown } | unknown[];
+        const list = Array.isArray(parsed) ? parsed : (parsed as { widgets?: unknown[] }).widgets;
+        if (!Array.isArray(list)) throw new Error("no widgets");
+        const clean = (list as Partial<WidgetInstance>[]).filter(
+          (w): w is WidgetInstance => typeof w?.id === "string" && typeof w?.type === "string" && w.type in WIDGETS && typeof w?.x === "number" && typeof w?.y === "number" && typeof w?.w === "number" && typeof w?.h === "number",
+        ).slice(0, 50);
+        if (clean.length === 0) throw new Error("empty");
+        commit(clean.map((w, i) => ({ ...w, id: w.id || `w-${i}`, x: clamp(w.x, 0, GRID_COLS - Math.min(w.w, GRID_COLS)), y: clamp(w.y, 0, MAX_ROWS), w: clamp(w.w, WIDGETS[w.type].minW, GRID_COLS), h: clamp(w.h, WIDGETS[w.type].minH, 16) })));
+      } catch {
+        toast.error(t("dashboard.builder.importInvalid"));
+      }
+    });
+  };
+
   if (widgets === null) {
     if (layout.isError) {
       return (
@@ -136,6 +169,24 @@ export function DashboardBuilder() {
               <RotateCcw size={14} aria-hidden />
               {t("dashboard.builder.reset")}
             </Button>
+            <Button size="sm" variant="glass" onClick={exportLayout}>
+              <Download size={14} aria-hidden />
+              {t("dashboard.builder.export")}
+            </Button>
+            <label className="btn btn-glass btn-sm cursor-pointer">
+              <Upload size={14} aria-hidden />
+              {t("dashboard.builder.import")}
+              <input
+                type="file"
+                accept="application/json,.json"
+                className="hidden"
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f) importLayout(f);
+                  e.target.value = "";
+                }}
+              />
+            </label>
             <span className="text-xs text-[var(--ink-500)]" aria-live="polite">
               {saveLabel}
             </span>
@@ -150,9 +201,47 @@ export function DashboardBuilder() {
           ))}
         </div>
       ) : (
-        <BuilderCanvas widgets={widgets} editing={editing} onChange={commit} onDuplicate={duplicate} onRemove={remove} />
+        <BuilderCanvas widgets={widgets} editing={editing} onChange={commit} onDuplicate={duplicate} onRemove={remove} onConfigure={configure} />
       )}
       {editing && mobile ? <Palette onAdd={addWidget} /> : null}
+    </div>
+  );
+}
+
+function WidgetSettings({ w, onConfigure, onClose }: { w: WidgetInstance; onConfigure: (id: string, config: WidgetConfig | undefined) => void; onClose: () => void }) {
+  const cfg = w.config ?? {};
+  const set = (patch: WidgetConfig) => onConfigure(w.id, { ...cfg, ...patch });
+  return (
+    <div className="panel-soft absolute left-1 top-8 z-20 w-56 rounded-xl p-3 text-[13px] shadow-lg" role="dialog" aria-label={t("dashboard.builder.settings")}>
+      {w.type === "stat" ? (
+        <div className="flex flex-col gap-1.5">
+          <div className="text-xs font-medium text-[var(--ink-500)]">{t("dashboard.builder.metric")}</div>
+          {STAT_METRICS.map((m) => (
+            <button
+              key={m}
+              type="button"
+              className={`rounded-lg px-2 py-1 text-left ${defaultMetric(cfg) === m ? "bg-[var(--scilla-100)] font-medium" : "hover:bg-[var(--hover)]"}`}
+              onClick={() => set({ metric: m as StatMetric })}
+            >
+              {m === "online" ? t("dashboard.online") : m === "active" ? t("dashboard.active") : m === "traffic" ? t("dashboard.trafficToday") : t("dashboard.expiring7d")}
+            </button>
+          ))}
+        </div>
+      ) : w.type === "traffic" || w.type === "shares" ? (
+        <div className="flex flex-col gap-1.5">
+          <div className="text-xs font-medium text-[var(--ink-500)]">{t("dashboard.period")}</div>
+          {(["24h", "7d", "30d"] as const).map((r) => (
+            <button key={r} type="button" className={`rounded-lg px-2 py-1 text-left ${cfg.range === r ? "bg-[var(--scilla-100)] font-medium" : "hover:bg-[var(--hover)]"}`} onClick={() => set({ range: r })}>
+              {r === "24h" ? t("dashboard.range24h") : r === "7d" ? t("dashboard.range7d") : t("dashboard.range30d")}
+            </button>
+          ))}
+        </div>
+      ) : (
+        <p className="text-xs text-[var(--ink-500)]">{t("dashboard.builder.noSettings")}</p>
+      )}
+      <button type="button" className="link-btn mt-2 text-[13px]" onClick={onClose}>
+        {t("common.close")}
+      </button>
     </div>
   );
 }
@@ -180,8 +269,9 @@ function MobileWidget({ w }: { w: WidgetInstance }) {
 
 type Gesture = { mode: "move" | "resize"; pointerId: number; startX: number; startY: number; x: number; y: number; w: number; h: number };
 
-function BuilderCanvas({ widgets, editing, onChange, onDuplicate, onRemove }: { widgets: WidgetInstance[]; editing: boolean; onChange: (w: WidgetInstance[]) => void; onDuplicate: (w: WidgetInstance) => void; onRemove: (id: string) => void }) {
+function BuilderCanvas({ widgets, editing, onChange, onDuplicate, onRemove, onConfigure }: { widgets: WidgetInstance[]; editing: boolean; onChange: (w: WidgetInstance[]) => void; onDuplicate: (w: WidgetInstance) => void; onRemove: (id: string) => void; onConfigure: (id: string, config: WidgetConfig | undefined) => void }) {
   const wrap = useRef<HTMLDivElement>(null);
+  const [settingsFor, setSettingsFor] = useState<string | null>(null);
   const height = useMemo(() => bottomOf(widgets) * (ROW_H + ROW_GAP), [widgets]);
 
   const patch = (id: string, next: Partial<WidgetInstance>) => onChange(widgets.map((w) => (w.id === id ? { ...w, ...next } : w)));
@@ -249,6 +339,9 @@ function BuilderCanvas({ widgets, editing, onChange, onDuplicate, onRemove }: { 
                   >
                     <GripVertical size={14} aria-hidden />
                   </button>
+                  <button type="button" className="p-0.5" aria-label={t("dashboard.builder.settings")} onClick={() => setSettingsFor(settingsFor === w.id ? null : w.id)}>
+                    <SlidersHorizontal size={12} aria-hidden />
+                  </button>
                   <button type="button" className="p-0.5" aria-label={t("dashboard.builder.duplicate")} onClick={() => onDuplicate(w)}>
                     <Copy size={12} aria-hidden />
                   </button>
@@ -262,6 +355,7 @@ function BuilderCanvas({ widgets, editing, onChange, onDuplicate, onRemove }: { 
                   aria-label={t("dashboard.builder.resize")}
                   onPointerDown={(e) => start(e, w, "resize")}
                 />
+                {settingsFor === w.id ? <WidgetSettings w={w} onConfigure={onConfigure} onClose={() => setSettingsFor(null)} /> : null}
               </>
             ) : null}
           </div>

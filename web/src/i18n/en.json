@@ -813,7 +813,13 @@
       "paymentsEmpty": "No payments yet",
       "auditEmpty": "No entries yet",
       "paid": "Paid",
-      "pending": "Pending"
+      "pending": "Pending",
+      "settings": "Settings",
+      "metric": "Counter",
+      "noSettings": "This widget has no settings",
+      "export": "Export",
+      "import": "Import",
+      "importInvalid": "Could not read the layout file"
     }
   },
   "users": {
