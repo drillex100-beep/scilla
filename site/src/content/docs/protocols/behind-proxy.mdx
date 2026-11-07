@@ -28,14 +28,14 @@ description: Протоколы за nginx stream или HAProxy на одном
 
 ```nginx
 stream {
-    map $ssl_preread_server_name $mikan {
+    map $ssl_preread_server_name $scilla {
         www.microsoft.com  127.0.0.1:444;   # VLESS · REALITY, сайт маскировки
         default            127.0.0.1:4430;  # ваш сайт
     }
     server {
         listen 443;
         ssl_preread on;
-        proxy_pass $mikan;
+        proxy_pass $scilla;
     }
 }
 ```
@@ -51,7 +51,7 @@ stream {
 
 ## Через CDN
 
-С версии 0.5.2.0 для CDN есть свои пресеты и блок **За CDN** с настоящим IP клиентов, см. [За CDN](/mikan/protocols/cdn/). Ниже способ без них, на WebSocket.
+С версии 0.5.2.0 для CDN есть свои пресеты и блок **За CDN** с настоящим IP клиентов, см. [За CDN](/scilla/protocols/cdn/). Ниже способ без них, на WebSocket.
 
 **VLESS · TLS · WebSocket** проходит через CDN (Cloudflare, Яндекс Cloud CDN): клиенты идут на адрес CDN, а CDN передаёт соединение ноде. Там, где IP сервера заблокирован, а сеть CDN нет, это может спасти.
 

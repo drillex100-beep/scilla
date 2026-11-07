@@ -7,8 +7,8 @@ import (
 
 	"github.com/metacubex/mihomo/config"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/subtest"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/subtest"
 )
 
 // The template's own proxies, which the chains are made of, as in Citrus's own tests.
@@ -101,7 +101,7 @@ func TestCheckTemplateChainsCitrusRefuses(t *testing.T) {
 			groups: "  - {name: exits, type: url-test, use: [subs]}\n  - {name: C, type: chain, proxies: [entry, exits]}", code: "template_chain_dialer", detail: "C → subs"},
 		"include-all chain": {extra: chainProvider, groups: `  - {name: C, type: chain, proxies: [entry, mid], include-all: true}`, code: "template_chain_keys", detail: "C"},
 		"filter chain":      {groups: `  - {name: C, type: chain, proxies: [entry, mid], filter: "^e"}`, code: "template_chain_keys", detail: "C"},
-		"mikan chain":       {groups: `  - {name: C, type: chain, proxies: [entry], mikan: {types: [vless]}}`, code: "template_chain_keys", detail: "C", filled: true},
+		"scilla chain":       {groups: `  - {name: C, type: chain, proxies: [entry], scilla: {types: [vless]}}`, code: "template_chain_keys", detail: "C", filled: true},
 		"provider's override": {extra: "proxy-providers:\n  subs: {type: inline, override: {dialer-proxy: other}, payload: [{name: sub-1, type: ss, server: 127.0.0.1, port: 1090, cipher: aes-128-gcm, password: pass}]}\n",
 			groups: "  - {name: exits, type: url-test, use: [subs]}\n  - {name: C, type: chain, proxies: [entry, exits]}", code: "template_chain_dialer", detail: "C → subs"},
 		"loop through a group": {groups: "  - {name: g, type: select, proxies: [C, other]}\n  - {name: C, type: chain, proxies: [g, exit-a]}",

@@ -4,8 +4,8 @@ import (
 	"errors"
 	"strconv"
 
-	"mikan/internal/sub/apps"
-	"mikan/internal/sub/model"
+	"scilla/internal/sub/apps"
+	"scilla/internal/sub/model"
 )
 
 // Template is the own template the profile in format is made of (Config.Templates): the

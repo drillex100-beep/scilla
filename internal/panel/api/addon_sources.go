@@ -14,9 +14,9 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // Third-party addon sources: the admin adds the address of an author's file, catalog or
@@ -55,7 +55,7 @@ type sourcesOutput struct{ Body SourcesView }
 
 type addSourceInput struct {
 	Body struct {
-		URL string `json:"url" minLength:"1" maxLength:"512" doc:"https://…/mikan-addon.json, https://…/index.json или github.com/<владелец>/<репозиторий> (последний релиз)"`
+		URL string `json:"url" minLength:"1" maxLength:"512" doc:"https://…/scilla-addon.json, https://…/index.json или github.com/<владелец>/<репозиторий> (последний релиз)"`
 		Key string `json:"key,omitempty" maxLength:"64" doc:"Публичный ключ автора, ed25519 в base64, если админ знает его заранее: источник принимается, только если подписан им"`
 	}
 }
@@ -288,7 +288,7 @@ func (h *handlers) installSourceEntry(ctx context.Context, st addons.State, c ad
 	if owner == 0 || !ok {
 		return addons.Entry{}, nil, errNotASource
 	}
-	// mikan took the author's repository out of its registry: none of it installs from a source
+	// scilla took the author's repository out of its registry: none of it installs from a source
 	// either. Without the registry at hand nothing is known against it.
 	if c := h.community(ctx); c != nil {
 		if _, out := c.RevokedFor("", src.Url); out {

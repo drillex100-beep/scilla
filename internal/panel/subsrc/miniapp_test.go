@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"testing"
 
-	"mikan/internal/panel/billing"
-	"mikan/internal/panel/promo"
+	"scilla/internal/panel/billing"
+	"scilla/internal/panel/promo"
 )
 
 // What the buyer can act on is told as it is; a provider that fails or a database that is

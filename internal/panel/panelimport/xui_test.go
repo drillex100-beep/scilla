@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
+	"scilla/internal/panel/domain"
 )
 
 // fakeXUI answers like 3x-ui at the base path /x7k: 3.x (csrf) asks for the token of the
@@ -87,7 +87,7 @@ func byName(list []User) map[string]User {
 
 // The clients of one subscription are one user: anna is on two vless inbounds (3.x
 // repeats her) and has a second client on vmess under the same subId, which adds nothing
-// (mikan has no vmess); 3.x's limitHwid stands before limitIp. Settings come as objects
+// (scilla has no vmess); 3.x's limitHwid stands before limitIp. Settings come as objects
 // (3.x) and as a string (the trojan inbound, 2.x); numbers written as strings are read; a
 // client only on vmess is left out with the reason; a client 3x-ui turned off at the end
 // of its term or traffic is expired or limited, not disabled; a client without a subId
@@ -130,7 +130,7 @@ func TestFetchXUI(t *testing.T) {
 		t.Errorf("egor %+v", e)
 	}
 	if _, err := Normalize(m["gleb"]); err == nil || !strings.Contains(err.Error(), "vmess") {
-		t.Errorf("Normalize took a client mikan has no protocol for: %v", err)
+		t.Errorf("Normalize took a client scilla has no protocol for: %v", err)
 	}
 }
 
@@ -191,7 +191,7 @@ func TestFetchXUIBroken(t *testing.T) {
 	}
 }
 
-// The subId is filed as the old link, as Remnawave's short UUID; a client mikan has no
+// The subId is filed as the old link, as Remnawave's short UUID; a client scilla has no
 // protocol for is reported with the reason and not made.
 func TestApplyXUI(t *testing.T) {
 	st, tariff := seeded(t)
@@ -199,7 +199,7 @@ func TestApplyXUI(t *testing.T) {
 	users := domain.NewUsers(st, domain.NewPool(st, time.Now), noChanges{}, time.Now)
 	list := []User{
 		{Name: "anna", Status: StatusActive, Token: "anna0sub0long0id"},
-		{Name: "gleb", Status: StatusActive, Token: "gleb0sub0long000", Skip: "only on vmess inbounds, which mikan has not"},
+		{Name: "gleb", Status: StatusActive, Token: "gleb0sub0long000", Skip: "only on vmess inbounds, which scilla has not"},
 	}
 	p, err := Check(ctx, st.Q, list)
 	if err != nil || p.New != 1 || p.Invalid.Count != 1 || !strings.Contains(p.Invalid.Names[0], "gleb: only on vmess") {

@@ -11,14 +11,14 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"mikan/internal/sub/apps"
-	"mikan/internal/sub/xray"
-	"mikan/internal/textutil"
+	"scilla/internal/sub/apps"
+	"scilla/internal/sub/xray"
+	"scilla/internal/textutil"
 )
 
 // Every header the answer to a subscription carries is set here: the traffic and term the
 // apps show, the profile's name and file, the operator's page, announcement and branding,
-// what Happ and INCY take beside the profile, the device binding's notices and the Mikan
+// what Happ and INCY take beside the profile, the device binding's notices and the Scilla
 // app's server groups.
 
 // userInfoHeaders: the traffic and term apps show. With traffic packages left the total
@@ -291,24 +291,24 @@ func happHeaders(h http.Header, c Happ) {
 	}
 }
 
-// The server groups as the Mikan app (getmikan/MikanApp) shows them: the app asks with
-// "groups" in X-Mikan-Features, and the answer carries X-Mikan-Groups beside the profile.
+// The server groups as the Scilla app (getmikan/ScillaApp) shows them: the app asks with
+// "groups" in X-Scilla-Features, and the answer carries X-Scilla-Groups beside the profile.
 // An app that does not ask gets the same subscription as before, header for header: the
 // groups never become fake servers or proxy groups that other apps would show.
 const (
-	// FeaturesHeader lists, comma-separated, the extensions the Mikan app shows.
-	FeaturesHeader = "X-Mikan-Features"
+	// FeaturesHeader lists, comma-separated, the extensions the Scilla app shows.
+	FeaturesHeader = "X-Scilla-Features"
 	// GroupsHeader is "base64:" and the JSON of AppGroups.
-	GroupsHeader = "X-Mikan-Groups"
+	GroupsHeader = "X-Scilla-Groups"
 
 	featureGroups = "groups"
-	// appGroupsMax is the most X-Mikan-Groups takes. A reverse proxy in front of the panel
+	// appGroupsMax is the most X-Scilla-Groups takes. A reverse proxy in front of the panel
 	// fails an answer whose headers outgrow its buffer (nginx: 4 or 8 KB for all of them by
 	// default), so past this the server names go and the groups' traffic stays.
 	appGroupsMax = 1536
 )
 
-// wantsFeature says whether the app lists f in X-Mikan-Features.
+// wantsFeature says whether the app lists f in X-Scilla-Features.
 func wantsFeature(h http.Header, f string) bool {
 	for _, v := range h.Values(FeaturesHeader) {
 		for _, x := range strings.Split(v, ",") {
@@ -320,7 +320,7 @@ func wantsFeature(h http.Header, f string) bool {
 	return false
 }
 
-// header is the X-Mikan-Groups value of g; "" without groups. Past appGroupsMax the server
+// header is the X-Scilla-Groups value of g; "" without groups. Past appGroupsMax the server
 // names go, and the groups that are names alone (on the main traffic) with them; then the
 // last groups, should a great many still not fit.
 func (g AppGroups) header() string {
@@ -352,8 +352,8 @@ func (g AppGroups) header() string {
 	return v
 }
 
-// groupsHeaders put X-Mikan-Groups, the groups g of the subscription, on the answer to a
-// Mikan app; nothing without groups.
+// groupsHeaders put X-Scilla-Groups, the groups g of the subscription, on the answer to a
+// Scilla app; nothing without groups.
 func groupsHeaders(hd http.Header, g AppGroups) {
 	if v := g.header(); v != "" {
 		hd.Set(GroupsHeader, v)

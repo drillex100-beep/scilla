@@ -22,17 +22,17 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/pace"
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/promo"
-	"mikan/internal/panel/secure"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/textutil"
+	"scilla/internal/pace"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/promo"
+	"scilla/internal/panel/secure"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/textutil"
 )
 
 // Stars is Telegram's own currency; every other provider is a marketplace adapter,
@@ -1077,7 +1077,7 @@ func (s *Service) Refund(ctx context.Context, id int64) (Reverted, error) {
 		} else if err != nil {
 			return Reverted{}, err
 		}
-		if err := s.refundCharge(ctx, p, p.ExternalID.String, "mikan-refund-"+strconv.FormatInt(p.ID, 10)); err != nil {
+		if err := s.refundCharge(ctx, p, p.ExternalID.String, "scilla-refund-"+strconv.FormatInt(p.ID, 10)); err != nil {
 			return Reverted{}, err
 		}
 		rv, err := s.refunded(ctx, id)

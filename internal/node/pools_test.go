@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 // A traffic pool has its own counter and quota: running it out keeps the slot out of its

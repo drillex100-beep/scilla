@@ -9,11 +9,11 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/presets"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/proto"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/presets"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/proto"
 )
 
 // Cascades: an inbound of node A may leave the internet through node B. B runs a
@@ -114,7 +114,7 @@ func EnsureRelay(ctx context.Context, q *db.Queries, node db.Node, now time.Time
 
 // MoveRelay moves node's relay from port from to port to, the way another program that
 // holds from calls for. It is ErrRelayChanged when the relay is no longer on from, and a
-// *PortInUseError when something of mikan's holds to. Sources of the relay follow with the
+// *PortInUseError when something of scilla's holds to. Sources of the relay follow with the
 // next sync of the nodes: they read the port from the row.
 func MoveRelay(ctx context.Context, st *store.Store, node db.Node, from, to string) error {
 	return st.Tx(ctx, func(q *db.Queries) error {

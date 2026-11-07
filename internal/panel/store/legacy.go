@@ -11,12 +11,12 @@ import (
 	"path/filepath"
 	"time"
 
-	"mikan/internal/fsutil"
+	"scilla/internal/fsutil"
 )
 
-// What is left of the panel's SQLite past: 0.4 kept its data in data/panel/mikan.db, and
+// What is left of the panel's SQLite past: 0.4 kept its data in data/panel/scilla.db, and
 // 0.5.0.x moved them into PostgreSQL once (the import, with its proof in the table
-// mikan_sqlite_import and a copy in the marker file below). This release no longer
+// scilla_sqlite_import and a copy in the marker file below). This release no longer
 // imports: a server still on SQLite goes through 0.5.0.4 first (the release index sends
 // it there, "from" in .github/upgrade-from), and this one refuses to start on its data.
 
@@ -24,7 +24,7 @@ import (
 const MigrationMarker = "postgres-migration.json"
 
 // ErrSQLiteData: the server's data are still in SQLite; this release cannot move them.
-var ErrSQLiteData = errors.New("this server's data are still in SQLite (mikan 0.4): update through mikan 0.5.0.4 first, it moves them to PostgreSQL")
+var ErrSQLiteData = errors.New("this server's data are still in SQLite (scilla 0.4): update through scilla 0.5.0.4 first, it moves them to PostgreSQL")
 
 // importRecord is the proof an import (or an explicit PostgreSQL restore) left behind.
 type importRecord struct {
@@ -38,7 +38,7 @@ type importRecord struct {
 // the record when a crash lost it. A marker without a record means the PostgreSQL data
 // were lost after the move: the backup has to be restored, not the old SQLite trusted.
 func checkLegacy(ctx context.Context, conn *sql.DB, dataDir string) error {
-	_, legacyErr := os.Stat(filepath.Join(dataDir, "mikan.db"))
+	_, legacyErr := os.Stat(filepath.Join(dataDir, "scilla.db"))
 	_, markerErr := os.Stat(filepath.Join(dataDir, MigrationMarker))
 	for _, err := range []error{legacyErr, markerErr} {
 		if err != nil && !errors.Is(err, fs.ErrNotExist) {
@@ -49,7 +49,7 @@ func checkLegacy(ctx context.Context, conn *sql.DB, dataDir string) error {
 		return nil // never on SQLite
 	}
 	var report string
-	err := conn.QueryRowContext(ctx, "SELECT report FROM mikan_sqlite_import WHERE id = 1").Scan(&report)
+	err := conn.QueryRowContext(ctx, "SELECT report FROM scilla_sqlite_import WHERE id = 1").Scan(&report)
 	switch {
 	case err == nil:
 		return writeMigrationMarker(dataDir, []byte(report))
@@ -72,14 +72,14 @@ func writeMigrationMarker(dir string, report []byte) error {
 // its stale original SQLite must neither block startup nor overwrite the restored data.
 func ConfirmPostgresRestore(ctx context.Context, pg *sql.DB, dir string) error {
 	var report string
-	err := pg.QueryRowContext(ctx, "SELECT report FROM mikan_sqlite_import WHERE id=1").Scan(&report)
+	err := pg.QueryRowContext(ctx, "SELECT report FROM scilla_sqlite_import WHERE id=1").Scan(&report)
 	if errors.Is(err, sql.ErrNoRows) {
 		encoded, err := json.Marshal(importRecord{Format: 1, ImportedAt: time.Now().Unix(), SourceKind: "postgresql-restore"})
 		if err != nil {
 			return err
 		}
 		report = string(encoded)
-		if _, err := pg.ExecContext(ctx, "INSERT INTO mikan_sqlite_import(id,report) VALUES(1,$1)", report); err != nil {
+		if _, err := pg.ExecContext(ctx, "INSERT INTO scilla_sqlite_import(id,report) VALUES(1,$1)", report); err != nil {
 			return err
 		}
 	} else if err != nil {

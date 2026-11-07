@@ -8,10 +8,10 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/profile"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/subtest"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/profile"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/subtest"
 )
 
 // profileOf is the Clash profile of a test user the config is made of.
@@ -134,7 +134,7 @@ func TestSingBox(t *testing.T) {
 	rules, _ := json.Marshal(c.Route.Rules)
 	for _, want := range []string{`"action":"sniff"`, `"action":"hijack-dns"`, `"domain_suffix":["sber.ru"],"outbound":"direct"`,
 		`"ip_is_private":true,"outbound":"direct"`, `"action":"reject","rule_set":["geosite-category-ads-all"]`, `"outbound":"VPN","rule_set":["geosite-youtube"]`,
-		`"mode":"and"`, `"rule_set":["list-mikan-ru-apps"]`, `"outbound":"direct","rule_set":["geosite-category-ru"]`} {
+		`"mode":"and"`, `"rule_set":["list-scilla-ru-apps"]`, `"outbound":"direct","rule_set":["geosite-category-ru"]`} {
 		if !strings.Contains(string(rules), want) {
 			t.Errorf("rules lack %s:\n%s", want, rules)
 		}
@@ -146,15 +146,15 @@ func TestSingBox(t *testing.T) {
 	if yt := sets["geosite-youtube"]; yt["type"] != "remote" || yt["download_detour"] != "VPN" || !strings.HasSuffix(yt["url"].(string), "/sing/geo/geosite/youtube.srs") {
 		t.Errorf("remote set: %v", yt)
 	}
-	apps, _ := json.Marshal(sets["list-mikan-ru-apps"])
+	apps, _ := json.Marshal(sets["list-scilla-ru-apps"])
 	if !strings.Contains(string(apps), `"package_name":["ru.sberbankmobile","ru.gosuslugi.app"]`) {
 		t.Errorf("Android packages: %s", apps)
 	}
-	pc, _ := json.Marshal(sets["list-mikan-ru-pc"])
+	pc, _ := json.Marshal(sets["list-scilla-ru-pc"])
 	if !strings.Contains(string(pc), `"process_name":["qbittorrent.exe"]`) {
 		t.Errorf("programs: %s", pc)
 	}
-	if sets["list-mikan-ru-apps-wildcard"] != nil {
+	if sets["list-scilla-ru-apps-wildcard"] != nil {
 		t.Error("a list of a younger mihomo type went in")
 	}
 	if c.DNS.Final != "remote" || c.Route.Resolver != "local" || len(c.DNS.Servers) < 2 {
@@ -182,7 +182,7 @@ func TestSingBoxModes(t *testing.T) {
 	prof := profileOf(subtest.TwoNodes())
 	c := renderSingBox(t, prof, routing.Blocked, model.Template{})
 	rules, _ := json.Marshal(c.Route.Rules)
-	if c.Route.Final != "direct" || !strings.Contains(string(rules), `"outbound":"VPN","rule_set":["list-mikan-blocked"]`) {
+	if c.Route.Final != "direct" || !strings.Contains(string(rules), `"outbound":"VPN","rule_set":["list-scilla-blocked"]`) {
 		t.Fatalf("blocked: %q %s", c.Route.Final, rules)
 	}
 	own := renderSingBox(t, prof, routing.All, subtest.Clash(subtest.OwnTemplate))

@@ -14,8 +14,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/store/db"
 )
 
 // fakePages is an addon of protocol 2 with pages: it remembers what reached it.

@@ -11,12 +11,12 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/subsrc"
-	submodel "mikan/internal/sub/model"
-	"mikan/internal/sub/ready"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/subsrc"
+	submodel "scilla/internal/sub/model"
+	"scilla/internal/sub/ready"
 )
 
 // The subscription templates: the admin's own profiles of the cores (internal/sub/<core>)
@@ -109,7 +109,7 @@ type ReadySubTemplate struct {
 	Author  string `json:"author"`
 	License string `json:"license" doc:"Лицензия текста шаблона, SPDX"`
 	Source  string `json:"source" doc:"Откуда шаблон и списки, на которые он ссылается"`
-	Builtin bool   `json:"builtin" doc:"Свой шаблон mikan: панель собирает его из своих настроек, когда его загружают"`
+	Builtin bool   `json:"builtin" doc:"Свой шаблон scilla: панель собирает его из своих настроек, когда его загружают"`
 }
 
 type readySubTemplatesOutput struct {
@@ -125,7 +125,7 @@ type readySubTemplateInput struct {
 type readySubTemplateOutput struct {
 	Body struct {
 		ReadySubTemplate
-		Text string `json:"body" doc:"Текст шаблона: для своего шаблона mikan собран из текущих настроек панели"`
+		Text string `json:"body" doc:"Текст шаблона: для своего шаблона scilla собран из текущих настроек панели"`
 	}
 }
 
@@ -158,7 +158,7 @@ func (h *handlers) listReadySubTemplates(context.Context, *struct{}) (*readySubT
 	return out, nil
 }
 
-// getReadySubTemplate is a ready template's text; mikan's own is the starter the editor's
+// getReadySubTemplate is a ready template's text; scilla's own is the starter the editor's
 // own button gives, made of the panel's settings now.
 func (h *handlers) getReadySubTemplate(ctx context.Context, in *readySubTemplateInput) (*readySubTemplateOutput, error) {
 	r, ok := ready.Get(in.ID)

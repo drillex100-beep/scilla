@@ -33,7 +33,7 @@ proxy-groups:
   - name: "🇳🇱 Нидерланды"
     type: url-test
     interval: 300
-    mikan:
+    scilla:
       nodes:
         - "🇳🇱 Нидерланды"
     tolerance: 50
@@ -41,7 +41,7 @@ proxy-groups:
   - name: "🇺🇸 США"
     type: url-test
     interval: 300
-    mikan:
+    scilla:
       nodes:
         - "🇺🇸 США"
     tolerance: 50

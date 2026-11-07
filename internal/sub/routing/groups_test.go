@@ -4,7 +4,7 @@ import (
 	"slices"
 	"testing"
 
-	"mikan/internal/sub/model"
+	"scilla/internal/sub/model"
 )
 
 // The built-in groups: the main one over the automatic choice, the countries and every

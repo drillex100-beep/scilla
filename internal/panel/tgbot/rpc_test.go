@@ -11,7 +11,7 @@ import (
 	"reflect"
 	"testing"
 
-	"mikan/internal/panel/model"
+	"scilla/internal/panel/model"
 )
 
 // The types of the RPC: its interfaces, and the context every method takes and the error it

@@ -37,7 +37,7 @@ const emptyApps = { order: [], hidden: [] };
  * this copy is for a page served without one (the Vite dev server). Keep the two in step.
  */
 const DEFAULT_PAGE: PageConfig = {
-  look: { palette: "mikan", mode: "light", accent: "theme", font: "default", radius: "medium", cards: "glass", background: { kind: "theme", from: "", to: "", angle: 160, dim: 30 } },
+  look: { palette: "scilla", mode: "light", accent: "theme", font: "default", radius: "medium", cards: "glass", background: { kind: "theme", from: "", to: "", angle: 160, dim: 30 } },
   brand: { logo: "letter", emoji: "", subtitle: "" },
   blocks: (
     [
@@ -65,7 +65,7 @@ const DEFAULT_PAGE: PageConfig = {
 /** The page's data from its HTML; the default page when it has none. */
 export function readPage(): PagePublic {
   try {
-    const raw = document.getElementById("mikan-page")?.textContent;
+    const raw = document.getElementById("scilla-page")?.textContent;
     if (raw) {
       const p = JSON.parse(raw) as PagePublic;
       if (p?.config?.blocks) return { ...p, docs: p.docs ?? [] };

@@ -557,7 +557,7 @@ export function useSubTemplate(id: number | undefined) {
   });
 }
 
-/** The catalog of ready subscription templates: mikan's own and the community's, without their texts. */
+/** The catalog of ready subscription templates: scilla's own and the community's, without their texts. */
 export function useReadySubTemplates() {
   return useQuery({ queryKey: qk.readySubTemplates, queryFn: ({ signal }) => unwrap(api.GET("/api/v1/sub-templates/ready", { signal })), staleTime: Infinity });
 }

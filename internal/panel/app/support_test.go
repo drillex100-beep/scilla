@@ -19,15 +19,15 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/logbuf"
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/support"
-	"mikan/internal/panel/tgate"
-	"mikan/internal/proto"
-	"mikan/internal/release"
+	"scilla/internal/logbuf"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/support"
+	"scilla/internal/panel/tgate"
+	"scilla/internal/proto"
+	"scilla/internal/release"
 )
 
 // supportHarness is a logged-in admin with a read key and a full key, plus the means to be
@@ -982,7 +982,7 @@ func TestSupportOperatorHostOperations(t *testing.T) {
 }
 
 // The admin's switch: off, the operator is out at once and no access can be opened; the
-// operator can never flip it; MIKAN_SUPPORT_ACCESS=off keeps it off whatever the setting.
+// operator can never flip it; SCILLA_SUPPORT_ACCESS=off keeps it off whatever the setting.
 func TestSupportAccessSwitch(t *testing.T) {
 	s := newSupportHarness(t)
 	g, code, out := s.grant(map[string]any{"hours": 2, "level": "change"})
@@ -1028,7 +1028,7 @@ func TestSupportAccessSwitch(t *testing.T) {
 
 	env := newSupportHarness(t, func(o *Options) { o.SupportOff = true })
 	if _, code, out := env.grant(map[string]any{"hours": 2, "level": "view"}); code != http.StatusForbidden || detail(out) != "support_disabled" {
-		t.Fatalf("grant with MIKAN_SUPPORT_ACCESS=off: %d %s", code, out)
+		t.Fatalf("grant with SCILLA_SUPPORT_ACCESS=off: %d %s", code, out)
 	}
 	_, body = env.do(http.MethodGet, env.api+"/support/grants", nil, nil)
 	if err := json.Unmarshal(body, &list); err != nil || list.Off != "env" {

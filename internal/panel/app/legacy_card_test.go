@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // legacyCard is the part of a user's card that tells about the links from the old panel.

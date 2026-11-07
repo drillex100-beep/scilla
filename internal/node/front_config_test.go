@@ -9,9 +9,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"mikan/internal/frontpage"
-	"mikan/internal/nodeapi"
-	"mikan/internal/proto"
+	"scilla/internal/frontpage"
+	"scilla/internal/nodeapi"
+	"scilla/internal/proto"
 )
 
 // Apply writes the chosen page under the core's home, named after the template; a name that
@@ -53,10 +53,10 @@ func TestFrontPageInTheConfig(t *testing.T) {
 		return tm.JSON()
 	}
 	st := nodeapi.DesiredState{Inbounds: []nodeapi.Inbound{
-		{Name: "ws", Port: "8443", Config: tpl("type: vless\nws-path: /ws\nmikan:\n  tls: node\n")},
-		{Name: "xhttp", Port: "8444", Config: tpl("type: vless\nxhttp-config:\n  path: /x\nmikan:\n  tls: node\n")},
-		{Name: "grpc", Port: "8445", Config: tpl("type: trojan\ngrpc-service-name: GunService\nmikan:\n  tls: node\n")},
-		{Name: "plain", Port: "8446", Config: tpl("type: vless\nmikan:\n  tls: node\n")},
+		{Name: "ws", Port: "8443", Config: tpl("type: vless\nws-path: /ws\nscilla:\n  tls: node\n")},
+		{Name: "xhttp", Port: "8444", Config: tpl("type: vless\nxhttp-config:\n  path: /x\nscilla:\n  tls: node\n")},
+		{Name: "grpc", Port: "8445", Config: tpl("type: trojan\ngrpc-service-name: GunService\nscilla:\n  tls: node\n")},
+		{Name: "plain", Port: "8446", Config: tpl("type: vless\nscilla:\n  tls: node\n")},
 		{Name: "hy2", Port: "8447", Config: tpl("type: hysteria2\n")},
 	}}
 	cert := proto.Cert{CertPath: "/tmp/c.pem", KeyPath: "/tmp/k.pem"}
@@ -78,9 +78,9 @@ func TestFrontPageInTheConfig(t *testing.T) {
 		}
 		return out
 	}
-	got := pages("/var/lib/mikan-node/front/cats.html")
+	got := pages("/var/lib/scilla-node/front/cats.html")
 	for name, want := range map[string]bool{"ws": true, "xhttp": true, "grpc": true, "plain": false, "hy2": false} {
-		if has := got[name] == "/var/lib/mikan-node/front/cats.html"; has != want || !want && got[name] != nil {
+		if has := got[name] == "/var/lib/scilla-node/front/cats.html"; has != want || !want && got[name] != nil {
 			t.Errorf("%s: fallback-page %v", name, got[name])
 		}
 	}

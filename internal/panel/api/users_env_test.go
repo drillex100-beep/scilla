@@ -12,11 +12,11 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/auth"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/auth"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
 )
 
 // What every user of an answer shares (the subscription address, who is online) is worked

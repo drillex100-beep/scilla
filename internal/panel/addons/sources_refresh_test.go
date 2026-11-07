@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store/db"
 )
 
 // A fake of the table the fetches are recorded in.
@@ -54,7 +54,7 @@ func newSlowSource(t *testing.T, body []byte) *slowSource {
 	s := &slowSource{body: body}
 	s.status.Store(http.StatusOK)
 	s.srv = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/mikan-addon.json" {
+		if r.URL.Path != "/scilla-addon.json" {
 			http.NotFound(w, r)
 			return
 		}
@@ -75,7 +75,7 @@ func newSlowSource(t *testing.T, body []byte) *slowSource {
 }
 
 func (s *slowSource) row() db.AddonSource {
-	return db.AddonSource{ID: 1, Url: s.srv.URL + "/mikan-addon.json"}
+	return db.AddonSource{ID: 1, Url: s.srv.URL + "/scilla-addon.json"}
 }
 
 // settled waits until what the source's fetch left in memory satisfies ok.
@@ -254,9 +254,9 @@ func TestSourceSignatureAbsentOnCommonHosts(t *testing.T) {
 	sigBody.Store("")
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
-		case "/mikan-addon.json":
+		case "/scilla-addon.json":
 			_, _ = w.Write(data)
-		case "/mikan-addon.json.sig":
+		case "/scilla-addon.json.sig":
 			if st := int(sigStatus.Load()); st != http.StatusOK {
 				http.Error(w, "no", st)
 				return
@@ -266,7 +266,7 @@ func TestSourceSignatureAbsentOnCommonHosts(t *testing.T) {
 	}))
 	t.Cleanup(srv.Close)
 	m := srcManager(t, devNet())
-	url := srv.URL + "/mikan-addon.json"
+	url := srv.URL + "/scilla-addon.json"
 	pinned := SourcePin{Key: "A" + strings.Repeat("A", 42) + "="}
 	for _, status := range []int32{http.StatusNotFound, http.StatusForbidden, http.StatusGone} {
 		sigStatus.Store(status)

@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/model"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/model"
+	"scilla/internal/tgapi"
 )
 
 // The account's balance and its top-ups by hand. Callback data: bl the balance, bt a

@@ -19,7 +19,7 @@ Subscribers buy and renew access in the bot and Mini App. The panel creates or e
 
 </Steps>
 
-The same place has the "Sell to new people" and "Renewal resets traffic" switches. A renewal adds the plan's term after the current one and, unless switched off, starts a new traffic period. The leftover of the last period goes into the new one if that is turned on in the [subscription rules](/mikan/en/billing/lifecycle/#leftover-traffic).
+The same place has the "Sell to new people" and "Renewal resets traffic" switches. A renewal adds the plan's term after the current one and, unless switched off, starts a new traffic period. The leftover of the last period goes into the new one if that is turned on in the [subscription rules](/scilla/en/billing/lifecycle/#leftover-traffic).
 
 :::note[New in 0.5.2.1]
 Carrying the leftover over, and taking it back with a refund (see [History and refunds](#history-and-refunds)), are new in 0.5.2.1.
@@ -38,23 +38,23 @@ The panel never trusts a single notification from a payment system: it asks the 
 On the server the same is done with commands:
 
 ```bash
-mikan addon list               # what is running and what is in the catalog
-mikan addon install yookassa   # install or update an adapter
-mikan addon remove yookassa    # stop and remove; settings and history stay
+scilla addon list               # what is running and what is in the catalog
+scilla addon install yookassa   # install or update an adapter
+scilla addon remove yookassa    # stop and remove; settings and history stay
 ```
 
-Adapters are installed only by the mikan program on the host: the panel itself does not see Docker.
+Adapters are installed only by the scilla program on the host: the panel itself does not see Docker.
 
 ## Balance and campaigns
 
 0.5.2.0 adds two more things to **Payments**:
 
-- **Clients' balance**: a client tops up an internal balance by a transfer and a screenshot, you approve the request on the **Top-ups** tab, and the balance pays for subscriptions, renewals, packages and devices. Its settings are on the **Payment methods** tab, details in [Clients' balance](/mikan/en/billing/balance/).
-- **Campaigns**: links to the bot with a code for adverts and the stats by them, see [Ad campaigns](/mikan/en/billing/campaigns/).
+- **Clients' balance**: a client tops up an internal balance by a transfer and a screenshot, you approve the request on the **Top-ups** tab, and the balance pays for subscriptions, renewals, packages and devices. Its settings are on the **Payment methods** tab, details in [Clients' balance](/scilla/en/billing/balance/).
+- **Campaigns**: links to the bot with a code for adverts and the stats by them, see [Ad campaigns](/scilla/en/billing/campaigns/).
 
 ## History and refunds
 
-**Payments** has a payment history. With the "Refund" button you can refund an applied Telegram Stars payment or a payment from the [clients' balance](/mikan/en/billing/balance/) (in 0.5.2.0; the money goes back to the balance). A refund takes back what the payment gave:
+**Payments** has a payment history. With the "Refund" button you can refund an applied Telegram Stars payment or a payment from the [clients' balance](/scilla/en/billing/balance/) (in 0.5.2.0; the money goes back to the balance). A refund takes back what the payment gave:
 
 - a new subscription is disabled, but not deleted;
 - a renewal loses the term it bought, and if nothing changed after the payment, the previous plan and limits are restored;

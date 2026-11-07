@@ -1,13 +1,13 @@
 // Package hostchan is how the panel, or a node, asks its own server for what a container
-// cannot do: run `mikan doctor` on the host and restart the containers. The container has
+// cannot do: run `scilla doctor` on the host and restart the containers. The container has
 // no Docker socket and no shell, so it writes a request file into its data directory and a
-// systemd path unit on the host (installed by mikan, like the update units) runs the
+// systemd path unit on the host (installed by scilla, like the update units) runs the
 // command, which takes the request away first:
 //
-//	doctor/request      {"id": "<hex>", "at": "<RFC 3339>"}: `mikan doctor --requested` runs
+//	doctor/request      {"id": "<hex>", "at": "<RFC 3339>"}: `scilla doctor --requested` runs
 //	                    the checks and writes doctor/report.json, the report of
-//	                    `mikan doctor --json` with the same "id"
-//	restart/request     the same: `mikan restart --requested` restarts the containers
+//	                    `scilla doctor --json` with the same "id"
+//	restart/request     the same: `scilla restart --requested` restarts the containers
 //	apilock/request     a node's: the firewall rule for its API port (apilock.go)
 //
 // The host's side is not trusted with more than it is: what it writes is a small regular
@@ -28,9 +28,9 @@ import (
 	"sync/atomic"
 	"time"
 
-	"mikan/internal/fsutil"
-	"mikan/internal/logbuf"
-	"mikan/internal/nodeapi"
+	"scilla/internal/fsutil"
+	"scilla/internal/logbuf"
+	"scilla/internal/nodeapi"
 )
 
 const (
@@ -55,14 +55,14 @@ var (
 	// ErrBusy: the doctor is being asked already.
 	ErrBusy = errors.New("doctor_busy")
 	// ErrTimeout: the host did not report in time: its unit is not installed (a server
-	// updated by an older installer: mikan update brings it) or stuck.
+	// updated by an older installer: scilla update brings it) or stuck.
 	ErrTimeout = errors.New("doctor_timeout")
 	// ErrPending: a restart was asked for and the host has not taken it yet.
 	ErrPending = errors.New("restart_pending")
 )
 
 // Channel is the panel's or the node's side of the files; dir is its data directory, which
-// the host sees as /opt/mikan/data/panel or /opt/mikan/data/node.
+// the host sees as /opt/scilla/data/panel or /opt/scilla/data/node.
 type Channel struct {
 	dir  string
 	now  func() time.Time
@@ -101,7 +101,7 @@ func (c *Channel) put(sub string, data []byte) error {
 	return fsutil.WriteFileAtomic(filepath.Join(dir, request), data, 0o644)
 }
 
-// Doctor asks the host for `mikan doctor` and waits up to wait for its report. One question
+// Doctor asks the host for `scilla doctor` and waits up to wait for its report. One question
 // at a time: ErrBusy while another goes on. ErrTimeout when the host does not answer; the
 // request is taken back then, so a unit that appears later does not run an old question.
 func (c *Channel) Doctor(ctx context.Context, wait time.Duration) (nodeapi.HostReport, error) {

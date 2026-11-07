@@ -12,12 +12,12 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/nodetls"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/nodesync"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/nodeapi"
+	"scilla/internal/nodetls"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/nodesync"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // updNode is a node that answers its health and takes update requests.
@@ -108,7 +108,7 @@ func newUpdRig(t *testing.T, version string) *updRig {
 			t.Fatal(err)
 		}
 	}
-	panel, _ := nodetls.Generate("mikan-panel", x509.ExtKeyUsageClientAuth, time.Now())
+	panel, _ := nodetls.Generate("scilla-panel", x509.ExtKeyUsageClientAuth, time.Now())
 	for i, host := range []string{"198.51.100.2", "198.51.100.3", "198.51.100.4"} {
 		if _, _, err := domain.AddNode(ctx, h.st, panel, domain.NodeInput{Name: "N" + string(rune('A'+i)), Host: host, APIPort: 40000 + i}, time.Now()); err != nil {
 			t.Fatal(err)
@@ -190,7 +190,7 @@ func TestUpdatingNodesFromThePanel(t *testing.T) {
 	for id, want := range map[int64]nodeView{
 		1: {Behind: false, CanUpdate: false}, // the panel's own node updates with the panel
 		2: {Behind: true, CanUpdate: true},
-		3: {Behind: true, CanUpdate: false}, // 0.5.0.1 has no endpoint: the admin runs mikan update there once
+		3: {Behind: true, CanUpdate: false}, // 0.5.0.1 has no endpoint: the admin runs scilla update there once
 		4: {Behind: false, CanUpdate: true},
 	} {
 		if v := r.nodes(nil)[id]; v.Behind != want.Behind || v.CanUpdate != want.CanUpdate || v.Version != r.fakes[id].version {
@@ -235,7 +235,7 @@ func TestUpdatingNodesFromThePanel(t *testing.T) {
 		t.Errorf("the node's update: %+v", v.Update)
 	}
 	// the updater reports it went back, and why
-	r.fakes[2].set("0.5.0.2", &nodeapi.UpdateStatus{State: "failed", Version: "0.5.0.3", From: "0.5.0.2", Error: "mikan 0.5.0.3 did not start: going back"})
+	r.fakes[2].set("0.5.0.2", &nodeapi.UpdateStatus{State: "failed", Version: "0.5.0.3", From: "0.5.0.2", Error: "scilla 0.5.0.3 did not start: going back"})
 	waitFor(t, func() bool {
 		v := r.nodes(r.full)[2]
 		return v.Update != nil && v.Update.State == "failed" && strings.Contains(v.Update.Error, "going back") && v.Behind && v.CanUpdate

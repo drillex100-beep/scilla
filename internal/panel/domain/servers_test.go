@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store/db"
 )
 
 // A tariff includes every server until servers are chosen: then only its chosen nodes,

@@ -17,7 +17,7 @@ import (
 const AppNameMax = 30
 
 // AppName is the installed panel's name: the admin's own (stored), else the brand, else
-// "mikan" ("VPN" is the brand of a panel that never set one).
+// "scilla" ("VPN" is the brand of a panel that never set one).
 func AppName(stored, brand string) string {
 	if s := cleanAppName(stored); s != "" {
 		return s
@@ -25,7 +25,7 @@ func AppName(stored, brand string) string {
 	if b := cleanAppName(brand); b != "" && b != "VPN" {
 		return b
 	}
-	return "mikan"
+	return "scilla"
 }
 
 func cleanAppName(s string) string {
@@ -116,7 +116,7 @@ func Manifest(info func(ctx context.Context) (ManifestInfo, error)) http.Handler
 		}
 		m := manifest{
 			Name: in.Name, ShortName: in.Name,
-			Description: "mikan admin panel",
+			Description: "scilla admin panel",
 			Lang:        lang, Dir: "ltr",
 			StartURL: "./", Scope: "./",
 			Display:         "standalone",
@@ -124,7 +124,7 @@ func Manifest(info func(ctx context.Context) (ManifestInfo, error)) http.Handler
 			Icons: manifestIcons,
 		}
 		if lang == "ru" {
-			m.Description = "Панель управления mikan"
+			m.Description = "Панель управления scilla"
 		}
 		for _, s := range manifestShortcuts {
 			name := s.en

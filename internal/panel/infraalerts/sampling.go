@@ -12,11 +12,11 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/hysteresis"
-	"mikan/internal/panel/nodesync"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/hysteresis"
+	"scilla/internal/panel/nodesync"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // The hysteresis of the samples, in rounds (see hysteresis.Tracker). A node is unavailable after

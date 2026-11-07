@@ -17,7 +17,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/sub/serve"
+	"scilla/internal/sub/serve"
 
 	"golang.org/x/crypto/chacha20poly1305"
 )

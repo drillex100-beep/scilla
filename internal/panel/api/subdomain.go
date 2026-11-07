@@ -8,9 +8,9 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/acme"
-	"mikan/internal/panel/dnscheck"
-	"mikan/internal/panel/settings"
+	"scilla/internal/panel/acme"
+	"scilla/internal/panel/dnscheck"
+	"scilla/internal/panel/settings"
 )
 
 // The subscription domain: links on a name of their own, apart from the panel's, with a

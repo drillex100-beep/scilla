@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
+	"scilla/internal/panel/domain"
 )
 
 // Traffic packages over HTTP: the catalog with its checks, the admin's grant that brings

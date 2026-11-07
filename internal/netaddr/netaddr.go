@@ -1,5 +1,5 @@
 // Package netaddr says where an address leads: to the internet, or to this host, its network,
-// a carrier's NAT or nowhere a unicast dial can go. Every check of mikan that asks whether an
+// a carrier's NAT or nowhere a unicast dial can go. Every check of scilla that asks whether an
 // address is public is Classify, each with its own policy on top: what a CA can validate, what
 // the panel may dial for the admin, what an import may reach.
 package netaddr

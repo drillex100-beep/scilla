@@ -6,17 +6,17 @@ import (
 	"strconv"
 	"time"
 
-	"mikan/internal/panel/acme"
-	"mikan/internal/panel/api"
-	"mikan/internal/panel/certcheck"
-	"mikan/internal/panel/dnscheck"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/nodesync"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/tlscert"
-	"mikan/internal/proto"
+	"scilla/internal/panel/acme"
+	"scilla/internal/panel/api"
+	"scilla/internal/panel/certcheck"
+	"scilla/internal/panel/dnscheck"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/nodesync"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/tlscert"
+	"scilla/internal/proto"
 )
 
 // nodeTLSView is what the node card says of the certificate on the node's protocols on TLS.

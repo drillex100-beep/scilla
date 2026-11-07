@@ -41,7 +41,7 @@ func (e *TemplateError) Error() string { return e.Code + ": " + e.Detail }
 // TemplateErr is the *TemplateError of code and detail.
 func TemplateErr(code, detail string) error { return &TemplateError{Code: code, Detail: detail} }
 
-// Ask is what a group of a JSON template asks of the user's servers (its "mikan"): every
+// Ask is what a group of a JSON template asks of the user's servers (its "scilla"): every
 // server, narrowed to the nodes named (by the name the panel shows, or the id), to the
 // protocols named (vless, hysteria2, ss or shadowsocks…) and to the names Filter matches. A
 // list left empty narrows nothing.
@@ -87,7 +87,7 @@ func (a Ask) Take(ps []Proxy, nodes []Node) ([]Proxy, error) {
 	return out, nil
 }
 
-// ReadAsk reads the "mikan" of a group of a JSON template: an object of nodes, types (each a
+// ReadAsk reads the "scilla" of a group of a JSON template: an object of nodes, types (each a
 // list, or one word) and filter. more takes a key of a core's own and says whether it is
 // good; false for anything else, and for a key nobody knows: a typo must not widen a group
 // to every server.

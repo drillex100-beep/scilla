@@ -5,9 +5,9 @@ import (
 	"errors"
 	"testing"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // balanceEnv: the balance on in dollars at 95 ₽ for 1 $, top-ups from 1 $ to 100 $.

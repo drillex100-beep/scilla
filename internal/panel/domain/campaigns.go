@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/secure"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/secure"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // Ad campaigns: a link to the bot with a campaign's code, and what came of it. An account

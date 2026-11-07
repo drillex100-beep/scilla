@@ -16,11 +16,11 @@ import (
 	"github.com/go-webauthn/webauthn/protocol"
 	"github.com/go-webauthn/webauthn/webauthn"
 
-	"mikan/internal/panel/auth"
-	"mikan/internal/panel/secure"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/auth"
+	"scilla/internal/panel/secure"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // Passkeys are a second way into the panel beside the password: the admin adds one from the
@@ -127,7 +127,7 @@ func (h *handlers) passkeyRP(ctx context.Context) (*webauthn.WebAuthn, error) {
 	}
 	return webauthn.New(&webauthn.Config{
 		RPID:          domain,
-		RPDisplayName: "mikan",
+		RPDisplayName: "scilla",
 		RPOrigins:     []string{origin},
 		AuthenticatorSelection: protocol.AuthenticatorSelection{
 			ResidentKey:      protocol.ResidentKeyRequirementRequired,

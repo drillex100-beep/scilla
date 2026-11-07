@@ -12,14 +12,14 @@ import (
 	"text/tabwriter"
 	"time"
 
-	"mikan/internal/nodetls"
-	"mikan/internal/panel/audit"
-	"mikan/internal/panel/dnscheck"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/subsrc"
-	"mikan/internal/release"
+	"scilla/internal/nodetls"
+	"scilla/internal/panel/audit"
+	"scilla/internal/panel/dnscheck"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/subsrc"
+	"scilla/internal/release"
 )
 
 // nodeCmd manages the panel's nodes from the server shell. Join keys go to stdout alone,
@@ -230,7 +230,7 @@ func domainText(e *domain.DomainError) string {
 
 func nodeID(args []string) (int64, error) {
 	if len(args) < 2 {
-		return 0, errors.New("name the node by its ID: mikan admin node list")
+		return 0, errors.New("name the node by its ID: scilla admin node list")
 	}
 	id, err := strconv.ParseInt(args[1], 10, 64)
 	if err != nil || id < 1 {

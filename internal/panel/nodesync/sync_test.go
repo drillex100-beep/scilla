@@ -11,13 +11,13 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/nodetls"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
+	"scilla/internal/nodeapi"
+	"scilla/internal/nodetls"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
 )
 
 type fakeNode struct {
@@ -267,7 +267,7 @@ func TestMaintainAppliesChangesMadeOutsideTheAPI(t *testing.T) {
 // addRemote registers a second node the way the panel does and attaches a fake for it.
 func addRemote(t *testing.T, s *Syncer, st *store.Store) (*Syncer, *fakeNode) {
 	t.Helper()
-	panel, err := nodetls.Generate("mikan-panel", x509.ExtKeyUsageClientAuth, time.Now())
+	panel, err := nodetls.Generate("scilla-panel", x509.ExtKeyUsageClientAuth, time.Now())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -553,9 +553,9 @@ func TestSNIRouterRoutes(t *testing.T) {
 	}
 	r := sniRouter([]nodeapi.Inbound{
 		in("plain", `{"type":"vless","reality-config":{"server-names":["www.example.com"]}}`),
-		in("reality", `{"type":"vless","reality-config":{"server-names":["www.microsoft.com","microsoft.com"]},"mikan":{"sni443":true}}`),
-		in("tls", `{"type":"trojan","mikan":{"tls":"node","sni443":true}}`),
-		in("udp", `{"type":"hysteria2","mikan":{"sni443":true}}`),
+		in("reality", `{"type":"vless","reality-config":{"server-names":["www.microsoft.com","microsoft.com"]},"scilla":{"sni443":true}}`),
+		in("tls", `{"type":"trojan","scilla":{"tls":"node","sni443":true}}`),
+		in("udp", `{"type":"hysteria2","scilla":{"sni443":true}}`),
 	}, "node.example.net", false)
 	if r == nil || len(r.Routes) != 2 || r.Default != "reality" {
 		t.Fatalf("router: %+v", r)
@@ -581,12 +581,12 @@ func TestSNIRouterFrontPage(t *testing.T) {
 	in := func(name, port, cfg string) nodeapi.Inbound {
 		return nodeapi.Inbound{Name: name, Port: port, Config: []byte(cfg)}
 	}
-	reality := in("reality", "8443", `{"type":"vless","reality-config":{"server-names":["www.microsoft.com"]},"mikan":{"sni443":true}}`)
+	reality := in("reality", "8443", `{"type":"vless","reality-config":{"server-names":["www.microsoft.com"]},"scilla":{"sni443":true}}`)
 	r := sniRouter([]nodeapi.Inbound{reality}, "Node.Example.net.", true)
 	if r == nil || !slices.Equal(r.Stub, []string{"node.example.net", ""}) || r.Default != "reality" {
 		t.Fatalf("page on the domain and with no name: %+v", r)
 	}
-	tls := in("tls", "8443", `{"type":"trojan","mikan":{"tls":"node","sni443":true}}`)
+	tls := in("tls", "8443", `{"type":"trojan","scilla":{"tls":"node","sni443":true}}`)
 	if r := sniRouter([]nodeapi.Inbound{reality, tls}, "node.example.net", true); r == nil || !slices.Equal(r.Stub, []string{""}) {
 		t.Fatalf("a domain an inbound asks for stays the inbound's: %+v", r)
 	}

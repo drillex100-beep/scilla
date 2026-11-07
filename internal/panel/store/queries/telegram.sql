@@ -63,4 +63,4 @@ SELECT COUNT(*) FROM tg_links;
 
 -- name: LockTgLinks :exec
 -- The subscriptions of one Telegram account are linked one transaction at a time.
-SELECT pg_advisory_xact_lock(hashtextextended('mikan-tg-links:' || CAST(sqlc.arg(tg_id) AS BIGINT), 0));
+SELECT pg_advisory_xact_lock(hashtextextended('scilla-tg-links:' || CAST(sqlc.arg(tg_id) AS BIGINT), 0));

@@ -4,7 +4,7 @@ import (
 	"slices"
 	"testing"
 
-	"mikan/internal/panel/events"
+	"scilla/internal/panel/events"
 )
 
 // The known types are the documented ones, each once and in the documented order; a name

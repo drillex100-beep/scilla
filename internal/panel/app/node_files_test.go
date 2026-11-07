@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodetls"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/tlscert"
+	"scilla/internal/nodetls"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/tlscert"
 )
 
 // A deleted node takes its certificates and private keys with it. An old restored
@@ -22,7 +22,7 @@ func TestNodeFilesGoWithTheNode(t *testing.T) {
 	ctx := t.Context()
 	dataDir := t.TempDir()
 	nodeCerts := tlscert.NewNodeStore(filepath.Join(dataDir, "tls", "custom-nodes"), time.Now)
-	panel, err := nodetls.Generate("mikan-panel", x509.ExtKeyUsageClientAuth, time.Now())
+	panel, err := nodetls.Generate("scilla-panel", x509.ExtKeyUsageClientAuth, time.Now())
 	if err != nil {
 		t.Fatal(err)
 	}

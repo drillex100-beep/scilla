@@ -8,11 +8,11 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/billing"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/billing"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // A plan sold for several terms in the bot: the list says "from", the plan shows a button

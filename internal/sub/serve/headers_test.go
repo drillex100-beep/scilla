@@ -11,12 +11,12 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/textutil"
+	"scilla/internal/textutil"
 )
 
 func TestOperatorHeadersWithoutBranding(t *testing.T) {
 	h := http.Header{}
-	OperatorHeaders(h, User{Name: "a"}, Config{Brand: "Mikan"}, "https://vpn.example.com/s/tok", "https://t.me/bot", 1)
+	OperatorHeaders(h, User{Name: "a"}, Config{Brand: "Scilla"}, "https://vpn.example.com/s/tok", "https://t.me/bot", 1)
 	if h.Get("Profile-Web-Page-Url") != "https://vpn.example.com/s/tok" {
 		t.Errorf("page: %q", h.Get("Profile-Web-Page-Url"))
 	}
@@ -49,7 +49,7 @@ func TestOperatorHeadersBranding(t *testing.T) {
 	cfg := Config{Brand: "Мандарин VPN", SupportURL: "https://t.me/support", Binding: true,
 		App: AppBrand{Enabled: true, Accent: "#F07A2E", LogoURL: "https://cdn.example.com/logo.png"}}
 	h := http.Header{}
-	OperatorHeaders(h, u, cfg, "https://vpn.example.com/s/tok", "https://t.me/mikan_bot", 2)
+	OperatorHeaders(h, u, cfg, "https://vpn.example.com/s/tok", "https://t.me/scilla_bot", 2)
 
 	want := map[string]string{
 		"X-Hwid-Active": "true",
@@ -60,7 +60,7 @@ func TestOperatorHeadersBranding(t *testing.T) {
 		"X-Brand-Accent-Color":      "#F07A2E",
 		"X-Brand-Logo-URL":          "https://cdn.example.com/logo.png",
 		"X-Brand-Support-URL":       "https://t.me/support",
-		"X-Brand-Bot-URL":           "https://t.me/mikan_bot",
+		"X-Brand-Bot-URL":           "https://t.me/scilla_bot",
 		"X-Brand-Renew-URL":         "https://vpn.example.com/s/tok",
 		"X-Brand-Max-Devices":       "3",
 		"X-Brand-Current-Devices":   "2",
@@ -71,7 +71,7 @@ func TestOperatorHeadersBranding(t *testing.T) {
 		"X-Brand-Desktop-Accent-Color":      "#F07A2E",
 		"X-Brand-Desktop-Logo-URL":          "https://cdn.example.com/logo.png",
 		"X-Brand-Desktop-Support-URL":       "https://t.me/support",
-		"X-Brand-Desktop-Bot-URL":           "https://t.me/mikan_bot",
+		"X-Brand-Desktop-Bot-URL":           "https://t.me/scilla_bot",
 		"X-Brand-Desktop-Renew-URL":         "https://vpn.example.com/s/tok",
 		"X-Brand-Desktop-Devices-Limit":     "3",
 		"X-Brand-Desktop-Devices-Used":      "2",
@@ -83,10 +83,10 @@ func TestOperatorHeadersBranding(t *testing.T) {
 	}
 
 	// Without binding there are no places to count; an ASCII name goes as is.
-	cfg.Binding, cfg.Brand, cfg.App.Accent = false, "Mikan", ""
+	cfg.Binding, cfg.Brand, cfg.App.Accent = false, "Scilla", ""
 	h = http.Header{}
 	OperatorHeaders(h, u, cfg, "", "", 2)
-	if h.Get("X-Brand-Name") != "Mikan" || h.Get("X-Brand-Max-Devices") != "" || h.Get("X-Brand-Desktop-Devices-Used") != "" || h.Get("X-Brand-Accent-Color") != "" {
+	if h.Get("X-Brand-Name") != "Scilla" || h.Get("X-Brand-Max-Devices") != "" || h.Get("X-Brand-Desktop-Devices-Used") != "" || h.Get("X-Brand-Accent-Color") != "" {
 		t.Errorf("without binding: %v", h)
 	}
 	// The online mode has no places to count either.
@@ -109,7 +109,7 @@ func TestBrandNameIsCutByLetters(t *testing.T) {
 
 func TestBotURLDropsTheStartCode(t *testing.T) {
 	for in, want := range map[string]string{
-		"https://t.me/mikan_bot?start=abc": "https://t.me/mikan_bot",
+		"https://t.me/scilla_bot?start=abc": "https://t.me/scilla_bot",
 		"":                                 "",
 		"tg://resolve?domain=x":            "",
 	} {
@@ -164,11 +164,11 @@ func TestValidAccent(t *testing.T) {
 func TestUserInfoHeaders(t *testing.T) {
 	hd := http.Header{}
 	exp := time.Unix(1793491200, 0)
-	userInfoHeaders(hd, User{UsedUp: 1, UsedDown: 9, Limit: ptr(100), Grants: 50, Expires: exp}, Config{Brand: "Mikan", SupportURL: "https://t.me/support"}, nil)
+	userInfoHeaders(hd, User{UsedUp: 1, UsedDown: 9, Limit: ptr(100), Grants: 50, Expires: exp}, Config{Brand: "Scilla", SupportURL: "https://t.me/support"}, nil)
 	if got := hd.Get("Subscription-Userinfo"); got != "upload=1; download=9; total=150; expire=1793491200" {
 		t.Errorf("userinfo: %q", got)
 	}
-	if hd.Get("Profile-Title") != "base64:"+base64.StdEncoding.EncodeToString([]byte("Mikan")) || hd.Get("Profile-Update-Interval") != "1" || hd.Get("Support-Url") != "https://t.me/support" {
+	if hd.Get("Profile-Title") != "base64:"+base64.StdEncoding.EncodeToString([]byte("Scilla")) || hd.Get("Profile-Update-Interval") != "1" || hd.Get("Support-Url") != "https://t.me/support" {
 		t.Errorf("headers: %v", hd)
 	}
 	hd = http.Header{}
@@ -226,11 +226,11 @@ func TestHappHeaders(t *testing.T) {
 	}
 	// The panel's own profile: INCY's, which keeps the geodata whole and replaces the one saved.
 	h = http.Header{}
-	appHeaders(h, "INCY/3.8.1/Android", Config{Brand: "Mikan", Happ: Happ{Routing: "auto"}}, "")
+	appHeaders(h, "INCY/3.8.1/Android", Config{Brand: "Scilla", Happ: Happ{Routing: "auto"}}, "")
 	payload, ok := strings.CutPrefix(h.Get("routing"), "incy://routing/onadd/")
 	raw, _ := base64.StdEncoding.DecodeString(payload)
 	var p map[string]any
-	if !ok || json.Unmarshal(raw, &p) != nil || p["Name"] != "Mikan" || p["useChunkFiles"] != false || p["LastUpdated"] == nil {
+	if !ok || json.Unmarshal(raw, &p) != nil || p["Name"] != "Scilla" || p["useChunkFiles"] != false || p["LastUpdated"] == nil {
 		t.Fatalf("INCY's own profile: %v %s", h, raw)
 	}
 	h = http.Header{}

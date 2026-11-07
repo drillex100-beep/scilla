@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/domain"
+	"scilla/internal/panel/domain"
 )
 
 // A tariff's description for buyers through the API: stored trimmed with plain line

@@ -3,7 +3,7 @@ package mihomo
 import (
 	"strings"
 
-	"mikan/internal/sub/model"
+	"scilla/internal/sub/model"
 )
 
 // checkChains refuses, on saving, the chains Citrus refuses on loading a profile (its
@@ -16,7 +16,7 @@ import (
 //   - a chain of fewer than two hops, a hop twice, the chain as its own hop
 //     (template_chain_hops);
 //   - a chain that takes hops other than from proxies: use, include-all, filter and the
-//     like (template_chain_keys; checkChainKeys refuses them, and the panel's mikan ask, in
+//     like (template_chain_keys; checkChainKeys refuses them, and the panel's scilla ask, in
 //     the template as written, since the panel fills or drops some of them);
 //   - DIRECT, REJECT and the other built-ins past the first hop, or in a group past the
 //     first hop (template_chain_builtin);
@@ -101,7 +101,7 @@ func checkChains(cfg map[string]any) error {
 }
 
 // checkChainKeys refuses a chain of the template as written that asks for its hops: Citrus
-// takes them from proxies only, and the panel's fill (include-all-proxies, mikan, a filter
+// takes them from proxies only, and the panel's fill (include-all-proxies, scilla, a filter
 // it drops) would make a chain of whatever proxies a user has, of one hop for some.
 func checkChainKeys(cfg map[string]any) error {
 	groups, _ := cfg["proxy-groups"].([]any)
@@ -117,7 +117,7 @@ func checkChainKeys(cfg map[string]any) error {
 
 // askedHops refuses the chain c when it asks for hops other than by proxies.
 func askedHops(c map[string]any) error {
-	for _, k := range []string{"use", "include-all", "include-all-proxies", "include-all-providers", "filter", "exclude-filter", "exclude-type", "mikan"} {
+	for _, k := range []string{"use", "include-all", "include-all-proxies", "include-all-providers", "filter", "exclude-filter", "exclude-type", "scilla"} {
 		if _, ok := c[k]; ok {
 			return templateErr("template_chain_keys", str(c["name"]))
 		}

@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store/db"
 )
 
 // A node's billing is saved whole and comes back with the next payment and the plan's traffic

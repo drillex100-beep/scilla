@@ -11,11 +11,11 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/events/feed"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/events/feed"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // hook is an addon that serves HTTP: its /v2/info says whether it wants its events pushed

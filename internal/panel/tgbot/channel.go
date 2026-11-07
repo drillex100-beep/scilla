@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"html"
 
-	"mikan/internal/panel/model"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/model"
+	"scilla/internal/tgapi"
 )
 
 // The channel a subscriber must join before the bot shows its menu (Config.Channel), and

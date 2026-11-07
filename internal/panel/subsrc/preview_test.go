@@ -4,10 +4,10 @@ import (
 	"slices"
 	"testing"
 
-	submodel "mikan/internal/sub/model"
-	"mikan/internal/sub/profile"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/subtest"
+	submodel "scilla/internal/sub/model"
+	"scilla/internal/sub/profile"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/subtest"
 )
 
 // The preview of a Clash profile tells what sing-box and xray leave out of it, each core's

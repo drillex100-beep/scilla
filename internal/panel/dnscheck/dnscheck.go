@@ -16,8 +16,8 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/httpjson"
-	"mikan/internal/netaddr"
+	"scilla/internal/httpjson"
+	"scilla/internal/netaddr"
 )
 
 // Resolvers are the public DNS-over-HTTPS resolvers asked in turn (JSON API).

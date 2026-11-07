@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store/db"
 )
 
 // BulkSampleSize is how many of the users a plan changes it shows one by one.

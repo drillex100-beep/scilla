@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"testing"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store/db"
 )
 
 // A tariff's chosen servers reach the node at once: its clients get the tariff's inbounds

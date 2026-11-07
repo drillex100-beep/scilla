@@ -7,8 +7,8 @@ import (
 	"errors"
 	"time"
 
-	"mikan/internal/panel/hysteresis"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/hysteresis"
+	"scilla/internal/panel/store/db"
 )
 
 const stateKey = "monitor"

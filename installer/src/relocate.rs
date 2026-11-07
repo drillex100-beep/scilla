@@ -1,7 +1,7 @@
-//! `mikan move user@new-server`: the panel goes to another server in one command, run on
-//! the old one. It backs the panel up, installs mikan on the new server over ssh with the
+//! `scilla move user@new-server`: the panel goes to another server in one command, run on
+//! the old one. It backs the panel up, installs scilla on the new server over ssh with the
 //! same panel port, copies the backup there and restores it, and opens in the new
-//! server's ufw what this one lets in for mikan. The old panel keeps running until the
+//! server's ufw what this one lets in for scilla. The old panel keeps running until the
 //! admin stops it (or --stop-old does).
 //!
 //! ssh is the system's, with the admin's own keys and agent: the move never asks for a
@@ -21,20 +21,20 @@ use crate::release::REPO;
 use crate::{DIR, docker, lock, release, system};
 
 /// The page with the move by hand.
-pub const GUIDE: &str = "https://miroshka000.github.io/mikan/en/start/migrate/#moving-mikan-to-another-server";
+pub const GUIDE: &str = "https://drillex100-beep.github.io/scilla/en/start/migrate/#moving-scilla-to-another-server";
 
 /// Where the backup lands on the new server: where its own backups are.
-const REMOTE_BACKUPS: &str = "/opt/mikan/backups";
+const REMOTE_BACKUPS: &str = "/opt/scilla/backups";
 
-/// The command mikan has on a server.
-const REMOTE_MIKAN: &str = "/usr/local/bin/mikan";
+/// The command scilla has on a server.
+const REMOTE_SCILLA: &str = "/usr/local/bin/scilla";
 
 /// The daily update: on a stopped panel it would start the containers again (`compose up`)
 /// with the node keys the new panel holds now.
-const UPDATE_TIMER: &str = "mikan-update.timer";
+const UPDATE_TIMER: &str = "scilla-update.timer";
 
 /// The payment adapters' compose file (addon.rs).
-const ADDONS_COMPOSE: &str = "/opt/mikan/addons/compose.yml";
+const ADDONS_COMPOSE: &str = "/opt/scilla/addons/compose.yml";
 
 #[derive(clap::Args, Debug, Clone)]
 pub struct MoveArgs {
@@ -44,8 +44,8 @@ pub struct MoveArgs {
     /// The new server's ssh port
     #[arg(long, short = 'p', value_name = "PORT")]
     pub ssh_port: Option<u16>,
-    /// Go on when the new server already has mikan: its data are replaced with this panel's
-    /// (a copy of them stays in its /opt/mikan/backups)
+    /// Go on when the new server already has scilla: its data are replaced with this panel's
+    /// (a copy of them stays in its /opt/scilla/backups)
     #[arg(long)]
     pub force: bool,
     /// Stop the panel here once the new server runs it
@@ -67,7 +67,7 @@ pub struct Plan {
     pub panel_port: u16,
     /// This panel's release: the new server must run the same or a newer one.
     pub version: String,
-    /// ufw is mikan's here (not installed with --no-firewall).
+    /// ufw is scilla's here (not installed with --no-firewall).
     pub firewall: bool,
     /// The ufw rules to open on the new server beside the install's own.
     pub rules: Vec<String>,
@@ -124,14 +124,14 @@ fn as_root(sudo: bool, script: &str) -> String {
 
 /// The release of the panel installed on the new server, as `version=X` (config.json, or
 /// the .env of an older one).
-const VERSION_PROBE: &str = "sed -n 's/^ *\"MIKAN_VERSION\": *\"\\([^\"]*\\)\".*/version=\\1/p' /opt/mikan/config.json 2>/dev/null; \
-sed -n 's/^MIKAN_VERSION=\\(.*\\)/version=\\1/p' /opt/mikan/.env 2>/dev/null; true";
+const VERSION_PROBE: &str = "sed -n 's/^ *\"SCILLA_VERSION\": *\"\\([^\"]*\\)\".*/version=\\1/p' /opt/scilla/config.json 2>/dev/null; \
+sed -n 's/^SCILLA_VERSION=\\(.*\\)/version=\\1/p' /opt/scilla/.env 2>/dev/null; true";
 
 /// What the check reads on the new server: one word a line, and its panel's release.
 fn probe_script() -> String {
     format!(
-        "if [ -e /opt/mikan/config.json ] || [ -e /opt/mikan/.env ]; then echo installed; fi; \
-if grep -qs '\"MIKAN_MODE\": *\"node\"' /opt/mikan/config.json || grep -qs '^MIKAN_MODE=node' /opt/mikan/.env; then echo node; fi; \
+        "if [ -e /opt/scilla/config.json ] || [ -e /opt/scilla/.env ]; then echo installed; fi; \
+if grep -qs '\"SCILLA_MODE\": *\"node\"' /opt/scilla/config.json || grep -qs '^SCILLA_MODE=node' /opt/scilla/.env; then echo node; fi; \
 command -v curl >/dev/null 2>&1 || echo no-curl; {VERSION_PROBE}"
     )
 }
@@ -155,7 +155,7 @@ struct Probe {
     installed: bool,
     node: bool,
     curl: bool,
-    /// The release of the mikan installed there.
+    /// The release of the scilla installed there.
     version: Option<String>,
 }
 
@@ -174,7 +174,7 @@ impl Plan {
         let install = Install::load()?;
         install.panel_only()?;
         let panel_port =
-            install.config.get("PANEL_PORT").and_then(|p| p.parse().ok()).context("PANEL_PORT is not set in /opt/mikan/config.json")?;
+            install.config.get("PANEL_PORT").and_then(|p| p.parse().ok()).context("PANEL_PORT is not set in /opt/scilla/config.json")?;
         let rules = if install.ufw() { crate::doctor::moved_rules(&install) } else { Vec::new() };
         Self::new(a, panel_port, install.version(), install.ufw(), rules)
     }
@@ -217,7 +217,7 @@ impl Plan {
         )
     }
 
-    /// What the new server's ufw opens: the panel's port always (an install over a mikan
+    /// What the new server's ufw opens: the panel's port always (an install over a scilla
     /// that was there keeps its old port, and the restore brings this one), then the rest.
     fn ufw_rules(&self) -> Vec<String> {
         let panel = format!("{}/tcp", self.panel_port);
@@ -243,17 +243,17 @@ impl Plan {
         let file = name.unwrap_or("<the backup>");
         match step {
             Step::Check => format!(
-                "Check that {t} lets ssh in with your key, runs as root or sudo without a password, has no mikan yet, and gets a release no older than this panel's {}",
+                "Check that {t} lets ssh in with your key, runs as root or sudo without a password, has no scilla yet, and gets a release no older than this panel's {}",
                 self.version
             ),
-            Step::Backup => "Back up this panel (mikan backup)".into(),
+            Step::Backup => "Back up this panel (scilla backup)".into(),
             Step::Install => {
-                format!("Install mikan on {t} with the panel port {} (install.sh {})", self.panel_port, self.install_flags())
+                format!("Install scilla on {t} with the panel port {} (install.sh {})", self.panel_port, self.install_flags())
             }
             Step::Copy => format!("Copy {file} to {t}:{REMOTE_BACKUPS} and compare its sha256"),
-            Step::Restore => format!("Restore it there (mikan restore -y {REMOTE_BACKUPS}/{file})"),
+            Step::Restore => format!("Restore it there (scilla restore -y {REMOTE_BACKUPS}/{file})"),
             Step::Firewall => {
-                format!("Open in the new server's ufw the panel's port and what this one lets in for mikan: {}", self.ufw_rules().join(" "))
+                format!("Open in the new server's ufw the panel's port and what this one lets in for scilla: {}", self.ufw_rules().join(" "))
             }
             Step::StopOld => "Stop the panel here, its payment adapters and its daily update".into(),
         }
@@ -267,7 +267,7 @@ impl Plan {
         let on_new = |c: &str| format!("on the new server ({}): {c}", self.ssh_hint());
         match step {
             Step::Check => vec![self.ssh_hint()],
-            Step::Backup => vec!["mikan backup".into()],
+            Step::Backup => vec!["scilla backup".into()],
             Step::Install => vec![on_new(&format!(
                 "curl -fsSL https://github.com/{REPO}/releases/latest/download/install.sh | {su}bash -s -- {}",
                 self.install_flags()
@@ -282,11 +282,11 @@ impl Plan {
                 };
                 vec![format!("scp {port}{DIR}/backups/{file} {to}:")]
             }
-            Step::Restore if copied => vec![on_new(&format!("{su}mikan restore {REMOTE_BACKUPS}/{file}"))],
-            Step::Restore => vec![on_new(&format!("{su}mikan restore ~/{file}"))],
+            Step::Restore if copied => vec![on_new(&format!("{su}scilla restore {REMOTE_BACKUPS}/{file}"))],
+            Step::Restore => vec![on_new(&format!("{su}scilla restore ~/{file}"))],
             Step::Firewall => vec![on_new(&self.ufw_rules().iter().map(|r| format!("{su}ufw allow {r}")).collect::<Vec<_>>().join("; "))],
             Step::StopOld => vec![
-                format!("[ -e {ADDONS_COMPOSE} ] && docker compose -p mikan-addons -f {ADDONS_COMPOSE} down"),
+                format!("[ -e {ADDONS_COMPOSE} ] && docker compose -p scilla-addons -f {ADDONS_COMPOSE} down"),
                 format!("docker compose --project-directory {DIR} stop"),
                 format!("systemctl disable --now {UPDATE_TIMER}"),
             ],
@@ -297,7 +297,7 @@ impl Plan {
     fn after(&self) -> Vec<String> {
         let host = host_of(&self.target);
         let mut l = vec![
-            format!("The panel runs on {host}, at the same port and link (mikan url there shows it). What is left:"),
+            format!("The panel runs on {host}, at the same port and link (scilla url there shows it). What is left:"),
             format!(
                 "  1. Point the panel's domain (and the subscription domain, if you have one) at {host}'s IP. Subscription links keep working once it does."
             ),
@@ -306,10 +306,10 @@ impl Plan {
         ];
         if self.stop_old {
             l.push(format!(
-                "  3. The panel here is stopped and its daily update is off, so nothing starts it again. mikan uninstall removes it for good (the data stay in {DIR}); systemctl enable --now {UPDATE_TIMER} and mikan restart bring it back."
+                "  3. The panel here is stopped and its daily update is off, so nothing starts it again. scilla uninstall removes it for good (the data stay in {DIR}); systemctl enable --now {UPDATE_TIMER} and scilla restart bring it back."
             ));
         } else {
-            l.push("  3. The panel here still runs: what changes in it from now on does not come over. Once the new one works, stop it: mikan uninstall (the data stay in /opt/mikan).".into());
+            l.push("  3. The panel here still runs: what changes in it from now on does not come over. Once the new one works, stop it: scilla uninstall (the data stay in /opt/scilla).".into());
         }
         l
     }
@@ -366,7 +366,7 @@ pub fn execute(plan: &Plan, r: &mut dyn Runner) -> Result<()> {
                 }
             }
             if !matches!(step, Step::Backup | Step::StopOld) {
-                r.say("The install there has begun: running mikan move again needs --force.");
+                r.say("The install there has begun: running scilla move again needs --force.");
             }
             r.say(&format!("All the steps: {GUIDE}"));
             return Err(e);
@@ -399,7 +399,7 @@ fn run(plan: &Plan, step: Step, st: &mut State, r: &mut dyn Runner) -> Result<()
             }
             if p.installed && !plan.force {
                 bail!(
-                    "{t} already has mikan in /opt/mikan: --force replaces its data with this panel's (a copy of them stays in its /opt/mikan/backups)"
+                    "{t} already has scilla in /opt/scilla: --force replaces its data with this panel's (a copy of them stays in its /opt/scilla/backups)"
                 );
             }
             if !p.curl {
@@ -416,7 +416,7 @@ fn run(plan: &Plan, step: Step, st: &mut State, r: &mut dyn Runner) -> Result<()
                 return Ok(());
             }
             // The install takes a fresh server to the newest stable release, and updates a
-            // mikan that is there no lower than that.
+            // scilla that is there no lower than that.
             let latest = r.latest_stable().context("cannot read the newest stable release")?;
             let after = match p.version.filter(|there| p.installed && release::newer(there, &latest)) {
                 Some(there) => there,
@@ -424,7 +424,7 @@ fn run(plan: &Plan, step: Step, st: &mut State, r: &mut dyn Runner) -> Result<()
             };
             if release::newer(v, &after) {
                 bail!(
-                    "this panel runs mikan {v}, and {t} would get mikan {after}: a backup goes onto the same release or a newer one. Update the new server to {v} first, then run mikan move --force"
+                    "this panel runs scilla {v}, and {t} would get scilla {after}: a backup goes onto the same release or a newer one. Update the new server to {v} first, then run scilla move --force"
                 );
             }
         }
@@ -464,13 +464,13 @@ fn run(plan: &Plan, step: Step, st: &mut State, r: &mut dyn Runner) -> Result<()
             let there = parse_version(&out).unwrap_or_default();
             if release::valid_version(&plan.version) && release::newer(&plan.version, &there) {
                 bail!(
-                    "{t} runs mikan {there:?}, older than this panel's {}: a backup goes onto the same release or a newer one. Update the new server to {} first",
+                    "{t} runs scilla {there:?}, older than this panel's {}: a backup goes onto the same release or a newer one. Update the new server to {} first",
                     plan.version,
                     plan.version
                 );
             }
             let name = st.name().unwrap_or_default().to_owned();
-            r.remote(&as_root(st.sudo, &format!("{REMOTE_MIKAN} restore -y {REMOTE_BACKUPS}/{name}")), None, false)
+            r.remote(&as_root(st.sudo, &format!("{REMOTE_SCILLA} restore -y {REMOTE_BACKUPS}/{name}")), None, false)
                 .with_context(|| format!("the restore on {t} failed"))?;
         }
         Step::Firewall => {
@@ -570,14 +570,14 @@ impl Runner for System {
     }
 }
 
-/// `mikan move`.
+/// `scilla move`.
 pub fn run_move(a: &MoveArgs) -> Result<()> {
     if !system::is_root() {
-        bail!("run as root: sudo mikan move {}", a.target);
+        bail!("run as root: sudo scilla move {}", a.target);
     }
     let plan = Plan::load(a)?;
     if a.dry_run {
-        crate::out(&format!("mikan move to {}: the steps (nothing is done with --dry-run)", plan.target));
+        crate::out(&format!("scilla move to {}: the steps (nothing is done with --dry-run)", plan.target));
         for (i, s) in plan.steps().into_iter().enumerate() {
             crate::out(&format!("  {}. {}", i + 1, plan.describe(s, None)));
         }
@@ -673,8 +673,8 @@ mod tests {
         assert_eq!(quote("it's"), r"'it'\''s'");
         assert_eq!(as_root(false, "id"), "sh -c 'id'");
         assert_eq!(as_root(true, "echo 'x'"), r"sudo -n sh -c 'echo '\''x'\'''");
-        assert!(valid_backup_name("mikan-20261028-101500.tar.gz"));
-        assert!(!valid_backup_name("x;reboot.tar.gz") && !valid_backup_name(".x.tar.gz") && !valid_backup_name("mikan.tar"));
+        assert!(valid_backup_name("scilla-20261028-101500.tar.gz"));
+        assert!(!valid_backup_name("x;reboot.tar.gz") && !valid_backup_name(".x.tar.gz") && !valid_backup_name("scilla.tar"));
     }
 
     /// The scripts as the new server's shell reads them: each one parses, and the line ssh
@@ -682,7 +682,7 @@ mod tests {
     #[test]
     fn the_scripts_parse_in_sh() {
         let p = plan(&["root@new"]);
-        for s in [probe_script(), VERSION_PROBE.to_owned(), p.install_script(), p.ufw_script(), copy_script("mikan-1.tar.gz", SUM)] {
+        for s in [probe_script(), VERSION_PROBE.to_owned(), p.install_script(), p.ufw_script(), copy_script("scilla-1.tar.gz", SUM)] {
             let line = as_root(false, &s);
             for check in [&s, &line] {
                 let ok = Command::new("sh").args(["-n", "-c", check]).status().unwrap().success();
@@ -694,7 +694,7 @@ mod tests {
     }
 
     fn tmpdir(name: &str) -> PathBuf {
-        let d = std::env::temp_dir().join(format!("mikan-relocate-{name}-{}", std::process::id()));
+        let d = std::env::temp_dir().join(format!("scilla-relocate-{name}-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&d);
         std::fs::create_dir_all(&d).unwrap();
         d
@@ -704,17 +704,17 @@ mod tests {
     #[test]
     fn the_version_probe_reads_the_settings() {
         let d = tmpdir("version");
-        let script = VERSION_PROBE.replace("/opt/mikan", d.to_str().unwrap());
+        let script = VERSION_PROBE.replace("/opt/scilla", d.to_str().unwrap());
         let run = || String::from_utf8(Command::new("sh").args(["-c", &script]).output().unwrap().stdout).unwrap();
         assert_eq!(parse_version(&run()), None);
         std::fs::write(
             d.join("config.json"),
-            "{\n  \"MIKAN_MODE\": \"panel\",\n  \"MIKAN_VERSION\": \"0.5.2.1-rc.2\",\n  \"PANEL_PORT\": \"1\"\n}\n",
+            "{\n  \"SCILLA_MODE\": \"panel\",\n  \"SCILLA_VERSION\": \"0.5.2.1-rc.2\",\n  \"PANEL_PORT\": \"1\"\n}\n",
         )
         .unwrap();
         assert_eq!(parse_version(&run()).as_deref(), Some("0.5.2.1-rc.2"));
         std::fs::remove_file(d.join("config.json")).unwrap();
-        std::fs::write(d.join(".env"), "PANEL_PORT=1\nMIKAN_VERSION=0.4.9\n").unwrap();
+        std::fs::write(d.join(".env"), "PANEL_PORT=1\nSCILLA_VERSION=0.4.9\n").unwrap();
         assert_eq!(parse_version(&run()).as_deref(), Some("0.4.9"));
         let _ = std::fs::remove_dir_all(&d);
     }
@@ -729,7 +729,7 @@ mod tests {
         let want = release::sha256_hex(data);
         let copy = |want: &str| {
             let mut c = Command::new("sh")
-                .args(["-c", &copy_script_in(dir.to_str().unwrap(), "mikan-1.tar.gz", want)])
+                .args(["-c", &copy_script_in(dir.to_str().unwrap(), "scilla-1.tar.gz", want)])
                 .stdin(Stdio::piped())
                 .stdout(Stdio::piped())
                 .spawn()
@@ -741,8 +741,8 @@ mod tests {
         assert_eq!(copy(&"0".repeat(64)).trim(), "copy-damaged");
         assert!(left().is_empty(), "a damaged copy is removed: {:?}", left());
         assert_eq!(copy(&want).trim(), "copy-ok");
-        assert_eq!(left(), ["mikan-1.tar.gz"]);
-        assert_eq!(std::fs::read(dir.join("mikan-1.tar.gz")).unwrap(), data);
+        assert_eq!(left(), ["scilla-1.tar.gz"]);
+        assert_eq!(std::fs::read(dir.join("scilla-1.tar.gz")).unwrap(), data);
         let _ = std::fs::remove_dir_all(&d);
     }
 
@@ -807,7 +807,7 @@ mod tests {
             } else if command.contains("sha256sum") {
                 // As the script does: the copy's own sum against the one it was sent.
                 if command.contains(&format!("= {} ]", self.copy_sum)) { "copy-ok\n" } else { "copy-damaged\n" }.into()
-            } else if command.contains("MIKAN_VERSION") {
+            } else if command.contains("SCILLA_VERSION") {
                 self.there.into()
             } else if command.contains("ufw status") {
                 self.ufw.into()
@@ -817,7 +817,7 @@ mod tests {
         }
         fn backup(&mut self) -> Result<PathBuf> {
             self.calls.push("backup".into());
-            Ok(PathBuf::from("/opt/mikan/backups/mikan-1.tar.gz"))
+            Ok(PathBuf::from("/opt/scilla/backups/scilla-1.tar.gz"))
         }
         fn sha256(&mut self, _: &Path) -> Result<String> {
             Ok(SUM.into())
@@ -846,7 +846,7 @@ mod tests {
             self.said.iter().any(|l| l.contains(s))
         }
         fn restored(&self) -> bool {
-            self.calls.iter().any(|c| c.contains("mikan restore"))
+            self.calls.iter().any(|c| c.contains("scilla restore"))
         }
         fn installed(&self) -> bool {
             self.calls.iter().any(|c| c.contains("install.sh"))
@@ -860,20 +860,20 @@ mod tests {
         assert!(
             f.began(&[
                 "remote id -u",
-                "remote sh -c 'if [ -e /opt/mikan/config.json ] ",
+                "remote sh -c 'if [ -e /opt/scilla/config.json ] ",
                 "backup",
                 "remote sh -c 'f=$(mktemp) && curl -fsSL --proto",
-                "remote sh -c 'umask 077 && mkdir -p /opt/mikan/backups",
+                "remote sh -c 'umask 077 && mkdir -p /opt/scilla/backups",
                 "remote sh -c 'sed -n ",
-                "remote sh -c '/usr/local/bin/mikan restore -y",
+                "remote sh -c '/usr/local/bin/scilla restore -y",
                 "remote sh -c 'if ufw status 2>/dev/null | grep",
                 "stop old",
             ]),
             "{:#?}",
             f.calls
         );
-        assert!(f.calls[4].ends_with("< /opt/mikan/backups/mikan-1.tar.gz"), "the backup goes on stdin: {}", f.calls[4]);
-        assert!(f.calls[6].contains("restore -y /opt/mikan/backups/mikan-1.tar.gz"));
+        assert!(f.calls[4].ends_with("< /opt/scilla/backups/scilla-1.tar.gz"), "the backup goes on stdin: {}", f.calls[4]);
+        assert!(f.calls[6].contains("restore -y /opt/scilla/backups/scilla-1.tar.gz"));
         assert!(f.said("opened: 21355/tcp 2097/tcp 20000:20100/udp"));
         assert!(f.said("Point the panel's domain") && f.said("within 15 minutes") && f.said("daily update is off"));
     }
@@ -889,7 +889,7 @@ mod tests {
     }
 
     #[test]
-    fn a_server_with_mikan_is_refused_without_force() {
+    fn a_server_with_scilla_is_refused_without_force() {
         let mut f = Fake { probe: "installed\nversion=0.5.2.1\n", ..Default::default() };
         let e = execute(&plan(&["root@new"]), &mut f).unwrap_err();
         assert!(format!("{e:#}").contains("--force"), "{e:#}");
@@ -902,12 +902,12 @@ mod tests {
 
         let mut f = Fake { probe: "installed\nnode\n", ..Default::default() };
         assert!(execute(&plan(&["root@new", "--force"]), &mut f).is_err(), "a node never takes a panel");
-        assert!(!f.said("install.sh") && !f.said("mikan restore"), "no steps by hand for a node: {:?}", f.said);
+        assert!(!f.said("install.sh") && !f.said("scilla restore"), "no steps by hand for a node: {:?}", f.said);
         let mut f = Fake { probe: "no-curl\n", ..Default::default() };
         assert!(format!("{:#}", execute(&plan(&["root@new"]), &mut f).unwrap_err()).contains("curl"));
     }
 
-    /// Over a mikan that was there the install keeps its old port, and the restore brings
+    /// Over a scilla that was there the install keeps its old port, and the restore brings
     /// this panel's: its rule is opened whatever else is.
     #[test]
     fn a_forced_move_opens_the_panel_port() {
@@ -927,7 +927,7 @@ mod tests {
         let rc = |line: &[&str]| Plan { version: "0.5.3.0-rc.1".into(), ..plan(line) };
         let mut f = Fake::default();
         let e = format!("{:#}", execute(&rc(&["root@new"]), &mut f).unwrap_err());
-        assert!(e.contains("would get mikan 0.5.2.1") && e.contains("Update the new server to 0.5.3.0-rc.1 first"), "{e}");
+        assert!(e.contains("would get scilla 0.5.2.1") && e.contains("Update the new server to 0.5.3.0-rc.1 first"), "{e}");
         assert!(!e.contains("restore"), "{e}");
         assert_eq!(f.calls.len(), 2, "stopped at the check: {:?}", f.calls);
 
@@ -977,16 +977,16 @@ mod tests {
         assert_eq!(f.calls.len(), 4, "nothing after the install: {:?}", f.calls);
         assert!(f.said("The rest by hand"));
         assert!(f.said("install.sh | sudo bash -s -- --yes --port 21355"));
-        assert!(f.said("scp -P 2222 /opt/mikan/backups/mikan-1.tar.gz admin@new:"));
-        assert!(f.said("sudo mikan restore ~/mikan-1.tar.gz"), "not copied: the restore takes it from the home");
+        assert!(f.said("scp -P 2222 /opt/scilla/backups/scilla-1.tar.gz admin@new:"));
+        assert!(f.said("sudo scilla restore ~/scilla-1.tar.gz"), "not copied: the restore takes it from the home");
         assert!(f.said("sudo ufw allow 21355/tcp; sudo ufw allow 2097/tcp; sudo ufw allow 20000:20100/udp"));
         assert!(f.said("needs --force"));
         assert!(f.said(GUIDE));
 
-        let mut f = Fake { fail: Some("mikan restore"), ..Default::default() };
+        let mut f = Fake { fail: Some("scilla restore"), ..Default::default() };
         assert!(execute(&plan(&["root@new"]), &mut f).is_err());
-        assert!(f.said(": mikan restore /opt/mikan/backups/mikan-1.tar.gz"), "copied, as root: {:?}", f.said);
-        assert!(!f.said("sudo mikan") && !f.said("sudo ufw"), "root needs no sudo: {:?}", f.said);
+        assert!(f.said(": scilla restore /opt/scilla/backups/scilla-1.tar.gz"), "copied, as root: {:?}", f.said);
+        assert!(!f.said("sudo scilla") && !f.said("sudo ufw"), "root needs no sudo: {:?}", f.said);
         assert!(!f.said("scp "), "the copy is done, not repeated");
 
         let mut f = Fake { fail: Some("id -u"), ..Default::default() };
@@ -998,7 +998,7 @@ mod tests {
         assert!(execute(&plan(&["root@new", "--stop-old"]), &mut f).is_err());
         assert!(f.said("The move is done, but the panel here did not stop"), "{:?}", f.said);
         assert!(!f.said("runs as before") && !f.said("needs --force"));
-        assert!(f.said("compose.yml down") && f.said("--project-directory /opt/mikan stop") && f.said("disable --now mikan-update.timer"));
+        assert!(f.said("compose.yml down") && f.said("--project-directory /opt/scilla stop") && f.said("disable --now scilla-update.timer"));
     }
 
     #[test]

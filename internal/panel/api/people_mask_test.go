@@ -12,8 +12,8 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/support"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/support"
 )
 
 func TestMaskPeople(t *testing.T) {

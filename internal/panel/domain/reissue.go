@@ -8,11 +8,11 @@ import (
 	"strconv"
 	"time"
 
-	"mikan/internal/panel/audit"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/audit"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // ReissueRules is how the subscriber may replace their own subscription link: so many

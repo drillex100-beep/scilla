@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"mikan/internal/hostchan"
-	"mikan/internal/nodeapi"
+	"scilla/internal/hostchan"
+	"scilla/internal/nodeapi"
 )
 
 // The node's logs and the host's doctor and restart, for the panel's Diagnostics page and
@@ -51,7 +51,7 @@ func doctorHandler(e *Engine) http.HandlerFunc {
 		case errors.Is(err, hostchan.ErrBusy):
 			writeJSON(w, http.StatusConflict, nodeapi.Error{Code: nodeapi.CodeDoctorBusy, Message: "a doctor run is going on"})
 		case errors.Is(err, hostchan.ErrTimeout):
-			writeJSON(w, http.StatusGatewayTimeout, nodeapi.Error{Code: nodeapi.CodeDoctorTimeout, Message: "the host did not answer: run mikan update on the server"})
+			writeJSON(w, http.StatusGatewayTimeout, nodeapi.Error{Code: nodeapi.CodeDoctorTimeout, Message: "the host did not answer: run scilla update on the server"})
 		case errors.Is(err, hostchan.ErrUnavailable):
 			writeJSON(w, http.StatusConflict, nodeapi.Error{Code: nodeapi.CodeHostUnavailable, Message: "this node has no directory its host watches"})
 		case err != nil:

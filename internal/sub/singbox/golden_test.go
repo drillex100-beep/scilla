@@ -5,12 +5,12 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/sub/mihomo"
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/profile"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/subtest"
-	"mikan/internal/sub/subtest/corecheck"
+	"scilla/internal/sub/mihomo"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/profile"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/subtest"
+	"scilla/internal/sub/subtest/corecheck"
 )
 
 // goldenProfile is the variant's user in its app: the admin's rules the app's core takes.

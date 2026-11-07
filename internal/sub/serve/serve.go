@@ -13,16 +13,16 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/frontpage"
-	"mikan/internal/proto"
-	"mikan/internal/sub/apps"
-	"mikan/internal/sub/build"
-	"mikan/internal/sub/mihomo"
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/profile"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/singbox"
-	"mikan/internal/sub/xray"
+	"scilla/internal/frontpage"
+	"scilla/internal/proto"
+	"scilla/internal/sub/apps"
+	"scilla/internal/sub/build"
+	"scilla/internal/sub/mihomo"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/profile"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/singbox"
+	"scilla/internal/sub/xray"
 )
 
 // Source is where subscriptions come from: the panel's database (internal/panel/subsrc),
@@ -57,7 +57,7 @@ type Subscription interface {
 	// device only once it took a profile with an inbound's current port and target. It is
 	// told once a profile went out, never of a stub, a HEAD or a failure.
 	Fetched(ctx context.Context, ip string)
-	// Groups are the server groups of the Mikan app (X-Mikan-Groups): the ones the user
+	// Groups are the server groups of the Scilla app (X-Scilla-Groups): the ones the user
 	// reaches and is not shut out of, with the traffic each used and no Proxies. An own
 	// limit without a number is GroupUnlimited; a group on the main traffic or apart without
 	// a limit is there with no servers too. The handler names the servers of each in the
@@ -448,7 +448,7 @@ func (h *Handler) operatorHeaders(hd http.Header, r *http.Request, sub Subscript
 	OperatorHeaders(hd, u, cfg, page, bot, devices)
 }
 
-// groupsHeader puts X-Mikan-Groups on the answer to a Mikan app that asked for it: the
+// groupsHeader puts X-Scilla-Groups on the answer to a Scilla app that asked for it: the
 // groups of the subscription, whose servers in the profile are ps.
 func (h *Handler) groupsHeader(ctx context.Context, hd http.Header, r *http.Request, sub Subscription, ps []model.Proxy) {
 	if !wantsFeature(r.Header, featureGroups) {
@@ -457,7 +457,7 @@ func (h *Handler) groupsHeader(ctx context.Context, hd http.Header, r *http.Requ
 	g, err := sub.Groups(ctx)
 	if err != nil {
 		// The profile still goes out: the app shows the groups of its last fetch.
-		h.Warn("mikan_groups", "subscription: the server groups for the Mikan app are not read", "err", err)
+		h.Warn("scilla_groups", "subscription: the server groups for the Scilla app are not read", "err", err)
 		return
 	}
 	groupsHeaders(hd, g.named(ps))

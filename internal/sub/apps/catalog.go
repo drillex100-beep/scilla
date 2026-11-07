@@ -27,7 +27,7 @@ type Known struct {
 // the app is told before the core it is built on. DetectApp reads the same words for the
 // family (rules_test.go checks every word and prefix).
 var Catalog = []Known{
-	{ID: "mikan", Name: "Mikan", Family: FamilyMihomo, Words: []string{"mikan"}},
+	{ID: "scilla", Name: "Scilla", Family: FamilyMihomo, Words: []string{"scilla"}},
 	{ID: "kabosu", Name: "Kabosu", Family: FamilyMihomo, Words: []string{"kabosu"}},
 	{ID: "koala", Name: "Koala Clash", Family: FamilyMihomo, Words: []string{"koala"}},
 	{ID: "clashfest", Name: "ClashFest", Family: FamilyMihomo, Words: []string{"clashfest"}},
@@ -135,7 +135,7 @@ func Named(id, userAgent string) bool {
 // Recommended are the apps a notice sends a visitor to, best first: the ones the panel
 // serves best on every system and the ones that are free. A notice names the first three
 // the admin has not blocked.
-var Recommended = []string{"happ", "incy", "koala", "mikan", "kabosu", "hiddify"}
+var Recommended = []string{"happ", "incy", "koala", "scilla", "kabosu", "hiddify"}
 
 // Alternatives are the names of up to n Recommended apps that blocked leaves allowed.
 func Alternatives(blocked map[string]bool, n int) []string {

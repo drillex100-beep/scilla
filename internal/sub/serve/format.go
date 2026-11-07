@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strings"
 
-	"mikan/internal/sub/apps"
-	"mikan/internal/sub/singbox"
+	"scilla/internal/sub/apps"
+	"scilla/internal/sub/singbox"
 )
 
 // The formats of an answer.

@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/routing"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/routing"
 )
 
 // The cores' own test packages render each ready template and have the core check it
@@ -33,7 +33,7 @@ func TestCatalog(t *testing.T) {
 		if r.Starter {
 			starters[r.Core]++
 			if r.Body != "" || r.Author != mikanAuthor {
-				t.Errorf("%s: a starter is mikan's own and has no text of its own", r.ID)
+				t.Errorf("%s: a starter is scilla's own and has no text of its own", r.ID)
 			}
 		} else if strings.TrimSpace(r.Body) == "" {
 			t.Errorf("%s: no text", r.ID)
@@ -41,7 +41,7 @@ func TestCatalog(t *testing.T) {
 	}
 	for _, c := range []model.Core{model.CoreMihomo, model.CoreSingBox, model.CoreXray} {
 		if starters[c] != 1 {
-			t.Errorf("core %s has %d of mikan's own, want 1", c, starters[c])
+			t.Errorf("core %s has %d of scilla's own, want 1", c, starters[c])
 		}
 	}
 	if _, ok := Get("nope"); ok {

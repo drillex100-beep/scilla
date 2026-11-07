@@ -26,16 +26,16 @@ func TestPolicyNames(t *testing.T) {
 		{"geosite:!cn", geo("!cn")},
 		{"geosite:cn,a.com", geo("cn", "a.com")}, // a plain name after the prefix is a category
 		{"geosite:", nil},
-		{"rule-set:mikan-ru-core", []PolicyName{{"rule-set", "mikan-ru-core"}}},
-		{"rule-set: mikan-ru-core , Mikan-Games", []PolicyName{{"rule-set", "mikan-ru-core"}, {"rule-set", "Mikan-Games"}}}, // a list's name as it is
-		{"RULE-SET:mikan-ru-core", []PolicyName{{"rule-set", "mikan-ru-core"}}},
+		{"rule-set:scilla-ru-core", []PolicyName{{"rule-set", "scilla-ru-core"}}},
+		{"rule-set: scilla-ru-core , Scilla-Games", []PolicyName{{"rule-set", "scilla-ru-core"}, {"rule-set", "Scilla-Games"}}}, // a list's name as it is
+		{"RULE-SET:scilla-ru-core", []PolicyName{{"rule-set", "scilla-ru-core"}}},
 		{"rule-set:", nil},
 		// Each name of its own kind: a prefix of its own (in lower case, as mihomo reads it
 		// inside a key), a "+." or "*." name a domain.
 		{"geosite:cn,+.a.com", []PolicyName{{"geosite", "cn"}, {"", "+.a.com"}}},
 		{"geosite:cn,*.a.com,category-ru", []PolicyName{{"geosite", "cn"}, {"", "*.a.com"}, {"geosite", "category-ru"}}},
 		{"+.a.com,geosite:CN", []PolicyName{{"", "+.a.com"}, {"geosite", "cn"}}},
-		{"rule-set:mikan-games,geosite:cn", []PolicyName{{"rule-set", "mikan-games"}, {"geosite", "cn"}}},
+		{"rule-set:scilla-games,geosite:cn", []PolicyName{{"rule-set", "scilla-games"}, {"geosite", "cn"}}},
 		{"a.com,GEOSITE:cn", []PolicyName{{"", "a.com"}, {"", "GEOSITE:cn"}}}, // a domain to mihomo
 		{"a.com, +.B.com ,*.c.com", []PolicyName{{"", "a.com"}, {"", "+.B.com"}, {"", "*.c.com"}}},
 		{"a.com,,b.com", []PolicyName{{"", "a.com"}, {"", "b.com"}}},
@@ -59,7 +59,7 @@ func TestPolicyNames(t *testing.T) {
 func TestPolicyKey(t *testing.T) {
 	for _, k := range []string{
 		"geosite:cn", "GEOSITE:cn", "geosite:category-ai-!cn", "geosite:cn,category-ru", "GeoSite:CN,Category-RU",
-		"rule-set:mikan-ru-core", "rule-set:mikan-ru-core,mikan-games", "RULE-SET:wl",
+		"rule-set:scilla-ru-core", "rule-set:scilla-ru-core,scilla-games", "RULE-SET:wl",
 		"+.a.com", "*.a.com", "a.com", ".a.com", "a.*.com", "*", "localhost", "+.cn",
 		"+.a.com,+.b.com", "a.com,+.b.com,*.c.com", "+.a.com,geosite:cn", "a.com,geosite:cn,rule-set:wl",
 	} {

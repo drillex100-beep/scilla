@@ -30,7 +30,7 @@ const methods = ['get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'tr
 
 const texts = {
 	ru: {
-		title: 'mikan API',
+		title: 'scilla API',
 		access: {
 			public: 'Открыт без ключа.',
 			session: '**Только сессия администратора.** Ключ API получает 403 `session_only`.',
@@ -39,7 +39,7 @@ const texts = {
 		},
 	},
 	en: {
-		title: 'mikan API',
+		title: 'scilla API',
 		access: {
 			public: 'Open without a key.',
 			session: '**Admin session only.** An API key gets 403 `session_only`.',
@@ -48,7 +48,7 @@ const texts = {
 		},
 		/** @param {string} base the site's base path */
 		description: (base) =>
-			"The REST API of the mikan panel. Every path is under the panel's secret admin address, `https://<panel>/<secret path>/api/v1/…`, and the paths below already have the `/api/v1`.\n\n" +
+			"The REST API of the scilla panel. Every path is under the panel's secret admin address, `https://<panel>/<secret path>/api/v1/…`, and the paths below already have the `/api/v1`.\n\n" +
 			`Keys, their access levels and the errors are on the [API page](${base}/en/api/). Each operation is named by its \`operationId\`, which is also the name of its function in the [SDKs](${base}/en/api/sdk/). The summaries and the descriptions of operations and fields come from the panel's source code and are in Russian.`,
 	},
 };
@@ -145,7 +145,7 @@ export function isReferenceLink(link, base) {
 /** @returns {import('astro').AstroIntegration} */
 export default function openapi() {
 	return {
-		name: 'mikan-openapi',
+		name: 'scilla-openapi',
 		hooks: {
 			'astro:config:setup': ({ config, addWatchFile }) => {
 				render(config.base.replace(/\/$/, ''));

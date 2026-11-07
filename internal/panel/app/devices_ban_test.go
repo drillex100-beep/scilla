@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // Renaming clients and devices and banning devices, end to end over HTTP: the admin's API,

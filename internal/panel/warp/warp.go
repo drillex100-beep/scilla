@@ -22,7 +22,7 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/httpjson"
+	"scilla/internal/httpjson"
 )
 
 // DefaultAPI is Cloudflare's WARP client API.

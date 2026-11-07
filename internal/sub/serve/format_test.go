@@ -5,7 +5,7 @@ import (
 	"slices"
 	"testing"
 
-	"mikan/internal/sub/apps"
+	"scilla/internal/sub/apps"
 )
 
 func TestFormat(t *testing.T) {
@@ -113,11 +113,11 @@ var pinnedUAs = []struct {
 	// Looks wrong: INCY's headers and announcement, though apps.Identify says Happ.
 	{"INCY/2.1 Happ", FormatURI, FormatURI, FormatXray, "incy://routing/off", true},
 	{"Stash/2.8.0 Clash/1.11.0", FormatClash, FormatClash, FormatClash, "", false},
-	// The Mikan app asks as "mihomo[/core] Mikan/x" and gets Clash; a bare "Mikan/x" (its
+	// The Scilla app asks as "mihomo[/core] Scilla/x" and gets Clash; a bare "Scilla/x" (its
 	// update check, a user's own User-Agent) is the Clash app too.
-	{"Mikan/0.1.3", FormatClash, FormatClash, FormatClash, "", false},
-	{"mihomo/1.19.32 Mikan/0.1.3", FormatClash, FormatClash, FormatClash, "", false},
-	{"mihomo Mikan/1.1.1", FormatClash, FormatClash, FormatClash, "", false},
+	{"Scilla/0.1.3", FormatClash, FormatClash, FormatClash, "", false},
+	{"mihomo/1.19.32 Scilla/0.1.3", FormatClash, FormatClash, FormatClash, "", false},
+	{"mihomo Scilla/1.1.1", FormatClash, FormatClash, FormatClash, "", false},
 	// Looks wrong: the discontinued Clash apps get mihomo's profile; the built-in rule turns
 	// them away before the format is asked.
 	{"ClashforWindows/0.20.39", FormatClash, FormatClash, FormatClash, "", false},
@@ -155,7 +155,7 @@ var pinnedUAs = []struct {
 	{"v2RayTun/Android", FormatURI, FormatURI, FormatURI, "", false},
 
 	// A row for every word and prefix of apps.Catalog, as word+"/1.0".
-	{"mikan/1.0", FormatClash, FormatClash, FormatClash, "", false},
+	{"scilla/1.0", FormatClash, FormatClash, FormatClash, "", false},
 	{"kabosu/1.0", FormatClash, FormatClash, FormatClash, "", false},
 	{"koala/1.0", FormatClash, FormatClash, FormatClash, "", false},
 	{"clashfest/1.0", FormatClash, FormatClash, FormatClash, "", false},

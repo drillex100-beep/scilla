@@ -13,8 +13,8 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/panel/model"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/model"
+	"scilla/internal/tgapi"
 )
 
 // Deps is what the bot's screens need: the panel's data and the way to Telegram.
@@ -31,7 +31,7 @@ type Deps struct {
 }
 
 // Bot is the bot's screens: the menu, the shop, the payment messages and the notices. It
-// runs as the bot addon (cmd/mikan-telegram) on the updates and the events of the panel;
+// runs as the bot addon (cmd/scilla-telegram) on the updates and the events of the panel;
 // Panel is the panel's side.
 type Bot struct {
 	d Deps

@@ -15,7 +15,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 // The speed test measures the node's own way to the internet, not a user's: latency and

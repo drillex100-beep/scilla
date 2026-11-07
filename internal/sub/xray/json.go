@@ -7,11 +7,11 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/sub/apps"
-	"mikan/internal/sub/mihomo"
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/profile"
-	"mikan/internal/sub/routing"
+	"scilla/internal/sub/apps"
+	"scilla/internal/sub/mihomo"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/profile"
+	"scilla/internal/sub/routing"
 )
 
 // The xray JSON profile is for the apps that run whole xray-core configs (apps.XrayJSON):

@@ -17,19 +17,19 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/hostname"
-	"mikan/internal/panel/api"
-	"mikan/internal/panel/app"
-	"mikan/internal/panel/audit"
-	"mikan/internal/panel/auth"
-	"mikan/internal/panel/config"
-	"mikan/internal/panel/secure"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/hostname"
+	"scilla/internal/panel/api"
+	"scilla/internal/panel/app"
+	"scilla/internal/panel/audit"
+	"scilla/internal/panel/auth"
+	"scilla/internal/panel/config"
+	"scilla/internal/panel/secure"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
-const usage = `mikan — VPN panel on the Citrus core
+const usage = `scilla — VPN panel on the Citrus core
 
 Commands:
   serve                         run the panel
@@ -210,7 +210,7 @@ func bootstrap(ctx context.Context, st *store.Store, set *settings.Settings, arg
 	if n, err := st.Q.CountAdmins(ctx); err != nil {
 		return err
 	} else if n > 0 {
-		return errors.New("the panel is already set up; for a new password run `mikan admin reset-password`")
+		return errors.New("the panel is already set up; for a new password run `scilla admin reset-password`")
 	}
 	password, generated, err := readOrGeneratePassword(*passwordStdin, stdin)
 	if err != nil {
@@ -391,8 +391,8 @@ func readOrGeneratePassword(fromStdin bool, r io.Reader) (string, bool, error) {
 	return pw, false, nil
 }
 
-// printURL: stdout carries only the link, because the host `mikan` script of every
-// installed version parses it (`mikan update` waits for the panel with it); the login goes
+// printURL: stdout carries only the link, because the host `scilla` script of every
+// installed version parses it (`scilla update` waits for the panel with it); the login goes
 // to stderr, which still shows in a terminal.
 func printURL(stdout, stderr io.Writer, url, login string) {
 	fmt.Fprintln(stdout, url)
@@ -458,7 +458,7 @@ func panelURL(ctx context.Context, set *settings.Settings) (string, error) {
 		return "", err
 	}
 	if ep.URL() == "" || p.Admin == "" {
-		return "", errors.New("the panel is not set up: run `mikan admin bootstrap`")
+		return "", errors.New("the panel is not set up: run `scilla admin bootstrap`")
 	}
 	return ep.URL() + "/" + p.Admin + "/", nil
 }

@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/proto"
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/subtest"
+	"scilla/internal/proto"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/subtest"
 )
 
 func links(t *testing.T, u subtest.User) []string {

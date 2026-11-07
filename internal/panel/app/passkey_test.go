@@ -13,11 +13,11 @@ import (
 
 	"github.com/descope/virtualwebauthn"
 
-	"mikan/internal/panel/settings"
+	"scilla/internal/panel/settings"
 )
 
 // passkeyRP is the relying party the panel of the tests is for: its domain on 443.
-var passkeyRP = virtualwebauthn.RelyingParty{ID: "panel.example", Name: "mikan", Origin: "https://panel.example"}
+var passkeyRP = virtualwebauthn.RelyingParty{ID: "panel.example", Name: "scilla", Origin: "https://panel.example"}
 
 func passkeyHarness(t *testing.T) *harness {
 	t.Helper()

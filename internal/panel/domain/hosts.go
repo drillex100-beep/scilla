@@ -6,15 +6,15 @@ import (
 	"errors"
 	"strings"
 
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/proto"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/proto"
 )
 
 // The hosts of an inbound (#01) are the places its clients reach it at: an address, a port,
 // a TLS name, an HTTP Host and a fingerprint, each empty (port 0) for what clients get
 // without it. They go in the order of their position. Position 0 is the default host: until
-// subscriptions read the hosts, they read the template's mikan.client, so that host is the
+// subscriptions read the hosts, they read the template's scilla.client, so that host is the
 // template's, written only through it. Every write of a template writes it too, in the same
 // transaction (syncDefaultHost); a change of the default host is a change of the template
 // (UpdateHost). The other hosts are kept for the subscriptions to come and change nothing yet.
@@ -163,7 +163,7 @@ func (h Host) trimmed() Host {
 }
 
 // checkHost holds a host to the rules of the inbound's own client endpoint (config is its
-// template): what the template's mikan.client could not hold, no host holds. A refusal is an
+// template): what the template's scilla.client could not hold, no host holds. A refusal is an
 // *EditError named by the host's field.
 func checkHost(config string, h Host) error {
 	t, err := proto.Parse(config)
@@ -173,7 +173,7 @@ func checkHost(config string, h Host) error {
 	err = proto.SetClientEndpoint(t, h.Address, h.Port, h.SNI, h.Host)
 	if err == nil && h.Fingerprint != "" {
 		if !proto.UsesFingerprint(t) {
-			err = &proto.Error{Code: "fingerprint_no_tls", Field: "mikan.client.fingerprint"}
+			err = &proto.Error{Code: "fingerprint_no_tls", Field: "scilla.client.fingerprint"}
 		} else {
 			err = proto.SetFingerprint(t, h.Fingerprint)
 		}
@@ -194,9 +194,9 @@ func hostError(err error) error {
 	return err
 }
 
-// hostField is the host's field for a key of mikan.client.
+// hostField is the host's field for a key of scilla.client.
 func hostField(key string) string {
-	switch k := strings.TrimPrefix(key, "mikan.client."); k {
+	switch k := strings.TrimPrefix(key, "scilla.client."); k {
 	case "port", "sni", "host", "fingerprint":
 		return k
 	}

@@ -23,11 +23,11 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/proto"
-	"mikan/internal/sub/apps"
-	"mikan/internal/sub/build"
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/routing"
+	"scilla/internal/proto"
+	"scilla/internal/sub/apps"
+	"scilla/internal/sub/build"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/routing"
 )
 
 var update = flag.Bool("update", false, "rewrite the golden files of the subscription profiles")
@@ -110,7 +110,7 @@ func Inbounds(node, firstID int64, more bool) []model.Inbound {
 		Inbound(firstID, node, "VLESS XHTTP", 443, proto.Template{"type": "vless", "xhttp-config": map[string]any{"path": "/golden-path", "mode": "stream-one"}, "reality-config": reality("www.example.com")}),
 		Inbound(firstID+1, node, "Hysteria2", 443, proto.Template{"type": "hysteria2", "alpn": []any{"h3"}, "obfs": proto.ObfsSalamander, "obfs-password": "golden-obfs-password"}),
 		Inbound(firstID+2, node, "TUIC", 8443, proto.Template{"type": "tuic", "alpn": []any{"h3"}, "congestion-controller": "bbr", "max-idle-time": 15000, "authentication-timeout": 1000}),
-		Inbound(firstID+3, node, "VLESS Vision", 8443, proto.Template{"type": "vless", "mikan": map[string]any{"flow": "xtls-rprx-vision"}, "reality-config": reality("www.example.com")}),
+		Inbound(firstID+3, node, "VLESS Vision", 8443, proto.Template{"type": "vless", "scilla": map[string]any{"flow": "xtls-rprx-vision"}, "reality-config": reality("www.example.com")}),
 	}
 	if more {
 		out = append(out,
@@ -289,10 +289,10 @@ const OwnSingBoxTemplate = `{
   "inbounds": [{"type": "tun", "tag": "tun-in", "address": ["172.19.0.1/30"], "auto_route": true, "strict_route": true}],
   "outbounds": [
     {"type": "selector", "tag": "🌍 Сеть", "outbounds": ["⚡ Авто", "🇺🇸 США", "🔒 VLESS", "🇯🇵 Япония", "direct"]},
-    {"type": "urltest", "tag": "⚡ Авто", "mikan": {}, "url": "https://www.gstatic.com/generate_204", "interval": "5m"},
-    {"type": "selector", "tag": "🇺🇸 США", "mikan": {"filter": "🇺🇸"}},
-    {"type": "selector", "tag": "🇯🇵 Япония", "mikan": {"filter": "🇯🇵"}},
-    {"type": "selector", "tag": "🔒 VLESS", "mikan": {"nodes": ["🇳🇱 Нидерланды"], "types": ["vless"]}},
+    {"type": "urltest", "tag": "⚡ Авто", "scilla": {}, "url": "https://www.gstatic.com/generate_204", "interval": "5m"},
+    {"type": "selector", "tag": "🇺🇸 США", "scilla": {"filter": "🇺🇸"}},
+    {"type": "selector", "tag": "🇯🇵 Япония", "scilla": {"filter": "🇯🇵"}},
+    {"type": "selector", "tag": "🔒 VLESS", "scilla": {"nodes": ["🇳🇱 Нидерланды"], "types": ["vless"]}},
     {"type": "direct", "tag": "direct"}
   ],
   "route": {
@@ -336,9 +336,9 @@ const OwnXrayTemplate = `{
       {"network": "tcp,udp", "outboundTag": "proxy"}
     ],
     "balancers": [
-      {"tag": "⚡ Авто", "mikan": {"choice": true}, "strategy": {"type": "leastPing"}},
-      {"tag": "🔒 VLESS", "mikan": {"nodes": ["🇳🇱 Нидерланды"], "types": ["vless"]}, "strategy": {"type": "random"}},
-      {"tag": "🇯🇵 Япония", "mikan": {"filter": "🇯🇵"}, "strategy": {"type": "random"}}
+      {"tag": "⚡ Авто", "scilla": {"choice": true}, "strategy": {"type": "leastPing"}},
+      {"tag": "🔒 VLESS", "scilla": {"nodes": ["🇳🇱 Нидерланды"], "types": ["vless"]}, "strategy": {"type": "random"}},
+      {"tag": "🇯🇵 Япония", "scilla": {"filter": "🇯🇵"}, "strategy": {"type": "random"}}
     ]
   },
   "observatory": {"subjectSelector": ["proxy"], "probeUrl": "https://www.gstatic.com/generate_204", "probeInterval": "5m"}
@@ -370,7 +370,7 @@ proxy-groups:
     filter: "🇯🇵"
   - name: 🔒 VLESS
     type: select
-    mikan: {nodes: ["🇳🇱 Нидерланды"], types: [vless]}
+    scilla: {nodes: ["🇳🇱 Нидерланды"], types: [vless]}
   - name: 🚫 Без VPN
     type: select
     proxies: [DIRECT]

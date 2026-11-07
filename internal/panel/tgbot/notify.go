@@ -5,10 +5,10 @@ import (
 	"strconv"
 	"time"
 
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/model"
-	"mikan/internal/textutil"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/model"
+	"scilla/internal/textutil"
+	"scilla/internal/tgapi"
 )
 
 // night: automatic notices then come without a sound. Most users live on Moscow time;

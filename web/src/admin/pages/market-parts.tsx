@@ -7,7 +7,7 @@ import type { AddonKind } from "../search";
 import { unofficialLabel, type MarketOrigin } from "./market-common";
 
 // The small pieces the addons tabs, their dialogs and the sources drawer all show for an
-// addon that mikan has not checked: the warning with the shield and the mark of its source.
+// addon that scilla has not checked: the warning with the shield and the mark of its source.
 
 /** The kinds of addons a tab lists, as filter chips with how many of each the search finds
  * (no counts while it loads); "all" first. */

@@ -6,7 +6,7 @@ import (
 	"html"
 	"strconv"
 
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store/db"
 )
 
 // tellAdminOfTopup shows the admin, in the chat connected for the panel's alerts, a top-up

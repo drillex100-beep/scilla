@@ -14,7 +14,7 @@ import (
 	"syscall"
 	"time"
 
-	"mikan/internal/netaddr"
+	"scilla/internal/netaddr"
 )
 
 // What is wrong with an address the admin gave, or one it led to. The API words each of them

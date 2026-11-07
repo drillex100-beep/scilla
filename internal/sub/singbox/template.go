@@ -6,16 +6,16 @@ import (
 	"slices"
 	"strconv"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/profile"
-	"mikan/internal/sub/routing"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/profile"
+	"scilla/internal/sub/routing"
 )
 
 // An own sing-box template (model.CoreSingBox) is a sing-box config without the servers:
 // the apps get what the admin wrote, with the user's servers in it. The panel adds them to
 // outbounds after the template's own, tagged by their names (an own outbound of a server's
 // name stays in its place), and fills the groups that ask for them: a selector or an
-// urltest with "mikan": {} takes every server, narrowed by nodes, types and filter
+// urltest with "scilla": {} takes every server, narrowed by nodes, types and filter
 // (model.Ask), after the outbounds it lists itself. A group left with none gets REJECT, an
 // outbound that refuses every connection: closed, not open. The panel's and the nodes'
 // hosts go direct ahead of the template's route rules, after its sniff and DNS hijack.
@@ -90,7 +90,7 @@ func templateConfig(p profile.Profile, src string) (map[string]any, error) {
 	reject := false
 	for _, x := range own {
 		o := x.(map[string]any)
-		v, asks := o["mikan"]
+		v, asks := o["scilla"]
 		if !asks {
 			continue
 		}
@@ -115,7 +115,7 @@ func templateConfig(p profile.Profile, src string) (map[string]any, error) {
 			members, reject = []any{rejectTag}, true
 		}
 		o["outbounds"] = members
-		delete(o, "mikan")
+		delete(o, "scilla")
 	}
 	outs := append(own, servers...)
 	if reject && !tags[rejectTag] {
@@ -311,8 +311,8 @@ func Example(g model.GroupNames) []byte {
     {"type": "tun", "tag": "tun-in", "address": ["172.19.0.1/30"], "auto_route": true, "strict_route": true}
   ],
   "outbounds": [
-    {"type": "selector", "tag": %[1]s, "outbounds": [%[2]s], "mikan": {}},
-    {"type": "urltest", "tag": %[2]s, "url": "https://www.gstatic.com/generate_204", "interval": "5m", "mikan": {}},
+    {"type": "selector", "tag": %[1]s, "outbounds": [%[2]s], "scilla": {}},
+    {"type": "urltest", "tag": %[2]s, "url": "https://www.gstatic.com/generate_204", "interval": "5m", "scilla": {}},
     {"type": "direct", "tag": "direct"}
   ],
   "route": {

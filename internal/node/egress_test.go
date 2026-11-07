@@ -18,8 +18,8 @@ import (
 	"github.com/metacubex/mihomo/hub/executor"
 	"github.com/metacubex/mihomo/tunnel"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/presets"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/presets"
 )
 
 // The way out of a node: its rules keep users off the server's private networks, and the
@@ -29,7 +29,7 @@ import (
 
 var loopback = netip.MustParseAddr("127.0.0.1")
 
-// The rules close the private networks without the guard's help, and MIKAN_ALLOW_PRIVATE,
+// The rules close the private networks without the guard's help, and SCILLA_ALLOW_PRIVATE,
 // which test setups depend on, opens them whatever the panel lists: with nothing left open
 // the guard would refuse the loopback if it were on.
 func TestRulesDecideWhatAUserReaches(t *testing.T) {

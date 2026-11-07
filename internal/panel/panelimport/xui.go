@@ -28,11 +28,11 @@ import (
 // inbounds do not carry; older versions have no such list.
 //
 // A person in 3x-ui is a subscription: the clients that share a subId, on any inbound,
-// are one mikan user, named after the first of them, and the subId is the old link's
+// are one scilla user, named after the first of them, and the subId is the old link's
 // token, as Remnawave's short UUID is. A client without a subId is a user of its own.
 // Limits are per client (per email) there: the user gets their sum, used traffic summed
 // too; no limit, no term or no device limit on any of them is none for the user. A
-// client only on inbounds of protocols mikan has not adds nothing to the user.
+// client only on inbounds of protocols scilla has not adds nothing to the user.
 //
 // The base path is the panel's secret, so the errors of a 3x-ui import, which go to the
 // log, do not carry it (hidePath).
@@ -40,7 +40,7 @@ import (
 // xuiListBytes bounds the inbounds' list, which comes in one answer.
 const xuiListBytes = 128 << 20
 
-// xuiProtocols are the inbound protocols mikan has: a client only on others (vmess,
+// xuiProtocols are the inbound protocols scilla has: a client only on others (vmess,
 // wireguard, mtproto, …) is reported and left out.
 var xuiProtocols = []string{"vless", "trojan", "shadowsocks", "hysteria", "hysteria2", "tuic"}
 
@@ -217,7 +217,7 @@ type xuiPerson struct {
 	protocols []string
 }
 
-// xuiEntry is a client on one inbound; ok: the inbound's protocol is one mikan has.
+// xuiEntry is a client on one inbound; ok: the inbound's protocol is one scilla has.
 type xuiEntry struct {
 	xuiClient
 	ok bool
@@ -297,8 +297,8 @@ func xuiUsers(inbounds []xuiInbound, hwid map[string]int64, now time.Time) ([]Us
 }
 
 func (p *xuiPerson) user(stats map[string]xuiClientStats, hwid map[string]int64, now time.Time) User {
-	// Only the clients mikan can serve make the user: an email on an inbound of a protocol
-	// mikan has (3.x: on any of the inbounds it is on). With none, the user is left out.
+	// Only the clients scilla can serve make the user: an email on an inbound of a protocol
+	// scilla has (3.x: on any of the inbounds it is on). With none, the user is left out.
 	served := map[string]bool{}
 	for _, c := range p.clients {
 		if c.ok {
@@ -312,7 +312,7 @@ func (p *xuiPerson) user(stats map[string]xuiClientStats, hwid map[string]int64,
 	first := clients[0]
 	u := User{Name: cut(first.Email, maxNameBytes), Status: StatusDisabled}
 	if len(served) == 0 {
-		u.Skip = "only on " + strings.Join(p.protocols, ", ") + " inbounds, which mikan has not"
+		u.Skip = "only on " + strings.Join(p.protocols, ", ") + " inbounds, which scilla has not"
 	}
 	if first.SubID != "" {
 		u.Token = cut(first.SubID, 128)
@@ -344,7 +344,7 @@ func (p *xuiPerson) user(stats map[string]xuiClientStats, hwid map[string]int64,
 		}
 		e := int64(c.ExpiryTime)
 		// 3x-ui turns a client off by itself once its term or traffic is over: that one is
-		// expired or limited here, so a renewal in mikan brings it back; off by hand is off.
+		// expired or limited here, so a renewal in scilla brings it back; off by hand is off.
 		over := (e > 0 && !time.UnixMilli(e).After(now)) || (c.TotalGB > 0 && used >= int64(c.TotalGB))
 		if c.Enable == nil || bool(*c.Enable) || over {
 			u.Status = StatusActive

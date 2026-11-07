@@ -8,7 +8,7 @@ import (
 // Behind a CDN the node takes the client's address from the CDN's header, from the CDN's
 // networks only; Cloudflare's come by name.
 func TestCDNGivesTheListenerTheRealAddress(t *testing.T) {
-	tpl := mustParse(t, "type: vless\nxhttp-config: {path: /x, mode: packet-up}\nmikan: {tls: node}\n")
+	tpl := mustParse(t, "type: vless\nxhttp-config: {path: /x, mode: packet-up}\nscilla: {tls: node}\n")
 	if !CanCDN(tpl) {
 		t.Fatal("VLESS TLS XHTTP can go behind a CDN")
 	}
@@ -24,8 +24,8 @@ func TestCDNGivesTheListenerTheRealAddress(t *testing.T) {
 		!slices.Contains(trusted, any("2606:4700::/32")) || trusted[len(trusted)-1] != "203.0.113.0/24" {
 		t.Fatalf("listener: %v %v", l["trusted-proxy-header"], trusted)
 	}
-	if _, ok := l["mikan"]; ok {
-		t.Fatal("mikan's section reached the core")
+	if _, ok := l["scilla"]; ok {
+		t.Fatal("scilla's section reached the core")
 	}
 
 	// A CDN without a header keeps the CDN's addresses: nothing for the core.
@@ -39,18 +39,18 @@ func TestCDNGivesTheListenerTheRealAddress(t *testing.T) {
 	if err := SetCDN(tpl, nil); err != nil || CDNOf(tpl) != nil {
 		t.Fatalf("out from behind the CDN: %v %v", CDNOf(tpl), err)
 	}
-	if _, ok := tpl["mikan"].(map[string]any)["cdn"]; ok {
+	if _, ok := tpl["scilla"].(map[string]any)["cdn"]; ok {
 		t.Fatal("the cdn key stays")
 	}
 }
 
 func TestCDNRefusesWhatACDNCannotCarry(t *testing.T) {
-	ok := "type: vless\nws-path: /w\nmikan: {tls: node}\n"
+	ok := "type: vless\nws-path: /w\nscilla: {tls: node}\n"
 	for src, want := range map[string]string{
 		"type: vless\nxhttp-config: {path: /x}\nreality-config: {dest: a.example:443, private-key: x, short-id: [a1], server-names: [a.example]}\n": "cdn_type",
 		"type: hysteria2\n": "cdn_type",
-		"type: vless\nmikan: {tls: node, flow: xtls-rprx-vision}\n": "cdn_transport",
-		"type: trojan\nmikan: {tls: node}\n":                        "cdn_transport",
+		"type: vless\nscilla: {tls: node, flow: xtls-rprx-vision}\n": "cdn_transport",
+		"type: trojan\nscilla: {tls: node}\n":                        "cdn_transport",
 	} {
 		if got := code(SetCDN(mustParse(t, src), &CDN{})); got != want {
 			t.Errorf("%q: %q, want %q", src, got, want)
@@ -68,7 +68,7 @@ func TestCDNRefusesWhatACDNCannotCarry(t *testing.T) {
 		}
 	}
 	// A template written by hand is checked the same way.
-	if got := code(Validate(mustParse(t, "type: trojan\nmikan: {tls: node, cdn: {}}\n"), Options{})); got != "cdn_transport" {
+	if got := code(Validate(mustParse(t, "type: trojan\nscilla: {tls: node, cdn: {}}\n"), Options{})); got != "cdn_transport" {
 		t.Fatalf("validate: %q", got)
 	}
 }
@@ -87,7 +87,7 @@ func TestXHTTPGetUplink(t *testing.T) {
 			t.Errorf("%+v: %q, want %q", x, got, want)
 		}
 	}
-	tpl := mustParse(t, "type: vless\nxhttp-config: {path: /x, mode: packet-up, uplink-http-method: GET, uplink-data-placement: header, uplink-data-key: X-Data}\nmikan: {tls: node}\n")
+	tpl := mustParse(t, "type: vless\nxhttp-config: {path: /x, mode: packet-up, uplink-http-method: GET, uplink-data-placement: header, uplink-data-key: X-Data}\nscilla: {tls: node}\n")
 	if err := Validate(tpl, Options{}); err != nil {
 		t.Fatal(err)
 	}

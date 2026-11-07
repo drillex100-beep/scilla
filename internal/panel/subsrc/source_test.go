@@ -10,11 +10,11 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	submodel "mikan/internal/sub/model"
-	"mikan/internal/sub/serve"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	submodel "scilla/internal/sub/model"
+	"scilla/internal/sub/serve"
 )
 
 // Why a device gets no keys reaches serve in its own words, wrapped or not; an unbound

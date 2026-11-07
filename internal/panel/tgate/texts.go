@@ -1,6 +1,6 @@
 package tgate
 
-import "mikan/internal/textutil"
+import "scilla/internal/textutil"
 
 // The gateway's own words, in the bot's language: to the admin about its chat and the
 // token, and the reason a Stars payment is refused before it is made. The bot's screens

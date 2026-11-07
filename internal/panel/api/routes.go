@@ -8,9 +8,9 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/subsrc"
-	submodel "mikan/internal/sub/model"
-	"mikan/internal/sub/routing"
+	"scilla/internal/panel/subsrc"
+	submodel "scilla/internal/sub/model"
+	"scilla/internal/sub/routing"
 )
 
 // The routing of the Clash profiles: what the admin can send where (the catalog), and the

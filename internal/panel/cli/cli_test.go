@@ -14,11 +14,11 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/dnscheck"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
+	"scilla/internal/panel/dnscheck"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
 )
 
 // The host script opens the new inbound's port in ufw from stdout, so it must be bare.
@@ -98,7 +98,7 @@ func TestInboundSetPrintsPortOnlyForOwnNode(t *testing.T) {
 	}
 }
 
-// The host `mikan` script of every installed version waits for the panel after an update
+// The host `scilla` script of every installed version waits for the panel after an update
 // with path=$(admin url | sed -E 's#https?://[^/]+/##'); 0.1.2 broke it by printing
 // "Адрес: ..." and the login on stdout, and every update rolled back.
 func TestURLStdoutParsesInHostScript(t *testing.T) {

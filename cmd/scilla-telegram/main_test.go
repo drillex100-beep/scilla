@@ -14,16 +14,16 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/addons/panelapi"
-	"mikan/internal/panel/botpanel"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/events/feed"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
-	"mikan/internal/panel/tgate"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/addons/panelapi"
+	"scilla/internal/panel/botpanel"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/events/feed"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
+	"scilla/internal/panel/tgate"
 )
 
 // telegram is Telegram for the panel's gateway: it hands out the updates pushed into it
@@ -51,7 +51,7 @@ func (f *telegram) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	ok := func(result any) { _ = json.NewEncoder(w).Encode(map[string]any{"ok": true, "result": result}) }
 	switch method {
 	case "getMe":
-		ok(map[string]any{"id": 1, "is_bot": true, "first_name": "Mikan", "username": "mikan_test_bot"})
+		ok(map[string]any{"id": 1, "is_bot": true, "first_name": "Scilla", "username": "scilla_test_bot"})
 	case "getUpdates":
 		off, _ := body["offset"].(float64)
 		for range 20 {
@@ -105,7 +105,7 @@ func TestAddonEndToEnd(t *testing.T) {
 	tg := &telegram{}
 	tgSrv := httptest.NewServer(tg)
 	defer tgSrv.Close()
-	for k, v := range map[string]any{tgate.KeyEnabled: true, tgate.KeyToken: "123:REAL", "brand": "Mikan VPN", panelapi.SlotKey: "telegram"} {
+	for k, v := range map[string]any{tgate.KeyEnabled: true, tgate.KeyToken: "123:REAL", "brand": "Scilla VPN", panelapi.SlotKey: "telegram"} {
 		if err := settings.Set(ctx, set, k, v); err != nil {
 			t.Fatal(err)
 		}
@@ -153,7 +153,7 @@ func TestAddonEndToEnd(t *testing.T) {
 	tg.push(555, "/start")
 	said := until("the welcome", func(s []string) bool {
 		for _, m := range s {
-			if strings.HasPrefix(m, "sendMessage: ") && strings.Contains(m, "Mikan VPN") {
+			if strings.HasPrefix(m, "sendMessage: ") && strings.Contains(m, "Scilla VPN") {
 				return true
 			}
 		}

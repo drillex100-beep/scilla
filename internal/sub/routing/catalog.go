@@ -112,16 +112,16 @@ func (g Geodata) Names(kind string) []string {
 
 // runetfreedomLists are the categories nearest to the panel's rule lists (Services,
 // DirectSets, BlockedLists): sites, then IPs. Lists of apps have none, nor the IPs of
-// Discord's voice servers (mikan-discord-voice).
+// Discord's voice servers (scilla-discord-voice).
 var runetfreedomLists = map[string][2][]string{
-	"mikan-blocked":     {{"geosite:ru-blocked"}, {"geoip:ru-blocked"}},
-	"mikan-ru-sites":    {{"geosite:category-ru", "geosite:ru-available-only-inside"}, nil},
-	"mikan-ru-keywords": {{"geosite:category-ru"}, nil},
-	"mikan-ru-core":     {{"geosite:category-ru"}, nil},
-	"mikan-telegram-ip": {nil, {"geoip:telegram"}},
-	"mikan-ai":          {{"geosite:category-ai-!cn"}, nil},
-	"mikan-gemini":      {{"geosite:google-gemini"}, nil},
-	"mikan-games":       {{"geosite:category-games"}, nil},
+	"scilla-blocked":     {{"geosite:ru-blocked"}, {"geoip:ru-blocked"}},
+	"scilla-ru-sites":    {{"geosite:category-ru", "geosite:ru-available-only-inside"}, nil},
+	"scilla-ru-keywords": {{"geosite:category-ru"}, nil},
+	"scilla-ru-core":     {{"geosite:category-ru"}, nil},
+	"scilla-telegram-ip": {nil, {"geoip:telegram"}},
+	"scilla-ai":          {{"geosite:category-ai-!cn"}, nil},
+	"scilla-gemini":      {{"geosite:google-gemini"}, nil},
+	"scilla-games":       {{"geosite:category-games"}, nil},
 }
 
 // List is what the geodata has for a rule list of the panel's: the sites' and the IPs'

@@ -10,14 +10,14 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/proto"
+	"scilla/internal/proto"
 )
 
 // Family is an app's proxy core.
 type Family string
 
 const (
-	FamilyMihomo  Family = "mihomo"  // Mikan, Kabosu, Koala Clash, SlothClash, FlClash, Clash Verge, Clash Meta for Android, ClashFest…
+	FamilyMihomo  Family = "mihomo"  // Scilla, Kabosu, Koala Clash, SlothClash, FlClash, Clash Verge, Clash Meta for Android, ClashFest…
 	FamilyXray    Family = "xray"    // Happ, v2RayTun, INCY, v2rayNG, v2rayN…
 	FamilySingBox Family = "singbox" // Hiddify, Karing, NekoBox, sing-box…
 	FamilyStash   Family = "stash"

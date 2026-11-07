@@ -10,13 +10,13 @@ import (
 
 	"go.yaml.in/yaml/v3"
 
-	"mikan/internal/proto"
-	"mikan/internal/sub/apps"
-	"mikan/internal/sub/build"
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/profile"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/subtest"
+	"scilla/internal/proto"
+	"scilla/internal/sub/apps"
+	"scilla/internal/sub/build"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/profile"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/subtest"
 )
 
 // unmarshalProfile reads a YAML profile into a struct with json tags.

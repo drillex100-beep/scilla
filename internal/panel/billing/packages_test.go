@@ -9,11 +9,11 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/promo"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/promo"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
 )
 
 // packageEnv: a subscription of buyer 555 on the sale tariff (150 GB) and a 50 GB package

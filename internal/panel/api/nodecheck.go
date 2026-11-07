@@ -16,17 +16,17 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/diag"
-	"mikan/internal/netaddr"
-	"mikan/internal/nodeapi"
-	"mikan/internal/nodehello"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/nodesync"
-	"mikan/internal/panel/nodeupdate"
-	"mikan/internal/panel/reach"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/proto"
-	"mikan/internal/release"
+	"scilla/internal/diag"
+	"scilla/internal/netaddr"
+	"scilla/internal/nodeapi"
+	"scilla/internal/nodehello"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/nodesync"
+	"scilla/internal/panel/nodeupdate"
+	"scilla/internal/panel/reach"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/proto"
+	"scilla/internal/release"
 )
 
 // CheckItem is one line of "Check node" or "Check server": what was looked at, how it is,
@@ -203,7 +203,7 @@ func (h *handlers) checkResult(ctx context.Context, n db.Node, items []CheckItem
 		nodeVersion = "v" + hv.Health.Version
 	}
 	versions := "panel v" + h.d.Version + ", node " + nodeVersion + " (" + kind + ")"
-	return &checkOutput{Body: CheckView{At: at, Items: items, Report: reportText("mikan node check", versions, at, items, secrets)}}, nil
+	return &checkOutput{Body: CheckView{At: at, Items: items, Report: reportText("scilla node check", versions, at, items, secrets)}}, nil
 }
 
 func (h *handlers) helloItem(id int64) CheckItem {
@@ -673,5 +673,5 @@ func (h *handlers) checkServer(ctx context.Context, _ *struct{}) (*checkOutput, 
 	if paths, err := h.d.Settings.Paths(ctx); err == nil {
 		secrets = append(secrets, paths.Admin, paths.Sub)
 	}
-	return &checkOutput{Body: CheckView{At: at, Items: items, Report: reportText("mikan server check", "panel v"+h.d.Version, at, items, secrets)}}, nil
+	return &checkOutput{Body: CheckView{At: at, Items: items, Report: reportText("scilla server check", "panel v"+h.d.Version, at, items, secrets)}}, nil
 }

@@ -3,11 +3,11 @@ package subsrc
 import (
 	"context"
 
-	"mikan/internal/panel/store/db"
-	"mikan/internal/sub/mihomo"
-	submodel "mikan/internal/sub/model"
-	"mikan/internal/sub/singbox"
-	"mikan/internal/sub/xray"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/sub/mihomo"
+	submodel "scilla/internal/sub/model"
+	"scilla/internal/sub/singbox"
+	"scilla/internal/sub/xray"
 )
 
 // The subscription templates as the panel keeps them (sub_templates): what the profiles are

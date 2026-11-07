@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/hostchan"
-	"mikan/internal/hostchan/hosttest"
+	"scilla/internal/hostchan"
+	"scilla/internal/hostchan/hosttest"
 )
 
 func TestFramesRoundTripAndAreBounded(t *testing.T) {

@@ -7,10 +7,10 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/profile"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/subtest"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/profile"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/subtest"
 )
 
 type groupView struct {
@@ -49,7 +49,7 @@ func TestStarterRoundTrip(t *testing.T) {
 		t.Fatal(err)
 	}
 	s := string(starter)
-	if strings.Contains(s, "uuid") || !strings.Contains(s, "include-all-proxies: true") || !strings.Contains(s, "mikan:") || strings.Contains(s, "203.0.113.7/32") {
+	if strings.Contains(s, "uuid") || !strings.Contains(s, "include-all-proxies: true") || !strings.Contains(s, "scilla:") || strings.Contains(s, "203.0.113.7/32") {
 		t.Fatalf("starter:\n%s", s)
 	}
 	got, _, err := Template(prof, s)
@@ -113,16 +113,16 @@ func TestTemplateGroups(t *testing.T) {
 	}
 	for _, n := range byName["🔒 VLESS"] {
 		if !strings.HasPrefix(n, "🇳🇱") || types[n] != "vless" {
-			t.Errorf("mikan nodes and types: %v", byName["🔒 VLESS"])
+			t.Errorf("scilla nodes and types: %v", byName["🔒 VLESS"])
 		}
 	}
 	if len(byName["🔒 VLESS"]) == 0 {
-		t.Error("mikan picked nothing")
+		t.Error("scilla picked nothing")
 	}
 	if v.Rules[0] != "IP-CIDR,203.0.113.7/32,DIRECT,no-resolve" || v.Rules[len(v.Rules)-1] != "MATCH,REJECT" {
 		t.Fatalf("the panel's rules around the admin's:\n%s", strings.Join(v.Rules, "\n"))
 	}
-	if strings.Contains(string(raw), "include-all-proxies") || strings.Contains(string(raw), "mikan:") {
+	if strings.Contains(string(raw), "include-all-proxies") || strings.Contains(string(raw), "scilla:") {
 		t.Fatalf("the asks stay out of the profile:\n%s", raw)
 	}
 	if err := CheckTemplate(prof, subtest.OwnTemplate); err != nil {
@@ -217,14 +217,14 @@ func TestTemplateIsCheckedForEachUser(t *testing.T) {
 	}
 }
 
-// A filter only mihomo reads cannot go with mikan's choice of nodes: the panel could not
+// A filter only mihomo reads cannot go with scilla's choice of nodes: the panel could not
 // apply the choice and the group would take every server.
 func TestTemplateFilterGoCannotRead(t *testing.T) {
 	prof := profileOf(subtest.TwoNodes())
-	with := "proxy-groups:\n  - {name: G, type: select, mikan: {nodes: [2]}, filter: \"^(?=.*US)\"}\nrules:\n  - MATCH,G\n"
+	with := "proxy-groups:\n  - {name: G, type: select, scilla: {nodes: [2]}, filter: \"^(?=.*US)\"}\nrules:\n  - MATCH,G\n"
 	var te *model.TemplateError
 	if err := CheckTemplate(prof, with); !errors.As(err, &te) || te.Code != "template_filter" {
-		t.Fatalf("mikan with a lookahead filter: %v", err)
+		t.Fatalf("scilla with a lookahead filter: %v", err)
 	}
 	without := "proxy-groups:\n  - {name: G, type: select, include-all-proxies: true, filter: \"^(?=.*US)\"}\nrules:\n  - MATCH,G\n"
 	if err := CheckTemplate(prof, without); err != nil {
@@ -233,7 +233,7 @@ func TestTemplateFilterGoCannotRead(t *testing.T) {
 }
 
 // Next to proxy-providers, include-all would also take every proxy of the user, past the
-// nodes "mikan" picked: the group keeps only the providers, and its filters stay for them.
+// nodes "scilla" picked: the group keeps only the providers, and its filters stay for them.
 func TestTemplateIncludeAllNextToProviders(t *testing.T) {
 	prof := profileOf(subtest.TwoNodes())
 	const providers = "proxy-providers:\n  p1: {type: http, url: \"http://127.0.0.1:1/p1.yaml\", path: ./providers/p1.yaml, interval: 3600}\n"
@@ -242,25 +242,25 @@ func TestTemplateIncludeAllNextToProviders(t *testing.T) {
 		drop        func(model.Proxy) bool // the NL proxies the group leaves out
 		want        string                 // the group's keys besides name, type and proxies
 	}{
-		{"include-all", providers + "{name: G, type: select, mikan: {nodes: [1]}, include-all: true}",
+		{"include-all", providers + "{name: G, type: select, scilla: {nodes: [1]}, include-all: true}",
 			nil, "map[include-all-providers:true]"},
-		{"include-all with filters", providers + "{name: G, type: select, mikan: {nodes: [1]}, include-all: true, filter: \"^🇳🇱\", exclude-type: hysteria2}",
+		{"include-all with filters", providers + "{name: G, type: select, scilla: {nodes: [1]}, include-all: true, filter: \"^🇳🇱\", exclude-type: hysteria2}",
 			func(x model.Proxy) bool { return typeOf(x) == "hysteria2" }, "map[exclude-type:hysteria2 filter:^🇳🇱 include-all-providers:true]"},
-		{"use with filters", providers + "{name: G, type: select, mikan: {nodes: [1]}, use: [p1], filter: \"^🇳🇱\", exclude-filter: TUIC}",
+		{"use with filters", providers + "{name: G, type: select, scilla: {nodes: [1]}, use: [p1], filter: \"^🇳🇱\", exclude-filter: TUIC}",
 			func(x model.Proxy) bool { return strings.Contains(x.Name, "TUIC") }, "map[exclude-filter:TUIC filter:^🇳🇱 use:[p1]]"},
-		{"include-all-providers with a filter", providers + "{name: G, type: select, mikan: {nodes: [1]}, include-all-providers: true, filter: \"^🇳🇱\"}",
+		{"include-all-providers with a filter", providers + "{name: G, type: select, scilla: {nodes: [1]}, include-all-providers: true, filter: \"^🇳🇱\"}",
 			nil, "map[filter:^🇳🇱 include-all-providers:true]"},
 		{"include-all-proxies and use with a filter", providers + "{name: G, type: select, include-all-proxies: true, use: [p1], filter: \"^🇳🇱\"}",
 			nil, "map[filter:^🇳🇱 use:[p1]]"},
 		// Nothing of the user's, but the providers': no REJECT for select to start on.
-		{"nothing picked", providers + "{name: G, type: select, mikan: {nodes: [1]}, include-all: true, filter: \"^none\"}",
+		{"nothing picked", providers + "{name: G, type: select, scilla: {nodes: [1]}, include-all: true, filter: \"^none\"}",
 			func(model.Proxy) bool { return true }, "map[filter:^none include-all-providers:true]"},
-		{"no providers", "{name: G, type: select, mikan: {nodes: [1]}, include-all: true, filter: \"^🇳🇱\", exclude-type: hysteria2}",
+		{"no providers", "{name: G, type: select, scilla: {nodes: [1]}, include-all: true, filter: \"^🇳🇱\", exclude-type: hysteria2}",
 			func(x model.Proxy) bool { return typeOf(x) == "hysteria2" }, "map[]"},
 		// mihomo has no providers to give such a group.
-		{"empty proxy-providers, nothing picked", "proxy-providers: {}\n{name: G, type: select, mikan: {nodes: [1]}, include-all: true, filter: \"^none\"}",
+		{"empty proxy-providers, nothing picked", "proxy-providers: {}\n{name: G, type: select, scilla: {nodes: [1]}, include-all: true, filter: \"^none\"}",
 			func(model.Proxy) bool { return true }, "map[]"},
-		{"no providers, nothing picked", "{name: G, type: select, mikan: {nodes: [1]}, include-all: true, filter: \"^none\"}",
+		{"no providers, nothing picked", "{name: G, type: select, scilla: {nodes: [1]}, include-all: true, filter: \"^none\"}",
 			func(model.Proxy) bool { return true }, "map[]"},
 	} {
 		t.Run(c.name, func(t *testing.T) {

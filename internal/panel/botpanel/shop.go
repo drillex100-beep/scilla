@@ -3,10 +3,10 @@ package botpanel
 import (
 	"context"
 
-	"mikan/internal/panel/billing"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/tgbot"
+	"scilla/internal/panel/billing"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/tgbot"
 )
 
 // shop is the panel's billing as the bot's screens use it (tgbot.Shop): what it answers, in the

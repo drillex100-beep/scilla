@@ -5,8 +5,8 @@ import (
 	"path"
 	"strings"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // MaxToken is the longest old token taken: the HTTP route and the bot refuse longer ones.

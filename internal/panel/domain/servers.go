@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"errors"
 
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store/db"
 )
 
 // Servers is what a tariff includes: every server (All), or only the chosen ones: nodes

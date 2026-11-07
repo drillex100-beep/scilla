@@ -3,8 +3,8 @@ package serve
 import (
 	"net/http"
 
-	"mikan/internal/frontpage"
-	"mikan/internal/sub/apps"
+	"scilla/internal/frontpage"
+	"scilla/internal/sub/apps"
 )
 
 // The response rules (apps.Responder) go first in Serve: before the page, before the

@@ -12,7 +12,7 @@ const maxSecret = 64 << 10
 
 // Secret is a secret the installer hands over: the variable key itself (servers set up
 // before the secrets moved out of .env), else the file key_FILE names, as compose mounts
-// it from /opt/mikan/secrets (/run/secrets/<name>), trimmed. "" when neither is set, or the
+// it from /opt/scilla/secrets (/run/secrets/<name>), trimmed. "" when neither is set, or the
 // file is empty.
 func Secret(key string) (string, error) {
 	if v := os.Getenv(key); v != "" {

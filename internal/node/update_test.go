@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 func updateEngine(t *testing.T) (*Engine, http.Handler, string) {
@@ -80,7 +80,7 @@ func TestUpdateRequestValidatesTheVersion(t *testing.T) {
 		"three numbers": `{"version":"0.5"}`,
 		"five numbers":  `{"version":"0.5.0.2.1"}`,
 		"path":          `{"version":"../../etc/passwd"}`,
-		"image":         `{"version":"ghcr.io/x/mikan@sha256:aa"}`,
+		"image":         `{"version":"ghcr.io/x/scilla@sha256:aa"}`,
 		"long":          `{"version":"0.5.0.2-` + strings.Repeat("x", 100) + `"}`,
 	} {
 		rec := post(h, "/v1/update", body)

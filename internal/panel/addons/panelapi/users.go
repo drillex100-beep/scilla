@@ -13,13 +13,13 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"mikan/internal/panel/audit"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/events/feed"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/audit"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/events/feed"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // Subscribers outside the bot. users:read and users:write reach only the accounts the bot is

@@ -27,7 +27,7 @@ SELECT DISTINCT name FROM users WHERE name = ANY(sqlc.arg(names)::text[]);
 -- name: LockUserName :exec
 -- Holds a name until the transaction ends: two imports (or retries) at once cannot both
 -- find it free.
-SELECT pg_advisory_xact_lock(hashtextextended('mikan-user-name:' || sqlc.arg(name)::text, 0));
+SELECT pg_advisory_xact_lock(hashtextextended('scilla-user-name:' || sqlc.arg(name)::text, 0));
 
 -- name: UserNameTaken :one
 SELECT EXISTS (SELECT 1 FROM users WHERE name = $1);

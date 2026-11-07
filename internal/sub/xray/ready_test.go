@@ -3,15 +3,15 @@ package xray
 import (
 	"testing"
 
-	"mikan/internal/sub/mihomo"
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/ready"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/subtest"
+	"scilla/internal/sub/mihomo"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/ready"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/subtest"
 )
 
 // Every ready template xray apps get configs of, each config checked by xray: the ready
-// xray ones as own templates, the Clash ones (mikan's own made from the panel's settings
+// xray ones as own templates, the Clash ones (scilla's own made from the panel's settings
 // among them) through the conversion.
 func TestReadyTemplates(t *testing.T) {
 	prof := profileOf(subtest.Multi())

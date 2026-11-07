@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // grantsEnv is a user with a small base quota (bytes) and a helper to give it grants.

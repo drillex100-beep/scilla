@@ -8,7 +8,7 @@ import (
 
 	C "github.com/metacubex/mihomo/constant"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 func TestSiteOf(t *testing.T) {

@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/subtest"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/subtest"
 )
 
 // The names a key of the admin's nameserver-policy covers in xray's DNS: one key may list
@@ -36,15 +36,15 @@ func TestPolicyDomains(t *testing.T) {
 		{"GEOSITE:cn", routing.Common, []string{"geosite:cn"}}, // the prefix in any case, as mihomo reads it
 		{"GeoSite:CN,Category-RU", routing.Common, []string{"geosite:cn", "geosite:category-ru"}},
 		// rule-set: the panel's lists as their nearest categories, none for others.
-		{"rule-set:mikan-ru-sites", routing.Common, []string{"geosite:category-ru"}},
-		{"rule-set:mikan-ru-sites", routing.Runetfreedom, []string{"geosite:category-ru", "geosite:ru-available-only-inside"}},
-		{"rule-set:mikan-ru-core,mikan-games", routing.Common, []string{"geosite:category-ru", "geosite:category-games"}},
-		{"rule-set: mikan-ru-core , mikan-gemini", routing.Common, []string{"geosite:category-ru", "geosite:google-gemini"}},
-		{"rule-set:mikan-blocked", routing.Common, nil},
-		{"rule-set:mikan-blocked", routing.Runetfreedom, []string{"geosite:ru-blocked"}},
-		{"rule-set:mikan-telegram-ip", routing.Common, nil}, // only IPs
+		{"rule-set:scilla-ru-sites", routing.Common, []string{"geosite:category-ru"}},
+		{"rule-set:scilla-ru-sites", routing.Runetfreedom, []string{"geosite:category-ru", "geosite:ru-available-only-inside"}},
+		{"rule-set:scilla-ru-core,scilla-games", routing.Common, []string{"geosite:category-ru", "geosite:category-games"}},
+		{"rule-set: scilla-ru-core , scilla-gemini", routing.Common, []string{"geosite:category-ru", "geosite:google-gemini"}},
+		{"rule-set:scilla-blocked", routing.Common, nil},
+		{"rule-set:scilla-blocked", routing.Runetfreedom, []string{"geosite:ru-blocked"}},
+		{"rule-set:scilla-telegram-ip", routing.Common, nil}, // only IPs
 		{"rule-set:wl.yaml", routing.Common, nil},
-		{"RULE-SET:mikan-ru-core", routing.Common, []string{"geosite:category-ru"}},
+		{"RULE-SET:scilla-ru-core", routing.Common, []string{"geosite:category-ru"}},
 		// Domains: "+." with every subdomain, "*." one label deep, the others as they are.
 		{"+.example.com", routing.Common, []string{"domain:example.com"}},
 		{"*.example.com", routing.Common, []string{`regexp:^[^.]+\.example\.com$`}},
@@ -68,8 +68,8 @@ func TestPolicyDomains(t *testing.T) {
 		{"geosite:cn,+.a.com", routing.Common, []string{"geosite:cn", "domain:a.com"}},
 		{"geosite:cn,*.a.com,category-ru", routing.Common, []string{"geosite:cn", `regexp:^[^.]+\.a\.com$`, "geosite:category-ru"}},
 		{"+.a.com,geosite:cn", routing.Common, []string{"domain:a.com", "geosite:cn"}},
-		{"a.com,GEOSITE:cn,rule-set:mikan-games", routing.Common, []string{"full:a.com", "geosite:category-games"}}, // a prefix inside the key in lower case only
-		{"rule-set:mikan-games,+.a.com", routing.Common, []string{"geosite:category-games", "domain:a.com"}},
+		{"a.com,GEOSITE:cn,rule-set:scilla-games", routing.Common, []string{"full:a.com", "geosite:category-games"}}, // a prefix inside the key in lower case only
+		{"rule-set:scilla-games,+.a.com", routing.Common, []string{"geosite:category-games", "domain:a.com"}},
 		{"geosite:cn,a.com", routing.Common, []string{"geosite:cn"}}, // a plain name after the prefix is a category
 	} {
 		if got := policyDomains(c.key, c.geo); !slices.Equal(got, c.want) {
@@ -86,7 +86,7 @@ func TestDNSPolicyServers(t *testing.T) {
 		Policy: []routing.DNSPolicy{
 			{Match: "geosite:cn,category-ru", Servers: []string{"223.5.5.5"}},
 			{Match: "+.a.com,+.b.com", Servers: []string{"77.88.8.8", "tcp://77.88.8.1"}},
-			{Match: "rule-set:mikan-ru-core", Servers: []string{"77.88.8.8"}},
+			{Match: "rule-set:scilla-ru-core", Servers: []string{"77.88.8.8"}},
 			{Match: "geosite:!cn", Servers: []string{"8.8.8.8"}},
 			{Match: "geosite:no-such-category", Servers: []string{"8.8.8.8"}},
 			{Match: "rule-set:wl.yaml", Servers: []string{"8.8.8.8"}},
@@ -118,7 +118,7 @@ func TestDNSPolicyMixedKeys(t *testing.T) {
 		Policy: []routing.DNSPolicy{
 			{Match: "geosite:cn,+.a.com", Servers: []string{"223.5.5.5"}},
 			{Match: "+.b.com,geosite:category-ru,*.c.com", Servers: []string{"77.88.8.8"}},
-			{Match: "GEOSITE:category-games,rule-set:mikan-gemini", Servers: []string{"8.8.8.8"}},
+			{Match: "GEOSITE:category-games,rule-set:scilla-gemini", Servers: []string{"8.8.8.8"}},
 			{Match: "+.,*.", Servers: []string{"9.9.9.9"}},
 		},
 	}}

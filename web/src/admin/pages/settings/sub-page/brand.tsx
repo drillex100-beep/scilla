@@ -65,9 +65,9 @@ export function BrandSection({ draft, set, errors, logo, brandName }: SectionPro
         <div className="text-xs text-[var(--ink-500)]">{t("settings.page.ogLook")}</div>
         {og.title || og.description || (og.image && logo) ? (
           <div className="panel-soft mt-2 flex items-start gap-3 p-3" aria-hidden>
-            <span className="w-0.5 self-stretch rounded-full bg-[var(--mikan-500)]" />
+            <span className="w-0.5 self-stretch rounded-full bg-[var(--scilla-500)]" />
             <div className="min-w-0 flex-1">
-              <div className="text-xs font-semibold text-[var(--mikan-700)]">{name}</div>
+              <div className="text-xs font-semibold text-[var(--scilla-700)]">{name}</div>
               <div className="truncate text-[13px] font-semibold">{og.title || name}</div>
               {og.description ? <div className="line-clamp-2 text-xs text-[var(--ink-600)]">{og.description}</div> : null}
             </div>

@@ -9,8 +9,8 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/billing"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/billing"
 )
 
 // The marketplace of payment adapters: what the signed catalog offers, what the server

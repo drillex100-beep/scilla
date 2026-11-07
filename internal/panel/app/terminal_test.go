@@ -16,11 +16,11 @@ import (
 
 	"github.com/coder/websocket"
 
-	"mikan/internal/hostchan"
-	"mikan/internal/hostchan/hosttest"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/tgate"
+	"scilla/internal/hostchan"
+	"scilla/internal/hostchan/hosttest"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/tgate"
 )
 
 // terminalHarness is the whole panel with the host's directory and a fake agent in it.

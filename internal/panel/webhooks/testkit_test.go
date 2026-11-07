@@ -12,11 +12,11 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/events/feed"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/events/feed"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
 )
 
 // world is a service over a real database, with quick pauses.

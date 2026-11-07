@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/sub/mihomo"
-	"mikan/internal/sub/profile"
-	"mikan/internal/sub/routing"
+	"scilla/internal/sub/mihomo"
+	"scilla/internal/sub/profile"
+	"scilla/internal/sub/routing"
 )
 
 // HappRoutingAuto as Happ's routing (settings.KeyHappRouting): the panel makes the routing

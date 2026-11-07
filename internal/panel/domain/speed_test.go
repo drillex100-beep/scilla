@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store/db"
 )
 
 // A tariff's speed cap goes to its users like the device limit; the admin may set or lift

@@ -49,7 +49,7 @@ export function installMarket({ entry, ack, acceptKey }: InstallArgs) {
   );
 }
 
-/** Code mikan has not looked at: an addon of a source or of the registry of community addons. */
+/** Code scilla has not looked at: an addon of a source or of the registry of community addons. */
 export function unofficial(e: MarketEntry | undefined): boolean {
   return !!e?.origin;
 }
@@ -101,7 +101,7 @@ export function marketName(id: string, d: Market | undefined): string {
 }
 
 /** The site's guide to running a bot of the admin's own through the panel's Bot API proxy. */
-export const ownBotDocs = () => `https://miroshka000.github.io/mikan/${getLocale() === "en" ? "en/" : ""}api/own-bot/`;
+export const ownBotDocs = () => `https://drillex100-beep.github.io/scilla/${getLocale() === "en" ? "en/" : ""}api/own-bot/`;
 
 export const KIND_ICONS: Record<Kind, LucideIcon> = { bot: Bot, ui: LayoutPanelTop, generic: Puzzle };
 

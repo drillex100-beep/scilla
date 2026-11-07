@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // offerFree turns the free plan on, on the seeded trial tariff (3 days), with selling off:
@@ -107,9 +107,9 @@ func TestFreePlanChannel(t *testing.T) {
 		t.Fatalf("a free plan for a channel nobody set up: %v", err)
 	}
 	e.tg.mu.Lock()
-	e.tg.channel, e.tg.members = "https://t.me/mikan_news", map[int64]bool{915: true}
+	e.tg.channel, e.tg.members = "https://t.me/scilla_news", map[int64]bool{915: true}
 	e.tg.mu.Unlock()
-	if o, ok := e.s.FreeOffer(ctx, 914); !ok || o.Channel != "https://t.me/mikan_news" {
+	if o, ok := e.s.FreeOffer(ctx, 914); !ok || o.Channel != "https://t.me/scilla_news" {
 		t.Fatalf("the offer does not name the channel: %+v %v", o, ok)
 	}
 	if _, err := e.s.FreePlan(ctx, 914); !errors.Is(err, ErrFreeChannel) {

@@ -5,9 +5,9 @@ import (
 	"database/sql"
 	"errors"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/store/db"
 )
 
 // What the free plan asks of an account (Config.FreeCondition).

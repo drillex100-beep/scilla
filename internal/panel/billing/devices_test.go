@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // deviceEnv: buyer 555's subscription on the sale tariff (3 devices), which sells up to

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 func TestValidate(t *testing.T) {

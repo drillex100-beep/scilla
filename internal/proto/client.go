@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"slices"
 
-	"mikan/internal/hostname"
+	"scilla/internal/hostname"
 )
 
 // What the apps of an inbound get past the node's own settings: their uTLS profile, and
@@ -43,7 +43,7 @@ func UsesFingerprint(t Template) bool {
 	return false
 }
 
-// SetFingerprint writes the inbound's own fingerprint into mikan.client; "" removes it,
+// SetFingerprint writes the inbound's own fingerprint into scilla.client; "" removes it,
 // so the panel's default applies again.
 func SetFingerprint(t Template, fp string) error {
 	if fp != "" && !ValidFingerprint(fp) {
@@ -93,7 +93,7 @@ func ClientHost(t Template) bool {
 	return false
 }
 
-// setClient writes one key of mikan.client; an empty value removes it, and with it the
+// setClient writes one key of scilla.client; an empty value removes it, and with it the
 // sections it leaves empty.
 func setClient(t Template, key string, v any) {
 	unset := v == "" || v == 0

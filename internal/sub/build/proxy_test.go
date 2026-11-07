@@ -10,10 +10,10 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/proto"
-	"mikan/internal/sub/build"
-	"mikan/internal/sub/mihomo"
-	"mikan/internal/sub/xray"
+	"scilla/internal/proto"
+	"scilla/internal/sub/build"
+	"scilla/internal/sub/mihomo"
+	"scilla/internal/sub/xray"
 )
 
 func realityKey(t *testing.T) (private, public string) {
@@ -56,7 +56,7 @@ func reality(priv string) string {
 func TestPresetsRender(t *testing.T) {
 	priv, pub := realityKey(t)
 	cases := map[string]string{
-		"vless_reality_vision": "type: vless\n" + reality(priv) + "mikan:\n  flow: xtls-rprx-vision\n",
+		"vless_reality_vision": "type: vless\n" + reality(priv) + "scilla:\n  flow: xtls-rprx-vision\n",
 		"vless_reality_xhttp":  "type: vless\n" + reality(priv) + "xhttp-config:\n  path: /x7k2\n  mode: stream-one\n",
 		"hysteria2":            "type: hysteria2\nalpn: [h3]\nobfs: salamander\nobfs-password: obfs123\n",
 		"tuic_v5":              "type: tuic\nalpn: [h3]\ncongestion-controller: bbr\n",
@@ -96,7 +96,7 @@ func TestPresetsRender(t *testing.T) {
 // Behind a TCP proxy (GitHub issue #11) clients get the proxy's address, port and TLS
 // name; an IPv6 proxy address is bracketed in links.
 func TestClientEndpoint(t *testing.T) {
-	tpl := mustParse(t, "type: trojan\nws-path: /ws\nmikan:\n  tls: node\n  client:\n    fingerprint: ios\n")
+	tpl := mustParse(t, "type: trojan\nws-path: /ws\nscilla:\n  tls: node\n  client:\n    fingerprint: ios\n")
 	if err := proto.SetClientEndpoint(tpl, "vpn.example.com", 443, "trojan.example.com", ""); err != nil {
 		t.Fatal(err)
 	}
@@ -117,11 +117,11 @@ func TestClientEndpoint(t *testing.T) {
 	}
 }
 
-// Input.Client replaces mikan.client field by field, and an empty field keeps the
+// Input.Client replaces scilla.client field by field, and an empty field keeps the
 // template's: a caller that passes none (the relay of a node cascade) gets it whole.
 func TestInputClient(t *testing.T) {
 	in := build.Input{Name: "X", Host: "203.0.113.7", Port: 8444, SNI: "node.example.com", PinSHA256: "ab12", Keys: keys}
-	tpl := mustParse(t, "type: vless\nws-path: /ws\nmikan:\n  tls: node\n  client:\n    fingerprint: ios\n")
+	tpl := mustParse(t, "type: vless\nws-path: /ws\nscilla:\n  tls: node\n  client:\n    fingerprint: ios\n")
 	if err := proto.SetClientEndpoint(tpl, "vpn.example.com", 443, "tpl.example.com", "tpl-host.example.com"); err != nil {
 		t.Fatal(err)
 	}
@@ -195,8 +195,8 @@ func TestClientPortDropsHopping(t *testing.T) {
 func TestCDNClients(t *testing.T) {
 	in := build.Input{Name: "X", Host: "203.0.113.7", Port: 2053, PinSHA256: "ab12", SNI: "node.example.com", Keys: keys}
 	for _, src := range []string{
-		"type: vless\nws-path: /w\nmikan: {tls: node}\n",
-		"type: vless\nxhttp-config: {path: /x, mode: packet-up}\nmikan: {tls: node}\n",
+		"type: vless\nws-path: /w\nscilla: {tls: node}\n",
+		"type: vless\nxhttp-config: {path: /x, mode: packet-up}\nscilla: {tls: node}\n",
 	} {
 		tpl := mustParse(t, src)
 		if err := proto.SetClientEndpoint(tpl, "cdn.example.com", 443, "cdn.example.com", "edge.example.com"); err != nil {
@@ -228,7 +228,7 @@ func TestCDNClients(t *testing.T) {
 		}
 	}
 	// Not behind a CDN, the pin stays.
-	if m, _ := client(t, mustParse(t, "type: vless\nws-path: /w\nmikan: {tls: node}\n"), in); m["fingerprint"] != "ab12" {
+	if m, _ := client(t, mustParse(t, "type: vless\nws-path: /w\nscilla: {tls: node}\n"), in); m["fingerprint"] != "ab12" {
 		t.Fatalf("the pin without a CDN: %v", m)
 	}
 }
@@ -328,7 +328,7 @@ func TestFingerprintPrecedence(t *testing.T) {
 	} {
 		src := "type: vless\n" + reality(priv)
 		if c.own != "" {
-			src += "mikan:\n  client:\n    fingerprint: " + c.own + "\n"
+			src += "scilla:\n  client:\n    fingerprint: " + c.own + "\n"
 		}
 		m, link := client(t, mustParse(t, src), build.Input{Name: "X", Host: "203.0.113.7", Port: 443, Fingerprint: c.panel, Keys: keys})
 		u, _ := url.Parse(link)
@@ -341,7 +341,7 @@ func TestFingerprintPrecedence(t *testing.T) {
 // Node-certificate TLS gets the fingerprint too; QUIC protocols have no uTLS and no fp.
 func TestFingerprintByTransport(t *testing.T) {
 	in := build.Input{Name: "X", Host: "vpn.example.com", Port: 2053, SNI: "vpn.example.com", Fingerprint: "edge", Keys: keys}
-	m, link := client(t, mustParse(t, "type: trojan\nws-path: /ws\nmikan:\n  tls: node\n"), in)
+	m, link := client(t, mustParse(t, "type: trojan\nws-path: /ws\nscilla:\n  tls: node\n"), in)
 	u, _ := url.Parse(link)
 	if u.Query().Get("fp") != "edge" || m["client-fingerprint"] != "edge" {
 		t.Fatalf("trojan tls: %s %v", link, m)
@@ -397,9 +397,9 @@ func TestVLESSEncryption(t *testing.T) {
 func TestSelfSignedLinksCarryThePin(t *testing.T) {
 	in := build.Input{Name: "X", Host: "203.0.113.7", Port: 2083, PinSHA256: "ab12", Keys: keys}
 	for src, want := range map[string]string{
-		"type: trojan\nmikan: {tls: node}\n":             "pcs=ab12",
+		"type: trojan\nscilla: {tls: node}\n":             "pcs=ab12",
 		"type: anytls\n":                                 "pcs=ab12",
-		"type: vless\nws-path: /v\nmikan: {tls: node}\n": "pcs=ab12",
+		"type: vless\nws-path: /v\nscilla: {tls: node}\n": "pcs=ab12",
 		"type: hysteria2\n":                              "pinSHA256=ab12",
 		"type: tuic\n":                                   "allow_insecure=1",
 	} {
@@ -443,7 +443,7 @@ func TestNewTypes(t *testing.T) {
 				t.Errorf("grpc: %s %v", link, m)
 			}
 		},
-		"type: trojan\nws-path: /t\nmikan: {tls: node}\n": func(m map[string]any, link string) {
+		"type: trojan\nws-path: /t\nscilla: {tls: node}\n": func(m map[string]any, link string) {
 			if !strings.HasPrefix(link, "trojan://") || m["sni"] != "vpn.example.com" || m["password"] != "S3cr3t+/=" || m["tls"] != true {
 				t.Errorf("trojan: %s %v", link, m)
 			}
@@ -453,7 +453,7 @@ func TestNewTypes(t *testing.T) {
 				t.Errorf("anytls: %s %v", link, m)
 			}
 		},
-		"type: vless\nws-path: /v\nmikan: {tls: node, client: {server: cdn.example.com, port: 443}}\n": func(m map[string]any, link string) {
+		"type: vless\nws-path: /v\nscilla: {tls: node, client: {server: cdn.example.com, port: 443}}\n": func(m map[string]any, link string) {
 			if m["server"] != "cdn.example.com" || m["port"] != 443 || !strings.HasPrefix(link, "vless://") || !strings.Contains(link, "@cdn.example.com:443?") {
 				t.Errorf("vless override: %s %v", link, m)
 			}

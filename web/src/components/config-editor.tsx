@@ -32,7 +32,7 @@ const NESTED: Record<string, string[]> = {
     "mldsa65-seed", "require-x25519mlkem768", "min-client-ver", "max-client-ver",
   ],
   "xhttp-config": ["path", "mode", "host", "x-padding-bytes"],
-  mikan: ["flow", "tls", "client"],
+  scilla: ["flow", "tls", "client"],
   client: ["server", "port", "sni", "fingerprint"],
   "jls-upstream": ["addr", "sni"],
   httpmask: ["disable", "mode", "path-root"],
@@ -67,15 +67,15 @@ function parentKey(doc: EditorState["doc"], lineNo: number, own: number): string
   return "";
 }
 
-// The own Clash profile: mihomo's keys an admin types most, and mikan's for the groups.
+// The own Clash profile: mihomo's keys an admin types most, and scilla's for the groups.
 const PROFILE_TOP = ["mixed-port", "allow-lan", "mode", "log-level", "ipv6", "unified-delay", "tcp-concurrent", "find-process-mode", "geodata-mode", "geo-auto-update", "geox-url", "profile", "hosts", "dns", "tun", "sniffer", "proxies", "proxy-groups", "proxy-providers", "rule-providers", "sub-rules", "rules"];
 const PROFILE_NESTED: Record<string, string[]> = {
   dns: ["enable", "listen", "ipv6", "enhanced-mode", "fake-ip-range", "fake-ip-filter", "respect-rules", "use-hosts", "use-system-hosts", "default-nameserver", "nameserver", "proxy-server-nameserver", "direct-nameserver", "direct-nameserver-follow-policy", "nameserver-policy", "fallback"],
   tun: ["enable", "stack", "auto-route", "auto-detect-interface", "strict-route", "dns-hijack", "mtu", "route-exclude-address"],
   sniffer: ["enable", "parse-pure-ip", "force-dns-mapping", "override-destination", "sniff", "skip-domain", "skip-dst-address"],
   profile: ["store-selected", "store-fake-ip"],
-  "proxy-groups": ["name", "type", "proxies", "include-all-proxies", "filter", "exclude-filter", "exclude-type", "mikan", "url", "interval", "tolerance", "timeout", "lazy", "hidden", "icon", "strategy", "max-failed-times", "expected-status"],
-  mikan: ["nodes", "types"],
+  "proxy-groups": ["name", "type", "proxies", "include-all-proxies", "filter", "exclude-filter", "exclude-type", "scilla", "url", "interval", "tolerance", "timeout", "lazy", "hidden", "icon", "strategy", "max-failed-times", "expected-status"],
+  scilla: ["nodes", "types"],
   "rule-providers": [],
 };
 const PROFILE_VALUES: Record<string, string[]> = {
@@ -139,7 +139,7 @@ function complete(ctx: CompletionContext): CompletionResult | null {
   let keys: string[];
   if (parent === "") {
     const type = /^type:\s*([\w-]+)/m.exec(ctx.state.doc.toString())?.[1] ?? "";
-    keys = ["type", "mikan", ...(TOP[type] ?? Object.values(TOP).flat())];
+    keys = ["type", "scilla", ...(TOP[type] ?? Object.values(TOP).flat())];
   } else {
     keys = NESTED[parent] ?? [];
   }
@@ -149,7 +149,7 @@ function complete(ctx: CompletionContext): CompletionResult | null {
 // YAML in the theme's own inks: CodeMirror's default colours are made for a white page and
 // sink into a dark one.
 const highlight = HighlightStyle.define([
-  { tag: [tags.propertyName, tags.definition(tags.propertyName)], color: "var(--mikan-700)" },
+  { tag: [tags.propertyName, tags.definition(tags.propertyName)], color: "var(--scilla-700)" },
   { tag: [tags.string, tags.special(tags.string)], color: "var(--leaf-700)" },
   { tag: [tags.number, tags.bool, tags.null, tags.atom], color: "var(--lagoon-600)" },
   { tag: [tags.keyword, tags.typeName, tags.labelName], color: "var(--fc-purple)" },
@@ -163,13 +163,13 @@ const theme = EditorView.theme({
   ".cm-content": { fontFamily: "var(--font-mono-stack)", padding: "8px 0" },
   ".cm-content, .cm-line": { color: "var(--ink-900)", caretColor: "var(--ink-900)" },
   ".cm-cursor, .cm-dropCursor": { borderLeftColor: "var(--ink-900)" },
-  "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, ::selection": { backgroundColor: "color-mix(in srgb, var(--mikan-500) 24%, transparent)" },
+  "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, ::selection": { backgroundColor: "color-mix(in srgb, var(--scilla-500) 24%, transparent)" },
   ".cm-gutters": { backgroundColor: "transparent", border: "none", color: "var(--ink-400)" },
   ".cm-activeLine, .cm-activeLineGutter": { backgroundColor: "var(--hover)" },
   "&.cm-focused": { outline: "none" },
   ".cm-tooltip": { backgroundColor: "var(--surface-solid)", color: "var(--ink-900)", border: "1px solid var(--hairline)", boxShadow: "var(--shadow-md)" },
   ".cm-tooltip-autocomplete": { borderRadius: "12px", overflow: "hidden" },
-  ".cm-tooltip-autocomplete ul li[aria-selected]": { backgroundColor: "var(--mikan-50)", color: "var(--ink-900)" },
+  ".cm-tooltip-autocomplete ul li[aria-selected]": { backgroundColor: "var(--scilla-50)", color: "var(--ink-900)" },
 });
 
 export default function ConfigEditor({

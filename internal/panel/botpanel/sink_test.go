@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/tgapi"
+	"scilla/internal/tgapi"
 )
 
 // sink is a Bot API that records the messages sent, for the outbox the broadcasts feed.

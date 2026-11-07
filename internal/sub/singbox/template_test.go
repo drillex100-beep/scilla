@@ -9,10 +9,10 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/subtest"
-	"mikan/internal/sub/subtest/corecheck"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/subtest"
+	"scilla/internal/sub/subtest/corecheck"
 )
 
 // own is the own sing-box template src as the template it is.
@@ -60,7 +60,7 @@ func TestOwnTemplate(t *testing.T) {
 			servers = append(servers, x.Name)
 		}
 	}
-	if len(servers) == 0 || !slices.Equal(members("⚡ Авто"), servers) || outbound(c, "⚡ Авто")["mikan"] != nil {
+	if len(servers) == 0 || !slices.Equal(members("⚡ Авто"), servers) || outbound(c, "⚡ Авто")["scilla"] != nil {
 		t.Fatalf("every server: %v of %v", members("⚡ Авто"), servers)
 	}
 	for _, m := range members("🇺🇸 США") {
@@ -79,7 +79,7 @@ func TestOwnTemplate(t *testing.T) {
 		t.Fatalf("the panel's hosts: %v", c.Route.Rules)
 	}
 	raw, _ := json.Marshal(c.Route.Rules)
-	if strings.Contains(string(raw), "list-mikan-blocked") || c.Route.Final != "🌍 Сеть" || c.DNS.Final != "remote" {
+	if strings.Contains(string(raw), "list-scilla-blocked") || c.Route.Final != "🌍 Сеть" || c.DNS.Final != "remote" {
 		t.Fatalf("the panel's routing in an own template: %s", raw)
 	}
 	if Notes(prof, model.GroupNames{}, routing.All, own(subtest.OwnSingBoxTemplate)) != nil {
@@ -93,7 +93,7 @@ func TestOwnTemplateKeepsItsOwn(t *testing.T) {
 	prof := profileOf(subtest.Multi())
 	name := prof.Proxies[0].Name
 	src := `{"outbounds": [
-	  {"type": "selector", "tag": "VPN", "mikan": {"types": ["hysteria9"]}},
+	  {"type": "selector", "tag": "VPN", "scilla": {"types": ["hysteria9"]}},
 	  {"type": "direct", "tag": "out"},
 	  {"type": "http", "tag": ` + quote(name) + `, "server": "10.0.0.1", "server_port": 8080},
 	  {"type": "direct", "tag": "REJECT"}
@@ -127,9 +127,9 @@ func TestCheckOwnTemplate(t *testing.T) {
 		{"outbounds of another kind", `{"outbounds": {}}`, "template_shape", "outbounds"},
 		{"no tag", `{"outbounds": [{"type": "direct"}]}`, "template_tag", "1"},
 		{"a tag twice", `{"outbounds": [{"type": "direct", "tag": "a"}, {"type": "block", "tag": "a"}]}`, "template_tag_dup", "a"},
-		{"an ask on no group", `{"outbounds": [{"type": "direct", "tag": "a", "mikan": {}}]}`, "template_ask", "a"},
-		{"a typo in the ask", `{"outbounds": [{"type": "selector", "tag": "a", "mikan": {"node": ["1"]}}]}`, "template_ask", "a"},
-		{"a filter that is no pattern", `{"outbounds": [{"type": "urltest", "tag": "a", "mikan": {"filter": "("}}]}`, "template_ask", "a"},
+		{"an ask on no group", `{"outbounds": [{"type": "direct", "tag": "a", "scilla": {}}]}`, "template_ask", "a"},
+		{"a typo in the ask", `{"outbounds": [{"type": "selector", "tag": "a", "scilla": {"node": ["1"]}}]}`, "template_ask", "a"},
+		{"a filter that is no pattern", `{"outbounds": [{"type": "urltest", "tag": "a", "scilla": {"filter": "("}}]}`, "template_ask", "a"},
 		{"a member nobody defines", `{"outbounds": [{"type": "selector", "tag": "a", "outbounds": ["b"]}]}`, "template_group_member", "a → b"},
 		{"a group of nothing", `{"outbounds": [{"type": "selector", "tag": "a"}]}`, "template_group_empty", "a"},
 		{"a rule to nowhere", `{"route": {"rules": [{"domain": ["x.com"], "outbound": "b"}]}}`, "template_rule_target", "1 (b)"},

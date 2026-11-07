@@ -12,12 +12,12 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/billing"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/tgate"
-	"mikan/internal/panel/tgbot"
+	"scilla/internal/panel/billing"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/tgate"
+	"scilla/internal/panel/tgbot"
 )
 
 type stubBackend struct {

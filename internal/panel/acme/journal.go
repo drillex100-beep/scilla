@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/fsutil"
+	"scilla/internal/fsutil"
 )
 
 // Attempt is one order at a CA as the admin panel lists it: when, at which CA and how it

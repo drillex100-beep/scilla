@@ -6,7 +6,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"mikan/internal/textutil"
+	"scilla/internal/textutil"
 )
 
 // Endpoint describes how clients reach one node.
@@ -52,7 +52,7 @@ type Inbound struct {
 	// NoAuto keeps the inbound's servers out of the automatic choice (as Node.NoAuto).
 	NoAuto bool
 	// Hosts are the places clients reach the inbound at, the default one first. Until the
-	// build reads them it reads the template's mikan.client, which the default host repeats.
+	// build reads them it reads the template's scilla.client, which the default host repeats.
 	Hosts []Host
 }
 

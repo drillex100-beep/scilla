@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store/db"
 )
 
 // The rules of the lifecycle over the wire: the session sets all of them, a full key only the

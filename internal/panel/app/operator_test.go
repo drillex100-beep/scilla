@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
 )
 
 // The announcement and the app branding over the API: bad values are refused by field,
@@ -19,7 +19,7 @@ func TestOperatorHeadersOverHTTP(t *testing.T) {
 	if err := domain.Seed(ctx, h.st, h.now); err != nil {
 		t.Fatal(err)
 	}
-	for k, v := range map[string]any{settings.KeyPublicHost: "203.0.113.10", settings.KeyPanelPort: 21355, settings.KeyBrand: "Mikan"} {
+	for k, v := range map[string]any{settings.KeyPublicHost: "203.0.113.10", settings.KeyPanelPort: 21355, settings.KeyBrand: "Scilla"} {
 		if err := settings.Set(ctx, settings.New(h.st.Q), k, v); err != nil {
 			t.Fatal(err)
 		}
@@ -65,7 +65,7 @@ func TestOperatorHeadersOverHTTP(t *testing.T) {
 		t.Fatalf("save: %d %s", resp.StatusCode, body)
 	}
 	hd = fetch()
-	for k, v := range map[string]string{"X-Branding-Enabled": "true", "X-Brand-Desktop-Enabled": "true", "X-Brand-Name": "Mikan", "X-Brand-Accent-Color": "#F07A2E",
+	for k, v := range map[string]string{"X-Branding-Enabled": "true", "X-Brand-Desktop-Enabled": "true", "X-Brand-Name": "Scilla", "X-Brand-Accent-Color": "#F07A2E",
 		"X-Brand-Desktop-Logo-URL": "https://cdn.example.com/logo.png", "Announce-Url": "https://t.me/news"} {
 		if hd.Get(k) != v {
 			t.Errorf("%s = %q, want %q", k, hd.Get(k), v)
@@ -88,7 +88,7 @@ func TestOperatorHeadersOverHTTP(t *testing.T) {
 		t.Fatalf("an unknown variable must save: %d %s", resp.StatusCode, body)
 	}
 	hd = fetch()
-	if got := decode(hd.Get("Profile-Title")); got != "Mikan {nmae}" {
+	if got := decode(hd.Get("Profile-Title")); got != "Scilla {nmae}" {
 		t.Errorf("unknown variable stays text: %q", got)
 	}
 	if got := decode(hd.Get("Announce")); got != "Работы {ночью}" {
@@ -98,11 +98,11 @@ func TestOperatorHeadersOverHTTP(t *testing.T) {
 		t.Fatalf("save the title: %d %s", resp.StatusCode, body)
 	}
 	hd = fetch()
-	if got := decode(hd.Get("Profile-Title")); got != "Mikan · a" {
+	if got := decode(hd.Get("Profile-Title")); got != "Scilla · a" {
 		t.Errorf("title: %q", got)
 	}
 	// Clash apps name the profile after the file, so the file carries the title too.
-	if got, want := hd.Get("Content-Disposition"), "attachment; filename*=UTF-8''Mikan%20%C2%B7%20a.yaml"; got != want {
+	if got, want := hd.Get("Content-Disposition"), "attachment; filename*=UTF-8''Scilla%20%C2%B7%20a.yaml"; got != want {
 		t.Errorf("Content-Disposition = %q, want %q", got, want)
 	}
 	if got := decode(hd.Get("Announce")); !strings.HasPrefix(got, "Осталось ") || strings.Contains(got, "{") {

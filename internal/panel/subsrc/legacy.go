@@ -5,10 +5,10 @@ import (
 	"path"
 	"strings"
 
-	"mikan/internal/panel/panelimport"
-	"mikan/internal/panel/server"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/sub/serve"
+	"scilla/internal/panel/panelimport"
+	"scilla/internal/panel/server"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/sub/serve"
 )
 
 // Legacy serves the subscription links of the panel users were imported from: the old
@@ -16,8 +16,8 @@ import (
 // user's own link. The router strips the old path, so the path here is /<token>[/<rest>].
 //
 // After the token Marzban and PasarGuard put a client type (/sub/<token>/clash), and
-// Remnawave does the same (/api/sub/<token>/mihomo): the types mikan has a format for
-// become ?format=, the rest is left to the User-Agent, as on mikan's own links.
+// Remnawave does the same (/api/sub/<token>/mihomo): the types scilla has a format for
+// become ?format=, the rest is left to the User-Agent, as on scilla's own links.
 func (h *Handler) Legacy() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet && r.Method != http.MethodHead {
@@ -56,7 +56,7 @@ func (h *Handler) legacyUser(r *http.Request, token string) (db.User, bool) {
 	return cfg.Legacy.User(r.Context(), h.st.Q, token)
 }
 
-// legacyFormat is mikan's format for an old panel's client type, "" when mikan has none
+// legacyFormat is scilla's format for an old panel's client type, "" when scilla has none
 // (the User-Agent decides then).
 func legacyFormat(clientType string) string {
 	switch strings.ToLower(clientType) {

@@ -1,15 +1,15 @@
-name: mikan-slice
+name: scilla-slice
 
 services:
   node:
     build: {context: ../.., dockerfile: Dockerfile}
-    image: mikan:slice
-    entrypoint: ["/usr/local/bin/mikan-node"]
+    image: scilla:slice
+    entrypoint: ["/usr/local/bin/scilla-node"]
     environment:
-      MIKAN_DATA_DIR: /data/node
+      SCILLA_DATA_DIR: /data/node
       # the test target lives on a private docker network
-      MIKAN_ALLOW_PRIVATE: "true"
-    volumes: ["data:/data", "run:/run/mikan"]
+      SCILLA_ALLOW_PRIVATE: "true"
+    volumes: ["data:/data", "run:/run/scilla"]
     # The panel takes a public host only as an IP or a full domain name.
     networks:
       default:
@@ -18,17 +18,17 @@ services:
         aliases: [node.test]
 
   panel:
-    image: mikan:slice
+    image: scilla:slice
     depends_on:
       node: {condition: service_started}
       postgres: {condition: service_healthy}
     environment:
-      MIKAN_DATA_DIR: /data/panel
-      MIKAN_PANEL_LISTEN: 0.0.0.0:2053
-      MIKAN_DATABASE_URL: postgresql://mikan:${MIKAN_TEST_POSTGRES_PASSWORD:?set test database password}@localhost/mikan?host=/run/postgresql
+      SCILLA_DATA_DIR: /data/panel
+      SCILLA_PANEL_LISTEN: 0.0.0.0:2053
+      SCILLA_DATABASE_URL: postgresql://scilla:${SCILLA_TEST_POSTGRES_PASSWORD:?set test database password}@localhost/scilla?host=/run/postgresql
       # The automatic moves' windows in seconds instead of half hours.
-      MIKAN_AUTOTUNE_SCALE: "0.01"
-    volumes: ["data:/data", "run:/run/mikan", "pg-run:/run/postgresql"]
+      SCILLA_AUTOTUNE_SCALE: "0.01"
+    volumes: ["data:/data", "run:/run/scilla", "pg-run:/run/postgresql"]
     networks: [default, isp2]
 
   # As the installer runs it (installer/src/docker.rs): no network, the panel talks to it
@@ -38,25 +38,25 @@ services:
     network_mode: none
     security_opt: ["no-new-privileges:true"]
     environment:
-      POSTGRES_USER: mikan
-      POSTGRES_DB: mikan
-      POSTGRES_PASSWORD: ${MIKAN_TEST_POSTGRES_PASSWORD:?set test database password}
+      POSTGRES_USER: scilla
+      POSTGRES_DB: scilla
+      POSTGRES_PASSWORD: ${SCILLA_TEST_POSTGRES_PASSWORD:?set test database password}
       POSTGRES_INITDB_ARGS: --auth-local=scram-sha-256 --auth-host=scram-sha-256
     command: ["postgres", "-c", "listen_addresses=", "-c", "unix_socket_directories=/run/postgresql", "-c", "unix_socket_permissions=0777"]
     volumes: ["pg-data:/var/lib/postgresql", "pg-run:/run/postgresql"]
     healthcheck:
-      test: ["CMD", "pg_isready", "-h", "/run/postgresql", "-U", "mikan", "-d", "mikan"]
+      test: ["CMD", "pg_isready", "-h", "/run/postgresql", "-U", "scilla", "-d", "scilla"]
       interval: 2s
       timeout: 5s
       retries: 60
 
   # A remote node: the panel reaches it over mTLS by the name it was added with.
   node2:
-    image: mikan:slice
-    entrypoint: ["sh", "-c", "MIKAN_NODE_JOIN=$$(cat /work/node2.key) exec /usr/local/bin/mikan-node"]
+    image: scilla:slice
+    entrypoint: ["sh", "-c", "SCILLA_NODE_JOIN=$$(cat /work/node2.key) exec /usr/local/bin/scilla-node"]
     environment:
-      MIKAN_DATA_DIR: /data/node
-      MIKAN_ALLOW_PRIVATE: "true"
+      SCILLA_DATA_DIR: /data/node
+      SCILLA_ALLOW_PRIVATE: "true"
     volumes: ["work:/work:ro", "data2:/data"]
     networks:
       default:
@@ -110,36 +110,36 @@ services:
     volumes:
       - "../..:/src:ro"
       - "work:/work"
-      - "mikan-gomod:/go/pkg/mod"
-      - "mikan-gocache:/root/.cache/go-build"
+      - "scilla-gomod:/go/pkg/mod"
+      - "scilla-gocache:/root/.cache/go-build"
     networks: [default, isp2]
 
   # The core's egress guard (guard.sh), on a stack of its own: the panel shares the node's
-  # network as the installer has them share the server's, and MIKAN_ALLOW_PRIVATE is not set.
+  # network as the installer has them share the server's, and SCILLA_ALLOW_PRIVATE is not set.
   guard-node:
-    image: mikan:slice
-    entrypoint: ["/usr/local/bin/mikan-node"]
+    image: scilla:slice
+    entrypoint: ["/usr/local/bin/scilla-node"]
     environment:
-      MIKAN_DATA_DIR: /data/node
-    volumes: ["guard-data:/data", "guard-run:/run/mikan"]
+      SCILLA_DATA_DIR: /data/node
+    volumes: ["guard-data:/data", "guard-run:/run/scilla"]
     networks:
       public:
         aliases: [guard.test]
     profiles: ["guard"]
 
   guard-panel:
-    image: mikan:slice
+    image: scilla:slice
     network_mode: "service:guard-node"
     depends_on:
       guard-node: {condition: service_started}
       guard-postgres: {condition: service_healthy}
     environment:
-      MIKAN_DATA_DIR: /data/panel
-      MIKAN_PANEL_LISTEN: 0.0.0.0:2053
-      MIKAN_DATABASE_URL: postgresql://mikan:${MIKAN_TEST_POSTGRES_PASSWORD:?set test database password}@localhost/mikan?host=/run/postgresql
+      SCILLA_DATA_DIR: /data/panel
+      SCILLA_PANEL_LISTEN: 0.0.0.0:2053
+      SCILLA_DATABASE_URL: postgresql://scilla:${SCILLA_TEST_POSTGRES_PASSWORD:?set test database password}@localhost/scilla?host=/run/postgresql
       # Port 80 is the web server's below.
-      MIKAN_ACME_LISTEN: 127.0.0.1:8088
-    volumes: ["guard-data:/data", "guard-run:/run/mikan", "guard-pg-run:/run/postgresql"]
+      SCILLA_ACME_LISTEN: 127.0.0.1:8088
+    volumes: ["guard-data:/data", "guard-run:/run/scilla", "guard-pg-run:/run/postgresql"]
     profiles: ["guard"]
 
   guard-postgres:
@@ -173,8 +173,8 @@ services:
     volumes:
       - "../..:/src:ro"
       - "guard-work:/work"
-      - "mikan-gomod:/go/pkg/mod"
-      - "mikan-gocache:/root/.cache/go-build"
+      - "scilla-gomod:/go/pkg/mod"
+      - "scilla-gocache:/root/.cache/go-build"
     networks: [public]
     profiles: ["guard"]
 
@@ -201,5 +201,5 @@ volumes:
   guard-data: {}
   guard-run: {}
   guard-work: {}
-  mikan-gomod: {external: true}
-  mikan-gocache: {external: true}
+  scilla-gomod: {external: true}
+  scilla-gocache: {external: true}

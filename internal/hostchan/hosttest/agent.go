@@ -1,4 +1,4 @@
-// Package hosttest plays the host's terminal agent (`mikan terminal-agent`) for the tests of
+// Package hosttest plays the host's terminal agent (`scilla terminal-agent`) for the tests of
 // the packages that open a support terminal: it takes support/terminal/request the way the
 // agent does, makes the unix socket, says hello, echoes what is typed, notes window sizes and
 // ends its session on the revocation marker, on a closed stream or when told to. It runs no
@@ -16,7 +16,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/hostchan"
+	"scilla/internal/hostchan"
 )
 
 // Request is what the panel, or a node, asked the agent for.
@@ -39,7 +39,7 @@ type Agent struct {
 	paused   bool
 }
 
-// MakeLayout makes support/terminal/ and support/recordings/ in dir, as mikan update does.
+// MakeLayout makes support/terminal/ and support/recordings/ in dir, as scilla update does.
 func MakeLayout(t *testing.T, dir string) {
 	t.Helper()
 	for _, p := range []string{"support/terminal", "support/recordings"} {

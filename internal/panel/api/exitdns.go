@@ -8,9 +8,9 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/exitdns"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/exitdns"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // The DNS at the exit (internal/panel/exitdns): the nodes name the sites users reach

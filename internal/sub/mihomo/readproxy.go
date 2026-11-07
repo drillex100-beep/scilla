@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/sub/model"
+	"scilla/internal/sub/model"
 )
 
 // ReadProxy is a proxy of an admin's own Clash profile in the model, for a core that writes

@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/subtest"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/subtest"
 )
 
 // What sing-box has no group for becomes the nearest, and the preview is told: a fallback

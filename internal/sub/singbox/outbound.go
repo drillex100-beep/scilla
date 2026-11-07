@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/proto"
-	"mikan/internal/sub/model"
+	"scilla/internal/proto"
+	"scilla/internal/sub/model"
 )
 
 // singboxOutbound is p as a sing-box outbound; false for one sing-box cannot carry: a

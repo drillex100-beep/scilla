@@ -5,9 +5,9 @@ import (
 
 	"github.com/metacubex/mihomo/config"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/subtest"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/subtest"
 )
 
 // The profile is what an app loads: mihomo's own parser must take it whole. The tests alone

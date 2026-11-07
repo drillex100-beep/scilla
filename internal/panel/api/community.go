@@ -5,14 +5,14 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/store/db"
 )
 
 // The registry of community addons (internal/panel/addons, community.go) as the marketplace
-// offers it: addons of third-party authors that mikan lists and does not vouch for. They
+// offers it: addons of third-party authors that scilla lists and does not vouch for. They
 // install as unofficial addons, by digest, as a source's do; the admin confirms the risk on
-// every install and every update, and an addon mikan revoked is shown as such and installs no
+// every install and every update, and an addon scilla revoked is shown as such and installs no
 // more.
 
 // community is the registry's index, or nil when it cannot be read: the marketplace shows the

@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 const (

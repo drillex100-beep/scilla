@@ -6,9 +6,9 @@ import (
 	"encoding/json"
 	"errors"
 
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/model"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/model"
+	"scilla/internal/tgapi"
 )
 
 // The screens run as the bot addon and the panel tells them what the buyer and the

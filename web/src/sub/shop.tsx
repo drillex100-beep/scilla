@@ -180,7 +180,7 @@ export function Shop({
                 ))}
                 {o.gifts?.map((what, i) => (
                   <span key={i} className="flex items-center gap-1.5">
-                    <Gift size={13} className="shrink-0 text-[var(--mikan-600)]" aria-hidden />
+                    <Gift size={13} className="shrink-0 text-[var(--scilla-600)]" aria-hidden />
                     {t("sub.shopGift", { what })}
                   </span>
                 ))}

@@ -18,8 +18,8 @@ import (
 	C "github.com/metacubex/mihomo/constant"
 	"github.com/metacubex/mihomo/tunnel"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/textutil"
+	"scilla/internal/nodeapi"
+	"scilla/internal/textutil"
 )
 
 // warpProxy is the WARP outbound's name in mihomo.

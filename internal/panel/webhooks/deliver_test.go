@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/pace"
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/pace"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/store/db"
 )
 
 // Events go to an endpoint one to a request, in id order, each signed by the endpoint's secret
@@ -34,11 +34,11 @@ func TestDeliversEachEventSigned(t *testing.T) {
 		user int64
 	}{{paid, events.PaymentPaid, 7}, {made, events.UserCreated, 8}, {down, events.NodeDown, 0}} {
 		p := r.posts()[i]
-		if p.method != http.MethodPost || p.header.Get("Content-Type") != "application/json" || p.header.Get("User-Agent") != "mikan-webhooks/test" {
+		if p.method != http.MethodPost || p.header.Get("Content-Type") != "application/json" || p.header.Get("User-Agent") != "scilla-webhooks/test" {
 			t.Errorf("request %d: %s %q %q", i, p.method, p.header.Get("Content-Type"), p.header.Get("User-Agent"))
 		}
-		if p.header.Get("X-Mikan-Event") != want.typ || p.header.Get("X-Mikan-Event-Id") != idText(want.id) {
-			t.Errorf("request %d names %q #%q", i, p.header.Get("X-Mikan-Event"), p.header.Get("X-Mikan-Event-Id"))
+		if p.header.Get("X-Scilla-Event") != want.typ || p.header.Get("X-Scilla-Event-Id") != idText(want.id) {
+			t.Errorf("request %d names %q #%q", i, p.header.Get("X-Scilla-Event"), p.header.Get("X-Scilla-Event-Id"))
 		}
 		if err := verify(ep.Secret, p.header, p.body, time.Now()); err != nil {
 			t.Errorf("request %d: a receiver refuses it: %v", i, err)
@@ -496,7 +496,7 @@ func TestTestEvent(t *testing.T) {
 	}
 	p := posts[0]
 	ev := p.event(t)
-	if p.method != http.MethodPost || ev.Type != "webhook.test" || ev.ID != 0 || p.header.Get("X-Mikan-Event") != "webhook.test" || p.header.Get("X-Mikan-Event-Id") != "0" {
+	if p.method != http.MethodPost || ev.Type != "webhook.test" || ev.ID != 0 || p.header.Get("X-Scilla-Event") != "webhook.test" || p.header.Get("X-Scilla-Event-Id") != "0" {
 		t.Errorf("the test event: %+v, headers %v", ev, p.header)
 	}
 	var data struct {

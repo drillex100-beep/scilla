@@ -14,11 +14,11 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/nodesync"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/nodesync"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
 )
 
 // Where a user is online is told apart by node and by the keys online there (the user's

@@ -1,12 +1,12 @@
 // Package mihomo renders subscriptions for the Clash family of apps on the mihomo core
-// (and Citrus, mikan's fork of it): their proxies, groups, rules and DNS, the admin's own
+// (and Citrus, scilla's fork of it): their proxies, groups, rules and DNS, the admin's own
 // Clash profile, and Stash's flavor of it.
 package mihomo
 
 import (
-	"mikan/internal/sub/apps"
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/profile"
+	"scilla/internal/sub/apps"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/profile"
 )
 
 // defaultReuse makes mihomo reuse a few HTTP/2 connections for XHTTP (Xray clients do this

@@ -31,15 +31,15 @@ import (
 	"github.com/metacubex/mihomo/tunnel"
 	"github.com/metacubex/mihomo/tunnel/statistic"
 
-	"mikan/internal/acmechallenge"
-	"mikan/internal/frontpage"
-	"mikan/internal/fsutil"
-	"mikan/internal/hostchan"
-	"mikan/internal/logbuf"
-	"mikan/internal/netaddr"
-	"mikan/internal/nodeapi"
-	"mikan/internal/proto"
-	"mikan/internal/scan"
+	"scilla/internal/acmechallenge"
+	"scilla/internal/frontpage"
+	"scilla/internal/fsutil"
+	"scilla/internal/hostchan"
+	"scilla/internal/logbuf"
+	"scilla/internal/netaddr"
+	"scilla/internal/nodeapi"
+	"scilla/internal/proto"
+	"scilla/internal/scan"
 )
 
 const (
@@ -478,7 +478,7 @@ func (e *Engine) Validate(req nodeapi.ValidateRequest) error {
 	cert := e.cert
 	e.mu.Unlock()
 	in := req.Inbound
-	in.Name = "mikan-validate"
+	in.Name = "scilla-validate"
 	probe := []nodeapi.Slot{{Name: "validate", UUID: "00000000-0000-4000-8000-000000000000", Secret: "validate"}}
 	l, err := listenerFor(in, probe, cert, proto.Options{SelfStealPort: req.SelfStealPort})
 	if err != nil {

@@ -12,7 +12,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"mikan/internal/textutil"
+	"scilla/internal/textutil"
 )
 
 // Page is the page's settings document. The API takes and gives it whole.
@@ -26,13 +26,13 @@ type Page struct {
 }
 
 // Palettes are the page's themes, the panel's: the first four follow Mode, the others are
-// light or dark by themselves (web/src/lib/themes.ts, styles/themes.css). Midnight is Mikan
+// light or dark by themselves (web/src/lib/themes.ts, styles/themes.css). Midnight is Scilla
 // in the dark mode.
-var Palettes = []string{"mikan", "ocean", "sakura", "forest", "latte", "snow", "dawn", "dune", "graphite", "abyss", "ember", "plum", "moss", "terminal", "nord", "mocha", "tokyo", "dracula", "aurora", "cosmos"}
+var Palettes = []string{"scilla", "ocean", "sakura", "forest", "latte", "snow", "dawn", "dune", "graphite", "abyss", "ember", "plum", "moss", "terminal", "nord", "mocha", "tokyo", "dracula", "aurora", "cosmos"}
 
 // PageLook is how the page looks.
 type PageLook struct {
-	Palette    string         `json:"palette" enum:"mikan,ocean,sakura,forest,latte,snow,dawn,dune,graphite,abyss,ember,plum,moss,terminal,nord,mocha,tokyo,dracula,aurora,cosmos" doc:"Тема, как темы панели. mikan, ocean, sakura и forest следуют mode; остальные светлые или тёмные сами"`
+	Palette    string         `json:"palette" enum:"scilla,ocean,sakura,forest,latte,snow,dawn,dune,graphite,abyss,ember,plum,moss,terminal,nord,mocha,tokyo,dracula,aurora,cosmos" doc:"Тема, как темы панели. scilla, ocean, sakura и forest следуют mode; остальные светлые или тёмные сами"`
 	Mode       string         `json:"mode" enum:"light,dark,system" doc:"light, dark (как Midnight) или system — как у посетителя"`
 	Accent     string         `json:"accent" enum:"theme,brand" doc:"theme — цвет палитры, brand — цвет бренда (brand_accent)"`
 	Background PageBackground `json:"background"`
@@ -133,7 +133,7 @@ var Platforms = []string{"ios", "android", "windows", "macos", "linux"}
 // Default is the page as it was before it could be configured.
 func Default() Page {
 	c := Page{
-		Look: PageLook{Palette: "mikan", Mode: "light", Accent: "theme", Font: "default", Radius: "medium", Cards: "glass",
+		Look: PageLook{Palette: "scilla", Mode: "light", Accent: "theme", Font: "default", Radius: "medium", Cards: "glass",
 			Background: PageBackground{Kind: "theme", Angle: 160, Dim: 30}},
 		Brand: PageBrand{Logo: "letter"},
 		Apps:  PageApps{Platform: "auto", QR: true},

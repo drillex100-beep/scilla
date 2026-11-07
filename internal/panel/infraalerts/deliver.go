@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/pace"
-	"mikan/internal/panel/settings"
-	"mikan/internal/textutil"
-	"mikan/internal/tgapi"
+	"scilla/internal/pace"
+	"scilla/internal/panel/settings"
+	"scilla/internal/textutil"
+	"scilla/internal/tgapi"
 )
 
 // deliveryTarget says where a queued message goes and how it is sent. The value is stored in

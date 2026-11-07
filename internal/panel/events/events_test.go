@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/events"
+	"scilla/internal/panel/events"
 )
 
 // Every type the panel emits is documented once, with data that is valid JSON of the struct

@@ -46,7 +46,7 @@ proxy-groups:
   - name: "🇳🇱 Нидерланды"
     type: url-test
     interval: 300
-    mikan:
+    scilla:
       nodes:
         - "🇳🇱 Нидерланды"
     tolerance: 50
@@ -54,7 +54,7 @@ proxy-groups:
   - name: "🇺🇸 США"
     type: url-test
     interval: 300
-    mikan:
+    scilla:
       nodes:
         - "🇺🇸 США"
     tolerance: 50
@@ -66,25 +66,25 @@ proxy-groups:
     hidden: true
 rules:
   - GEOIP,LAN,DIRECT,no-resolve
-  - RULE-SET,mikan-blocked,VPN
-  - RULE-SET,mikan-blocked,REJECT
-  - RULE-SET,mikan-blocked-apps,VPN
-  - RULE-SET,mikan-blocked-apps,REJECT
+  - RULE-SET,scilla-blocked,VPN
+  - RULE-SET,scilla-blocked,REJECT
+  - RULE-SET,scilla-blocked-apps,VPN
+  - RULE-SET,scilla-blocked-apps,REJECT
   - MATCH,DIRECT
 rule-providers:
-  mikan-blocked:
+  scilla-blocked:
     type: http
     behavior: classical
     format: yaml
     interval: 86400
-    path: ./ruleset/mikan-blocked.yaml
+    path: ./ruleset/scilla-blocked.yaml
     proxy: VPN
     url: https://raw.githubusercontent.com/Nemu-x/privWL-clash/5d0a5924b6c87e4abed0d3c87989ce2469679828/clV2_provider.yaml
-  mikan-blocked-apps:
+  scilla-blocked-apps:
     type: http
     behavior: classical
     format: yaml
     interval: 86400
-    path: ./ruleset/mikan-blocked-apps.yaml
+    path: ./ruleset/scilla-blocked-apps.yaml
     proxy: VPN
     url: https://raw.githubusercontent.com/Nemu-x/privWL-clash/5d0a5924b6c87e4abed0d3c87989ce2469679828/process-core.yaml

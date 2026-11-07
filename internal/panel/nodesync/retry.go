@@ -4,8 +4,8 @@ import (
 	"errors"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/pace"
+	"scilla/internal/nodeapi"
+	"scilla/internal/pace"
 )
 
 const (

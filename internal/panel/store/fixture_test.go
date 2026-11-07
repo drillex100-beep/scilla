@@ -14,13 +14,13 @@ import (
 // OpenTest is storetest.Open for this package's own tests, which cannot import storetest
 // (it imports store): a fresh schema per fixture, dropped when the store closes.
 func OpenTest(ctx context.Context, _ string) (*Store, error) {
-	dsn := os.Getenv("MIKAN_TEST_DATABASE_URL")
+	dsn := os.Getenv("SCILLA_TEST_DATABASE_URL")
 	if dsn == "" {
-		return nil, errors.New("tests require MIKAN_TEST_DATABASE_URL pointing to a disposable PostgreSQL database")
+		return nil, errors.New("tests require SCILLA_TEST_DATABASE_URL pointing to a disposable PostgreSQL database")
 	}
 	var token [12]byte
 	rand.Read(token[:])
-	name := "mikan_test_" + hex.EncodeToString(token[:])
+	name := "scilla_test_" + hex.EncodeToString(token[:])
 	exec := func(ctx context.Context, sql string) error {
 		return withConn(ctx, dsn, func(c *pgx.Conn) error { _, err := c.Exec(ctx, sql); return err })
 	}

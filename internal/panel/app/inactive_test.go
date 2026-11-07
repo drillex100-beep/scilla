@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
 )
 
 // A subscription that cannot connect gets one notice in place of its servers once the

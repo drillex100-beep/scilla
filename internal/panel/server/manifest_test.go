@@ -11,11 +11,11 @@ import (
 
 func TestAppName(t *testing.T) {
 	for _, c := range []struct{ stored, brand, want string }{
-		{"", "", "mikan"},
-		{"", "VPN", "mikan"}, // the brand of a panel that never set one
+		{"", "", "scilla"},
+		{"", "VPN", "scilla"}, // the brand of a panel that never set one
 		{"", " AuraVPN ", "AuraVPN"},
 		{"  Моя панель ", "AuraVPN", "Моя панель"},
-		{"mikan", "AuraVPN", "mikan"},
+		{"scilla", "AuraVPN", "scilla"},
 		{"A\tB\x07", "", "AB"},
 		{strings.Repeat("я", 40), "", strings.Repeat("я", AppNameMax)},
 		{" \t ", "Brand", "Brand"},
@@ -77,7 +77,7 @@ func TestManifest(t *testing.T) {
 	if _, m := fetchManifest(t, h, http.MethodGet, "ru-RU,ru;q=0.9"); m.Lang != "ru" || m.Shortcuts[3].Name != "Настройки" {
 		t.Fatalf("Russian visitor: %+v", m)
 	}
-	if _, m := fetchManifest(t, h, http.MethodGet, "de-DE"); m.Lang != "en" || m.Description != "mikan admin panel" {
+	if _, m := fetchManifest(t, h, http.MethodGet, "de-DE"); m.Lang != "en" || m.Description != "scilla admin panel" {
 		t.Fatalf("other visitor: %+v", m)
 	}
 

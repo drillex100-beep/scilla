@@ -14,8 +14,8 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/panel/model"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/model"
+	"scilla/internal/tgapi"
 )
 
 // A link code opens the bot with /start <code> from a subscription page and ties that
@@ -56,7 +56,7 @@ func ParseLinkCode(secret []byte, code string, now time.Time) (int64, error) {
 
 func sum(secret, b []byte) []byte {
 	m := hmac.New(sha256.New, secret)
-	m.Write([]byte("mikan-tg-link"))
+	m.Write([]byte("scilla-tg-link"))
 	m.Write(b)
 	return m.Sum(nil)[:macSize]
 }

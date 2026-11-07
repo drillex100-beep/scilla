@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/frontpage"
+	"scilla/internal/frontpage"
 )
 
 // The names of the built-in front pages are written in more than one place: frontpage.Templates,

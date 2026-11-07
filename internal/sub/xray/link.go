@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/sub/model"
+	"scilla/internal/sub/model"
 )
 
 // Links are the share links of ps, one a line, and the proxies they are of: the

@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // The admin's rules: so many unbinds a sliding window, a pause before an unbound device

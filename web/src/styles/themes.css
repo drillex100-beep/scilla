@@ -3,7 +3,7 @@
  * backdrop, the glass, the inks, the accent ramp and, on a dark theme, the status colours.
  *
  * Three layers, in this order, every selector one attribute so the later one wins:
- *  1. the light base (:root and [data-tone="light"]): Mikan, every token;
+ *  1. the light base (:root and [data-tone="light"]): Scilla, every token;
  *  2. the dark base ([data-tone="dark"]): what every dark theme shares;
  *  3. one block per theme ([data-theme="…"]): only what makes it itself.
  *
@@ -27,8 +27,8 @@
   --ink-100: #e7e9ed; --ink-50: #f2f3f5;
   --fill: var(--ink-900); --fill-hover: var(--ink-700); --on-fill: #fff; --on-danger: #fff;
   --code-bg: #161a24; --code-fg: #e7e9ed;
-  --mikan-50: #fff3ea; --mikan-100: #ffe4d0; --mikan-200: #ffcba6; --mikan-400: #f7964f;
-  --mikan-500: #f07a2e; --mikan-600: #db6317; --mikan-700: #b24c0c;
+  --scilla-50: #fff3ea; --scilla-100: #ffe4d0; --scilla-200: #ffcba6; --scilla-400: #f7964f;
+  --scilla-500: #f07a2e; --scilla-600: #db6317; --scilla-700: #b24c0c;
   --leaf-50: #e4f4eb; --leaf-500: #2f9e6b; --leaf-700: #1f7650;
   --lagoon-50: #e0f1f4; --lagoon-400: #58afbe; --lagoon-500: #2b8c9e; --lagoon-600: #247685;
   --honey-50: #fcf1da; --honey-500: #e0a021; --honey-600: #8f5e06;
@@ -48,7 +48,7 @@
   --glass-edge: rgba(255, 255, 255, 0.78);
   --hairline: rgba(22, 26, 36, 0.08);
   --hover: rgba(22, 26, 36, 0.045);
-  --ring: color-mix(in srgb, var(--mikan-500) 20%, transparent);
+  --ring: color-mix(in srgb, var(--scilla-500) 20%, transparent);
   --scrim: rgba(22, 26, 36, 0.18);
   --shadow-sm: 0 1px 2px rgba(22, 26, 36, 0.05);
   --shadow-md: 0 1px 2px rgba(22, 26, 36, 0.04), 0 12px 32px -14px rgba(22, 26, 36, 0.16);
@@ -79,12 +79,12 @@
   --berry-50: #3d2021; --berry-600: #ff7069;
   --fc-blue: #7aa2ff; --fc-purple: #b39bff; --fc-pink: #ff8cc6;
   --hairline: rgba(255, 255, 255, 0.09); --hover: rgba(255, 255, 255, 0.06);
-  --ring: color-mix(in srgb, var(--mikan-500) 28%, transparent);
+  --ring: color-mix(in srgb, var(--scilla-500) 28%, transparent);
   --scrim: rgba(0, 0, 0, 0.5);
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25);
   --shadow-md: 0 12px 32px -14px rgba(0, 0, 0, 0.55);
   --shadow-lg: 0 32px 64px -24px rgba(0, 0, 0, 0.65);
-  --fill-hover: var(--mikan-600);
+  --fill-hover: var(--scilla-600);
   --grain-blend: overlay; --grain-opacity: 0.04;
 }
 
@@ -96,8 +96,8 @@
   --ink-500: #476573; --ink-400: #557482; --ink-300: #9fb5bf; --ink-200: #c8d8de;
   --ink-100: #dde9ed; --ink-50: #edf4f6;
   --fill: #0f3644; --fill-hover: #1b4a5a; --code-bg: #0d2530;
-  --mikan-50: #e3f4f7; --mikan-100: #c6e8ef; --mikan-200: #9fd7e2; --mikan-400: #3fb3c7;
-  --mikan-500: #1a94aa; --mikan-600: #137d90; --mikan-700: #0c5f6e;
+  --scilla-50: #e3f4f7; --scilla-100: #c6e8ef; --scilla-200: #9fd7e2; --scilla-400: #3fb3c7;
+  --scilla-500: #1a94aa; --scilla-600: #137d90; --scilla-700: #0c5f6e;
   --surface: rgba(250, 254, 255, 0.8); --surface-soft: rgba(246, 252, 254, 0.55);
   --surface-hover: rgba(252, 255, 255, 0.92); --surface-solid: #fbfeff; --raised: #fdffff;
   --glass: rgba(244, 251, 253, 0.6); --glass-strong: rgba(248, 253, 255, 0.86);
@@ -116,8 +116,8 @@
   --ink-500: #764a62; --ink-400: #865870; --ink-300: #c7a6b6; --ink-200: #e3cbd6;
   --ink-100: #f1e1e8; --ink-50: #f8eef2;
   --fill: #4d1a35; --fill-hover: #66264a; --code-bg: #2b1421;
-  --mikan-50: #fff0f5; --mikan-100: #ffd9e7; --mikan-200: #ffb8d1; --mikan-400: #f080a6;
-  --mikan-500: #e05f8d; --mikan-600: #c94676; --mikan-700: #a3335d;
+  --scilla-50: #fff0f5; --scilla-100: #ffd9e7; --scilla-200: #ffb8d1; --scilla-400: #f080a6;
+  --scilla-500: #e05f8d; --scilla-600: #c94676; --scilla-700: #a3335d;
   --surface: rgba(255, 251, 253, 0.8); --surface-soft: rgba(255, 248, 251, 0.55);
   --surface-hover: rgba(255, 252, 254, 0.92); --surface-solid: #fffcfd; --raised: #fffdfe;
   --glass: rgba(255, 247, 251, 0.6); --glass-strong: rgba(255, 250, 252, 0.86);
@@ -136,8 +136,8 @@
   --ink-500: #4a6553; --ink-400: #577261; --ink-300: #a2b8a9; --ink-200: #cbdacf;
   --ink-100: #e1ebe3; --ink-50: #eef4ef;
   --fill: #1c3a27; --fill-hover: #285037; --code-bg: #13221a;
-  --mikan-50: #e6f4e8; --mikan-100: #c9e7ce; --mikan-200: #a3d5ad; --mikan-400: #55b06b;
-  --mikan-500: #33924c; --mikan-600: #277a3c; --mikan-700: #1d5e2e;
+  --scilla-50: #e6f4e8; --scilla-100: #c9e7ce; --scilla-200: #a3d5ad; --scilla-400: #55b06b;
+  --scilla-500: #33924c; --scilla-600: #277a3c; --scilla-700: #1d5e2e;
   --surface: rgba(252, 255, 251, 0.8); --surface-soft: rgba(249, 253, 248, 0.55);
   --surface-hover: rgba(253, 255, 252, 0.92); --surface-solid: #fcfefb; --raised: #fdfffc;
   --glass: rgba(247, 252, 246, 0.6); --glass-strong: rgba(250, 254, 249, 0.86);
@@ -157,8 +157,8 @@
   --ink-500: #5f6279; --ink-400: #6c6f85; --ink-300: #9ca0b0; --ink-200: #ccd0da;
   --ink-100: #dce0e8; --ink-50: #e6e9ef;
   --fill: #8839ef; --fill-hover: #7428d8; --code-bg: #303347;
-  --mikan-50: #f1e8fd; --mikan-100: #e2d0fb; --mikan-200: #c9a8f7; --mikan-400: #a46af3;
-  --mikan-500: #8839ef; --mikan-600: #7a2ee0; --mikan-700: #6420c0;
+  --scilla-50: #f1e8fd; --scilla-100: #e2d0fb; --scilla-200: #c9a8f7; --scilla-400: #a46af3;
+  --scilla-500: #8839ef; --scilla-600: #7a2ee0; --scilla-700: #6420c0;
   --leaf-50: #e3f1df; --leaf-500: #40a02b; --leaf-700: #2b6e1c;
   --berry-50: #fbe3e8; --berry-600: #b80c31;
   --surface: rgba(255, 255, 255, 0.8); --surface-soft: rgba(250, 251, 253, 0.6);
@@ -179,8 +179,8 @@
   --ink-500: #505a6e; --ink-400: #5f697d; --ink-300: #a3abb9; --ink-200: #cdd3dd;
   --ink-100: #dfe4eb; --ink-50: #eceff4;
   --fill: #3b4252; --fill-hover: #4c566a; --code-bg: #2e3440;
-  --mikan-50: #e3ebf4; --mikan-100: #c9d8ea; --mikan-200: #a7c0dc; --mikan-400: #81a1c1;
-  --mikan-500: #5e81ac; --mikan-600: #4f6f97; --mikan-700: #3e5a7d;
+  --scilla-50: #e3ebf4; --scilla-100: #c9d8ea; --scilla-200: #a7c0dc; --scilla-400: #81a1c1;
+  --scilla-500: #5e81ac; --scilla-600: #4f6f97; --scilla-700: #3e5a7d;
   --leaf-50: #e6efe0; --leaf-500: #7c9a62; --leaf-700: #4d6b36;
   --berry-50: #f6e4e6; --berry-600: #a5434d;
   --surface: rgba(251, 252, 254, 0.82); --surface-soft: rgba(246, 248, 251, 0.6);
@@ -203,8 +203,8 @@
   --ink-500: #67627f; --ink-400: #736e8c; --ink-300: #b4afc0; --ink-200: #dfd9d7;
   --ink-100: #f0e7df; --ink-50: #f6efe8;
   --fill: #286983; --fill-hover: #1f566c; --code-bg: #3b3657;
-  --mikan-50: #e3eff3; --mikan-100: #c6dee7; --mikan-200: #9cc3d1; --mikan-400: #56949f;
-  --mikan-500: #3a7d93; --mikan-600: #286983; --mikan-700: #1f566c;
+  --scilla-50: #e3eff3; --scilla-100: #c6dee7; --scilla-200: #9cc3d1; --scilla-400: #56949f;
+  --scilla-500: #3a7d93; --scilla-600: #286983; --scilla-700: #1f566c;
   --berry-50: #f8e6ea; --berry-600: #a24f66;
   --honey-50: #fbefd9; --honey-500: #ea9d34; --honey-600: #8a5a12;
   --surface: rgba(255, 250, 243, 0.82); --surface-soft: rgba(255, 250, 243, 0.6);
@@ -226,8 +226,8 @@
   --ink-500: #6a5340; --ink-400: #7a624e; --ink-300: #bba58f; --ink-200: #e0d0bd;
   --ink-100: #ecdfcd; --ink-50: #f3e9db;
   --fill: #3a2416; --fill-hover: #52341f; --code-bg: #2a1d14;
-  --mikan-50: #fbe9df; --mikan-100: #f6d0bb; --mikan-200: #ebab8a; --mikan-400: #d9774d;
-  --mikan-500: #c2562d; --mikan-600: #a94622; --mikan-700: #87361a;
+  --scilla-50: #fbe9df; --scilla-100: #f6d0bb; --scilla-200: #ebab8a; --scilla-400: #d9774d;
+  --scilla-500: #c2562d; --scilla-600: #a94622; --scilla-700: #87361a;
   --surface: rgba(255, 250, 243, 0.8); --surface-soft: rgba(253, 246, 237, 0.58);
   --surface-hover: rgba(255, 251, 246, 0.94); --surface-solid: #fffaf3; --raised: #fffcf8;
   --glass: rgba(252, 244, 233, 0.6); --glass-strong: rgba(255, 249, 241, 0.88);
@@ -251,8 +251,8 @@
   --ink-500: #8b97a8; --ink-400: #7a8697; --ink-300: #515d6d; --ink-200: #394453;
   --ink-100: #252e3a; --ink-50: #1b232e;
   --fill: #ff843d; --on-fill: #161a24;
-  --mikan-50: #3a2418; --mikan-100: #55311e; --mikan-200: #774322; --mikan-400: #ff9a57;
-  --mikan-500: #ff843d; --mikan-600: #ff9b5d; --mikan-700: #ffb27a;
+  --scilla-50: #3a2418; --scilla-100: #55311e; --scilla-200: #774322; --scilla-400: #ff9a57;
+  --scilla-500: #ff843d; --scilla-600: #ff9b5d; --scilla-700: #ffb27a;
   --surface: rgba(22, 29, 39, 0.92); --surface-soft: rgba(24, 31, 42, 0.72);
   --surface-hover: rgba(40, 50, 64, 0.96); --surface-solid: #161d27; --raised: #263142;
   --glass: rgba(24, 31, 42, 0.72); --glass-strong: rgba(22, 29, 39, 0.92);
@@ -272,8 +272,8 @@
   --ink-500: #909096; --ink-400: #7c7c82; --ink-300: #4f4f55; --ink-200: #3a3a3f;
   --ink-100: #26262a; --ink-50: #1a1a1d;
   --fill: #ececee; --on-fill: #111113; --fill-hover: #ffffff;
-  --mikan-50: #232326; --mikan-100: #2e2e33; --mikan-200: #45454c; --mikan-400: #d6d6da;
-  --mikan-500: #c8c8cd; --mikan-600: #e2e2e6; --mikan-700: #f0f0f2;
+  --scilla-50: #232326; --scilla-100: #2e2e33; --scilla-200: #45454c; --scilla-400: #d6d6da;
+  --scilla-500: #c8c8cd; --scilla-600: #e2e2e6; --scilla-700: #f0f0f2;
   --surface: rgba(22, 22, 24, 0.92); --surface-soft: rgba(26, 26, 29, 0.72);
   --surface-hover: rgba(38, 38, 42, 0.96); --surface-solid: #151517; --raised: #242428;
   --glass: rgba(20, 20, 22, 0.72); --glass-strong: rgba(18, 18, 20, 0.92);
@@ -295,8 +295,8 @@
   --ink-500: #7d9faa; --ink-400: #6a8c98; --ink-300: #44626d; --ink-200: #2f4952;
   --ink-100: #1c3139; --ink-50: #13252c;
   --fill: #36d0e0; --on-fill: #04161d; --fill-hover: #5fdcea;
-  --mikan-50: #0f2e36; --mikan-100: #134049; --mikan-200: #195a66; --mikan-400: #4fd7e6;
-  --mikan-500: #36d0e0; --mikan-600: #62dde9; --mikan-700: #8de8f1;
+  --scilla-50: #0f2e36; --scilla-100: #134049; --scilla-200: #195a66; --scilla-400: #4fd7e6;
+  --scilla-500: #36d0e0; --scilla-600: #62dde9; --scilla-700: #8de8f1;
   /* The upload line and the info notes: violet-blue, the cyan is the accent's. */
   --lagoon-50: #1c2347; --lagoon-400: #8b9dff; --lagoon-500: #7c8cff; --lagoon-600: #a7b4ff;
   --surface: rgba(10, 30, 40, 0.92); --surface-soft: rgba(12, 34, 45, 0.72);
@@ -319,8 +319,8 @@
   --ink-500: #a38d7a; --ink-400: #8f7865; --ink-300: #5c4a3d; --ink-200: #43352b;
   --ink-100: #2c221c; --ink-50: #211913;
   --fill: #f2b443; --on-fill: #1a1108; --fill-hover: #f7c766;
-  --mikan-50: #33250f; --mikan-100: #4a3514; --mikan-200: #6b4c19; --mikan-400: #f6c25d;
-  --mikan-500: #f2b443; --mikan-600: #f7c766; --mikan-700: #fad88f;
+  --scilla-50: #33250f; --scilla-100: #4a3514; --scilla-200: #6b4c19; --scilla-400: #f6c25d;
+  --scilla-500: #f2b443; --scilla-600: #f7c766; --scilla-700: #fad88f;
   /* Warnings: orange, the gold is the accent's. */
   --honey-50: #3a2213; --honey-500: #ff8a3d; --honey-600: #ffa466;
   --surface: rgba(30, 21, 16, 0.92); --surface-soft: rgba(32, 23, 18, 0.72);
@@ -343,8 +343,8 @@
   --ink-500: #ab889a; --ink-400: #977485; --ink-300: #604656; --ink-200: #46323e;
   --ink-100: #2e1f29; --ink-50: #22161f;
   --fill: #ff7eab; --on-fill: #22091a; --fill-hover: #ff9cbf;
-  --mikan-50: #3a1529; --mikan-100: #561d3b; --mikan-200: #7a2a53; --mikan-400: #ff96bb;
-  --mikan-500: #ff7eab; --mikan-600: #ff9cbf; --mikan-700: #ffbcd4;
+  --scilla-50: #3a1529; --scilla-100: #561d3b; --scilla-200: #7a2a53; --scilla-400: #ff96bb;
+  --scilla-500: #ff7eab; --scilla-600: #ff9cbf; --scilla-700: #ffbcd4;
   /* Errors: orange-red, the pink is the accent's. */
   --berry-50: #3d1a16; --berry-600: #ff6a4d;
   --surface: rgba(30, 17, 27, 0.92); --surface-soft: rgba(32, 19, 29, 0.72);
@@ -367,8 +367,8 @@
   --ink-500: #889c84; --ink-400: #74876f; --ink-300: #4a5947; --ink-200: #354133;
   --ink-100: #222b21; --ink-50: #182018;
   --fill: #a6d96a; --on-fill: #0f1a08; --fill-hover: #bce58b;
-  --mikan-50: #1f2e14; --mikan-100: #2b411a; --mikan-200: #3d5c22; --mikan-400: #b4e07f;
-  --mikan-500: #a6d96a; --mikan-600: #bce58b; --mikan-700: #d0eeaa;
+  --scilla-50: #1f2e14; --scilla-100: #2b411a; --scilla-200: #3d5c22; --scilla-400: #b4e07f;
+  --scilla-500: #a6d96a; --scilla-600: #bce58b; --scilla-700: #d0eeaa;
   --surface: rgba(18, 27, 19, 0.92); --surface-soft: rgba(20, 30, 21, 0.72);
   --surface-hover: rgba(32, 45, 33, 0.96); --surface-solid: #121a13; --raised: #1f2c20;
   --glass: rgba(18, 27, 19, 0.72); --glass-strong: rgba(16, 24, 17, 0.92);
@@ -389,8 +389,8 @@
   --ink-500: #a7b1c2; --ink-400: #929cae; --ink-300: #616e88; --ink-200: #4c566a;
   --ink-100: #3b4252; --ink-50: #323947;
   --fill: #88c0d0; --on-fill: #242933; --fill-hover: #9fd0de;
-  --mikan-50: #2c3b47; --mikan-100: #35505e; --mikan-200: #46707f; --mikan-400: #8fbcbb;
-  --mikan-500: #88c0d0; --mikan-600: #9fd0de; --mikan-700: #b8dde8;
+  --scilla-50: #2c3b47; --scilla-100: #35505e; --scilla-200: #46707f; --scilla-400: #8fbcbb;
+  --scilla-500: #88c0d0; --scilla-600: #9fd0de; --scilla-700: #b8dde8;
   --leaf-50: #2f3a33; --leaf-500: #a3be8c; --leaf-700: #b8d0a3;
   --honey-50: #3d3829; --honey-500: #ebcb8b; --honey-600: #f0d7a4;
   --berry-50: #3f2d33; --berry-600: #e08a92;
@@ -416,8 +416,8 @@
   --ink-500: #9399b2; --ink-400: #7f849c; --ink-300: #585b70; --ink-200: #45475a;
   --ink-100: #313244; --ink-50: #262637;
   --fill: #cba6f7; --on-fill: #1e1e2e; --fill-hover: #d8bcfa;
-  --mikan-50: #2f2840; --mikan-100: #42355c; --mikan-200: #5e4a85; --mikan-400: #d4b5f8;
-  --mikan-500: #cba6f7; --mikan-600: #d8bcfa; --mikan-700: #e4d0fc;
+  --scilla-50: #2f2840; --scilla-100: #42355c; --scilla-200: #5e4a85; --scilla-400: #d4b5f8;
+  --scilla-500: #cba6f7; --scilla-600: #d8bcfa; --scilla-700: #e4d0fc;
   --leaf-50: #233127; --leaf-500: #a6e3a1; --leaf-700: #b9ebb5;
   --honey-50: #36322a; --honey-500: #f9e2af; --honey-600: #fae8c0;
   --berry-50: #3a2433; --berry-600: #f38ba8;
@@ -443,8 +443,8 @@
   --ink-500: #8a93b8; --ink-400: #737aa2; --ink-300: #565f89; --ink-200: #3b4261;
   --ink-100: #292e42; --ink-50: #1f2335;
   --fill: #7aa2f7; --on-fill: #16161e; --fill-hover: #93b4f9;
-  --mikan-50: #1f2a48; --mikan-100: #283a66; --mikan-200: #3a5290; --mikan-400: #89acf8;
-  --mikan-500: #7aa2f7; --mikan-600: #93b4f9; --mikan-700: #b0c8fb;
+  --scilla-50: #1f2a48; --scilla-100: #283a66; --scilla-200: #3a5290; --scilla-400: #89acf8;
+  --scilla-500: #7aa2f7; --scilla-600: #93b4f9; --scilla-700: #b0c8fb;
   --leaf-50: #243024; --leaf-500: #9ece6a; --leaf-700: #b4da8c;
   --honey-50: #3a3021; --honey-500: #e0af68; --honey-600: #e9c48c;
   --berry-50: #3b2129; --berry-600: #f7768e;
@@ -470,8 +470,8 @@
   --ink-500: #a3a7c4; --ink-400: #8b91b8; --ink-300: #6272a4; --ink-200: #4a4e66;
   --ink-100: #383a4c; --ink-50: #2d2f3d;
   --fill: #ff79c6; --on-fill: #21222c; --fill-hover: #ff94d1;
-  --mikan-50: #3d2638; --mikan-100: #58304f; --mikan-200: #84417a; --mikan-400: #ff92d0;
-  --mikan-500: #ff79c6; --mikan-600: #ff94d1; --mikan-700: #ffb3df;
+  --scilla-50: #3d2638; --scilla-100: #58304f; --scilla-200: #84417a; --scilla-400: #ff92d0;
+  --scilla-500: #ff79c6; --scilla-600: #ff94d1; --scilla-700: #ffb3df;
   --leaf-50: #1f3a29; --leaf-500: #50fa7b; --leaf-700: #7dfb9c;
   --honey-50: #3a3a24; --honey-500: #f1fa8c; --honey-600: #f4fba6;
   --berry-50: #3f2125; --berry-600: #ff6e6e;
@@ -497,8 +497,8 @@
   --ink-500: #82a7ab; --ink-400: #6e9397; --ink-300: #46636a; --ink-200: #2f4650;
   --ink-100: #1c2e37; --ink-50: #13232b;
   --fill: #5ef2b8; --on-fill: #04140d; --fill-hover: #85f6ca;
-  --mikan-50: #0f2c24; --mikan-100: #134034; --mikan-200: #1a5c49; --mikan-400: #7ef5c6;
-  --mikan-500: #5ef2b8; --mikan-600: #85f6ca; --mikan-700: #aef9dc;
+  --scilla-50: #0f2c24; --scilla-100: #134034; --scilla-200: #1a5c49; --scilla-400: #7ef5c6;
+  --scilla-500: #5ef2b8; --scilla-600: #85f6ca; --scilla-700: #aef9dc;
   /* "Fine" teal and info violet: the mint is the accent's. */
   --leaf-50: #12302e; --leaf-500: #48d6c6; --leaf-700: #86e6db;
   --lagoon-50: #1e2347; --lagoon-400: #9aa6ff; --lagoon-500: #8b98ff; --lagoon-600: #b1baff;
@@ -527,8 +527,8 @@
   --ink-500: #9792b6; --ink-400: #7f7aa0; --ink-300: #514d6e; --ink-200: #3a3753;
   --ink-100: #25233a; --ink-50: #1a182b;
   --fill: #ffe08a; --on-fill: #1a1404; --fill-hover: #ffe9a8;
-  --mikan-50: #2f2a17; --mikan-100: #463d1d; --mikan-200: #6b5c27; --mikan-400: #ffe7a1;
-  --mikan-500: #ffe08a; --mikan-600: #ffe9a8; --mikan-700: #fff1c6;
+  --scilla-50: #2f2a17; --scilla-100: #463d1d; --scilla-200: #6b5c27; --scilla-400: #ffe7a1;
+  --scilla-500: #ffe08a; --scilla-600: #ffe9a8; --scilla-700: #fff1c6;
   /* Warnings: orange, the gold is the accent's. */
   --honey-50: #3a2414; --honey-500: #ff9f5a; --honey-600: #ffb880;
   --surface: rgba(18, 16, 32, 0.9); --surface-soft: rgba(20, 18, 36, 0.7);
@@ -561,8 +561,8 @@
   --ink-500: #70a17a; --ink-400: #5f8f68; --ink-300: #3a5a3f; --ink-200: #29402c;
   --ink-100: #1a281c; --ink-50: #111b12;
   --fill: #4af07f; --on-fill: #031007; --fill-hover: #77f59f;
-  --mikan-50: #0e2a16; --mikan-100: #13391e; --mikan-200: #1b5229; --mikan-400: #6ff397;
-  --mikan-500: #4af07f; --mikan-600: #77f59f; --mikan-700: #a3f8bd;
+  --scilla-50: #0e2a16; --scilla-100: #13391e; --scilla-200: #1b5229; --scilla-400: #6ff397;
+  --scilla-500: #4af07f; --scilla-600: #77f59f; --scilla-700: #a3f8bd;
   /* "Fine": cyan, the green is the accent's. */
   --leaf-50: #0f2b2a; --leaf-500: #3fd0c9; --leaf-700: #7fe3de;
   --surface: rgba(8, 14, 9, 0.94); --surface-soft: rgba(10, 17, 11, 0.76);

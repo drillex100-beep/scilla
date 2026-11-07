@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/store/db"
 )
 
 // Traffic packages (GitHub issue #12): a grant is extra traffic a user got, for the main

@@ -3,7 +3,7 @@
 # domains gathered from several lists (MetaCubeX category-ru, itdoginfo, hydraponique)
 # and the Russian and Belarusian networks from IPinfo, MaxMind, geofeeds and the AS of
 # Russian companies, so no geosite or GeoIP file is needed for them; and the Telegram
-# domains and ranges past those, which keep it on the VPN. The template is mikan's; the
+# domains and ranges past those, which keep it on the VPN. The template is scilla's; the
 # lists are not copied here, the apps fetch them from his repository, pinned to a commit:
 # a push to it cannot reroute the apps until the admin moves the pin.
 # In Happ and INCY (Xray configs) these lists do not work and everything goes through the

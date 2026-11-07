@@ -1,15 +1,15 @@
-// mikan-release makes the signed manifest of a release and the signed release index (used
+// scilla-release makes the signed manifest of a release and the signed release index (used
 // by .github/workflows/release.yml), checks a manifest against what the clients in the
 // field read (legacy.go), and makes the release signing key.
 //
-//	mikan-release keygen -out release-signing.pem
-//	RELEASE_SIGNING_KEY="$(cat key.pem)" mikan-release manifest -version 0.3.9 \
-//	    -image ghcr.io/miroshka000/mikan -digest sha256:… \
-//	    -asset x86_64=dist/mikan-x86_64 -asset aarch64=dist/mikan-aarch64 \
+//	scilla-release keygen -out release-signing.pem
+//	RELEASE_SIGNING_KEY="$(cat key.pem)" scilla-release manifest -version 0.3.9 \
+//	    -image ghcr.io/drillex100-beep/scilla -digest sha256:… \
+//	    -asset x86_64=dist/scilla-x86_64 -asset aarch64=dist/scilla-aarch64 \
 //	    -min-installer-file .github/min-installer -out dist
-//	mikan-release verify dist/manifest.json
-//	mikan-release legacy-check dist/manifest.json
-//	RELEASE_SIGNING_KEY="$(cat key.pem)" mikan-release index -version 0.5.0.1 \
+//	scilla-release verify dist/manifest.json
+//	scilla-release legacy-check dist/manifest.json
+//	RELEASE_SIGNING_KEY="$(cat key.pem)" scilla-release index -version 0.5.0.1 \
 //	    -from-file .github/upgrade-from -in updates/index.json -out dist
 package main
 
@@ -32,19 +32,19 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/release"
+	"scilla/internal/release"
 )
 
 func main() {
 	if err := run(os.Args[1:]); err != nil {
-		fmt.Fprintln(os.Stderr, "mikan-release:", err)
+		fmt.Fprintln(os.Stderr, "scilla-release:", err)
 		os.Exit(1)
 	}
 }
 
 func run(args []string) error {
 	if len(args) == 0 {
-		return errors.New("usage: mikan-release keygen|manifest|verify|legacy-check|index|goals …")
+		return errors.New("usage: scilla-release keygen|manifest|verify|legacy-check|index|goals …")
 	}
 	switch args[0] {
 	case "keygen":
@@ -134,7 +134,7 @@ func makeManifest(args []string) error {
 	version := fs.String("version", "", "release version, e.g. 0.5.0.1")
 	minInstaller := fs.String("min-installer", "", "minimum host installer version, only for a release that cannot run with an older one")
 	minInstallerFile := fs.String("min-installer-file", "", "file with the minimum installer version (# comments allowed); a missing file asks for none")
-	image := fs.String("image", "", "image repository, e.g. ghcr.io/miroshka000/mikan")
+	image := fs.String("image", "", "image repository, e.g. ghcr.io/drillex100-beep/scilla")
 	digest := fs.String("digest", "", "sha256 digest of the pushed multi-arch image")
 	changelog := fs.String("changelog", "CHANGELOG.md", "where the release notes are")
 	out := fs.String("out", "dist", "output directory")
@@ -229,7 +229,7 @@ func makeManifest(args []string) error {
 
 func verify(args []string) error {
 	if len(args) != 1 {
-		return errors.New("usage: mikan-release verify manifest.json")
+		return errors.New("usage: scilla-release verify manifest.json")
 	}
 	data, err := os.ReadFile(args[0])
 	if err != nil {

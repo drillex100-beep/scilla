@@ -8,7 +8,7 @@ const delivery = (status: Delivery["status"]) => ({ status }) as Delivery;
 
 describe("shortAddress", () => {
   it("keeps an address whole while nothing in it may be a token", () => {
-    expect(shortAddress("https://hooks.example.com/mikan")).toBe("https://hooks.example.com/mikan");
+    expect(shortAddress("https://hooks.example.com/scilla")).toBe("https://hooks.example.com/scilla");
     expect(shortAddress("http://10.0.0.5:8080/in")).toBe("http://10.0.0.5:8080/in");
     expect(shortAddress("https://example.com/")).toBe("https://example.com");
   });

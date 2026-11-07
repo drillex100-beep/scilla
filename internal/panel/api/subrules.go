@@ -12,12 +12,12 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/subsrc"
-	"mikan/internal/sub/apps"
-	submodel "mikan/internal/sub/model"
-	"mikan/internal/sub/serve"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/subsrc"
+	"scilla/internal/sub/apps"
+	submodel "scilla/internal/sub/model"
+	"scilla/internal/sub/serve"
 )
 
 // How the subscription answers a request (internal/sub/apps): which known apps get the

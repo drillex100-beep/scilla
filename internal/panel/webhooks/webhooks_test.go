@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/store/db"
 )
 
 // An endpoint is made with a secret of its own, in the order of the events' own list and
@@ -21,12 +21,12 @@ func TestCreate(t *testing.T) {
 	w.emit(events.PaymentPaid, 1)
 	end := w.emit(events.PaymentPaid, 2)
 
-	ep, err := w.s.Create(ctx, Input{Name: "  Billing  ", URL: " https://hooks.example.com/mikan ", Enabled: true,
+	ep, err := w.s.Create(ctx, Input{Name: "  Billing  ", URL: " https://hooks.example.com/scilla ", Enabled: true,
 		Events: []string{events.NodeUp, events.PaymentPaid, events.NodeUp}})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if ep.Name != "Billing" || ep.Url != "https://hooks.example.com/mikan" || !ep.Enabled || ep.AllowLocal {
+	if ep.Name != "Billing" || ep.Url != "https://hooks.example.com/scilla" || !ep.Enabled || ep.AllowLocal {
 		t.Errorf("saved %+v", ep)
 	}
 	if want := []string{events.PaymentPaid, events.NodeUp}; !slices.Equal(ep.Events, want) {

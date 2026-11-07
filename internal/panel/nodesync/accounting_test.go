@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/nodetls"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/nodeapi"
+	"scilla/internal/nodetls"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store/db"
 )
 
 // The background accounting writers (traffic batches of every node, the online marks and
@@ -36,7 +36,7 @@ func TestBackgroundAccountingWritersDoNotConflict(t *testing.T) {
 		slots = append(slots, slot.Name)
 		ids = append(ids, u.ID)
 	}
-	panel, _ := nodetls.Generate("mikan-panel", x509.ExtKeyUsageClientAuth, time.Now())
+	panel, _ := nodetls.Generate("scilla-panel", x509.ExtKeyUsageClientAuth, time.Now())
 	n2, _, err := domain.AddNode(ctx, st, panel, domain.NodeInput{Name: "B", Host: "198.51.100.20", APIPort: 40000}, time.Now())
 	if err != nil {
 		t.Fatal(err)
@@ -111,7 +111,7 @@ func TestSnapshotSharedAndConsistent(t *testing.T) {
 		t.Fatal(err)
 	}
 	slot, _ := st.Q.GetSlot(ctx, u.SlotID.Int64)
-	panel, _ := nodetls.Generate("mikan-panel", x509.ExtKeyUsageClientAuth, time.Now())
+	panel, _ := nodetls.Generate("scilla-panel", x509.ExtKeyUsageClientAuth, time.Now())
 	n2, _, err := domain.AddNode(ctx, st, panel, domain.NodeInput{Name: "B", Host: "198.51.100.20", APIPort: 40000}, time.Now())
 	if err != nil {
 		t.Fatal(err)
@@ -205,7 +205,7 @@ func TestConcurrentBatchesSpendGrantsExactly(t *testing.T) {
 		all = append(all, acct{id: u.ID, slot: slot.Name,
 			later: grant(0, later, domain.LifetimeUsed, 0), soon: grant(0, soon, domain.LifetimeDays, 7), poolGrant: grant(pool.ID, poolGrant, domain.LifetimeUsed, 0)})
 	}
-	panel, _ := nodetls.Generate("mikan-panel", x509.ExtKeyUsageClientAuth, time.Now())
+	panel, _ := nodetls.Generate("scilla-panel", x509.ExtKeyUsageClientAuth, time.Now())
 	n2, _, err := domain.AddNode(ctx, st, panel, domain.NodeInput{Name: "B", Host: "198.51.100.20", APIPort: 40000}, time.Now())
 	if err != nil {
 		t.Fatal(err)

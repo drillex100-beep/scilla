@@ -7,12 +7,12 @@ import (
 	"net/http"
 	"strings"
 
-	"mikan/internal/sub/apps"
-	"mikan/internal/sub/mihomo"
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/singbox"
-	"mikan/internal/sub/xray"
-	"mikan/internal/textutil"
+	"scilla/internal/sub/apps"
+	"scilla/internal/sub/mihomo"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/singbox"
+	"scilla/internal/sub/xray"
+	"scilla/internal/textutil"
 )
 
 // unsupportedError is why a request gets a stub that says its app is not supported.

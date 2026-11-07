@@ -6,11 +6,11 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/presets"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/presets"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // A node like the default one plus gRPC: three TCP inbounds, two UDP.

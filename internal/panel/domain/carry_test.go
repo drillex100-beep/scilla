@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // setLifecycle writes the panel's lifecycle rules.

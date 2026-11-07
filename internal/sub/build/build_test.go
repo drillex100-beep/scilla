@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/proto"
-	"mikan/internal/sub/apps"
-	"mikan/internal/sub/model"
+	"scilla/internal/proto"
+	"scilla/internal/sub/apps"
+	"scilla/internal/sub/model"
 )
 
 var testKeys = proto.Slot{Name: "s000001", UUID: "0b4ddc4c-7c4f-4a36-9d62-6f1a44b8c4e1", Secret: "S3cr3t+/="}
@@ -131,7 +131,7 @@ func TestBadInboundIsSkippedAndReported(t *testing.T) {
 
 // Behind the node's SNI router an inbound marked for it is reached on 443.
 func TestSNIRouterPort(t *testing.T) {
-	tpl := proto.Template{"type": "anytls", "mikan": map[string]any{"sni443": true}}
+	tpl := proto.Template{"type": "anytls", "scilla": map[string]any{"sni443": true}}
 	in := model.Inbound{ID: 1, Node: 1, Name: "AnyTLS", Port: 2083, PortSpec: "2083", Config: proto.Marshal(tpl)}
 	for router, port := range map[bool]int{true: 443, false: 2083} {
 		ps := Proxies(Profile{Keys: testKeys, Inbounds: []model.Inbound{in}, Nodes: []model.Node{{ID: 1, Endpoint: model.Endpoint{Host: "203.0.113.7", SNIRouter: router}}}})

@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/logbuf"
-	"mikan/internal/nodeapi"
+	"scilla/internal/logbuf"
+	"scilla/internal/nodeapi"
 )
 
 func getJSON(t *testing.T, h http.Handler, path string, out any) int {

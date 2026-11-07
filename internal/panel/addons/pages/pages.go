@@ -23,10 +23,10 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/auth"
-	"mikan/internal/panel/server"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/auth"
+	"scilla/internal/panel/server"
+	"scilla/internal/panel/store/db"
 )
 
 // Prefix is where the pages live below the admin path.
@@ -123,7 +123,7 @@ const sigLen = 8 + 8 + sha256.Size
 
 func (p *Pages) mac(id string, admin int64, session string, exp int64) []byte {
 	m := hmac.New(sha256.New, p.key)
-	m.Write([]byte("mikan-addons-ui\x00" + id + "\x00" + session + "\x00"))
+	m.Write([]byte("scilla-addons-ui\x00" + id + "\x00" + session + "\x00"))
 	_ = binary.Write(m, binary.BigEndian, admin)
 	_ = binary.Write(m, binary.BigEndian, exp)
 	return m.Sum(nil)

@@ -1,7 +1,7 @@
 -- +goose Up
 -- The places clients reach an inbound at (#01): an address, a port, the TLS name, the HTTP
 -- Host and the uTLS fingerprint, each empty (port 0) for what clients get without it. The
--- host at position 0 is the inbound's default one, the template's mikan.client, which
+-- host at position 0 is the inbound's default one, the template's scilla.client, which
 -- migration 64 copies in and the panel keeps equal to it (domain.syncDefaultHost) while
 -- subscriptions still read the template; the others follow it in the order of position.
 CREATE TABLE inbound_hosts (

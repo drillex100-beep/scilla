@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/sub/apps"
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/subtest"
+	"scilla/internal/sub/apps"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/subtest"
 )
 
 // A core's template is the one the rule names when it is the core's, else the core's
@@ -97,7 +97,7 @@ func TestProfileTemplate(t *testing.T) {
 }
 
 // A saved template that does not render for this user leaves the app the built-in profile,
-// and says so once; a Clash one leaves the Mikan app the groups of the built-in profile.
+// and says so once; a Clash one leaves the Scilla app the groups of the built-in profile.
 func TestTemplateThatDoesNotRender(t *testing.T) {
 	// The default user has no server of a US node: a group that names one by hand is empty.
 	for _, c := range []struct {

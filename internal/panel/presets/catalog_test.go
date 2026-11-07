@@ -3,9 +3,9 @@ package presets_test
 import (
 	"testing"
 
-	"mikan/internal/panel/presets"
-	"mikan/internal/proto"
-	"mikan/internal/sub/apps"
+	"scilla/internal/panel/presets"
+	"scilla/internal/proto"
+	"scilla/internal/sub/apps"
 )
 
 // A preset's catalog entry says what its generated template already says: its type, its

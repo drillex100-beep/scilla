@@ -1,6 +1,6 @@
 # Settings of openapi-python-client (sdk/build.sh python runs it with this file).
-project_name_override: mikan-sdk
-package_name_override: mikan_sdk
+project_name_override: scilla-sdk
+package_name_override: scilla_sdk
 # The generator has no parser for an image response: it would drop it with a warning. The
 # panel serves its pictures (a top-up's photo, the subscription page's images) as bytes.
 content_type_overrides:

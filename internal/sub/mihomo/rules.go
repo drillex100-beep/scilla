@@ -1,10 +1,10 @@
 package mihomo
 
 import (
-	"mikan/internal/sub/apps"
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/profile"
-	"mikan/internal/sub/routing"
+	"scilla/internal/sub/apps"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/profile"
+	"scilla/internal/sub/routing"
 )
 
 // ruleSince is the first mihomo with a rule type younger than the cores still around.
@@ -41,7 +41,7 @@ func RulesFor(rules []routing.Rule, app apps.App) []routing.Rule {
 // every profile. A rule ReadRule cannot read (OR, NOT, SUB-RULE) is left out; false when
 // src does not render.
 func TemplateRules(p profile.Profile, src string) ([]routing.Rule, bool) {
-	p.Proxies = []model.Proxy{{Name: "mikan", Type: "direct"}}
+	p.Proxies = []model.Proxy{{Name: "scilla", Type: "direct"}}
 	t, err := parseProfileTemplate(src)
 	if err == nil {
 		_, err = fillTemplate(t, p)

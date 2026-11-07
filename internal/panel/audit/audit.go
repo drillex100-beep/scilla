@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store/db"
 )
 
 type Entry struct {

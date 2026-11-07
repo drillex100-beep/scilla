@@ -12,13 +12,13 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
-	"mikan/internal/sub/apps"
-	"mikan/internal/sub/serve"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
+	"scilla/internal/sub/apps"
+	"scilla/internal/sub/serve"
 )
 
 func openStore(t *testing.T) *store.Store {
@@ -281,7 +281,7 @@ func TestInfoNamesTheBlockedApps(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	cfg := Config{Config: serve.Config{Brand: "Mikan", Responses: resp}}
+	cfg := Config{Config: serve.Config{Brand: "Scilla", Responses: resp}}
 	h := NewHandler(st, func(context.Context) (Config, error) { return cfg, nil }, nil, time.Now, nil, false)
 	w := httptest.NewRecorder()
 	h.ServeHTTP(w, httptest.NewRequest(http.MethodGet, "/"+u.SubToken+"/info", nil))

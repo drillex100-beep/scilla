@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"testing"
 
-	"mikan/internal/panel/settings"
+	"scilla/internal/panel/settings"
 )
 
 // The panel installs as an app from its secret path alone: the manifest is there, named
@@ -31,7 +31,7 @@ func TestManifestUnderTheAdminPathOnly(t *testing.T) {
 		}
 		return m.Name
 	}
-	if got := name(); got != "mikan" {
+	if got := name(); got != "scilla" {
 		t.Fatalf("no brand: %q", got)
 	}
 	if err := settings.Set(ctx, set, settings.KeyBrand, "AuraVPN"); err != nil {

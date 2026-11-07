@@ -16,7 +16,7 @@ import { ADDON_ID_RE, PERMISSIONS, actsAsAdmin, installMarket, ownBotDocs, insta
 // The dialogs of the protocol 2 addons, shared by both tabs of the addons page: approving
 // what an addon may do, its details, and an addon of the admin's own. Each one gets exactly
 // the permissions the admin approved; an addon of a source, of the registry of community addons
-// or of the admin's own (a process on the server) is code mikan has not seen, and says so
+// or of the admin's own (a process on the server) is code scilla has not seen, and says so
 // everywhere: an install or an update of one waits for the admin to tick that they take the risk.
 
 /**
@@ -469,7 +469,7 @@ function OwnBotSteps({ fill }: { fill: () => void }) {
         <li>{t("market.ownBot.step2")}</li>
         <li>
           {t("market.ownBot.step3")}
-          <code className="mono mt-1 block whitespace-pre-wrap break-all text-xs">{"MIKAN_BOT_API_URL=http://<panel_api>\nMIKAN_BOT_TOKEN=0:<panel_token>"}</code>
+          <code className="mono mt-1 block whitespace-pre-wrap break-all text-xs">{"SCILLA_BOT_API_URL=http://<panel_api>\nSCILLA_BOT_TOKEN=0:<panel_token>"}</code>
         </li>
         <li>{t("market.ownBot.step4")}</li>
       </ol>

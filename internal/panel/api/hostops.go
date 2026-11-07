@@ -9,13 +9,13 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/hostchan"
-	"mikan/internal/logbuf"
-	"mikan/internal/nodeapi"
-	"mikan/internal/textutil"
+	"scilla/internal/hostchan"
+	"scilla/internal/logbuf"
+	"scilla/internal/nodeapi"
+	"scilla/internal/textutil"
 )
 
-// The logs of the panel and of its nodes, the host's `mikan doctor` and a restart of the
+// The logs of the panel and of its nodes, the host's `scilla doctor` and a restart of the
 // containers: what an admin does over SSH, and what support needs when the admin gives it
 // no shell. The doctor and the restart reach the host through files its systemd units
 // watch (internal/hostchan); nothing here runs a command.
@@ -44,10 +44,10 @@ func (h *handlers) registerHostOps() {
 	huma.Register(h.api, huma.Operation{OperationID: "get-logs", Method: http.MethodGet, Path: "/api/v1/logs", Summary: "Последние строки лога панели или ноды",
 		Description: "source=panel или node:<id>; до 2000 строк, самые новые последними. Токены, ключи, пароли, ссылки подписок и секретные пути вырезаны.",
 		Tags:        []string{"diagnostics"}}, h.getLogs)
-	huma.Register(h.api, huma.Operation{OperationID: "doctor-server", Metadata: supportDiagnostic, Method: http.MethodPost, Path: "/api/v1/system/doctor", Summary: "mikan doctor на сервере панели",
-		Description: "Хост запускает mikan doctor и отдаёт отчёт (Docker, контейнеры, порты, файрвол, часы, DNS, GitHub, диск, память); ждём до минуты. Нужна команда mikan 0.5.1.1 или новее на сервере: mikan update. Оператору поддержки с доступом «просмотр» разрешён: отчёт ничего не меняет.",
+	huma.Register(h.api, huma.Operation{OperationID: "doctor-server", Metadata: supportDiagnostic, Method: http.MethodPost, Path: "/api/v1/system/doctor", Summary: "scilla doctor на сервере панели",
+		Description: "Хост запускает scilla doctor и отдаёт отчёт (Docker, контейнеры, порты, файрвол, часы, DNS, GitHub, диск, память); ждём до минуты. Нужна команда scilla 0.5.1.1 или новее на сервере: scilla update. Оператору поддержки с доступом «просмотр» разрешён: отчёт ничего не меняет.",
 		Tags:        []string{"settings"}}, h.doctorServer)
-	huma.Register(h.api, huma.Operation{OperationID: "doctor-node", Metadata: supportDiagnostic, Method: http.MethodPost, Path: "/api/v1/nodes/{id}/doctor", Summary: "mikan doctor на сервере ноды",
+	huma.Register(h.api, huma.Operation{OperationID: "doctor-node", Metadata: supportDiagnostic, Method: http.MethodPost, Path: "/api/v1/nodes/{id}/doctor", Summary: "scilla doctor на сервере ноды",
 		Description: "То же для сервера удалённой ноды; для своей ноды панели это сервер панели. Оператору поддержки с доступом «просмотр» разрешён.",
 		Tags:        []string{"node"}}, h.doctorNode)
 	huma.Register(h.api, huma.Operation{OperationID: "restart-server", Metadata: sessionOnly, Extensions: sessionOnlyExt, Method: http.MethodPost, Path: "/api/v1/system/restart", Summary: "Перезапустить контейнеры сервера панели",

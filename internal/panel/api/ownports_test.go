@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/support"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/support"
 )
 
 // The ports a node's users reach on the server's own address: checked, written one way, on
@@ -170,7 +170,7 @@ func TestSubPortReachesTheNodes(t *testing.T) {
 		body string
 		want int
 	}{
-		{`{"brand": "Mikan"}`, 0},
+		{`{"brand": "Scilla"}`, 0},
 		{`{"sub_port": ` + strconv.Itoa(2083) + `}`, 1},
 		{`{"sub_port": 0}`, 2},
 	} {

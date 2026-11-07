@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/events"
+	"scilla/internal/panel/events"
 )
 
 // codeSources are where error codes the web shows are written: the API's own (huma's

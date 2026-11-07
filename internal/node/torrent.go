@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 const (

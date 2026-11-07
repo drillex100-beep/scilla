@@ -13,13 +13,13 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/events/feed"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/secure"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/events/feed"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/secure"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // The states of a user (State).

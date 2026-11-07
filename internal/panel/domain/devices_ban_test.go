@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store/db"
 )
 
 // A device gets a name of its own, from the admin or the subscriber; another user's device

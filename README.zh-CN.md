@@ -2,15 +2,15 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset=".github/assets/banner-en-dark.svg">
-  <img alt="mikan：基于 Citrus 内核的 VPN 面板" src=".github/assets/banner-en-light.svg" width="100%">
+  <img alt="scilla：基于 Citrus 内核的 VPN 面板" src=".github/assets/banner-en-light.svg" width="100%">
 </picture>
 
 <br>
 
 **基于 [Citrus](https://github.com/getmikan/Citrus) 内核的 VPN 面板：快速、好看，一条命令安装，无需照看。**
 
-[![发布版本](https://img.shields.io/github/v/release/Miroshka000/mikan?color=f07a2e&label=发布版本&style=flat-square)](https://github.com/Miroshka000/mikan/releases)
-[![镜像](https://img.shields.io/badge/ghcr.io-miroshka000%2Fmikan-2b8c9e?style=flat-square&logo=docker&logoColor=white)](https://github.com/Miroshka000/mikan/pkgs/container/mikan)
+[![发布版本](https://img.shields.io/github/v/release/Miroshka000/mikan?color=f07a2e&label=发布版本&style=flat-square)](https://github.com/drillex100-beep/scilla/releases)
+[![镜像](https://img.shields.io/badge/ghcr.io-miroshka000%2Fmikan-2b8c9e?style=flat-square&logo=docker&logoColor=white)](https://github.com/drillex100-beep/scilla/pkgs/container/scilla)
 [![许可证](https://img.shields.io/badge/许可证-GPL--3.0-2f9e6b?style=flat-square)](LICENSE)
 [![Citrus](https://img.shields.io/badge/内核-Citrus-9e8eff?style=flat-square)](https://github.com/getmikan/Citrus)
 [![Telegram](https://img.shields.io/badge/Telegram-频道-26a5e4?style=flat-square&logo=telegram&logoColor=white)](https://t.me/mikanvpn)
@@ -27,27 +27,27 @@
 在全新的 Ubuntu 22.04+ 或 Debian 12+ 服务器上（amd64 或 arm64）：
 
 ```bash
-curl -fsSL https://github.com/Miroshka000/mikan/releases/latest/download/install.sh | sudo bash
+curl -fsSL https://github.com/drillex100-beep/scilla/releases/latest/download/install.sh | sudo bash
 ```
 
-安装程序会询问面板语言和可选的域名，检查域名是否指向本服务器，按需安装 Docker，在服务器附近挑选 REALITY 伪装站点，并输出管理员链接。之后随时再运行 `mikan` 即可打开管理菜单。
+安装程序会询问面板语言和可选的域名，检查域名是否指向本服务器，按需安装 Docker，在服务器附近挑选 REALITY 伪装站点，并输出管理员链接。之后随时再运行 `scilla` 即可打开管理菜单。
 
-为已有面板添加节点：在面板的 **节点** 页面（或用 `mikan node add`）获取带密钥的命令：
+为已有面板添加节点：在面板的 **节点** 页面（或用 `scilla node add`）获取带密钥的命令：
 
 ```bash
-curl -fsSL https://github.com/Miroshka000/mikan/releases/latest/download/install.sh | sudo bash -s -- --join KEY
+curl -fsSL https://github.com/drillex100-beep/scilla/releases/latest/download/install.sh | sudo bash -s -- --join KEY
 ```
 
-脚本中可免交互安装：`… | sudo bash -s -- --yes --lang en --domain vpn.example.com --email you@example.com`（全部参数见 `mikan install --help`）。
+脚本中可免交互安装：`… | sudo bash -s -- --yes --lang en --domain vpn.example.com --email you@example.com`（全部参数见 `scilla install --help`）。
 
-## 为什么选择 mikan
+## 为什么选择 scilla
 
 <table>
 <tr>
 <td width="50%" valign="top">
 
 ### 🛡️ 自动应对封锁
-mikan 会检查真实客户端是否仍能连上各个协议。端口在途中被封时，它会把协议换到空闲的 HTTPS 端口；REALITY 伪装站点失效时，它会在服务器附近重新挑选一个。
+scilla 会检查真实客户端是否仍能连上各个协议。端口在途中被封时，它会把协议换到空闲的 HTTPS 端口；REALITY 伪装站点失效时，它会在服务器附近重新挑选一个。
 
 </td>
 <td width="50%" valign="top">
@@ -106,11 +106,11 @@ Go 和 PostgreSQL，三个小容器。在带客户端的实际运行服务器上
 管理员可以创建折扣码，以及赠送天数或流量的奖励码。订阅用户在 Telegram Mini App 中使用
 优惠码，这里也会显示兑换记录。奖励流量可以计入主余额，也可以计入指定的流量池。带折扣的账单
 只能通过支持退款的支付方式支付：Telegram Stars，以及声明支持退款的适配器。这样，如果优惠码的预留
-在支付服务商确认之前过期，mikan 就能把款项退回。
+在支付服务商确认之前过期，scilla 就能把款项退回。
 
 ## 支持访问
 
-需要帮助时，由你自己开启临时访问：设置 → 支持，时长 2、6 或 24 小时，级别为「查看」「修改」或「终端」。没有这个按钮，任何人（包括 mikan 的开发者）都进不了面板：项目对你的服务器没有常驻访问，面板也不会自行连接任何地方。操作员的每个操作都写入审计日志，一键即可撤销访问，终端需要你的密码和 2FA 才能开启，并且全程录制。要彻底关闭此功能，可使用同一卡片上的开关，或在服务器上运行 `mikan support-access off`。付费支持规则：[见网站](https://miroshka000.github.io/mikan/support/paid/)。
+需要帮助时，由你自己开启临时访问：设置 → 支持，时长 2、6 或 24 小时，级别为「查看」「修改」或「终端」。没有这个按钮，任何人（包括 scilla 的开发者）都进不了面板：项目对你的服务器没有常驻访问，面板也不会自行连接任何地方。操作员的每个操作都写入审计日志，一键即可撤销访问，终端需要你的密码和 2FA 才能开启，并且全程录制。要彻底关闭此功能，可使用同一卡片上的开关，或在服务器上运行 `scilla support-access off`。付费支持规则：[见网站](https://drillex100-beep.github.io/scilla/support/paid/)。
 
 ## 截图
 
@@ -161,8 +161,8 @@ Go 和 PostgreSQL，三个小容器。在带客户端的实际运行服务器上
 
 ```mermaid
 flowchart LR
-    A[Browser] -- HTTPS, secret link --> P[mikan panel<br>users · plans · subscriptions]
-    P -- unix socket / pinned TLS --> N1[mikan node<br>Citrus inside]
+    A[Browser] -- HTTPS, secret link --> P[scilla panel<br>users · plans · subscriptions]
+    P -- unix socket / pinned TLS --> N1[scilla node<br>Citrus inside]
     P -- pinned TLS --> N2[remote node]
     C[VPN apps] -- REALITY · QUIC · … --> N1
     C --> N2
@@ -173,25 +173,25 @@ flowchart LR
 
 ## 管理服务器
 
-运行 `mikan` 打开菜单，或直接使用命令：
+运行 `scilla` 打开菜单，或直接使用命令：
 
 | 命令 | 作用 |
 |---|---|
-| `mikan status` | 容器、版本、健康状态、可用更新 |
-| `mikan logs [panel\|node]` | 实时日志 |
-| `mikan url` | 管理员链接 |
-| `mikan reset-password` · `reset-path` · `disable-2fa` | 找回访问权限 |
-| `mikan update` | 立即更新（先备份，失败自动回滚） |
-| `mikan backup` · `restore FILE` | 备份存放在 `/opt/mikan/backups` |
-| `mikan node …` · `mikan inbound …` | 节点和协议 |
-| `mikan targets scan` · `apply` | 服务器附近的 REALITY 伪装站点 |
-| `mikan join KEY` | 在节点上执行：从面板获取新密钥 |
-| `mikan restart` | 重启容器 |
-| `mikan doctor` | 检查服务器：Docker、端口、防火墙、时钟、DNS、磁盘 |
-| `mikan support 代码` | 面板无法访问时，把诊断发送到支持工单 |
-| `mikan support-access on\|off` | 允许或禁止本服务器的支持访问 |
-| `mikan api-lockdown [status\|off]` | 在节点上：查看「节点 API 仅限面板 IP」规则的状态，或立即解除 |
-| `mikan uninstall` | 停止并删除该命令，保留数据 |
+| `scilla status` | 容器、版本、健康状态、可用更新 |
+| `scilla logs [panel\|node]` | 实时日志 |
+| `scilla url` | 管理员链接 |
+| `scilla reset-password` · `reset-path` · `disable-2fa` | 找回访问权限 |
+| `scilla update` | 立即更新（先备份，失败自动回滚） |
+| `scilla backup` · `restore FILE` | 备份存放在 `/opt/scilla/backups` |
+| `scilla node …` · `scilla inbound …` | 节点和协议 |
+| `scilla targets scan` · `apply` | 服务器附近的 REALITY 伪装站点 |
+| `scilla join KEY` | 在节点上执行：从面板获取新密钥 |
+| `scilla restart` | 重启容器 |
+| `scilla doctor` | 检查服务器：Docker、端口、防火墙、时钟、DNS、磁盘 |
+| `scilla support 代码` | 面板无法访问时，把诊断发送到支持工单 |
+| `scilla support-access on\|off` | 允许或禁止本服务器的支持访问 |
+| `scilla api-lockdown [status\|off]` | 在节点上：查看「节点 API 仅限面板 IP」规则的状态，或立即解除 |
+| `scilla uninstall` | 停止并删除该命令，保留数据 |
 
 ## 更新
 
@@ -202,9 +202,9 @@ flowchart LR
 ## 从源码构建
 
 ```bash
-docker buildx build -t mikan:dev .            # panel + node image
+docker buildx build -t scilla:dev .            # panel + node image
 cd web && pnpm install && pnpm dev            # admin UI with hot reload
-MIKAN_TEST_DATABASE_URL=postgres://… go test ./...   # Go 1.27, a test PostgreSQL 18 and pg_dump
+SCILLA_TEST_DATABASE_URL=postgres://… go test ./...   # Go 1.27, a test PostgreSQL 18 and pg_dump
 cd installer && cargo test                    # the installer (Rust)
 ```
 
@@ -213,21 +213,21 @@ cd installer && cargo test                    # the installer (Rust)
 ## ⛔ 分叉与第三方构建
 
 > [!CAUTION]
-> **官方 mikan 只在这里**：仓库 `Miroshka000/mikan`、镜像 `ghcr.io/miroshka000/mikan`，以及用 mikan 密钥签名的发布版本。官方插件只来自 `getmikan/marketplace` 目录；社区注册表 `getmikan/marketplace-community` 收录的是第三方插件，mikan 不审查也不为其负责。其他一切，无论叫什么名字，都不是 mikan。
+> **官方 scilla 只在这里**：仓库 `Miroshka000/mikan`、镜像 `ghcr.io/miroshka000/scilla`，以及用 scilla 密钥签名的发布版本。官方插件只来自 `getmikan/marketplace` 目录；社区注册表 `getmikan/marketplace-community` 收录的是第三方插件，scilla 不审查也不为其负责。其他一切，无论叫什么名字，都不是 scilla。
 >
-> **mikan 项目认为，所有分叉以及所有来自其他来源的构建都存在潜在的安全风险。**
+> **scilla 项目认为，所有分叉以及所有来自其他来源的构建都存在潜在的安全风险。**
 >
 > **官方构建可以验证**。每个版本都由本仓库的开源代码自动构建并签名，面板和安装程序只接受带有此签名的更新。别人的构建由什么组成，只有其作者知道。
 >
-> **分叉收不到我们的更新**。分叉无法用 mikan 密钥签名其版本，因此错误和漏洞的修复不会到达它，除非其作者自行移植。
+> **分叉收不到我们的更新**。分叉无法用 scilla 密钥签名其版本，因此错误和漏洞的修复不会到达它，除非其作者自行移植。
 >
 > **我们不支持分叉**。我们不审查它们，也不对其中的错误、漏洞或数据丢失负责。关于他人构建的问题在聊天和 issues 中不予处理。
 >
-> **名称不属于许可证**。GPL v3 涵盖代码，不涵盖 mikan 的名称和标志（GPL v3 第 7 条，见 [NOTICE.md](NOTICE.md) 和 [TRADEMARK.md](TRADEMARK.md)）。分叉必须使用其他名称，且不得冒充 mikan。
+> **名称不属于许可证**。GPL v3 涵盖代码，不涵盖 scilla 的名称和标志（GPL v3 第 7 条，见 [NOTICE.md](NOTICE.md) 和 [TRADEMARK.md](TRADEMARK.md)）。分叉必须使用其他名称，且不得冒充 scilla。
 
 ## 许可证
 
-mikan 是基于 [GNU GPL v3](LICENSE) 的自由软件，并附有 [NOTICE.md](NOTICE.md) 中的附加条款：保留署名、不得将修改版冒充原版、不授予名称和标志的权利。Copyright (C) 2026 Miroshka and Mikan。内嵌 [Citrus](https://github.com/getmikan/Citrus)（[mihomo](https://github.com/MetaCubeX/mihomo) 的分支）（GPL-3.0），部分代码改编自 [3x-ui](https://github.com/MHSanaei/3x-ui)（GPL-3.0）。字体：Unbounded、Onest、JetBrains Mono（SIL OFL 1.1）。
+scilla 是基于 [GNU GPL v3](LICENSE) 的自由软件，并附有 [NOTICE.md](NOTICE.md) 中的附加条款：保留署名、不得将修改版冒充原版、不授予名称和标志的权利。Copyright (C) 2026 Miroshka and Scilla。内嵌 [Citrus](https://github.com/getmikan/Citrus)（[mihomo](https://github.com/MetaCubeX/mihomo) 的分支）（GPL-3.0），部分代码改编自 [3x-ui](https://github.com/MHSanaei/3x-ui)（GPL-3.0）。字体：Unbounded、Onest、JetBrains Mono（SIL OFL 1.1）。
 
 <div align="center">
 <sub>用 🍊 制作</sub>

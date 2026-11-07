@@ -10,10 +10,10 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/webhooks"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/webhooks"
 )
 
 // Outgoing webhooks (internal/panel/webhooks): the addresses the panel POSTs its events to,

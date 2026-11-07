@@ -4,7 +4,7 @@ import (
 	"math"
 	"testing"
 
-	"mikan/internal/sub/model"
+	"scilla/internal/sub/model"
 )
 
 // Each core's own settings go over the common ones; what a core leaves at zero keeps them.

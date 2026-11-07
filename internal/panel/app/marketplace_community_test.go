@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"testing"
 
-	"mikan/internal/panel/addons"
+	"scilla/internal/panel/addons"
 )
 
 // communityAddon is a snapshot of the registry: an entry of an author's release, its repository
@@ -186,7 +186,7 @@ func TestCommunityAddons(t *testing.T) {
 	}
 }
 
-// A source whose repository mikan revoked installs nothing either.
+// A source whose repository scilla revoked installs nothing either.
 func TestCommunityRevokesASource(t *testing.T) {
 	l := newSrcLab(t)
 	l.publish("/a.json", l.catalogDoc(srcEntry("alpha", "1.0.0", "b", "generic")), nil)

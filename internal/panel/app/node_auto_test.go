@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
 
 	"go.yaml.in/yaml/v3"
 )

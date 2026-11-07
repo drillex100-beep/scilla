@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"testing"
 
-	"mikan/internal/panel/auth"
+	"scilla/internal/panel/auth"
 )
 
 // The password form's minLength is a literal in a struct tag; the shell holds to the same

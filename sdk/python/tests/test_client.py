@@ -10,11 +10,11 @@ import unittest
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
-import mikan_sdk
-from mikan_sdk import AuthenticatedClient
-from mikan_sdk.api.payments import adjust_balance
-from mikan_sdk.api.users import extend_user, list_users
-from mikan_sdk.models import AdjustBalanceInputBody, ErrorModel, ExtendInputBody, ListUsersState
+import scilla_sdk
+from scilla_sdk import AuthenticatedClient
+from scilla_sdk.api.payments import adjust_balance
+from scilla_sdk.api.users import extend_user, list_users
+from scilla_sdk.models import AdjustBalanceInputBody, ErrorModel, ExtendInputBody, ListUsersState
 
 KEY = "mk_test_key"
 EMPTY_LIST = {
@@ -107,13 +107,13 @@ class ClientTest(unittest.TestCase):
         self.assertEqual(response.parsed.detail, "session_only")
 
     def test_every_operation_of_the_spec_is_a_function(self):
-        spec = json.loads(Path(os.environ["MIKAN_SDK_SPEC"]).read_text(encoding="utf-8"))
+        spec = json.loads(Path(os.environ["SCILLA_SDK_SPEC"]).read_text(encoding="utf-8"))
         operations = sum(
             1 for item in spec["paths"].values() for method in item if method in {"get", "put", "post", "delete", "patch"}
         )
         modules = [
             path
-            for path in (Path(mikan_sdk.__file__).parent / "api").glob("*/*.py")
+            for path in (Path(scilla_sdk.__file__).parent / "api").glob("*/*.py")
             if path.name != "__init__.py"
         ]
         self.assertEqual(len(modules), operations)

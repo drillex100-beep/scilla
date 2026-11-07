@@ -8,11 +8,11 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
-	"mikan/internal/panel/support"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
+	"scilla/internal/panel/support"
 )
 
 // A node's clients are the users with bytes on it, the latest seen first, a page at a time

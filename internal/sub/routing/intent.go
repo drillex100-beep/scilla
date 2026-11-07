@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/sub/model"
+	"scilla/internal/sub/model"
 )
 
 // Intent is what the panel's routing settings ask of every profile, apart from any core:

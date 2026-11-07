@@ -6,8 +6,8 @@ import (
 	"html"
 	"strings"
 
-	"mikan/internal/panel/model"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/model"
+	"scilla/internal/tgapi"
 )
 
 // One more device for the shown subscription. Callback data: e the offer, ep:<p> pay for

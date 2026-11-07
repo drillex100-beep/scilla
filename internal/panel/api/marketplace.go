@@ -11,11 +11,11 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/addons/panelapi"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/addons/panelapi"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // The marketplace of addons of protocol 2: bots, pages and the rest (the payment adapters
@@ -41,7 +41,7 @@ type MarketOrigin struct {
 	Title   string `json:"title" doc:"Название источника или владелец/репозиторий автора"`
 	Repo    string `json:"repo,omitempty" doc:"Репозиторий автора (community)"`
 	Signed  bool   `json:"signed" doc:"Подписан закреплённым ключом автора; без подписи тот, кто управляет адресом, управляет и обновлениями"`
-	Revoked string `json:"revoked,omitempty" doc:"mikan убрал аддон из реестра, причина: ставить и обновлять нельзя, установленный лучше удалить"`
+	Revoked string `json:"revoked,omitempty" doc:"scilla убрал аддон из реестра, причина: ставить и обновлять нельзя, установленный лучше удалить"`
 }
 
 type MarketEntry struct {
@@ -74,7 +74,7 @@ type MarketInstalled struct {
 	Version string        `json:"version" doc:"Одобренная версия у аддона из источника; пусто у аддона админа без источника: версию знает только каталог"`
 	Kind    string        `json:"kind" enum:"bot,ui,generic"`
 	Mode    string        `json:"mode" enum:"http,client"`
-	Source  string        `json:"source" enum:"official,custom,external" doc:"official — из подписанного каталога; custom — образ из источника или, у старых установок, свой образ админа; external — свой процесс админа; mikan неофициальные не проверял"`
+	Source  string        `json:"source" enum:"official,custom,external" doc:"official — из подписанного каталога; custom — образ из источника или, у старых установок, свой образ админа; external — свой процесс админа; scilla неофициальные не проверял"`
 	Origin  *MarketOrigin `json:"origin,omitempty" doc:"Откуда поставлен аддон (custom): источник или реестр сообщества"`
 	Image   string        `json:"image,omitempty" doc:"Образ неофициального аддона (custom)"`
 	Digest  string        `json:"digest,omitempty" doc:"Дайджест образа неофициального аддона (custom)"`
@@ -87,13 +87,13 @@ type MarketInstalled struct {
 type MarketView struct {
 	Catalog        []MarketEntry     `json:"catalog" doc:"Подписанный каталог и записи источников, которые админ добавил"`
 	CatalogError   string            `json:"catalog_error,omitempty" doc:"catalog_unavailable — каталог не загрузился"`
-	Community      []MarketEntry     `json:"community" doc:"Реестр аддонов сообщества: сторонние авторы, mikan их код не проверял"`
+	Community      []MarketEntry     `json:"community" doc:"Реестр аддонов сообщества: сторонние авторы, scilla их код не проверял"`
 	CommunityError string            `json:"community_error,omitempty" doc:"community_unavailable — реестр не загрузился"`
 	Installed      []MarketInstalled `json:"installed"`
 	Queue          []AddonRequest    `json:"queue,omitempty" doc:"Все заявки, которые сервер ещё не взял, по порядку"`
 	Last           *AddonResult      `json:"last,omitempty" doc:"Как сервер выполнил последнюю заявку"`
 	Supported      bool              `json:"supported" doc:"Панель видит каталог данных сервера; иначе ставить аддоны нельзя"`
-	HostReady      bool              `json:"host_ready" doc:"mikan на сервере умеет аддоны протокола 2; иначе сначала обновить сервер"`
+	HostReady      bool              `json:"host_ready" doc:"scilla на сервере умеет аддоны протокола 2; иначе сначала обновить сервер"`
 }
 
 type marketOutput struct{ Body MarketView }
@@ -106,7 +106,7 @@ type marketExternalInput struct {
 		Kind        string   `json:"kind" enum:"bot,ui,generic"`
 		Mode        string   `json:"mode" enum:"http,client" doc:"http — аддон отвечает панели на /v2/*; client — только сам ходит в панель"`
 		Permissions []string `json:"permissions" maxItems:"16" doc:"Права, которые админ даёт аддону"`
-		Confirm     bool     `json:"confirm" doc:"Админ подтвердил, что доверяет этому коду: mikan его не проверял"`
+		Confirm     bool     `json:"confirm" doc:"Админ подтвердил, что доверяет этому коду: scilla его не проверял"`
 	}
 }
 
@@ -123,7 +123,7 @@ func (h *handlers) registerMarketplace() {
 	op := sessionOps("addons")
 	huma.Register(h.api, op("list-marketplace", http.MethodGet, "/api/v1/marketplace", "Маркетплейс аддонов: боты, страницы и прочее", 0), h.listMarketplace)
 	huma.Register(h.api, op("install-marketplace", http.MethodPost, "/api/v1/marketplace/{id}/install", "Одобрить права и установить или обновить аддон каталога или источника: заявка серверу", http.StatusAccepted), h.installMarketplace)
-	huma.Register(h.api, op("install-external-addon", http.MethodPost, "/api/v1/marketplace/external", "Режим разработчика: подключить свой процесс на 127.0.0.1, без проверки mikan", http.StatusAccepted), h.installExternal)
+	huma.Register(h.api, op("install-external-addon", http.MethodPost, "/api/v1/marketplace/external", "Режим разработчика: подключить свой процесс на 127.0.0.1, без проверки scilla", http.StatusAccepted), h.installExternal)
 	huma.Register(h.api, op("remove-marketplace", http.MethodPost, "/api/v1/marketplace/{id}/remove", "Удалить аддон и отозвать его права: заявка серверу", http.StatusAccepted), h.removeMarketplace)
 }
 
@@ -341,7 +341,7 @@ func (h *handlers) installMarketplace(ctx context.Context, in *marketInstallInpu
 	if !addons.SamePermissions(in.Body.Permissions, e.Permissions) {
 		return nil, huma.Error409Conflict("permissions_changed")
 	}
-	// Code mikan has not looked at, at every install and every update: the admin says so, and
+	// Code scilla has not looked at, at every install and every update: the admin says so, and
 	// a support operator only in the extended mode (such an addon may be given the
 	// subscribers, and it stays after the grant).
 	if src != nil || comm != nil {
@@ -352,7 +352,7 @@ func (h *handlers) installMarketplace(ctx context.Context, in *marketInstallInpu
 			return nil, fieldErr("body.ack", "addon_not_confirmed")
 		}
 	}
-	// A permission the host does not know yet would make it drop the addon: mikan update first.
+	// A permission the host does not know yet would make it drop the addon: scilla update first.
 	if !addons.HostTakes(st.HostVersion, e.Permissions) {
 		return nil, huma.Error409Conflict("host_outdated")
 	}

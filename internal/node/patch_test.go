@@ -12,8 +12,8 @@ import (
 
 	"github.com/metacubex/mihomo/listener"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/nodetls"
+	"scilla/internal/nodeapi"
+	"scilla/internal/nodetls"
 )
 
 // The core reports what an Apply did to the listeners: a port another program holds is a
@@ -36,7 +36,7 @@ func TestApplyListenersThroughTheCore(t *testing.T) {
 		t.Fatal(err)
 	}
 	busyPort := strconv.Itoa(busy.Addr().(*net.TCPAddr).Port)
-	ws := []byte(`{"type":"vless","ws-path":"/w","mikan":{"tls":"node"}}`)
+	ws := []byte(`{"type":"vless","ws-path":"/w","scilla":{"tls":"node"}}`)
 	s1 := nodeapi.Slot{Name: "s1", UUID: "00000000-0000-4000-8000-000000000001", Secret: "a"}
 	s2 := nodeapi.Slot{Name: "s2", UUID: "00000000-0000-4000-8000-000000000002", Secret: "b"}
 	state := func(rev int64, slots ...nodeapi.Slot) nodeapi.DesiredState {

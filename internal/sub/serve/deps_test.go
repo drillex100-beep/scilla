@@ -14,12 +14,12 @@ func TestModuleLinksNeitherPanelNorCore(t *testing.T) {
 	if err != nil {
 		t.Skip("no go tool to list the imports with")
 	}
-	out, err := exec.Command(gobin, "list", "-deps", "-f", "{{.ImportPath}}", "mikan/internal/sub/...").CombinedOutput()
+	out, err := exec.Command(gobin, "list", "-deps", "-f", "{{.ImportPath}}", "scilla/internal/sub/...").CombinedOutput()
 	if err != nil {
 		t.Fatalf("go list: %v\n%s", err, out)
 	}
 	for _, p := range strings.Fields(string(out)) {
-		if p == "mikan/internal/panel" || strings.HasPrefix(p, "mikan/internal/panel/") ||
+		if p == "scilla/internal/panel" || strings.HasPrefix(p, "scilla/internal/panel/") ||
 			p == "github.com/metacubex/mihomo" || strings.HasPrefix(p, "github.com/metacubex/mihomo/") {
 			t.Errorf("internal/sub links %s", p)
 		}

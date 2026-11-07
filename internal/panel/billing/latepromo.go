@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"time"
 
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/promo"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/promo"
+	"scilla/internal/panel/store/db"
 )
 
 // A payment that comes after its promo discount ran out (promo.PaidLate) buys nothing at
@@ -26,7 +26,7 @@ func paymentTime(p db.Payment, fallback int64) int64 {
 }
 
 func (s *Service) refundPromoPayment(ctx context.Context, p db.Payment, externalID string) error {
-	return s.refundCharge(ctx, p, externalID, "mikan-promo-late-"+strconv.FormatInt(p.ID, 10))
+	return s.refundCharge(ctx, p, externalID, "scilla-promo-late-"+strconv.FormatInt(p.ID, 10))
 }
 
 // refundCharge gives a payment's money back through the provider it came by: Stars

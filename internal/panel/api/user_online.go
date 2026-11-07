@@ -10,7 +10,7 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 // UserOnlineView is where a user is online now: one node and one set of keys (the user's own,

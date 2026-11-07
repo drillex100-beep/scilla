@@ -51,7 +51,7 @@ func TestPresetsRender(t *testing.T) {
   server-names: [www.microsoft.com]
 `
 	cases := map[string]string{
-		"vless_reality_vision": "type: vless\n" + reality + "mikan:\n  flow: xtls-rprx-vision\n",
+		"vless_reality_vision": "type: vless\n" + reality + "scilla:\n  flow: xtls-rprx-vision\n",
 		"vless_reality_xhttp":  "type: vless\n" + reality + "xhttp-config:\n  path: /x7k2\n  mode: stream-one\n",
 		"hysteria2":            "type: hysteria2\nalpn: [h3]\nobfs: salamander\nobfs-password: obfs123\n",
 		"tuic_v5":              "type: tuic\nalpn: [h3]\ncongestion-controller: bbr\n",
@@ -154,7 +154,7 @@ func TestVLESSEncryption(t *testing.T) {
 	if code(Validate(mustParse(t, "type: vless\ndecryption: nope\n"+src[strings.Index(src, "reality-config"):]), Options{})) != "vless_decryption" {
 		t.Fatal("a broken decryption must be refused")
 	}
-	if code(Validate(mustParse(t, "type: trojan\ndecryption: none\nmikan: {tls: node}\n"), Options{})) != "config_key" {
+	if code(Validate(mustParse(t, "type: trojan\ndecryption: none\nscilla: {tls: node}\n"), Options{})) != "config_key" {
 		t.Fatal("decryption is VLESS only")
 	}
 }
@@ -179,18 +179,18 @@ func TestValidateRefusesDangerousTemplates(t *testing.T) {
 		"cert path":                 {"type: hysteria2\ncertificate: /etc/shadow\n", "config_managed"},
 		"routing bypass":            {"type: vless\n" + reality + "proxy: DIRECT\n", "config_key"},
 		"plain vless":               {"type: vless\nws-path: /ws\n", "config_insecure"},
-		"reality and tls":           {"type: vless\n" + reality + "mikan: {tls: node}\n", "config_both_tls"},
+		"reality and tls":           {"type: vless\n" + reality + "scilla: {tls: node}\n", "config_both_tls"},
 		"private dest":              {strings.Replace("type: vless\n"+reality, "www.microsoft.com:443", "169.254.169.254:80", 1), "reality_dest_private"},
 		"reality proxy":             {"type: vless\n" + reality + "  proxy: DIRECT\n", "config_key"},
 		"file masquerade":           {"type: hysteria2\nmasquerade: file:///etc\n", "config_masquerade"},
 		"private masquerade":        {"type: hysteria2\nmasquerade: https://10.0.0.1/\n", "config_masquerade"},
 		"realm":                     {"type: hysteria2\nrealm-opts: {enable: true}\n", "config_key"},
-		"vision over xhttp":         {"type: vless\n" + reality + "xhttp-config: {path: /x}\nmikan: {flow: xtls-rprx-vision}\n", "config_flow"},
+		"vision over xhttp":         {"type: vless\n" + reality + "xhttp-config: {path: /x}\nscilla: {flow: xtls-rprx-vision}\n", "config_flow"},
 		"xhttp auto":                {"type: vless\n" + reality + "xhttp-config: {path: /x, mode: auto}\n", "config_xhttp_mode"},
 		"shadowsocks pre-2022":      {"type: shadowsocks\npassword: x\n", "ss_cipher"},
 		"unencrypted socks":         {"type: socks\n", "config_type"},
-		"vmess, gone from the core": {"type: vmess\nws-path: /m\nmikan: {tls: node}\n", "config_type"},
-		"unknown mikan key":         {"type: tuic\nmikan: {evil: 1}\n", "config_key"},
+		"vmess, gone from the core": {"type: vmess\nws-path: /m\nscilla: {tls: node}\n", "config_type"},
+		"unknown scilla key":        {"type: tuic\nscilla: {evil: 1}\n", "config_key"},
 		"bad short id":              {strings.Replace("type: vless\n"+reality, "[a1b2]", "[xyz]", 1), "reality_sid"},
 		"obfs without password":     {"type: hysteria2\nobfs: salamander\n", "config_obfs"},
 	}
@@ -230,7 +230,7 @@ func TestNewTypes(t *testing.T) {
 				t.Errorf("grpc: %v", l)
 			}
 		},
-		"type: trojan\nws-path: /t\nmikan: {tls: node}\n": func(l map[string]any) {
+		"type: trojan\nws-path: /t\nscilla: {tls: node}\n": func(l map[string]any) {
 			if l["certificate"] != "/c" {
 				t.Errorf("trojan: %v", l)
 			}
@@ -243,7 +243,7 @@ func TestNewTypes(t *testing.T) {
 				t.Errorf("anytls: %v", l)
 			}
 		},
-		"type: vless\nws-path: /v\nmikan: {tls: node, client: {server: cdn.example.com, port: 443}}\n": func(l map[string]any) {
+		"type: vless\nws-path: /v\nscilla: {tls: node, client: {server: cdn.example.com, port: 443}}\n": func(l map[string]any) {
 			// The apps' own address is theirs: the node listens where it does.
 			if l["port"] != "2053" || l[extKey] != nil {
 				t.Errorf("vless override: %v", l)
@@ -261,7 +261,7 @@ func TestNewTypes(t *testing.T) {
 }
 
 func TestMarshalKeepsTypeFirst(t *testing.T) {
-	out := Marshal(Template{"alpn": []any{"h3"}, "type": "tuic", "mikan": map[string]any{"tls": "node"}, "congestion-controller": "bbr"})
+	out := Marshal(Template{"alpn": []any{"h3"}, "type": "tuic", "scilla": map[string]any{"tls": "node"}, "congestion-controller": "bbr"})
 	if !strings.HasPrefix(out, "type: tuic\n") || !strings.HasSuffix(strings.TrimSpace(out), "tls: node") {
 		t.Fatalf("order:\n%s", out)
 	}

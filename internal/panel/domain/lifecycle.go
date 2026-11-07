@@ -7,8 +7,8 @@ import (
 	"errors"
 	"time"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // The lifecycle of a subscription past its plain term (roadmap #10): the traffic a period

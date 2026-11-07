@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"time"
 
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/store"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/store"
 )
 
 // A billing day (1–31) ends every term on that day of the month: "+1 month" moves the

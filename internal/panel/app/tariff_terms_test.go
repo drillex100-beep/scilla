@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/domain"
+	"scilla/internal/panel/domain"
 )
 
 type termView struct {

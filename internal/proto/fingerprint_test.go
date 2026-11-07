@@ -8,7 +8,7 @@ import (
 // Node-certificate TLS dials through uTLS too; QUIC protocols have none.
 func TestUsesFingerprint(t *testing.T) {
 	for src, want := range map[string]bool{
-		"type: trojan\nws-path: /ws\nmikan:\n  tls: node\n": true,
+		"type: trojan\nws-path: /ws\nscilla:\n  tls: node\n": true,
 		"type: anytls\n":      true,
 		"type: trusttunnel\n": true,
 		"type: hysteria2\n":   false,
@@ -42,9 +42,9 @@ func TestSetFingerprint(t *testing.T) {
 		t.Fatal(err)
 	}
 	if _, ok := tpl[extKey]; ok {
-		t.Fatalf("empty mikan section left: %v", tpl)
+		t.Fatalf("empty scilla section left: %v", tpl)
 	}
-	tpl = mustParse(t, "type: anytls\nmikan:\n  client:\n    sni: cdn.example.com\n    fingerprint: qq\n")
+	tpl = mustParse(t, "type: anytls\nscilla:\n  client:\n    sni: cdn.example.com\n    fingerprint: qq\n")
 	if err := SetFingerprint(tpl, ""); err != nil {
 		t.Fatal(err)
 	}

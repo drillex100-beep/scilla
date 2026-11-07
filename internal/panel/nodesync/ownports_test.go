@@ -5,8 +5,8 @@ import (
 	"slices"
 	"testing"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // The panel's own node keeps the panel and the subscription open to its users; another node

@@ -5,9 +5,9 @@ import (
 	"slices"
 	"testing"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/subtest"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/subtest"
 )
 
 // The preview is told what xray leaves out: the proxies it cannot carry, a rule by an AS
@@ -46,7 +46,7 @@ func TestDroppedBuiltin(t *testing.T) {
 	u := subtest.Multi()
 	u.Routes, u.Rules = subtest.Routes(), subtest.Rules
 	_, rest := split(Dropped(profileOf(u), model.GroupNames{}, routing.RUDirect, model.Template{}))
-	for _, name := range []string{"own-wl", "own-ads", "mikan-ru-apps"} {
+	for _, name := range []string{"own-wl", "own-ads", "scilla-ru-apps"} {
 		if !slices.Contains(rest, model.Note{Core: "xray", Subject: name, Code: "list_unsupported"}) {
 			t.Errorf("%s is not told: %+v", name, rest)
 		}
@@ -82,11 +82,11 @@ func split(notes []model.Note) (proxies []string, rest []model.Note) {
 // categories of it: one the usual geodata has none of (ru-blocked) is told, one it has
 // (category-ru) is not, and its rule stays.
 func TestDroppedListWithoutGeodata(t *testing.T) {
-	if s, ips := routing.Common.List("mikan-blocked"); len(s)+len(ips) != 0 {
-		t.Fatalf("the usual geodata has mikan-blocked: %q %q", s, ips)
+	if s, ips := routing.Common.List("scilla-blocked"); len(s)+len(ips) != 0 {
+		t.Fatalf("the usual geodata has scilla-blocked: %q %q", s, ips)
 	}
-	if s, _ := routing.Common.List("mikan-ru-core"); len(s) == 0 {
-		t.Fatal("the usual geodata has no mikan-ru-core")
+	if s, _ := routing.Common.List("scilla-ru-core"); len(s) == 0 {
+		t.Fatal("the usual geodata has no scilla-ru-core")
 	}
 	const src = `mode: rule
 proxy-groups:
@@ -94,24 +94,24 @@ proxy-groups:
     type: select
     include-all-proxies: true
 rule-providers:
-  mikan-blocked:
+  scilla-blocked:
     type: http
     behavior: classical
-    url: https://example.com/mikan-blocked.yaml
-    path: ./mikan-blocked.yaml
-  mikan-ru-core:
+    url: https://example.com/scilla-blocked.yaml
+    path: ./scilla-blocked.yaml
+  scilla-ru-core:
     type: http
     behavior: domain
-    url: https://example.com/mikan-ru-core.yaml
-    path: ./mikan-ru-core.yaml
+    url: https://example.com/scilla-ru-core.yaml
+    path: ./scilla-ru-core.yaml
 rules:
-  - RULE-SET,mikan-blocked,Сеть
-  - RULE-SET,mikan-ru-core,DIRECT
+  - RULE-SET,scilla-blocked,Сеть
+  - RULE-SET,scilla-ru-core,DIRECT
   - MATCH,Сеть
 `
 	prof := profileOf(subtest.Multi())
 	_, rest := split(Dropped(prof, model.GroupNames{}, routing.All, subtest.Clash(src)))
-	if want := []model.Note{{Core: "xray", Subject: "mikan-blocked", Code: "list_unsupported"}}; !slices.Equal(rest, want) {
+	if want := []model.Note{{Core: "xray", Subject: "scilla-blocked", Code: "list_unsupported"}}; !slices.Equal(rest, want) {
 		t.Fatalf("notes: %+v", rest)
 	}
 	pl, err := planOf(prof, model.GroupNames{}, routing.All, subtest.Clash(src))

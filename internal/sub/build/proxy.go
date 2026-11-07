@@ -6,8 +6,8 @@ import (
 	"net"
 	"strconv"
 
-	"mikan/internal/proto"
-	"mikan/internal/sub/model"
+	"scilla/internal/proto"
+	"scilla/internal/sub/model"
 )
 
 // Input is what a subscription knows of one user and one node for an inbound of it.
@@ -28,7 +28,7 @@ type Input struct {
 	// SSOneKey: the node runs Shadowsocks-2022 with one key for everyone (older than the
 	// key per user): the app gets the server's key alone, as that node expects.
 	SSOneKey bool
-	// Client is what the apps get in place of the template's mikan.client: a field left
+	// Client is what the apps get in place of the template's scilla.client: a field left
 	// empty keeps the template's.
 	Client proto.ClientOverrides
 }
@@ -41,7 +41,7 @@ func Proxy(t proto.Template, in Input) (model.Proxy, error) {
 		return model.Proxy{}, err
 	}
 	ext := t.Ext()
-	// From here on in.Client is the one the apps get; nothing else reads mikan.client.
+	// From here on in.Client is the one the apps get; nothing else reads scilla.client.
 	in.Client = overrides(in.Client, ext.Client)
 	p := model.Proxy{Name: in.Name, Type: t.Type(), Server: in.Host, Port: in.Port}
 	if in.Client.Server != "" {

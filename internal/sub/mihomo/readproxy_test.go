@@ -4,8 +4,8 @@ import (
 	"reflect"
 	"testing"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/subtest"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/subtest"
 )
 
 // Every proxy the panel makes reads back as itself from what Proxy writes of it, but for

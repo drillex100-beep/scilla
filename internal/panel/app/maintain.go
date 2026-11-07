@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/subsrc"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/subsrc"
 )
 
 // What only grows is cut here, every ten minutes with the rest of the housekeeping. The

@@ -21,7 +21,7 @@ type Tab = (typeof ADDON_TABS)[number];
  * The addons: what is installed (the bot, the payment methods, pages and other addons of the
  * marketplace, the tools built into the panel), each in one row with its state and its
  * actions; the catalog to install from, the signed one and the sources the admin added; and the
- * registry of community addons, which mikan lists and does not vouch for.
+ * registry of community addons, which scilla lists and does not vouch for.
  * The dialogs of both tabs live here.
  */
 export function AddonsPage() {
@@ -120,7 +120,7 @@ function ServerBanners({ m, p }: { m: Market | undefined; p: Addons }) {
       ) : m && !m.host_ready ? (
         <div className="banner warn flex-wrap" role="status">
           <span className="min-w-0 flex-1">{t("market.hostOutdated")}</span>
-          <code className="mono">mikan update</code>
+          <code className="mono">scilla update</code>
         </div>
       ) : null}
       {pending ? (

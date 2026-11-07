@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/domain"
+	"scilla/internal/panel/domain"
 )
 
 // Hysteria2 with Gecko over the admin API: the preset goes to mihomo apps alone, and a

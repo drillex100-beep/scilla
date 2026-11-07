@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/sub/routing"
+	"scilla/internal/sub/routing"
 )
 
 // A Clash rule list is YAML with a payload or a line per entry, comments and blank lines

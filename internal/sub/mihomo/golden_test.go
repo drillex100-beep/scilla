@@ -4,9 +4,9 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/sub/profile"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/subtest"
+	"scilla/internal/sub/profile"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/subtest"
 )
 
 // profileOf is the mihomo profile of a test user: its proxies and the panel's settings

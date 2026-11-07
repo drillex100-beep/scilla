@@ -7,11 +7,11 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/panel/audit"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/presets"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/proto"
+	"scilla/internal/panel/audit"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/presets"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/proto"
 )
 
 // The nodes and their protocols, for addons that look after the servers: nodes:read and

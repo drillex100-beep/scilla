@@ -34,7 +34,7 @@ Some apps (Happ, v2RayTun, v2rayNG and others on the Xray core) look a site's ad
 - **Find out the site on the server**: the node reads the site's name from the connection (TLS, HTTP and QUIC on ports 443, 8443, 80 and 8080–8880). Other ports are left alone.
 - **DNS server**: "The server's own" fits almost always. There are presets for Cloudflare, Google and Quad9 (over DoH) and an own list: up to 8 servers, for example `1.1.1.1`, `tls://dns.google`, `https://1.1.1.1/dns-query`, `quic://dns.adguard-dns.com`.
 
-Nodes older than 0.5.2.0 skip this setting; after `mikan update` it works by itself.
+Nodes older than 0.5.2.0 skip this setting; after `scilla update` it works by itself.
 
 ## Your own Clash profile
 
@@ -42,7 +42,7 @@ Nodes older than 0.5.2.0 skip this setting; after `mikan update` it works by its
 The templates replace the one own profile of earlier versions: it became the default Clash template, and sing-box and Xray got templates of their own.
 :::
 
-A whole mihomo config of your own (DNS, fake-ip, TUN, sniffer, groups, rules) is a subscription template in **Settings → Subscription → Templates**. While Clash has a default template, the settings of this page don't reach Clash apps, and the **Routing** section says so at the top. How to write templates and how response rules pick them: [Subscription templates](/mikan/en/subscriptions/templates/).
+A whole mihomo config of your own (DNS, fake-ip, TUN, sniffer, groups, rules) is a subscription template in **Settings → Subscription → Templates**. While Clash has a default template, the settings of this page don't reach Clash apps, and the **Routing** section says so at the top. How to write templates and how response rules pick them: [Subscription templates](/scilla/en/subscriptions/templates/).
 
 ## Custom rules
 

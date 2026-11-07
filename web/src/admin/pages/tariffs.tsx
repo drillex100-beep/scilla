@@ -178,7 +178,7 @@ export function TariffsPage() {
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
                           <h2 className="font-display text-xl font-medium tracking-tight">{tr.name}</h2>
-                          {tr.price_label ? <div className="mt-1 text-[13px] font-medium text-[var(--mikan-700)]">{tr.price_label}</div> : null}
+                          {tr.price_label ? <div className="mt-1 text-[13px] font-medium text-[var(--scilla-700)]">{tr.price_label}</div> : null}
                           {tr.description ? <p className="mt-2 whitespace-pre-line text-[13px] text-[var(--ink-700)]">{tr.description}</p> : null}
                           {selling && tr.on_sale ? (
                             <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-[var(--ink-600)]">

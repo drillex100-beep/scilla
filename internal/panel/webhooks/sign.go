@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"time"
 
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/secure"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/secure"
 )
 
 // The headers of a delivery (site/src/content/docs/api/webhooks.mdx tells a receiver
@@ -17,10 +17,10 @@ import (
 // delivery can neither be given another body nor be replayed under a later time; each attempt
 // is signed anew, so a retry hours later still carries a timestamp that is fresh.
 const (
-	headerEvent     = "X-Mikan-Event"
-	headerEventID   = "X-Mikan-Event-Id"
-	headerTimestamp = "X-Mikan-Timestamp"
-	headerSignature = "X-Mikan-Signature"
+	headerEvent     = "X-Scilla-Event"
+	headerEventID   = "X-Scilla-Event-Id"
+	headerTimestamp = "X-Scilla-Timestamp"
+	headerSignature = "X-Scilla-Signature"
 )
 
 // signatureScheme leads the signature in its header ("v1=<hex>"), so a stronger scheme can

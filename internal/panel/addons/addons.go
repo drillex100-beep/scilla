@@ -34,11 +34,11 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/fsutil"
-	"mikan/internal/httpjson"
-	"mikan/internal/panel/model"
-	"mikan/internal/release"
-	"mikan/internal/textutil"
+	"scilla/internal/fsutil"
+	"scilla/internal/httpjson"
+	"scilla/internal/panel/model"
+	"scilla/internal/release"
+	"scilla/internal/textutil"
 )
 
 // CatalogURL is where the signed catalog is published, next to its signature (release.SigSuffix).

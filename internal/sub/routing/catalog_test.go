@@ -28,7 +28,7 @@ func TestRunetfreedomKnowsThePanelsCategories(t *testing.T) {
 			t.Errorf("geosite %s", c)
 		}
 	}
-	if sites, ips := Runetfreedom.List("mikan-telegram-ip"); sites != nil || len(ips) != 1 {
+	if sites, ips := Runetfreedom.List("scilla-telegram-ip"); sites != nil || len(ips) != 1 {
 		t.Errorf("telegram: %v %v", sites, ips)
 	}
 }
@@ -39,8 +39,8 @@ func TestRunetfreedomKnowsThePanelsCategories(t *testing.T) {
 func TestRunetfreedomListsNameTheProviders(t *testing.T) {
 	// Lists of apps (geodata has no processes) and Discord's voice IPs.
 	skipped := map[string]bool{
-		"mikan-ru-apps": true, "mikan-ru-apps-wildcard": true, "mikan-ru-pc": true,
-		"mikan-blocked-apps": true, "mikan-torrent-apps": true, "mikan-discord-voice": true,
+		"scilla-ru-apps": true, "scilla-ru-apps-wildcard": true, "scilla-ru-pc": true,
+		"scilla-blocked-apps": true, "scilla-torrent-apps": true, "scilla-discord-voice": true,
 	}
 	var all []Provider
 	for _, s := range Services {
@@ -84,10 +84,10 @@ func TestCommonGeodata(t *testing.T) {
 	if !Common.Has("geoip", "ru") || !Common.Has("geoip", "telegram") || Common.Has("geoip", "ru-blocked") {
 		t.Error("geoip")
 	}
-	if sites, _ := Common.List("mikan-ru-sites"); len(sites) != 1 || sites[0] != "geosite:category-ru" {
+	if sites, _ := Common.List("scilla-ru-sites"); len(sites) != 1 || sites[0] != "geosite:category-ru" {
 		t.Errorf("ru sites: %v", sites)
 	}
-	if sites, ips := Common.List("mikan-blocked"); sites != nil || ips != nil {
+	if sites, ips := Common.List("scilla-blocked"); sites != nil || ips != nil {
 		t.Errorf("blocked: %v %v", sites, ips)
 	}
 }

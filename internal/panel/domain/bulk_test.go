@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store/db"
 )
 
 // A bulk action is one transaction: when it fails on a user, the users before it are as

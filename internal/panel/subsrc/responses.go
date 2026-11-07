@@ -8,11 +8,11 @@ import (
 	"slices"
 	"time"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/sub/apps"
-	"mikan/internal/sub/serve"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/sub/apps"
+	"scilla/internal/sub/serve"
 )
 
 // What the admin decided about the requests for subscriptions (internal/sub/apps) and the

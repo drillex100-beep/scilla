@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/settings"
+	"scilla/internal/tgapi"
 )
 
 // How the bot reaches Telegram: straight from the panel's server, through one of the

@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/netaddr"
+	"scilla/internal/netaddr"
 )
 
 // Protocols of mihomo's newer cores; only Clash apps (mihomo) and a few others speak them.
@@ -45,7 +45,7 @@ func ssMultiUser(t Template) bool { return strings.HasPrefix(t.str("cipher"), "2
 // secret: the panel gives it to the user's apps and the node to its listener, and neither
 // stores it.
 func SSUserKey(cipher, secret string) string {
-	sum := sha256.Sum256([]byte("mikan/ss2022/" + secret))
+	sum := sha256.Sum256([]byte("scilla/ss2022/" + secret))
 	return base64.StdEncoding.EncodeToString(sum[:ssCiphers[cipher]])
 }
 

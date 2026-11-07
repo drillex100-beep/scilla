@@ -10,8 +10,8 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // The addon's own store (permission kv): addons run without volumes, so what they keep

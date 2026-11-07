@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"testing"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store/db"
 )
 
 // A pool the tariff leaves out: the user gets it closed, nothing of it to buy, and the

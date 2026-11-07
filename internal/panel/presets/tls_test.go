@@ -6,16 +6,16 @@ import (
 	"net/url"
 	"testing"
 
-	"mikan/internal/panel/presets"
-	"mikan/internal/proto"
-	"mikan/internal/sub/apps"
-	builder "mikan/internal/sub/build"
-	"mikan/internal/sub/mihomo"
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/profile"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/singbox"
-	"mikan/internal/sub/xray"
+	"scilla/internal/panel/presets"
+	"scilla/internal/proto"
+	"scilla/internal/sub/apps"
+	builder "scilla/internal/sub/build"
+	"scilla/internal/sub/mihomo"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/profile"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/singbox"
+	"scilla/internal/sub/xray"
 )
 
 // singboxTLS is the tls of c's outbound in the sing-box profile an app gets.

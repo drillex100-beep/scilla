@@ -14,11 +14,11 @@ import (
 
 	"github.com/pquerna/otp/totp"
 
-	"mikan/internal/panel/auth"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/proto"
+	"scilla/internal/panel/auth"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/proto"
 )
 
 // keyHarness is a harness logged in, with a "read" key and a "full" key made the way an

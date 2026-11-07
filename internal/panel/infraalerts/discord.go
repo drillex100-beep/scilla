@@ -15,7 +15,7 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/textutil"
+	"scilla/internal/textutil"
 )
 
 // KeyDiscord keeps the Discord webhook the admin's alerts and notices also go to (Discord).

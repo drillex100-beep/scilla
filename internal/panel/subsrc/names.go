@@ -3,8 +3,8 @@ package subsrc
 import (
 	"context"
 
-	"mikan/internal/panel/settings"
-	submodel "mikan/internal/sub/model"
+	"scilla/internal/panel/settings"
+	submodel "scilla/internal/sub/model"
 )
 
 // LoadGroups is the subscription's group names as saved, the defaults filled in for the

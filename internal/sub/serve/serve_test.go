@@ -17,12 +17,12 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/proto"
-	"mikan/internal/sub/apps"
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/subtest"
-	"mikan/internal/sub/xray"
+	"scilla/internal/proto"
+	"scilla/internal/sub/apps"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/subtest"
+	"scilla/internal/sub/xray"
 )
 
 const testToken = "0123456789abcdefghijklmn"
@@ -95,7 +95,7 @@ func newSub(t *testing.T, p apps.Policy) *fakeSub {
 		t.Fatal(err)
 	}
 	return &fakeSub{
-		cfg:  Config{Brand: "Mikan", Nodes: subtest.Defaults("").Build.Nodes, Responses: r, Lang: "en"},
+		cfg:  Config{Brand: "Scilla", Nodes: subtest.Defaults("").Build.Nodes, Responses: r, Lang: "en"},
 		user: User{Token: testToken, Name: "u", State: StateActive},
 	}
 }
@@ -400,7 +400,7 @@ func TestBlockedAppGetsAStubWithoutKeys(t *testing.T) {
 	if w.Code != 200 || len(sub.keys) != 0 {
 		t.Fatalf("%d, %d keys: a blocked app must not take a device's place", w.Code, len(sub.keys))
 	}
-	if got := stubName(t, w); got != "⛔ This app is not supported — install INCY, Koala Clash or Mikan" {
+	if got := stubName(t, w); got != "⛔ This app is not supported — install INCY, Koala Clash or Scilla" {
 		t.Errorf("stub: %q", got)
 	}
 	if e := oneEntry(t, sub); e.Outcome != OutcomeStub || e.Rule != apps.RuleApps || e.App != "shadowrocket" || e.Format != FormatURI {
@@ -670,8 +670,8 @@ func TestInactiveNotice(t *testing.T) {
 		{StateLimited, "ru", "", "⛔ Трафик закончился — докупите или продлите подписку в боте"},
 		{StateDisabled, "en", "", "⛔ The subscription is turned off — write to support"},
 		{StateDisabled, "ru", "", "⛔ Подписка отключена — напишите в поддержку"},
-		{StateLimited, "en", "{name}, top up at {brand}\nnow", "u, top up at Mikan now"},
-		{StateDisabled, "ru", "{name} — напишите в {brand}", "u — напишите в Mikan"},
+		{StateLimited, "en", "{name}, top up at {brand}\nnow", "u, top up at Scilla now"},
+		{StateDisabled, "ru", "{name} — напишите в {brand}", "u — напишите в Scilla"},
 		// The admin's text that fills to nothing gives way to the built-in one.
 		{StateLimited, "en", "{tariff}", "⛔ The traffic is used up — buy more or renew in the bot"},
 	} {
@@ -692,14 +692,14 @@ func testGroups() AppGroups {
 	return AppGroups{V: 1, Groups: []AppGroup{{ID: 7, Name: "Video", Mode: GroupOwn, Limit: ptr(10 << 30), Left: ptr(3 << 30), State: "active", Proxies: []string{"NL"}}}}
 }
 
-// The Mikan app that asks for the groups gets X-Mikan-Groups beside the profile, the
+// The Scilla app that asks for the groups gets X-Scilla-Groups beside the profile, the
 // servers of each named as that profile has them; any other request goes without it, and
 // without asking.
 func TestGroupsHeader(t *testing.T) {
 	for _, target := range []string{"/" + testToken, "/" + testToken + "?format=clash"} {
 		sub := newSub(t, apps.Policy{NoBuiltin: true})
 		sub.groups, sub.pool = testGroups(), 7
-		w := fetchAs(t, sub, http.MethodGet, target, "MikanApp/1.0", FeaturesHeader, "routes, groups")
+		w := fetchAs(t, sub, http.MethodGet, target, "ScillaApp/1.0", FeaturesHeader, "routes, groups")
 		if w.Code != 200 || w.Header().Get(GroupsHeader) == "" || sub.groupsCalls != 1 {
 			t.Fatalf("%s: %d %v, %d calls", target, w.Code, w.Header(), sub.groupsCalls)
 		}
@@ -707,7 +707,7 @@ func TestGroupsHeader(t *testing.T) {
 		if g := decodeGroups(t, w.Header().Get(GroupsHeader)).Groups; len(g) != 1 || !slices.Equal(g[0].Proxies, []string{"VLESS XHTTP"}) {
 			t.Errorf("%s: groups %+v", target, g)
 		}
-		w = fetchAs(t, sub, http.MethodGet, target, "MikanApp/1.0")
+		w = fetchAs(t, sub, http.MethodGet, target, "ScillaApp/1.0")
 		if _, ok := w.Header()[GroupsHeader]; ok || sub.groupsCalls != 1 {
 			t.Errorf("%s: groups sent unasked: %v, %d calls", target, w.Header(), sub.groupsCalls)
 		}
@@ -717,13 +717,13 @@ func TestGroupsHeader(t *testing.T) {
 // Groups that cannot be read cost the app its header, not its profile.
 func TestGroupsErrorServesTheProfile(t *testing.T) {
 	sub := newSub(t, apps.Policy{NoBuiltin: true})
-	want := fetch(t, sub, "MikanApp/1.0").Body.String()
+	want := fetch(t, sub, "ScillaApp/1.0").Body.String()
 	sub.groups, sub.groupsErr = testGroups(), errors.New("db is gone")
 	var logged bytes.Buffer
 	h := handlerOf(sub)
 	h.SetLogger(slog.New(slog.NewTextHandler(&logged, nil)))
 	r := httptest.NewRequest(http.MethodGet, "/"+testToken, nil)
-	r.Header.Set("User-Agent", "MikanApp/1.0")
+	r.Header.Set("User-Agent", "ScillaApp/1.0")
 	r.Header.Set(FeaturesHeader, "groups")
 	w := httptest.NewRecorder()
 	h.Serve(w, r, testToken)
@@ -733,7 +733,7 @@ func TestGroupsErrorServesTheProfile(t *testing.T) {
 	if e := sub.log[len(sub.log)-1]; e.Outcome != OutcomeServed {
 		t.Errorf("%+v", e)
 	}
-	if !strings.Contains(logged.String(), `msg="subscription: the server groups for the Mikan app are not read" err="db is gone"`) {
+	if !strings.Contains(logged.String(), `msg="subscription: the server groups for the Scilla app are not read" err="db is gone"`) {
 		t.Errorf("logged %q", logged.String())
 	}
 }
@@ -887,7 +887,7 @@ func TestFetchShowsBoundDevices(t *testing.T) {
 	sub.cfg.SubBase = "https://sub.example.com/s"
 	w := fetch(t, sub, "Happ/3.4.1", "X-Hwid", "abc")
 	for k, v := range map[string]string{
-		"Profile-Title":           "base64:" + base64.StdEncoding.EncodeToString([]byte("Mikan · 2/3")),
+		"Profile-Title":           "base64:" + base64.StdEncoding.EncodeToString([]byte("Scilla · 2/3")),
 		"Profile-Web-Page-Url":    "https://sub.example.com/s/" + testToken,
 		"X-Brand-Renew-URL":       "https://sub.example.com/s/" + testToken,
 		"X-Brand-Max-Devices":     "3",

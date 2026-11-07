@@ -19,11 +19,11 @@ import (
 	"context"
 	"encoding/json"
 
-	"mikan/internal/sub/apps"
-	"mikan/internal/sub/mihomo"
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/profile"
-	"mikan/internal/sub/routing"
+	"scilla/internal/sub/apps"
+	"scilla/internal/sub/mihomo"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/profile"
+	"scilla/internal/sub/routing"
 )
 
 // Since is the first sing-box with the config's shape.

@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/storetest"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/storetest"
 )
 
 type noChanges struct{}
@@ -110,7 +110,7 @@ func TestApplyTellsTheNodesOnce(t *testing.T) {
 	}
 }
 
-// Users mikan would not take are reported, the rest come over.
+// Users scilla would not take are reported, the rest come over.
 func TestApplyReportsInvalidUsers(t *testing.T) {
 	st, tariff := seeded(t)
 	users := domain.NewUsers(st, domain.NewPool(st, time.Now), noChanges{}, time.Now)

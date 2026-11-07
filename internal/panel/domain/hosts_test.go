@@ -7,15 +7,15 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/proto"
-	"mikan/internal/sub/build"
-	"mikan/internal/sub/model"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/proto"
+	"scilla/internal/sub/build"
+	"scilla/internal/sub/model"
 )
 
 // One truth while subscriptions read the template: whichever way the template changes (the
-// inbound's form, its YAML, the default host itself), its mikan.client and the default host
+// inbound's form, its YAML, the default host itself), its scilla.client and the default host
 // say the same, and the subscription's proxy is made of that value.
 func TestDefaultHostIsTheTemplates(t *testing.T) {
 	now := time.Unix(1_800_000_000, 0)

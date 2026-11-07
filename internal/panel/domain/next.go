@@ -8,11 +8,11 @@ import (
 	"strconv"
 	"time"
 
-	"mikan/internal/panel/audit"
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/events/feed"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/audit"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/events/feed"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // The next tariff: the admin sets the tariff a subscription moves to once its term ends,

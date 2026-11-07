@@ -59,7 +59,7 @@ export function ReissueSection({ info, subURL, title, onDone }: { info: Info; su
       <p className="text-[13px] text-[var(--ink-600)]">{off ? t("sub.reissueOff") : t("sub.reissueText")}</p>
       {waiting ? (
         <div className="mt-3 flex items-start gap-2 rounded-2xl bg-[var(--hover)] p-3" role="status">
-          <Hourglass size={18} className="mt-0.5 shrink-0 text-[var(--mikan-600)]" aria-hidden />
+          <Hourglass size={18} className="mt-0.5 shrink-0 text-[var(--scilla-600)]" aria-hidden />
           <p className="text-[13px] text-[var(--ink-600)]">{t("sub.reissueAfter", { date: dateShort(waiting), time: time(waiting) })}</p>
         </div>
       ) : null}

@@ -7,10 +7,10 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store/db"
 )
 
-// Migrations 0063 and 64 give every inbound a default host: its template's mikan.client, the
+// Migrations 0063 and 64 give every inbound a default host: its template's scilla.client, the
 // five fields subscriptions read of it, and an empty one when the template sets none or does
 // not parse. Run again, the move writes the same rows; going down takes the default hosts
 // away and then the table, and up again brings the same hosts back.
@@ -50,10 +50,10 @@ func TestInboundHostsMigration(t *testing.T) {
 		t.Fatal(err)
 	}
 	const (
-		client = "type: vless\nws-path: /ws\nmikan:\n    tls: node\n    client:\n        server: cdn.example.com\n        port: 8443\n        sni: front.example.com\n        host: h.example.com\n        fingerprint: firefox\n"
-		none   = "type: vless\nws-path: /ws\nmikan:\n    tls: node\n"
+		client = "type: vless\nws-path: /ws\nscilla:\n    tls: node\n    client:\n        server: cdn.example.com\n        port: 8443\n        sni: front.example.com\n        host: h.example.com\n        fingerprint: firefox\n"
+		none   = "type: vless\nws-path: /ws\nscilla:\n    tls: node\n"
 		// Written by hand, in flow style: what subscriptions read of it counts, not its look.
-		flow   = "{type: trojan, ws-path: /t, mikan: {tls: node, client: {server: 203.0.113.9}}}"
+		flow   = "{type: trojan, ws-path: /t, scilla: {tls: node, client: {server: 203.0.113.9}}}"
 		broken = "type: [vless"
 	)
 	for id, config := range map[int]string{71: client, 72: none, 73: flow, 74: broken} {
@@ -164,15 +164,15 @@ func TestInboundHostsMigration(t *testing.T) {
 }
 
 // The frozen reader of migration 64 reads a template as proto did when it was written: the
-// same five fields as DefaultHost for every shape of mikan.client the panel has seen.
+// same five fields as DefaultHost for every shape of scilla.client the panel has seen.
 func TestFrozenClientReadsAsProto(t *testing.T) {
 	for _, config := range []string{
-		"type: vless\nmikan:\n    client:\n        server: a.example.com\n        port: 8443\n        sni: s.example.com\n        host: h.example.com\n        fingerprint: ios\n",
-		"{type: trojan, mikan: {client: {server: 203.0.113.9, port: 2053.0}}}",
-		"type: vless\nmikan:\n    client:\n        port: 70000\n        server: 7\n",
-		"type: vless\nmikan:\n    client:\n        port: \"443\"\n        sni: s.example.com\n",
-		"type: vless\nmikan:\n    tls: node\n",
-		"type: vless\nmikan: on\n",
+		"type: vless\nscilla:\n    client:\n        server: a.example.com\n        port: 8443\n        sni: s.example.com\n        host: h.example.com\n        fingerprint: ios\n",
+		"{type: trojan, scilla: {client: {server: 203.0.113.9, port: 2053.0}}}",
+		"type: vless\nscilla:\n    client:\n        port: 70000\n        server: 7\n",
+		"type: vless\nscilla:\n    client:\n        port: \"443\"\n        sni: s.example.com\n",
+		"type: vless\nscilla:\n    tls: node\n",
+		"type: vless\nscilla: on\n",
 		"type: [vless",
 		"",
 	} {

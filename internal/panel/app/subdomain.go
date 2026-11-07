@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"mikan/internal/panel/tlscert"
+	"scilla/internal/panel/tlscert"
 )
 
 // subDomainRouter answers requests to the subscription domain with the subscriptions

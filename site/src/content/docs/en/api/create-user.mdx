@@ -49,18 +49,18 @@ curl -s -X POST "$BASE/users" \
 ```ts
 import { createClient } from "@getmikan/sdk";
 
-const mikan = createClient({
+const scilla = createClient({
   baseUrl: "https://vpn.example.com:8443/SECRET-PATH/api/v1",
-  apiKey: process.env.MIKAN_API_KEY!,
+  apiKey: process.env.SCILLA_API_KEY!,
 });
 
 // 3. the plans
-const tariffs = await mikan.GET("/tariffs");
+const tariffs = await scilla.GET("/tariffs");
 if (tariffs.error) throw new Error(tariffs.error.detail);
 console.log(tariffs.data.map((t) => `${t.id}: ${t.name}`));
 
 // 4. a user on plan 2
-const created = await mikan.POST("/users", {
+const created = await scilla.POST("/users", {
   body: { name: "Anna", tariff_id: 2, contact: "@anna", tags: ["family"] },
 });
 if (created.error) throw new Error(created.error.detail);
@@ -73,14 +73,14 @@ console.log(created.data.id, created.data.sub_url);
 ```python
 import os
 
-from mikan_sdk import AuthenticatedClient
-from mikan_sdk.api.tariffs import list_tariffs
-from mikan_sdk.api.users import create_user
-from mikan_sdk.models import CreateUserInputBody
+from scilla_sdk import AuthenticatedClient
+from scilla_sdk.api.tariffs import list_tariffs
+from scilla_sdk.api.users import create_user
+from scilla_sdk.models import CreateUserInputBody
 
 client = AuthenticatedClient(
     base_url="https://vpn.example.com:8443/SECRET-PATH/api/v1",
-    token=os.environ["MIKAN_API_KEY"],
+    token=os.environ["SCILLA_API_KEY"],
 )
 
 # 3. the plans
@@ -118,15 +118,15 @@ The answer to the creation, shortened:
 }
 ```
 
-How to install the SDK and what address to give it is on the [SDK](/mikan/en/api/sdk/) page.
+How to install the SDK and what address to give it is on the [SDK](/scilla/en/api/sdk/) page.
 
 ## What the user gets
 
 The plan gives the traffic limit, the number of devices, the speed, the rule that resets traffic, the servers and the term. The term counts from the moment of creation. The user is made "in the panel": their `source` is `admin`, as for those made by hand.
 
-With the same key you can then [extend](/mikan/en/api/reference/operations/extend-user/) the term, [add traffic](/mikan/en/api/reference/operations/grant-traffic/), [reissue the link](/mikan/en/api/reference/operations/reissue-user/) or reset the traffic. The full list of methods is in the [reference](/mikan/en/api/reference/).
+With the same key you can then [extend](/scilla/en/api/reference/operations/extend-user/) the term, [add traffic](/scilla/en/api/reference/operations/grant-traffic/), [reissue the link](/scilla/en/api/reference/operations/reissue-user/) or reset the traffic. The full list of methods is in the [reference](/scilla/en/api/reference/).
 
-For a service to learn of new users, payments and the end of a term at once, instead of polling the API, connect [webhooks](/mikan/en/api/webhooks/): the panel sends an event to your address by itself, `user.created` among them for every user that is made.
+For a service to learn of new users, payments and the end of a term at once, instead of polling the API, connect [webhooks](/scilla/en/api/webhooks/): the panel sends an event to your address by itself, `user.created` among them for every user that is made.
 
 ## If it did not work
 

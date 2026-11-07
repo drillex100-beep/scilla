@@ -16,11 +16,11 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/acme"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
-	"mikan/internal/panel/tlscert"
+	"scilla/internal/panel/acme"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
+	"scilla/internal/panel/tlscert"
 )
 
 // pairFor writes a certificate for name (a domain or an IP) into dir as the ACME manager
@@ -56,7 +56,7 @@ func pairFor(t *testing.T, dir, name string, until time.Time) {
 // last. Only the self-signed one and an own untrusted one carry a pin.
 func TestNodeCertificateOrder(t *testing.T) {
 	ctx := t.Context()
-	t.Setenv("MIKAN_ACME_DIRECTORY", "http://127.0.0.1:1/directory")
+	t.Setenv("SCILLA_ACME_DIRECTORY", "http://127.0.0.1:1/directory")
 	st, err := storetest.Open(ctx, t.TempDir())
 	if err != nil {
 		t.Fatal(err)

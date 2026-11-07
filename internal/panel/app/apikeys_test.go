@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store/db"
 )
 
 // API keys: made only from a browser session, shown once, scoped, expiring and revocable;

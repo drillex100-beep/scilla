@@ -9,10 +9,10 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/subsrc"
-	"mikan/internal/sub/ready"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/subsrc"
+	"scilla/internal/sub/ready"
 )
 
 // The subscription templates over the API: a Clash one started from the built-in profile,
@@ -130,7 +130,7 @@ func TestSubTemplatesOverHTTP(t *testing.T) {
 	}
 
 	_, example, _ := preview("singbox", "", true)
-	if code, p, raw := preview("singbox", example, false); code != http.StatusOK || !strings.Contains(p, `"tun-in"`) || strings.Contains(p, `"mikan"`) {
+	if code, p, raw := preview("singbox", example, false); code != http.StatusOK || !strings.Contains(p, `"tun-in"`) || strings.Contains(p, `"scilla"`) {
 		t.Fatalf("the sing-box example: %d %s", code, raw)
 	}
 	if code, _, raw := preview("singbox", `{"route": {"final": "nowhere"}}`, false); code != http.StatusUnprocessableEntity || !strings.Contains(string(raw), "template_final") {
@@ -152,7 +152,7 @@ func TestSubTemplatesOverHTTP(t *testing.T) {
 	var list []struct {
 		Remarks string `json:"remarks"`
 	}
-	if p := fetch("Happ/3.4.1", ""); json.Unmarshal([]byte(p), &list) != nil || len(list) < 2 || list[0].Remarks == "" || strings.Contains(p, `"mikan"`) {
+	if p := fetch("Happ/3.4.1", ""); json.Unmarshal([]byte(p), &list) != nil || len(list) < 2 || list[0].Remarks == "" || strings.Contains(p, `"scilla"`) {
 		t.Fatalf("Happ gets the template the rule names:\n%.400s", p)
 	}
 	resp, raw = h.do(http.MethodPost, api+"/sub-rules/test", map[string]any{"user_agent": "Happ/3.4.1", "headers": []any{}}, csrf)
@@ -276,7 +276,7 @@ func TestSubTemplateSizeInBytes(t *testing.T) {
 }
 
 // The ready templates over the API: the catalog by core with its authors and licenses, the
-// text of each, mikan's own made as the editor's starter is, each saved as it is loaded, and
+// text of each, scilla's own made as the editor's starter is, each saved as it is loaded, and
 // none of them in the database until it is.
 func TestReadySubTemplatesOverHTTP(t *testing.T) {
 	h := newHarness(t)

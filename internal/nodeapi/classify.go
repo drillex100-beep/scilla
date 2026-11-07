@@ -28,7 +28,7 @@ const (
 	// LinkPinMismatch: a node answered, but with another certificate than the panel pins,
 	// or it refused the panel's: its key is outdated or belongs to another node or panel.
 	LinkPinMismatch = "pin_mismatch"
-	// LinkTLS: something that is not a mikan node answers on the port.
+	// LinkTLS: something that is not a scilla node answers on the port.
 	LinkTLS = "tls"
 	// LinkHTTPStatus: the node answered the health check with an error status.
 	LinkHTTPStatus = "http_status"

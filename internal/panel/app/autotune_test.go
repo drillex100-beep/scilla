@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
 )
 
 // A client's subscription fetch is recorded (the block detector trusts only up-to-date

@@ -3,12 +3,12 @@ package mihomo
 import (
 	"testing"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/ready"
-	"mikan/internal/sub/subtest"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/ready"
+	"scilla/internal/sub/subtest"
 )
 
-// Every ready Clash template, and mikan's own made in each mode, is one the panel saves and
+// Every ready Clash template, and scilla's own made in each mode, is one the panel saves and
 // whose profile the core loads, with the user's servers in its groups.
 func TestReadyTemplates(t *testing.T) {
 	prof := profileOf(subtest.Multi())

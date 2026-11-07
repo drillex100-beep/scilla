@@ -7,11 +7,11 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/subpage"
-	"mikan/internal/sub/apps"
-	submodel "mikan/internal/sub/model"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/subpage"
+	"scilla/internal/sub/apps"
+	submodel "scilla/internal/sub/model"
 )
 
 // The admin's word keeps a node out at once; a node that does not answer the panel, only

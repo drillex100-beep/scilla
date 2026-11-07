@@ -20,9 +20,9 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // Limits of what the admin may set.
@@ -86,7 +86,7 @@ func New(d Deps) *Service { return newService(d, tune{}) }
 
 func newService(d Deps, t tune) *Service {
 	t = t.or()
-	s := &Service{d: d, tune: t, agent: "mikan-webhooks/" + d.Version}
+	s := &Service{d: d, tune: t, agent: "scilla-webhooks/" + d.Version}
 	s.clients = [2]*http.Client{newClient(false, t.timeout), newClient(true, t.timeout)}
 	return s
 }

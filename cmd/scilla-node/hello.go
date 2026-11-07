@@ -8,10 +8,10 @@ import (
 	"os"
 	"time"
 
-	"mikan/internal/nodehello"
-	"mikan/internal/nodetls"
-	"mikan/internal/pace"
-	"mikan/internal/panel/config"
+	"scilla/internal/nodehello"
+	"scilla/internal/nodetls"
+	"scilla/internal/pace"
+	"scilla/internal/panel/config"
 )
 
 // helloPause are the waits before each hello of a start: the panel may need a moment to
@@ -45,12 +45,12 @@ func helloLoop(ctx context.Context, key nodetls.Key, dataDir string, log *slog.L
 	}
 }
 
-// helloOnce is `mikan-node hello`: one hello now (mikan doctor runs it), its answer saved
+// helloOnce is `scilla-node hello`: one hello now (scilla doctor runs it), its answer saved
 // and printed as JSON. It never fails: the answer says what went wrong.
 func helloOnce() {
 	now := time.Now().UTC()
 	var s nodehello.Status
-	raw, err := config.Secret("MIKAN_NODE_JOIN")
+	raw, err := config.Secret("SCILLA_NODE_JOIN")
 	var key nodetls.Key
 	if err == nil {
 		key, err = nodetls.DecodeKey(raw)
@@ -63,8 +63,8 @@ func helloOnce() {
 		s = nodehello.Status{Result: nodehello.Send(ctx, key, nodehello.Client(), now)}
 	}
 	s.At, s.Started, s.Attempt, s.Final = time.Now().UTC(), now, 1, true
-	if err := nodehello.Write(envOr("MIKAN_DATA_DIR", config.DefaultDataDir), s); err != nil {
-		fmt.Fprintln(os.Stderr, "mikan-node: save the answer:", err)
+	if err := nodehello.Write(envOr("SCILLA_DATA_DIR", config.DefaultDataDir), s); err != nil {
+		fmt.Fprintln(os.Stderr, "scilla-node: save the answer:", err)
 	}
 	out, _ := json.Marshal(s)
 	fmt.Println(string(out))

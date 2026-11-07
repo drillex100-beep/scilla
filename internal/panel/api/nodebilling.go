@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store/db"
 )
 
 // NodeBilling is the node's server at its provider, as the admin keeps it: the panel reminds

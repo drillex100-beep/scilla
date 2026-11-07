@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 func quota(n int64) sql.NullInt64 { return sql.NullInt64{Int64: n, Valid: true} }

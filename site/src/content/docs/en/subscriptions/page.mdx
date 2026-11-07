@@ -14,15 +14,15 @@ Further down the page: a step-by-step "How to connect" guide, the link itself an
 | Platform | Apps on the page |
 |---|---|
 | iPhone | Happ, INCY, Streisand, v2RayTun |
-| Android | Mikan, Happ, ClashFest, INCY, v2RayTun, Hiddify |
+| Android | Scilla, Happ, ClashFest, INCY, v2RayTun, Hiddify |
 | Windows | Kabosu, Koala Clash, SlothClash, Hiddify, Clash Verge Rev |
 | Mac | Kabosu, Clash Verge Rev, SlothClash, Happ, Hiddify |
 | Linux | Kabosu, SlothClash, Clash Verge Rev, Hiddify |
 
 The subscription recognizes the app by its User-Agent header and serves the matching format:
 
-- **Clash apps on mihomo** (Mikan, Kabosu, Koala Clash, Clash Verge, FlClash, ClashFest, SlothClash and others) and Stash get a Clash YAML profile with groups and routes.
-- **Happ and INCY** get whole Xray configs with the panel's routing, DNS and automatic choice, see [the Xray format](/mikan/en/subscriptions/spec/#the-xray-format). The switch is in **Settings → Subscription → Apps**; with it off they get links.
+- **Clash apps on mihomo** (Scilla, Kabosu, Koala Clash, Clash Verge, FlClash, ClashFest, SlothClash and others) and Stash get a Clash YAML profile with groups and routes.
+- **Happ and INCY** get whole Xray configs with the panel's routing, DNS and automatic choice, see [the Xray format](/scilla/en/subscriptions/spec/#the-xray-format). The switch is in **Settings → Subscription → Apps**; with it off they get links.
 - **Other Xray apps** (v2RayTun, v2rayNG) and **sing-box apps** (Hiddify, Karing) get a list of links.
 - A browser gets the subscription page.
 
@@ -30,7 +30,7 @@ The subscription recognizes the app by its User-Agent header and serves the matc
 Xray configs for Happ and INCY, and the `xray` value of the `?format=` parameter, are new in 0.5.2.1.
 :::
 
-Each app gets only the protocols it can run, see [the table in presets](/mikan/en/protocols/presets/#who-gets-what). You can also set the format by hand with the parameter `?format=clash`, `singbox`, `xray`, `uri` or `html`. Every header and field the subscription reads and sends is described in the [Subscription specification](/mikan/en/subscriptions/spec/).
+Each app gets only the protocols it can run, see [the table in presets](/scilla/en/protocols/presets/#who-gets-what). You can also set the format by hand with the parameter `?format=clash`, `singbox`, `xray`, `uri` or `html`. Every header and field the subscription reads and sends is described in the [Subscription specification](/scilla/en/subscriptions/spec/).
 
 Apps refresh the subscription hourly, which is how new ports and keys reach clients on their own.
 
@@ -42,9 +42,9 @@ Apps refresh the subscription hourly, which is how new ports and keys reach clie
 - **Main group** (default "VPN") and **Auto select** ("Auto"): group names in Clash apps.
 - **Default TLS fingerprint** for all protocols.
 - **Support**: a Telegram or website link.
-- **Devices**: binding a subscription to devices, see [Plans and users](/mikan/en/billing/plans/#devices).
-- **Subscription port**: see [Domain and certificates](/mikan/en/start/domain/#subscription-port).
-- **A domain of its own for subscriptions** (since 0.5.2.0): see [A domain of its own for subscriptions](/mikan/en/subscriptions/domain/).
+- **Devices**: binding a subscription to devices, see [Plans and users](/scilla/en/billing/plans/#devices).
+- **Subscription port**: see [Domain and certificates](/scilla/en/start/domain/#subscription-port).
+- **A domain of its own for subscriptions** (since 0.5.2.0): see [A domain of its own for subscriptions](/scilla/en/subscriptions/domain/).
 - **When a subscription does not work** (since 0.5.2.0): an entry in place of the servers, see [below](#when-a-subscription-does-not-work).
 
 ## Subscription name in apps
@@ -63,7 +63,7 @@ The **Subscription name in apps** field sets the profile name that Happ, v2RayTu
 | `{devices}` | how many devices are bound, "2/3" with a limit |
 | `{tariff}` | the user's plan name; empty if there is no plan (since 0.5.2.0) |
 
-For example, `{brand} · until {date}` becomes "mikan · until 10.11.2026". An unknown word in curly braces is left as is, and the result is capped at 200 characters.
+For example, `{brand} · until {date}` becomes "scilla · until 10.11.2026". An unknown word in curly braces is left as is, and the result is capped at 200 characters.
 
 ## Announcement
 
@@ -89,7 +89,7 @@ The `{tariff}` variable works in the subscription name and the announcement too,
 
 ## A domain of your own for links
 
-Subscription links can be built on a separate domain with its own certificate, see [A domain of its own for subscriptions](/mikan/en/subscriptions/domain/).
+Subscription links can be built on a separate domain with its own certificate, see [A domain of its own for subscriptions](/scilla/en/subscriptions/domain/).
 
 ## Your brand in the apps
 

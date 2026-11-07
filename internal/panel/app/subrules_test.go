@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/store/db"
-	"mikan/internal/sub/apps"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/sub/apps"
 )
 
 // jsonOf decodes an API answer.

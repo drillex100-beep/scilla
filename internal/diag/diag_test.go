@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 func byID(d nodeapi.Diagnosis) map[string]nodeapi.DiagItem {

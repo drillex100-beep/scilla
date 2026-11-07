@@ -23,9 +23,9 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"mikan/internal/netaddr"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/release"
+	"scilla/internal/netaddr"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/release"
 )
 
 // Third-party addon sources. An admin adds the address of an author's file (one entry), an
@@ -217,7 +217,7 @@ func (n *sourceNet) get(ctx context.Context, rawURL string, limit int64, accept 
 	if err != nil {
 		return nil, 0, fmt.Errorf("%w: %v", ErrSourceURL, err)
 	}
-	req.Header.Set("User-Agent", "mikan-panel")
+	req.Header.Set("User-Agent", "scilla-panel")
 	if accept != "" {
 		req.Header.Set("Accept", accept)
 	}
@@ -310,7 +310,7 @@ type ghAsset struct {
 	URL  string `json:"browser_download_url"`
 }
 
-// githubFiles finds the latest release's file (mikan-addon.json, else index.json) and its
+// githubFiles finds the latest release's file (scilla-addon.json, else index.json) and its
 // signature. Only downloads from the repository's own release page are followed.
 func (n *sourceNet) githubFiles(ctx context.Context, r ghRepo) (file, sig string, err error) {
 	api := fmt.Sprintf("%s/repos/%s/%s/releases/latest", n.ghAPI, r.owner, r.repo)
@@ -337,7 +337,7 @@ func (n *sourceNet) githubFiles(ctx context.Context, r ghRepo) (file, sig string
 		}
 		return ""
 	}
-	for _, name := range []string{"mikan-addon.json", "index.json"} {
+	for _, name := range []string{"scilla-addon.json", "index.json"} {
 		if file = find(name); file != "" {
 			return file, find(name + ".sig"), nil
 		}

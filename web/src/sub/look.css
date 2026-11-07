@@ -2,7 +2,7 @@
  * The subscription page's looks (internal/panel/subpage): a palette (the panel's themes),
  * light or dark, the brand's colour, a font, corners and cards. Everything is scoped to
  * .sub-look: on the page it is <html>, in the admin's preview the frame, so the preview
- * shows the page's look whatever the admin's own theme is. The light Mikan look repeats
+ * shows the page's look whatever the admin's own theme is. The light Scilla look repeats
  * :root, which is the page as it always was.
  *
  * Any other panel theme comes whole from styles/themes.css: the element then carries
@@ -23,8 +23,8 @@
   --ink-100: #e7e9ed; --ink-50: #f2f3f5;
   --fill: var(--ink-900); --on-fill: #fff; --on-danger: #fff;
   --code-bg: #161a24; --code-fg: #e7e9ed;
-  --mikan-50: #fff3ea; --mikan-100: #ffe4d0; --mikan-200: #ffcba6; --mikan-400: #f7964f;
-  --mikan-500: #f07a2e; --mikan-600: #db6317; --mikan-700: #b24c0c;
+  --scilla-50: #fff3ea; --scilla-100: #ffe4d0; --scilla-200: #ffcba6; --scilla-400: #f7964f;
+  --scilla-500: #f07a2e; --scilla-600: #db6317; --scilla-700: #b24c0c;
   --leaf-50: #e4f4eb; --leaf-500: #2f9e6b; --leaf-700: #1f7650;
   --lagoon-50: #e0f1f4; --lagoon-400: #58afbe; --lagoon-500: #2b8c9e; --lagoon-600: #247685;
   --honey-50: #fcf1da; --honey-500: #e0a021; --honey-600: #8f5e06;
@@ -46,9 +46,9 @@
   --font-display-stack: "Unbounded Variable", "Onest Variable", system-ui, sans-serif;
   --font-ui-stack: "Onest Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
   --fill-hover: var(--ink-700);
-  --ring: color-mix(in srgb, var(--mikan-500) 20%, transparent);
+  --ring: color-mix(in srgb, var(--scilla-500) 20%, transparent);
   --scrim: rgba(22, 26, 36, 0.18);
-  /* The dawn of the panel's Mikan theme, whatever theme the admin previews it in. */
+  /* The dawn of the panel's Scilla theme, whatever theme the admin previews it in. */
   --glow-a: rgba(255, 138, 72, 0.72); --glow-b: rgba(255, 122, 150, 0.42); --glow-c: rgba(255, 196, 100, 0.55);
   --glow-d: rgba(158, 142, 255, 0.42); --glow-e: rgba(98, 184, 230, 0.48);
   --glow-opacity: 1; --grain-blend: multiply; --grain-opacity: 0.055;
@@ -57,15 +57,15 @@
 
 /* Palettes, light: the panel's Ocean, Sakura and Forest. */
 .sub-look[data-palette="ocean"] {
-  --bg: #eaf5f8; --mikan-50: #e6f5f8; --mikan-100: #cbeaf0; --mikan-200: #a9dce5; --mikan-400: #4bb8ca; --mikan-500: #2499ae; --mikan-600: #167f92; --mikan-700: #0f6272;
+  --bg: #eaf5f8; --scilla-50: #e6f5f8; --scilla-100: #cbeaf0; --scilla-200: #a9dce5; --scilla-400: #4bb8ca; --scilla-500: #2499ae; --scilla-600: #167f92; --scilla-700: #0f6272;
   --glass: rgba(255,255,255,.62); --glass-strong: rgba(255,255,255,.88); --glass-edge: rgba(255,255,255,.80);
 }
 .sub-look[data-palette="sakura"] {
-  --bg: #fbf0f5; --mikan-50: #fff0f6; --mikan-100: #ffd9e8; --mikan-200: #ffb8d2; --mikan-400: #f58aaa; --mikan-500: #e96b96; --mikan-600: #cf4f7c; --mikan-700: #a93c62;
+  --bg: #fbf0f5; --scilla-50: #fff0f6; --scilla-100: #ffd9e8; --scilla-200: #ffb8d2; --scilla-400: #f58aaa; --scilla-500: #e96b96; --scilla-600: #cf4f7c; --scilla-700: #a93c62;
   --glass: rgba(255,255,255,.64); --glass-strong: rgba(255,255,255,.9); --glass-edge: rgba(255,255,255,.82);
 }
 .sub-look[data-palette="forest"] {
-  --bg: #eef6ef; --mikan-50: #e7f4e9; --mikan-100: #cde8d2; --mikan-200: #acd8b4; --mikan-400: #58b66d; --mikan-500: #379c51; --mikan-600: #2a813f; --mikan-700: #216735;
+  --bg: #eef6ef; --scilla-50: #e7f4e9; --scilla-100: #cde8d2; --scilla-200: #acd8b4; --scilla-400: #58b66d; --scilla-500: #379c51; --scilla-600: #2a813f; --scilla-700: #216735;
   --glass: rgba(255,255,255,.62); --glass-strong: rgba(255,255,255,.89); --glass-edge: rgba(255,255,255,.80);
 }
 
@@ -76,10 +76,10 @@
   --ink-900: #f4f7fb; --ink-800: #e3e8ef; --ink-700: #c4ccd7; --ink-600: #a8b2c0;
   --ink-500: #8b97a8; --ink-400: #727e8f; --ink-300: #515d6d; --ink-200: #394453;
   --ink-100: #252e3a; --ink-50: #1b232e;
-  --fill: var(--mikan-500); --on-fill: #161a24; --on-danger: #161a24;
+  --fill: var(--scilla-500); --on-fill: #161a24; --on-danger: #161a24;
   --code-bg: #080b10; --code-fg: #e7e9ed;
-  --mikan-50: #3a2418; --mikan-100: #55311e; --mikan-200: #774322; --mikan-400: #ff9a57;
-  --mikan-500: #ff843d; --mikan-600: #ff9b5d; --mikan-700: #ffb27a;
+  --scilla-50: #3a2418; --scilla-100: #55311e; --scilla-200: #774322; --scilla-400: #ff9a57;
+  --scilla-500: #ff843d; --scilla-600: #ff9b5d; --scilla-700: #ffb27a;
   --leaf-50: #173326; --leaf-500: #45c487; --leaf-700: #73dca8;
   --lagoon-50: #17343b; --lagoon-400: #66c7d8; --lagoon-500: #42afc2; --lagoon-600: #79d6e4;
   --honey-50: #3a3018; --honey-500: #efb53b; --honey-600: #ffd36b;
@@ -90,22 +90,22 @@
   --surface-solid: #161d27;
   --raised: #263142;
   --glass: rgba(24, 31, 42, .72); --glass-strong: rgba(22, 29, 39, .92);
-  --glass-edge: color-mix(in srgb, var(--mikan-500) 18%, transparent);
-  --glass-highlight: color-mix(in srgb, var(--mikan-500) 18%, transparent);
+  --glass-edge: color-mix(in srgb, var(--scilla-500) 18%, transparent);
+  --glass-highlight: color-mix(in srgb, var(--scilla-500) 18%, transparent);
   --hairline: rgba(255,255,255,.09); --hover: rgba(255,255,255,.06);
   --shadow-sm: 0 1px 2px rgba(0,0,0,.25); --shadow-md: 0 12px 32px -14px rgba(0,0,0,.55); --shadow-lg: 0 32px 64px -24px rgba(0,0,0,.65);
-  --fill-hover: var(--mikan-600);
-  --ring: color-mix(in srgb, var(--mikan-500) 28%, transparent);
+  --fill-hover: var(--scilla-600);
+  --ring: color-mix(in srgb, var(--scilla-500) 28%, transparent);
   --scrim: rgba(0, 0, 0, 0.5);
 }
 .sub-look[data-scheme="dark"][data-palette="ocean"] {
-  --bg: #0a1419; --mikan-50: #12303a; --mikan-100: #17414d; --mikan-200: #1d5866; --mikan-400: #5cc8da; --mikan-500: #3fb5c9; --mikan-600: #6fd0e0; --mikan-700: #93dde9;
+  --bg: #0a1419; --scilla-50: #12303a; --scilla-100: #17414d; --scilla-200: #1d5866; --scilla-400: #5cc8da; --scilla-500: #3fb5c9; --scilla-600: #6fd0e0; --scilla-700: #93dde9;
 }
 .sub-look[data-scheme="dark"][data-palette="sakura"] {
-  --bg: #150d12; --mikan-50: #3a1828; --mikan-100: #552238; --mikan-200: #77304d; --mikan-400: #ff8fb3; --mikan-500: #f0759e; --mikan-600: #ff9dbd; --mikan-700: #ffbad1;
+  --bg: #150d12; --scilla-50: #3a1828; --scilla-100: #552238; --scilla-200: #77304d; --scilla-400: #ff8fb3; --scilla-500: #f0759e; --scilla-600: #ff9dbd; --scilla-700: #ffbad1;
 }
 .sub-look[data-scheme="dark"][data-palette="forest"] {
-  --bg: #0b140e; --mikan-50: #173322; --mikan-100: #1f472e; --mikan-200: #2a5f3d; --mikan-400: #6fcf86; --mikan-500: #4cb866; --mikan-600: #7ad690; --mikan-700: #a0e3b0;
+  --bg: #0b140e; --scilla-50: #173322; --scilla-100: #1f472e; --scilla-200: #2a5f3d; --scilla-400: #6fcf86; --scilla-500: #4cb866; --scilla-600: #7ad690; --scilla-700: #a0e3b0;
 }
 
 /*
@@ -113,25 +113,25 @@
  * with [data-scheme] (always set): it has to win over a dark palette's own scale.
  */
 .sub-look[data-accent][data-scheme] {
-  --mikan-500: var(--accent);
-  --mikan-400: color-mix(in oklab, var(--accent) 80%, white);
-  --mikan-600: color-mix(in oklab, var(--accent) 86%, black);
-  --mikan-700: color-mix(in oklab, var(--accent) 66%, black);
-  --mikan-50: color-mix(in oklab, var(--accent) 8%, white);
-  --mikan-100: color-mix(in oklab, var(--accent) 18%, white);
-  --mikan-200: color-mix(in oklab, var(--accent) 34%, white);
+  --scilla-500: var(--accent);
+  --scilla-400: color-mix(in oklab, var(--accent) 80%, white);
+  --scilla-600: color-mix(in oklab, var(--accent) 86%, black);
+  --scilla-700: color-mix(in oklab, var(--accent) 66%, black);
+  --scilla-50: color-mix(in oklab, var(--accent) 8%, white);
+  --scilla-100: color-mix(in oklab, var(--accent) 18%, white);
+  --scilla-200: color-mix(in oklab, var(--accent) 34%, white);
   --fill: var(--accent);
   --on-fill: var(--on-accent);
 }
 .sub-look[data-accent][data-scheme="dark"] {
-  --mikan-600: color-mix(in oklab, var(--accent) 80%, white);
-  --mikan-700: color-mix(in oklab, var(--accent) 62%, white);
-  --mikan-50: color-mix(in oklab, var(--accent) 18%, var(--bg));
-  --mikan-100: color-mix(in oklab, var(--accent) 28%, var(--bg));
-  --mikan-200: color-mix(in oklab, var(--accent) 42%, var(--bg));
+  --scilla-600: color-mix(in oklab, var(--accent) 80%, white);
+  --scilla-700: color-mix(in oklab, var(--accent) 62%, white);
+  --scilla-50: color-mix(in oklab, var(--accent) 18%, var(--bg));
+  --scilla-100: color-mix(in oklab, var(--accent) 28%, var(--bg));
+  --scilla-200: color-mix(in oklab, var(--accent) 42%, var(--bg));
 }
 .sub-look[data-accent] .btn-primary:hover:not(:disabled),
-.sub-look[data-scheme="dark"]:not([data-theme]) .btn-primary:hover:not(:disabled) { background: var(--mikan-600); }
+.sub-look[data-scheme="dark"]:not([data-theme]) .btn-primary:hover:not(:disabled) { background: var(--scilla-600); }
 .sub-look[data-accent] .btn-primary { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 8px 20px -10px color-mix(in srgb, var(--accent) 60%, transparent); }
 
 /* Fonts: the bundled ones, or the device's own (no font is fetched from elsewhere). */
@@ -166,8 +166,8 @@
 .md ul, .md ol { padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
 .md ul { list-style: disc; }
 .md ol { list-style: decimal; }
-.md li::marker { color: var(--mikan-600); }
-.md a { color: var(--mikan-700); text-decoration: underline; text-underline-offset: 3px; }
+.md li::marker { color: var(--scilla-600); }
+.md a { color: var(--scilla-700); text-decoration: underline; text-underline-offset: 3px; }
 .md code { padding: 1px 4px; border-radius: 6px; background: var(--hover); }
 .md pre { padding: 12px; border-radius: var(--r-md); background: var(--code-bg); color: var(--code-fg); font: 12px/1.6 var(--font-mono-stack); white-space: pre-wrap; overflow-x: auto; }
 .md pre code { padding: 0; border-radius: 0; background: none; }

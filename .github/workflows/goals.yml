@@ -37,5 +37,5 @@ jobs:
         run: |
           # Goals go into an index a release made; with none yet there is nothing to add to.
           gh release download updates -p index.json -p index.json.sig -D updates
-          go run ./cmd/mikan-release goals -file .github/goals.json -in updates/index.json -out dist
+          go run ./cmd/scilla-release goals -file .github/goals.json -in updates/index.json -out dist
           gh release upload updates dist/index.json dist/index.json.sig --clobber

@@ -5,8 +5,8 @@ import (
 
 	"github.com/metacubex/mihomo/listener"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/proto"
+	"scilla/internal/nodeapi"
+	"scilla/internal/proto"
 )
 
 // Traffic to the node's own networks is refused: without these rules any VPN user could

@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"mikan/internal/sub/model"
+	"scilla/internal/sub/model"
 )
 
 // The handler names the servers of each group in the profile, and drops the groups left

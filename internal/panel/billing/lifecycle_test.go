@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
 )
 
 // What a paid renewal carries over from the period before is the payment's, as its gifts

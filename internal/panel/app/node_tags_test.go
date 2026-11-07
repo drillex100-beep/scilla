@@ -10,13 +10,13 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodetls"
+	"scilla/internal/nodetls"
 )
 
 // Nodes and inbounds take labels as a user does: on creation and on a change, trimmed,
 // the empty ones dropped, at most 20; the lists filter by one of them in any letter case.
 func TestNodeAndInboundTags(t *testing.T) {
-	panel, err := nodetls.Generate("mikan-panel", x509.ExtKeyUsageClientAuth, time.Now())
+	panel, err := nodetls.Generate("scilla-panel", x509.ExtKeyUsageClientAuth, time.Now())
 	if err != nil {
 		t.Fatal(err)
 	}

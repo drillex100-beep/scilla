@@ -1,5 +1,5 @@
-//! Cuts secrets out of text before it leaves the server: the report `mikan doctor --json`
-//! writes for the panel, and what `mikan support` sends. The same rules as the panel's and
+//! Cuts secrets out of text before it leaves the server: the report `scilla doctor --json`
+//! writes for the panel, and what `scilla support` sends. The same rules as the panel's and
 //! the node's log buffers (internal/logbuf Redact): tokens and API keys, passwords, cookies
 //! and bearer headers, share and subscription links, private keys, UUIDs and the random
 //! segments of paths. It errs toward cutting too much: the reader is not the admin.
@@ -181,7 +181,7 @@ fn secret_name(name: &str) -> bool {
         return true;
     }
     let flat: String = lower.chars().filter(|c| !"_-.".contains(*c)).collect();
-    // MIKAN_NODE_JOIN holds a node's join key, which carries its private key.
+    // SCILLA_NODE_JOIN holds a node's join key, which carries its private key.
     FLAT.iter().any(|p| flat.contains(p)) || lower.split(['_', '-', '.']).any(|seg| seg.starts_with("key") || seg == "join")
 }
 
@@ -299,7 +299,7 @@ fn path_segment(_: Option<char>, rest: &str) -> Option<(usize, String)> {
     (n >= 20 && s.bytes().any(|b| b.is_ascii_digit()) && s.bytes().any(|b| b.is_ascii_alphabetic())).then(|| (1 + n, format!("/{MARK}")))
 }
 
-/// A long random-looking word on its own: a key pasted into a command (`mikan join <key>`)
+/// A long random-looking word on its own: a key pasted into a command (`scilla join <key>`)
 /// or printed bare. Hashes (all hex: an image digest, a commit) and words of letters only
 /// are left.
 fn long_token(prev: Option<char>, rest: &str) -> Option<(usize, String)> {
@@ -333,7 +333,7 @@ mod tests {
             ("bearer in text", format!("got bearer {TOK} from 1.2.3.4"), TOK.into(), "1.2.3.4"),
             ("token field", format!("msg=\"login\" token={TOK} ip=1.2.3.4"), TOK.into(), "ip=1.2.3.4"),
             ("quoted password", "err=\"bad\" password=\"hunter 2 hunter\" user=root".into(), "hunter".into(), "user=root"),
-            ("cookie", format!("cookie=mikan_session={TOK}"), TOK.into(), "cookie="),
+            ("cookie", format!("cookie=scilla_session={TOK}"), TOK.into(), "cookie="),
             ("secret in JSON", format!("{{\"api_key\":\"{TOK}\",\"name\":\"x\"}}"), TOK.into(), "\"name\":\"x\""),
             ("JSON in a value", format!("body=\"{{\\\"token\\\":\\\"{TOK}\\\"}}\""), TOK.into(), "body="),
             (
@@ -361,7 +361,7 @@ mod tests {
                 "MIIEvQ".into(),
                 " end",
             ),
-            ("join key", format!("MIKAN_NODE_JOIN={TOK}"), TOK.into(), "MIKAN_NODE_JOIN="),
+            ("join key", format!("SCILLA_NODE_JOIN={TOK}"), TOK.into(), "SCILLA_NODE_JOIN="),
         ];
         for (name, input, secret, keep) in cases {
             let got = text(&input);
@@ -375,17 +375,17 @@ mod tests {
     fn ordinary_lines_stay() {
         for line in [
             "✓ Docker            engine 28.0.1",
-            "Container mikan-panel-1  Up 3 hours (healthy)",
-            "✗ Disk              0.3 GB free in /opt/mikan",
-            "    fix: ufw allow 31234/tcp; mikan logs node",
+            "Container scilla-panel-1  Up 3 hours (healthy)",
+            "✗ Disk              0.3 GB free in /opt/scilla",
+            "    fix: ufw allow 31234/tcp; scilla logs node",
             "time=2026-10-14T10:00:00Z level=INFO msg=\"panel started\" listen=0.0.0.0:21355 version=0.5.1.1",
-            "msg=update unit=mikan-update-request.service path=/opt/mikan/data/panel/update/request",
-            "image ghcr.io/miroshka000/mikan-panel:0.5.1.0 pulled",
+            "msg=update unit=scilla-update-request.service path=/opt/scilla/data/panel/update/request",
+            "image ghcr.io/drillex100-beep/scilla-panel:0.5.1.0 pulled",
             "github.com resolves (2 addresses)",
             "Panel contact  the panel dials back on port 31234",
-            "image ghcr.io/miroshka000/mikan-panel@sha256:0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c4b5a69788796a5b4c3d2e1f0 runs",
+            "image ghcr.io/drillex100-beep/scilla-panel@sha256:0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c4b5a69788796a5b4c3d2e1f0 runs",
             "commit 0123456789abcdef0123456789abcdef01234567 built",
-            "unit mikan-update-request-and-a-very-long-name-of-letters-only started",
+            "unit scilla-update-request-and-a-very-long-name-of-letters-only started",
         ] {
             assert_eq!(text(line), line);
         }
@@ -395,11 +395,14 @@ mod tests {
     #[test]
     fn a_bare_key_is_cut() {
         let key = "eyAbCdEfGhIjKlMnOpQrStUvWxYz0123456789_-AbCdEfGhIjKl";
-        for line in [format!("fix: mikan join {key}"), key.to_owned(), format!("(key {key})")] {
+        for line in [format!("fix: scilla join {key}"), key.to_owned(), format!("(key {key})")] {
             let got = text(&line);
             assert!(!got.contains("AbCdEfGhIjKl"), "{got}");
         }
-        assert_eq!(text("fix: mikan join <new key from the panel's Nodes page>"), "fix: mikan join <new key from the panel's Nodes page>");
+        assert_eq!(
+            text("fix: scilla join <new key from the panel's Nodes page>"),
+            "fix: scilla join <new key from the panel's Nodes page>"
+        );
     }
 
     // Multi-byte text passes through whole.

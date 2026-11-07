@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/sub/model"
+	"scilla/internal/sub/model"
 )
 
 var testGroups = model.GroupNames{Main: "Мой VPN", Auto: "Быстрый"}

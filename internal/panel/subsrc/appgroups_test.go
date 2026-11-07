@@ -6,9 +6,9 @@ import (
 	"reflect"
 	"testing"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/sub/serve"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/sub/serve"
 )
 
 const gib = int64(1) << 30

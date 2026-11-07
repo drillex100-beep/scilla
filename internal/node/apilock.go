@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/hostchan"
-	"mikan/internal/nodeapi"
+	"scilla/internal/hostchan"
+	"scilla/internal/nodeapi"
 )
 
 // The node's API for its panel alone (DesiredState.APIAllow). Scanners find the API port
@@ -162,7 +162,7 @@ func (l *apiLock) tick() {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 	if lifted {
-		l.log.Warn("api lock lifted on the server (mikan api-lockdown off): the API answers any address until the panel comes back")
+		l.log.Warn("api lock lifted on the server (scilla api-lockdown off): the API answers any address until the panel comes back")
 		l.seen = time.Time{}
 		l.save(l.now())
 	}
@@ -244,7 +244,7 @@ func (l *apiLock) status() *nodeapi.PortStatus {
 	case ok && st.At >= askedAt.Unix(), askedAt.IsZero(), now.Sub(askedAt) < apiHostSilent:
 		return &nodeapi.PortStatus{OK: true}
 	default:
-		return &nodeapi.PortStatus{Error: "the server did not put the firewall rule in: run mikan update on the node's server"}
+		return &nodeapi.PortStatus{Error: "the server did not put the firewall rule in: run scilla update on the node's server"}
 	}
 }
 

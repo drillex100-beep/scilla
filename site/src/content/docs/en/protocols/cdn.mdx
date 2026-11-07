@@ -17,11 +17,11 @@ If your server's IP is blocked but the CDN's networks are not, a protocol can go
 - The CDN goes to the node by **the node's domain** and certificate. The CDN's domain and the node's domain must differ.
 - The node sees the addresses of the CDN's servers, not the clients'. So that the device limit and the incoming filter count real clients, the node takes the client's address from a header the CDN adds, and believes it only from the CDN's networks.
 
-A CDN carries HTTP, so only **VLESS and Trojan on the node's certificate** over **XHTTP, WebSocket or gRPC** work. REALITY, Vision and bare TLS do not pass through a CDN, and the panel refuses such settings. The older variant with WebSocket is in [Connecting behind a proxy](/mikan/en/protocols/behind-proxy/#through-a-cdn).
+A CDN carries HTTP, so only **VLESS and Trojan on the node's certificate** over **XHTTP, WebSocket or gRPC** work. REALITY, Vision and bare TLS do not pass through a CDN, and the panel refuses such settings. The older variant with WebSocket is in [Connecting behind a proxy](/scilla/en/protocols/behind-proxy/#through-a-cdn).
 
 ## Presets
 
-**Protocols → Add** has two presets for a CDN. Both use the node's certificate, so the node needs a domain with a public certificate, see [Node certificate](/mikan/en/nodes/nodes/#node-certificate). Their XHTTP mode is `packet-up`: ordinary short requests that a CDN passes and caches nothing of.
+**Protocols → Add** has two presets for a CDN. Both use the node's certificate, so the node needs a domain with a public certificate, see [Node certificate](/scilla/en/nodes/nodes/#node-certificate). Their XHTTP mode is `packet-up`: ordinary short requests that a CDN passes and caches nothing of.
 
 | Preset | Default port | When to take it |
 |---|---|---|

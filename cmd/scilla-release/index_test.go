@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/release"
+	"scilla/internal/release"
 )
 
 // readIndex reads back what the index command signed, as the readers check it.
@@ -50,7 +50,7 @@ func TestIndexSeedsThenGrows(t *testing.T) {
 	if got := versions(ix); got != "0.4.5/stable/0.4.0 0.5.0.0/stable/0.4.5 0.5.0.1/stable/0.4.5" {
 		t.Fatalf("seeded: %s", got)
 	}
-	if ix.Schema != release.IndexSchema || ix.Releases[2].Manifest != "https://github.com/Miroshka000/mikan/releases/download/v0.5.0.1/manifest.json" {
+	if ix.Schema != release.IndexSchema || ix.Releases[2].Manifest != "https://github.com/drillex100-beep/scilla/releases/download/v0.5.0.1/manifest.json" {
 		t.Fatalf("seeded: %+v", ix)
 	}
 	// A pre-release goes to beta, and "latest" is none of the index's business.
@@ -71,7 +71,7 @@ func TestIndexSeedsThenGrows(t *testing.T) {
 	}
 }
 
-// What a later mikan-release wrote and this one does not know stays for its readers.
+// What a later scilla-release wrote and this one does not know stays for its readers.
 func TestIndexCarriesWhatItDoesNotKnow(t *testing.T) {
 	f := newFixture(t, changelog)
 	priv := f.priv

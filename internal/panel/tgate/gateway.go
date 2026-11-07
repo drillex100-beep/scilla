@@ -22,14 +22,14 @@ import (
 	"sync/atomic"
 	"time"
 
-	"mikan/internal/pace"
-	"mikan/internal/panel/billing"
-	"mikan/internal/panel/secure"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/textutil"
-	"mikan/internal/tgapi"
+	"scilla/internal/pace"
+	"scilla/internal/panel/billing"
+	"scilla/internal/panel/secure"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/textutil"
+	"scilla/internal/tgapi"
 )
 
 // Settings keys of the gateway.

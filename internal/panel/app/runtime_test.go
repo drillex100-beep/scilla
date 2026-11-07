@@ -15,14 +15,14 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/server"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/subsrc"
-	"mikan/internal/panel/tgate"
-	"mikan/internal/sub/serve"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/server"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/subsrc"
+	"scilla/internal/panel/tgate"
+	"scilla/internal/sub/serve"
 )
 
 // Run returns only when every worker has: the database is closed after it, and a worker

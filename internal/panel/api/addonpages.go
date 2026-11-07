@@ -8,8 +8,8 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/addons/pages"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/addons/pages"
 )
 
 // The admin pages of an addon of protocol 2 (docs/pipeline/addons.md, section 9). The page

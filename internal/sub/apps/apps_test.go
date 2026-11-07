@@ -6,7 +6,7 @@ import (
 	"slices"
 	"testing"
 
-	"mikan/internal/proto"
+	"scilla/internal/proto"
 )
 
 func TestDetectApp(t *testing.T) {
@@ -22,8 +22,8 @@ func TestDetectApp(t *testing.T) {
 		"mihomo ClashFest/1.2.0":               {Family: FamilyMihomo}, // a build off a release tag names no core
 		"clash.meta/v1.19.32 SlothClash/0.9.4": {Family: FamilyMihomo, Core: Version{1, 19, 32}},
 		"clash.meta/mihomo SlothClash/0.9.4":   {Family: FamilyMihomo},
-		"mihomo/1.19.32 Mikan/0.1.3":           {Family: FamilyMihomo, Core: Version{1, 19, 32}},
-		"Mikan/0.1.3":                          {Family: FamilyMihomo}, // its update check, or a User-Agent of the user's own
+		"mihomo/1.19.32 Scilla/0.1.3":           {Family: FamilyMihomo, Core: Version{1, 19, 32}},
+		"Scilla/0.1.3":                          {Family: FamilyMihomo}, // its update check, or a User-Agent of the user's own
 		"mihomo/1.19.33 Kabosu/1.0.0":          {Family: FamilyMihomo, Core: Version{1, 19, 33}},
 		"kabosu/1.0.0":                         {Family: FamilyMihomo}, // a desktop app that names no core still gets Clash
 		"Happ/3.4.1":                           {Family: FamilyXray},
@@ -233,12 +233,12 @@ var pinnedUAs = []struct {
 	// headers and the announcement (INCY is asked first there).
 	{"INCY/2.1 Happ", App{Family: FamilyXray}, "happ", true, true, true, ""},
 	{"Stash/2.8.0 Clash/1.11.0", App{Family: FamilyStash}, "stash", false, false, false, ""},
-	// The Mikan app asks for a subscription as "mihomo[/core] Mikan/x", the mihomo on
-	// purpose (MikanApp's SubscriptionOverrides.buildDefaultUserAgent). A bare "Mikan/x"
+	// The Scilla app asks for a subscription as "mihomo[/core] Scilla/x", the mihomo on
+	// purpose (ScillaApp's SubscriptionOverrides.buildDefaultUserAgent). A bare "Scilla/x"
 	// comes from its update check or a user's own User-Agent, and is the Clash app too.
-	{"Mikan/0.1.3", App{Family: FamilyMihomo}, "mikan", false, false, false, ""},
-	{"mihomo/1.19.32 Mikan/0.1.3", App{Family: FamilyMihomo, Core: Version{1, 19, 32}}, "mikan", false, false, false, ""},
-	{"mihomo Mikan/1.1.1", App{Family: FamilyMihomo}, "mikan", false, false, false, ""},
+	{"Scilla/0.1.3", App{Family: FamilyMihomo}, "scilla", false, false, false, ""},
+	{"mihomo/1.19.32 Scilla/0.1.3", App{Family: FamilyMihomo, Core: Version{1, 19, 32}}, "scilla", false, false, false, ""},
+	{"mihomo Scilla/1.1.1", App{Family: FamilyMihomo}, "scilla", false, false, false, ""},
 	// The discontinued Clash apps (the Clash Premium core, not mihomo) are apps of their own,
 	// so the tester and the log name them; the built-in rule turns them away.
 	{"ClashforWindows/0.20.39", App{Family: FamilyMihomo}, "cfw", false, false, false, RuleOld},
@@ -286,7 +286,7 @@ var pinnedUAs = []struct {
 
 	// A row for every word and prefix of the Catalog, as word+"/1.0": TestDetectionIsPinned
 	// fails for one that has none, so a new entry is pinned when it is added.
-	{"mikan/1.0", App{Family: FamilyMihomo}, "mikan", false, false, false, ""},
+	{"scilla/1.0", App{Family: FamilyMihomo}, "scilla", false, false, false, ""},
 	{"kabosu/1.0", App{Family: FamilyMihomo}, "kabosu", false, false, false, ""},
 	{"koala/1.0", App{Family: FamilyMihomo}, "koala", false, false, false, ""},
 	{"clashfest/1.0", App{Family: FamilyMihomo}, "clashfest", false, false, false, ""},

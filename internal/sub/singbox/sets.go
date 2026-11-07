@@ -13,8 +13,8 @@ import (
 
 	"go.yaml.in/yaml/v3"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/routing"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/routing"
 )
 
 // ruleSets collects the rule sets the rules use: the geodata as MetaCubeX's .srs

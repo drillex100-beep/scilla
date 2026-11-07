@@ -11,26 +11,26 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/hostname"
-	"mikan/internal/panel/acme"
-	"mikan/internal/panel/dnscheck"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/secure"
-	"mikan/internal/panel/server"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/subsrc"
-	"mikan/internal/proto"
-	submodel "mikan/internal/sub/model"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/serve"
-	"mikan/internal/sub/xray"
-	"mikan/internal/textutil"
+	"scilla/internal/hostname"
+	"scilla/internal/panel/acme"
+	"scilla/internal/panel/dnscheck"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/secure"
+	"scilla/internal/panel/server"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/subsrc"
+	"scilla/internal/proto"
+	submodel "scilla/internal/sub/model"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/serve"
+	"scilla/internal/sub/xray"
+	"scilla/internal/textutil"
 )
 
 type SettingsView struct {
 	Brand          string `json:"brand"`
-	PanelAppName   string `json:"panel_app_name" doc:"Название панели, установленной как приложение (ярлык на рабочем столе, в меню, на главном экране); пусто — бренд, без бренда — mikan"`
+	PanelAppName   string `json:"panel_app_name" doc:"Название панели, установленной как приложение (ярлык на рабочем столе, в меню, на главном экране); пусто — бренд, без бренда — scilla"`
 	SupportURL     string `json:"support_url"`
 	SubTitle       string `json:"sub_title" doc:"Название подписки в приложениях (заголовок profile-title); пусто — бренд. Переменные: {brand} — бренд, {name} — имя пользователя, {date} — дата окончания (ДД.ММ.ГГГГ, МСК), {days} — дней осталось, {used} — израсходовано, {left} — осталось трафика, {total} — всего, {devices} — привязанные устройства (2/3); без срока или лимита — ∞"`
 	Announce       string `json:"sub_announce" doc:"Объявление над профилем в приложениях (заголовок announce): Happ и v2RayTun показывают его под названием подписки; пусто — нет. Те же переменные, что в sub_title"`
@@ -66,7 +66,7 @@ type SettingsView struct {
 	AutoSNI        bool           `json:"auto_sni" doc:"Менять сайт маскировки REALITY, если он перестал подходить"`
 	WideScan       bool           `json:"wide_sni_scan" doc:"Искать сайты маскировки REALITY не только в /24 ноды, но и в соседних /24 её /16, до 20 найденных сайтов или 2 минут. Много подключений: хостер может принять это за сканирование сети"`
 	AnyPort        bool           `json:"any_port" doc:"Когда запасные порты (2053, 2083…) заняты, панель сама берёт любой свободный из 20000-32767: для нового подключения без порта и при автопереносе. Эти порты установщик в файрволе не открывает"`
-	SupportAccess  bool           `json:"support_access" doc:"Разрешить доступ для поддержки (Настройки → Безопасность). Выключено: новый доступ не выдать, действующий закрывается. MIKAN_SUPPORT_ACCESS=off в .env сервера выключает его независимо от этой настройки"`
+	SupportAccess  bool           `json:"support_access" doc:"Разрешить доступ для поддержки (Настройки → Безопасность). Выключено: новый доступ не выдать, действующий закрывается. SCILLA_SUPPORT_ACCESS=off в .env сервера выключает его независимо от этой настройки"`
 	// Devices: see domain.Devices.
 	DeviceBinding bool `json:"device_binding" doc:"Привязывать подписку к устройствам: у каждого устройства свои ключи"`
 	RequireHWID   bool `json:"device_require_hwid" doc:"Не выдавать подписку приложениям без ID устройства (иначе они вместе занимают одно место)"`

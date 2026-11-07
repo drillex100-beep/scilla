@@ -7,11 +7,11 @@ import (
 	"slices"
 	"strings"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/promo"
-	"mikan/internal/panel/secure"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/promo"
+	"scilla/internal/panel/secure"
+	"scilla/internal/panel/store/db"
 )
 
 // Traffic packages (GitHub issue #12) are sold to a subscription's owner like a renewal:

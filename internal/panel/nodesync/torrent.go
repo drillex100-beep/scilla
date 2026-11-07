@@ -7,11 +7,11 @@ import (
 	"strconv"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/torrent"
-	"mikan/internal/textutil"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/torrent"
+	"scilla/internal/textutil"
 )
 
 // torrentPullEvery is how often a node is asked for its torrent blocker's hits. The node

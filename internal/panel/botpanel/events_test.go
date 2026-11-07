@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/billing"
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/billing"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/store/db"
 )
 
 // event is what the addon pulls from the panel's feed: the payment or the notice, as JSON.
@@ -125,7 +125,7 @@ func TestHandleEventPaymentMessages(t *testing.T) {
 	// trial.not_given: why, and where the money comes back, with the support link.
 	by := events.NotGiven{PaymentID: 8, Amount: 100, Currency: "RUB", Reason: events.TrialUsed, Refund: events.RefundedManually}
 	msg = e.said(event(t, events.TrialNotGiven, 0, buyer, by), buyer, "не засчитан")
-	if !strings.Contains(text(msg), "платёж 1 ₽ не засчитан") || buttons(msg)["💬 Поддержка"] != "https://t.me/mikan_support" {
+	if !strings.Contains(text(msg), "платёж 1 ₽ не засчитан") || buttons(msg)["💬 Поддержка"] != "https://t.me/scilla_support" {
 		t.Fatalf("trial not given: %q %v", text(msg), buttons(msg))
 	}
 	// One that went back by itself is told by its payment.refunded alone.

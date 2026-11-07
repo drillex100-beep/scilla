@@ -49,18 +49,18 @@ curl -s -X POST "$BASE/users" \
 ```ts
 import { createClient } from "@getmikan/sdk";
 
-const mikan = createClient({
+const scilla = createClient({
   baseUrl: "https://vpn.example.com:8443/SECRET-PATH/api/v1",
-  apiKey: process.env.MIKAN_API_KEY!,
+  apiKey: process.env.SCILLA_API_KEY!,
 });
 
 // 3. тарифы
-const tariffs = await mikan.GET("/tariffs");
+const tariffs = await scilla.GET("/tariffs");
 if (tariffs.error) throw new Error(tariffs.error.detail);
 console.log(tariffs.data.map((t) => `${t.id}: ${t.name}`));
 
 // 4. пользователь на тарифе 2
-const created = await mikan.POST("/users", {
+const created = await scilla.POST("/users", {
   body: { name: "Anna", tariff_id: 2, contact: "@anna", tags: ["family"] },
 });
 if (created.error) throw new Error(created.error.detail);
@@ -73,14 +73,14 @@ console.log(created.data.id, created.data.sub_url);
 ```python
 import os
 
-from mikan_sdk import AuthenticatedClient
-from mikan_sdk.api.tariffs import list_tariffs
-from mikan_sdk.api.users import create_user
-from mikan_sdk.models import CreateUserInputBody
+from scilla_sdk import AuthenticatedClient
+from scilla_sdk.api.tariffs import list_tariffs
+from scilla_sdk.api.users import create_user
+from scilla_sdk.models import CreateUserInputBody
 
 client = AuthenticatedClient(
     base_url="https://vpn.example.com:8443/SECRET-PATH/api/v1",
-    token=os.environ["MIKAN_API_KEY"],
+    token=os.environ["SCILLA_API_KEY"],
 )
 
 # 3. тарифы
@@ -118,15 +118,15 @@ print(created.parsed.id, created.parsed.sub_url)
 }
 ```
 
-Установка SDK и адрес API для него описаны на странице [SDK](/mikan/api/sdk/).
+Установка SDK и адрес API для него описаны на странице [SDK](/scilla/api/sdk/).
 
 ## Что получает пользователь
 
 Из тарифа берутся лимит трафика, число устройств, скорость, правило сброса трафика, серверы и срок. Срок отсчитывается от момента создания. Пользователь создан «в панели»: его `source` равен `admin`, как у созданных вручную.
 
-Дальше тем же ключом можно [продлить](/mikan/api/reference/operations/extend-user/) срок, [начислить трафик](/mikan/api/reference/operations/grant-traffic/), [перевыпустить ссылку](/mikan/api/reference/operations/reissue-user/) или сбросить трафик. Полный список методов в [справочнике](/mikan/api/reference/).
+Дальше тем же ключом можно [продлить](/scilla/api/reference/operations/extend-user/) срок, [начислить трафик](/scilla/api/reference/operations/grant-traffic/), [перевыпустить ссылку](/scilla/api/reference/operations/reissue-user/) или сбросить трафик. Полный список методов в [справочнике](/scilla/api/reference/).
 
-Чтобы сервис узнавал о новых пользователях, оплатах и конце срока сразу, а не опрашивал API, подключите [webhooks](/mikan/api/webhooks/): панель сама пришлёт на ваш адрес событие, в том числе `user.created` для каждого созданного пользователя.
+Чтобы сервис узнавал о новых пользователях, оплатах и конце срока сразу, а не опрашивал API, подключите [webhooks](/scilla/api/webhooks/): панель сама пришлёт на ваш адрес событие, в том числе `user.created` для каждого созданного пользователя.
 
 ## Если не получилось
 

@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
 )
 
 // The admin picks a default TLS fingerprint in the settings and an own one per inbound;

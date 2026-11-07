@@ -254,7 +254,7 @@ fn chown_below(dir: &OwnedFd, depth: usize) -> Result<()> {
     Ok(())
 }
 
-/// What the containers see of /opt/mikan/data: only data/panel and data/node are theirs,
+/// What the containers see of /opt/scilla/data: only data/panel and data/node are theirs,
 /// each mounted alone, made if missing and handed to the panel's user with all it holds.
 pub fn own_dirs(root: &Path, panel: bool) -> Result<()> {
     let data = root.join("data");

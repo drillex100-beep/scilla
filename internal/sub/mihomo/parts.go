@@ -4,9 +4,9 @@ import (
 	"slices"
 	"strconv"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/profile"
-	"mikan/internal/sub/routing"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/profile"
+	"scilla/internal/sub/routing"
 )
 
 // Parts are the admin's own Clash profile filled for a user, read apart from the core: for

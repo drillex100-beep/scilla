@@ -2,15 +2,15 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset=".github/assets/banner-ru-dark.svg">
-  <img alt="mikan — VPN-панель на ядре Citrus" src=".github/assets/banner-ru-light.svg" width="100%">
+  <img alt="scilla — VPN-панель на ядре Citrus" src=".github/assets/banner-ru-light.svg" width="100%">
 </picture>
 
 <br>
 
 **Быстрая и красивая VPN-панель на ядре [Citrus](https://github.com/getmikan/Citrus): ставится одной командой и не требует присмотра.**
 
-[![Релиз](https://img.shields.io/github/v/release/Miroshka000/mikan?color=f07a2e&label=релиз&style=flat-square)](https://github.com/Miroshka000/mikan/releases)
-[![Образ](https://img.shields.io/badge/ghcr.io-miroshka000%2Fmikan-2b8c9e?style=flat-square&logo=docker&logoColor=white)](https://github.com/Miroshka000/mikan/pkgs/container/mikan)
+[![Релиз](https://img.shields.io/github/v/release/Miroshka000/mikan?color=f07a2e&label=релиз&style=flat-square)](https://github.com/drillex100-beep/scilla/releases)
+[![Образ](https://img.shields.io/badge/ghcr.io-miroshka000%2Fmikan-2b8c9e?style=flat-square&logo=docker&logoColor=white)](https://github.com/drillex100-beep/scilla/pkgs/container/scilla)
 [![Лицензия](https://img.shields.io/badge/лицензия-GPL--3.0-2f9e6b?style=flat-square)](LICENSE)
 [![Citrus](https://img.shields.io/badge/ядро-Citrus-9e8eff?style=flat-square)](https://github.com/getmikan/Citrus)
 [![Telegram](https://img.shields.io/badge/Telegram-канал-26a5e4?style=flat-square&logo=telegram&logoColor=white)](https://t.me/mikanvpn)
@@ -27,7 +27,7 @@
 На чистом сервере с Ubuntu 22.04+ или Debian 12+ (amd64 или arm64):
 
 ```bash
-curl -fsSL https://github.com/Miroshka000/mikan/releases/latest/download/install.sh | sudo bash
+curl -fsSL https://github.com/drillex100-beep/scilla/releases/latest/download/install.sh | sudo bash
 ```
 
 Установщик по шагам:
@@ -36,24 +36,24 @@ curl -fsSL https://github.com/Miroshka000/mikan/releases/latest/download/install
 3. Подбирает сайты для маскировки REALITY рядом с сервером.
 4. В конце выдаёт ссылку на админку.
 
-Меню управления потом открывается командой `mikan`.
+Меню управления потом открывается командой `scilla`.
 
-Нода для уже работающей панели: страница **Ноды** в панели (или `mikan node add`) выдаёт команду с ключом:
+Нода для уже работающей панели: страница **Ноды** в панели (или `scilla node add`) выдаёт команду с ключом:
 
 ```bash
-curl -fsSL https://github.com/Miroshka000/mikan/releases/latest/download/install.sh | sudo bash -s -- --join КЛЮЧ
+curl -fsSL https://github.com/drillex100-beep/scilla/releases/latest/download/install.sh | sudo bash -s -- --join КЛЮЧ
 ```
 
-Без вопросов, для скриптов: `… | sudo bash -s -- --yes --lang ru --domain vpn.example.com --email you@example.com` (все флаги: `mikan install --help`).
+Без вопросов, для скриптов: `… | sudo bash -s -- --yes --lang ru --domain vpn.example.com --email you@example.com` (все флаги: `scilla install --help`).
 
-## Почему mikan
+## Почему scilla
 
 <table>
 <tr>
 <td width="50%" valign="top">
 
 ### 🛡️ Сама переживает блокировки
-mikan следит, доходят ли реальные клиенты до каждого протокола:
+scilla следит, доходят ли реальные клиенты до каждого протокола:
 - если по дороге заблокировали порт, панель переносит протокол на свободный HTTPS-порт;
 - если сайт маскировки REALITY перестал подходить, подбирает новый рядом с сервером.
 
@@ -130,12 +130,12 @@ REST API с документацией прямо в панели, ключи с
 Подписчики активируют их в Telegram Mini App и видят историю активаций. Бонусный трафик
 можно начислить в основной баланс или выбранный пул. Скидочные счета доступны только
 через способы оплаты с поддержкой возврата: Telegram Stars и адаптеры, которые заявили
-такую возможность. Тогда Mikan сможет вернуть оплату, если резерв промокода истёк до
+такую возможность. Тогда Scilla сможет вернуть оплату, если резерв промокода истёк до
 подтверждения платежа провайдером.
 
 ## Доступ для поддержки
 
-Если нужна помощь, вы сами открываете временный доступ: «Настройки → Поддержка», на 2, 6 или 24 часа, с уровнем «просмотр», «изменение» или «терминал». Без этой кнопки никто, включая разработчиков mikan, в панель не попадает: у проекта нет постоянного доступа к вашим серверам, и панель сама никуда не подключается. Все действия оператора пишутся в журнал, доступ отзывается одной кнопкой, терминал включается только паролем и 2FA и записывается. Выключить функцию совсем можно тумблером в той же карточке или командой `mikan support-access off` на сервере. Правила платной поддержки: [на сайте](https://miroshka000.github.io/mikan/support/paid/).
+Если нужна помощь, вы сами открываете временный доступ: «Настройки → Поддержка», на 2, 6 или 24 часа, с уровнем «просмотр», «изменение» или «терминал». Без этой кнопки никто, включая разработчиков scilla, в панель не попадает: у проекта нет постоянного доступа к вашим серверам, и панель сама никуда не подключается. Все действия оператора пишутся в журнал, доступ отзывается одной кнопкой, терминал включается только паролем и 2FA и записывается. Выключить функцию совсем можно тумблером в той же карточке или командой `scilla support-access off` на сервере. Правила платной поддержки: [на сайте](https://drillex100-beep.github.io/scilla/support/paid/).
 
 ## Скриншоты
 
@@ -186,8 +186,8 @@ REST API с документацией прямо в панели, ключи с
 
 ```mermaid
 flowchart LR
-    A[Браузер] -- HTTPS, секретная ссылка --> P[панель mikan<br>пользователи · тарифы · подписки]
-    P -- unix-сокет / TLS с пиннингом --> N1[нода mikan<br>внутри Citrus]
+    A[Браузер] -- HTTPS, секретная ссылка --> P[панель scilla<br>пользователи · тарифы · подписки]
+    P -- unix-сокет / TLS с пиннингом --> N1[нода scilla<br>внутри Citrus]
     P -- TLS с пиннингом --> N2[удалённая нода]
     C[VPN-приложения] -- REALITY · QUIC · … --> N1
     C --> N2
@@ -198,25 +198,25 @@ flowchart LR
 
 ## Управление сервером
 
-Команда `mikan` открывает меню. Команды можно вызывать и напрямую, они на английском:
+Команда `scilla` открывает меню. Команды можно вызывать и напрямую, они на английском:
 
 | Команда | Что делает |
 |---|---|
-| `mikan status` | контейнеры, версии, состояние, доступное обновление |
-| `mikan logs [panel\|node]` | логи в реальном времени |
-| `mikan url` | ссылка на админку |
-| `mikan reset-password` · `reset-path` · `disable-2fa` | вернуть доступ |
-| `mikan update` | обновить сейчас: сначала бэкап, при сбое откат |
-| `mikan backup` · `restore FILE` | бэкапы в `/opt/mikan/backups` |
-| `mikan node …` · `mikan inbound …` | ноды и протоколы |
-| `mikan targets scan` · `apply` | сайты для маскировки REALITY рядом с сервером |
-| `mikan join КЛЮЧ` | на ноде: взять новый ключ из панели |
-| `mikan restart` | перезапустить контейнеры |
-| `mikan doctor` | проверить сервер: Docker, порты, файрвол, часы, DNS, диск |
-| `mikan support КОД` | отправить диагностику в обращение поддержки, когда панель недоступна |
-| `mikan support-access on\|off` | разрешить или запретить доступ для поддержки на этом сервере |
-| `mikan api-lockdown [status\|off]` | на ноде: состояние правила «API ноды только с IP панели» или снять его сразу |
-| `mikan uninstall` | остановить и удалить команду, данные остаются |
+| `scilla status` | контейнеры, версии, состояние, доступное обновление |
+| `scilla logs [panel\|node]` | логи в реальном времени |
+| `scilla url` | ссылка на админку |
+| `scilla reset-password` · `reset-path` · `disable-2fa` | вернуть доступ |
+| `scilla update` | обновить сейчас: сначала бэкап, при сбое откат |
+| `scilla backup` · `restore FILE` | бэкапы в `/opt/scilla/backups` |
+| `scilla node …` · `scilla inbound …` | ноды и протоколы |
+| `scilla targets scan` · `apply` | сайты для маскировки REALITY рядом с сервером |
+| `scilla join КЛЮЧ` | на ноде: взять новый ключ из панели |
+| `scilla restart` | перезапустить контейнеры |
+| `scilla doctor` | проверить сервер: Docker, порты, файрвол, часы, DNS, диск |
+| `scilla support КОД` | отправить диагностику в обращение поддержки, когда панель недоступна |
+| `scilla support-access on\|off` | разрешить или запретить доступ для поддержки на этом сервере |
+| `scilla api-lockdown [status\|off]` | на ноде: состояние правила «API ноды только с IP панели» или снять его сразу |
+| `scilla uninstall` | остановить и удалить команду, данные остаются |
 
 ## Обновления
 
@@ -235,9 +235,9 @@ flowchart LR
 ## Сборка из исходников
 
 ```bash
-docker buildx build -t mikan:dev .            # образ панели и ноды
+docker buildx build -t scilla:dev .            # образ панели и ноды
 cd web && pnpm install && pnpm dev            # админка с горячей перезагрузкой
-MIKAN_TEST_DATABASE_URL=postgres://… go test ./...   # Go 1.27, тестовая PostgreSQL 18 и pg_dump
+SCILLA_TEST_DATABASE_URL=postgres://… go test ./...   # Go 1.27, тестовая PostgreSQL 18 и pg_dump
 cd installer && cargo test                    # установщик (Rust)
 ```
 
@@ -246,21 +246,21 @@ cd installer && cargo test                    # установщик (Rust)
 ## ⛔ Форки и чужие сборки
 
 > [!CAUTION]
-> **Официальный mikan есть только здесь:** репозиторий `Miroshka000/mikan`, образ `ghcr.io/miroshka000/mikan` и релизы, подписанные ключом mikan. Официальные аддоны — только из каталога `getmikan/marketplace`; реестр `getmikan/marketplace-community` — это сторонние аддоны, которые mikan не проверяет и за которые не отвечает. Всё остальное — не mikan, как бы оно ни называлось.
+> **Официальный scilla есть только здесь:** репозиторий `Miroshka000/mikan`, образ `ghcr.io/miroshka000/scilla` и релизы, подписанные ключом scilla. Официальные аддоны — только из каталога `getmikan/marketplace`; реестр `getmikan/marketplace-community` — это сторонние аддоны, которые scilla не проверяет и за которые не отвечает. Всё остальное — не scilla, как бы оно ни называлось.
 >
-> **Проект mikan считает любой форк и любую сборку не из официальных источников потенциально небезопасными.**
+> **Проект scilla считает любой форк и любую сборку не из официальных источников потенциально небезопасными.**
 >
 > **Официальные сборки можно проверить.** Каждый релиз собирается автоматически из открытого кода этого репозитория и подписывается, а панель и установщик принимают обновления только с этой подписью. Из чего собрана чужая сборка, знает только её автор.
 >
-> **Форк не получает наших обновлений.** Подписать релиз ключом mikan форк не может, поэтому исправления ошибок и уязвимостей до него не доходят, пока их не перенесёт автор форка, если перенесёт.
+> **Форк не получает наших обновлений.** Подписать релиз ключом scilla форк не может, поэтому исправления ошибок и уязвимостей до него не доходят, пока их не перенесёт автор форка, если перенесёт.
 >
 > **Форки мы не поддерживаем.** Мы не проверяем их и не отвечаем за ошибки, уязвимости и потерю данных в них. Вопросы о чужих сборках в чате и в issues не рассматриваются.
 >
-> **Название не входит в лицензию.** GPL v3 даёт права на код, но не на название mikan и логотип (п. 7 GPL v3, подробнее в [NOTICE.md](NOTICE.md) и [TRADEMARK.md](TRADEMARK.md)). Форк должен называться по-другому и не выдавать себя за mikan.
+> **Название не входит в лицензию.** GPL v3 даёт права на код, но не на название scilla и логотип (п. 7 GPL v3, подробнее в [NOTICE.md](NOTICE.md) и [TRADEMARK.md](TRADEMARK.md)). Форк должен называться по-другому и не выдавать себя за scilla.
 
 ## Лицензия
 
-mikan — свободная программа под [GNU GPL v3](LICENSE) с дополнительными условиями из [NOTICE.md](NOTICE.md): сохранять указание авторства, не выдавать изменённую версию за оригинал, права на название и логотип не передаются. Copyright (C) 2026 Miroshka and Mikan. Внутри [Citrus](https://github.com/getmikan/Citrus), форк [mihomo](https://github.com/MetaCubeX/mihomo), (GPL-3.0), часть кода взята из [3x-ui](https://github.com/MHSanaei/3x-ui) (GPL-3.0). Шрифты: Unbounded, Onest, JetBrains Mono (SIL OFL 1.1).
+scilla — свободная программа под [GNU GPL v3](LICENSE) с дополнительными условиями из [NOTICE.md](NOTICE.md): сохранять указание авторства, не выдавать изменённую версию за оригинал, права на название и логотип не передаются. Copyright (C) 2026 Miroshka and Scilla. Внутри [Citrus](https://github.com/getmikan/Citrus), форк [mihomo](https://github.com/MetaCubeX/mihomo), (GPL-3.0), часть кода взята из [3x-ui](https://github.com/MHSanaei/3x-ui) (GPL-3.0). Шрифты: Unbounded, Onest, JetBrains Mono (SIL OFL 1.1).
 
 <div align="center">
 <sub>Сделано с 🍊</sub>

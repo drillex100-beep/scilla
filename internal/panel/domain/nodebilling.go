@@ -5,7 +5,7 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store/db"
 )
 
 // NodeBilling is what the admin keeps about a node's server at its provider: who hosts it,

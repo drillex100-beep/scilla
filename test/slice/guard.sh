@@ -1,15 +1,15 @@
 #!/usr/bin/env sh
 # The core's egress guard on a stack of its own: the panel beside its own node as the installer
-# runs them, on addresses the core takes for public, without MIKAN_ALLOW_PRIVATE. A client goes
+# runs them, on addresses the core takes for public, without SCILLA_ALLOW_PRIVATE. A client goes
 # through the node to the panel, the subscription and the server's other ports. run.sh runs
 # this last; on its own it takes a minute or two. KEEP=1 leaves the stack running.
 set -eu
 cd "$(dirname "$0")"
 export MSYS_NO_PATHCONV=1
-export MIKAN_TEST_POSTGRES_PASSWORD=$(head -c 32 /dev/urandom | od -An -tx1 | tr -d ' \n')
+export SCILLA_TEST_POSTGRES_PASSWORD=$(head -c 32 /dev/urandom | od -An -tx1 | tr -d ' \n')
 
-docker volume create mikan-gomod >/dev/null
-docker volume create mikan-gocache >/dev/null
+docker volume create scilla-gomod >/dev/null
+docker volume create scilla-gocache >/dev/null
 docker compose --profile guard down -v --remove-orphans >/dev/null 2>&1 || true
 docker compose build node
 

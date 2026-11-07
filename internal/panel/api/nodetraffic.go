@@ -9,9 +9,9 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // Traffic by node: the bytes of the users' statistics, grouped by the node that carried

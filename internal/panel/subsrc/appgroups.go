@@ -3,13 +3,13 @@ package subsrc
 import (
 	"context"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/sub/serve"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/sub/serve"
 )
 
-// Groups are the server groups of the subscription as the Mikan app shows them
+// Groups are the server groups of the subscription as the Scilla app shows them
 // (serve.GroupsHeader), without their servers: the handler names those in the profile. It
 // reads what Inbounds found the user may use, which a fetch asks for first.
 func (s *subscription) Groups(ctx context.Context) (serve.AppGroups, error) {

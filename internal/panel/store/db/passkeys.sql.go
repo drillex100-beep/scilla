@@ -66,7 +66,7 @@ const deleteAdminPasskeysOf = `-- name: DeleteAdminPasskeysOf :execrows
 DELETE FROM admin_passkeys WHERE admin_id = $1
 `
 
-// With a new password (mikan reset-password, a change that revokes the keys): a passkey
+// With a new password (scilla reset-password, a change that revokes the keys): a passkey
 // added from a hijacked session would outlive the reaction to it.
 func (q *Queries) DeleteAdminPasskeysOf(ctx context.Context, adminID int64) (int64, error) {
 	result, err := q.db.ExecContext(ctx, deleteAdminPasskeysOf, adminID)

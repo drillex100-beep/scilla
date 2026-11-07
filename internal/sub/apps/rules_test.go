@@ -11,7 +11,7 @@ import (
 
 // samples are the User-Agents each app of the catalog sends, as far as they are known.
 var samples = map[string]string{
-	"mikan":        "mihomo/1.19.32 Mikan/0.1.3",
+	"scilla":        "mihomo/1.19.32 Scilla/0.1.3",
 	"kabosu":       "kabosu/1.0.0",
 	"koala":        "koala-clash/1.4.1",
 	"clashfest":    "mihomo/1.19.32 ClashFest/1.2.0",
@@ -113,7 +113,7 @@ func TestAlternativesSkipBlockedApps(t *testing.T) {
 	if got := Alternatives(nil, 3); !reflect.DeepEqual(got, []string{"Happ", "INCY", "Koala Clash"}) {
 		t.Errorf("%v", got)
 	}
-	if got := Alternatives(map[string]bool{"happ": true, "koala": true}, 3); !reflect.DeepEqual(got, []string{"INCY", "Mikan", "Kabosu"}) {
+	if got := Alternatives(map[string]bool{"happ": true, "koala": true}, 3); !reflect.DeepEqual(got, []string{"INCY", "Scilla", "Kabosu"}) {
 		t.Errorf("%v", got)
 	}
 	all := map[string]bool{}
@@ -334,7 +334,7 @@ func TestBlockedApps(t *testing.T) {
 	if d.Rule != RuleApps || d.Responds() != RespondStub || d.Action.Text != "Use INCY" || d.App.ID != "shadowrocket" {
 		t.Errorf("%+v", d)
 	}
-	if !reflect.DeepEqual(d.Install, []string{"INCY", "Koala Clash", "Mikan"}) {
+	if !reflect.DeepEqual(d.Install, []string{"INCY", "Koala Clash", "Scilla"}) {
 		t.Errorf("the blocked Happ is not recommended: %v", d.Install)
 	}
 	if d := r.Decide(hdr("User-Agent", "INCY/2.1.0")); d.Rule != "" || d.Responds() != RespondServe {

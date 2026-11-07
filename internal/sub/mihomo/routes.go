@@ -3,8 +3,8 @@ package mihomo
 import (
 	"strings"
 
-	"mikan/internal/sub/profile"
-	"mikan/internal/sub/routing"
+	"scilla/internal/sub/profile"
+	"scilla/internal/sub/routing"
 )
 
 // takes says whether the app's core reads a list.

@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/proto"
+	"scilla/internal/proto"
 )
 
 // A copy shares no secret with the original: every key a preset generates is new, the

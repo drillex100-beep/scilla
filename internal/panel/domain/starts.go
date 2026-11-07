@@ -6,9 +6,9 @@ import (
 	"errors"
 	"time"
 
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/events/feed"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/events/feed"
+	"scilla/internal/panel/store/db"
 )
 
 // A term that waits for its first connection: a subscription made on a tariff that says so

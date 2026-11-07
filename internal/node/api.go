@@ -14,9 +14,9 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/acmechallenge"
-	"mikan/internal/nodeapi"
-	"mikan/internal/scan"
+	"scilla/internal/acmechallenge"
+	"scilla/internal/nodeapi"
+	"scilla/internal/scan"
 )
 
 var scanning sync.Mutex
@@ -229,7 +229,7 @@ func Handler(e *Engine, log *slog.Logger) http.Handler {
 	})
 	// What the node's memory holds and what its goroutines wait on: the way to tell why a node
 	// grew while it is big, for whoever reaches this API (the socket's permissions, the panel's
-	// pinned certificate). curl --unix-socket /run/mikan/node.sock http://node/debug/pprof/heap
+	// pinned certificate). curl --unix-socket /run/scilla/node.sock http://node/debug/pprof/heap
 	mux.Handle("GET /debug/pprof/heap", pprof.Handler("heap"))
 	mux.Handle("GET /debug/pprof/goroutine", pprof.Handler("goroutine"))
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

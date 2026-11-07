@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store"
 )
 
 // JobTimeout bounds a whole job: reading the old panel and, for an import, making users.

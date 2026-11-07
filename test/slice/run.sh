@@ -4,10 +4,10 @@
 set -eu
 cd "$(dirname "$0")"
 export MSYS_NO_PATHCONV=1
-export MIKAN_TEST_POSTGRES_PASSWORD=$(head -c 32 /dev/urandom | od -An -tx1 | tr -d ' \n')
+export SCILLA_TEST_POSTGRES_PASSWORD=$(head -c 32 /dev/urandom | od -An -tx1 | tr -d ' \n')
 
-docker volume create mikan-gomod >/dev/null
-docker volume create mikan-gocache >/dev/null
+docker volume create scilla-gomod >/dev/null
+docker volume create scilla-gocache >/dev/null
 docker compose down -v --remove-orphans >/dev/null 2>&1 || true
 docker compose build node target
 
@@ -71,7 +71,7 @@ if [ "$status" != 0 ]; then
 fi
 if [ "${KEEP:-0}" != 1 ]; then
   docker compose --profile client --profile client2 --profile node2 --profile blocker --profile blocker2 down -v --remove-orphans
-  # The core's egress guard, which MIKAN_ALLOW_PRIVATE keeps off on the stack above.
+  # The core's egress guard, which SCILLA_ALLOW_PRIVATE keeps off on the stack above.
   if [ "$status" = 0 ]; then
     sh ./guard.sh || status=$?
   fi

@@ -13,7 +13,7 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/model"
+	"scilla/internal/panel/model"
 )
 
 // goldenDir holds what crossed the bot's RPC before the bot's side and the panel's were

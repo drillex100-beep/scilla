@@ -1,11 +1,11 @@
 ---
 title: Support access
-description: How to let the official mikan support into the panel for a few hours by a code from the bot, without a password or SSH, what it can and cannot do, and how to close the access.
+description: How to let the official scilla support into the panel for a few hours by a code from the bot, without a password or SSH, what it can and cannot do, and how to close the access.
 ---
 
-When you need help with the setup, you can let the [paid mikan support](/mikan/en/support/paid/) into your panel for a while: it needs neither your password nor SSH. The access lives for 2, 6 or 24 hours and closes with one button. Without your button nobody, mikan's developers included, gets into the panel: the project has no standing access to your servers.
+When you need help with the setup, you can let the [paid scilla support](/scilla/en/support/paid/) into your panel for a while: it needs neither your password nor SSH. The access lives for 2, 6 or 24 hours and closes with one button. Without your button nobody, scilla's developers included, gets into the panel: the project has no standing access to your servers.
 
-The access opens for the official support only, and only by a code from a paid ticket in [@MikanSup_bot](https://t.me/MikanSup_bot). The panel checks the code with the bot and hands the access to it itself: the link is never shown to you, there is nothing to copy or forward. Nobody else can be let in this way. The panel reaches the support bot only at that moment.
+The access opens for the official support only, and only by a code from a paid ticket in [@ScillaSup_bot](https://t.me/ScillaSup_bot). The panel checks the code with the bot and hands the access to it itself: the link is never shown to you, there is nothing to copy or forward. Nobody else can be let in this way. The panel reaches the support bot only at that moment.
 
 Section: **Settings → Support**.
 
@@ -19,8 +19,8 @@ Section: **Settings → Support**.
    - **Change**: also edit settings, clients, nodes, protocols and official addons, start updates and restarts;
    - **Terminal**: all of that plus a shell on chosen servers, see [below](#terminal).
 5. The **Show client data** checkbox is off by default: names, Telegram, subscription links, device addresses and the client search are hidden. Turn it on only if the problem cannot be solved without it.
-6. The **Extended mode** (for the Change and Terminal levels) is off by default. Without it the operator cannot reach what outlasts the access or touches money: issuing a node's key, a node's address and domain, own certificates and an own WireGuard exit, the payment settings, payment details, balances and refunds, handing the bot to an addon, addons from outside mikan's catalog, the subscription page and the settings fields that change what every client sees. The mode opens all of it. Through a node key or such an addon, client data becomes reachable to the operator as well, even when it is hidden. The mode takes your password and 2FA code, like the terminal: turn it on only for a ticket that cannot do without it.
-7. Press "Open access". The panel asks the bot whether the code fits, opens the access and hands it to the ticket. The bot checks that the panel answers at its address and is an official mikan build, and tells you "Access received".
+6. The **Extended mode** (for the Change and Terminal levels) is off by default. Without it the operator cannot reach what outlasts the access or touches money: issuing a node's key, a node's address and domain, own certificates and an own WireGuard exit, the payment settings, payment details, balances and refunds, handing the bot to an addon, addons from outside scilla's catalog, the subscription page and the settings fields that change what every client sees. The mode opens all of it. Through a node key or such an addon, client data becomes reachable to the operator as well, even when it is hidden. The mode takes your password and 2FA code, like the terminal: turn it on only for a ticket that cannot do without it.
+7. Press "Open access". The panel asks the bot whether the code fits, opens the access and hands it to the ticket. The bot checks that the panel answers at its address and is an official scilla build, and tells you "Access received".
 
 If the code does not fit, or the bot does not answer or refuses the access, nothing opens: an access that did not reach the bot is closed by the panel at once. One access is active at a time, a new one cancels the previous. The access covers every node of the panel at once.
 
@@ -48,7 +48,7 @@ At every level, the extended mode included, the operator cannot reach:
 
 ## Terminal
 
-The **Terminal** level gives a root shell on the panel's server and on chosen nodes right from the panel, on the **Diagnostics → Terminal** page. No ports open on the server and SSH is not needed: the panel hands the session to `mikan terminal-agent` on the server over a unix socket that a systemd unit creates for one session.
+The **Terminal** level gives a root shell on the panel's server and on chosen nodes right from the panel, on the **Diagnostics → Terminal** page. No ports open on the server and SSH is not needed: the panel hands the session to `scilla terminal-agent` on the server over a unix socket that a systemd unit creates for one session.
 
 - Only you turn it on, with your password and 2FA code, and only for the servers you tick.
 - A session closes on revoke, when the access runs out and after 15 minutes without input.
@@ -58,10 +58,10 @@ The **Terminal** level gives a root shell on the panel's server and on chosen no
 ## Turning it off
 
 - The **Allow support access** switch on the same card. Off: no access can be opened, the open one closes at once, links stop working.
-- On the server: `mikan support-access off`. It turns the feature off for good, whatever the panel says, and removes the support terminal's units from the server. `mikan support-access on` gives the choice back to the panel.
+- On the server: `scilla support-access off`. It turns the feature off for good, whatever the panel says, and removes the support terminal's units from the server. `scilla support-access on` gives the choice back to the panel.
 
 ## When the panel does not open
 
-Then no access can be opened. Run `mikan support <code>` on the server with the code from your ticket: it gathers the server check, the status and the last log lines without secrets and sends them to the ticket. More in [The mikan command](/mikan/en/operations/cli/).
+Then no access can be opened. Run `scilla support <code>` on the server with the code from your ticket: it gathers the server check, the status and the last log lines without secrets and sends them to the ticket. More in [The scilla command](/scilla/en/operations/cli/).
 
-mikan's paid support works through this access, its rules: [Paid support](/mikan/en/support/paid/).
+scilla's paid support works through this access, its rules: [Paid support](/scilla/en/support/paid/).

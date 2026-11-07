@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
+	"scilla/internal/panel/domain"
 )
 
 // A bulk action by filter takes the users the list shows for the same filter: the preview

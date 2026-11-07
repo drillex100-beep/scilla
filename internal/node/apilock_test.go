@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/hostchan"
-	"mikan/internal/nodeapi"
+	"scilla/internal/hostchan"
+	"scilla/internal/nodeapi"
 )
 
 type lockFixture struct {
@@ -121,7 +121,7 @@ func TestAPILockLiftsWithoutThePanel(t *testing.T) {
 	}
 }
 
-// `mikan api-lockdown off` on the server lifts the listener's lock too, until the panel
+// `scilla api-lockdown off` on the server lifts the listener's lock too, until the panel
 // comes again.
 func TestAPILockLiftedByTheHost(t *testing.T) {
 	f := newLockFixture(t)

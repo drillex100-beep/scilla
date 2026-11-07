@@ -20,17 +20,17 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/netaddr"
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/events/feed"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
+	"scilla/internal/netaddr"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/events/feed"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
 )
 
 // Prefix is where the API lives on its listener; the host hands it to addons as
-// MIKAN_PANEL_URL.
+// SCILLA_PANEL_URL.
 const Prefix = "/panel/v2"
 
 // MaxBody bounds what an addon may send in one request.

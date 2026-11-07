@@ -113,9 +113,9 @@ build_python() {
 
   # A warning is a piece of the API the client would be missing: stop on it.
   openapi-python-client generate --path "$build/openapi.json" --config "$here/python/generator.yml" \
-    --meta none --output-path "$stage/mikan_sdk" --fail-on-warning
+    --meta none --output-path "$stage/scilla_sdk" --fail-on-warning
   # The types are inline: this tells type checkers to read them (PEP 561).
-  touch "$stage/mikan_sdk/py.typed"
+  touch "$stage/scilla_sdk/py.typed"
 
   # PyPI takes the release's four numbers as they are; a beta's rc is written the way
   # Python versions write a release candidate (0.5.2.1-rc.2 is 0.5.2.1rc2), which pip
@@ -130,8 +130,8 @@ build_python() {
   python -m build --no-isolation --outdir "$dist" "$stage"
 
   # The wheel as a user gets it, not the files beside it: its dependencies are in the venv.
-  pip install --quiet --disable-pip-version-check --no-deps --force-reinstall "$dist/mikan_sdk-$py_version-py3-none-any.whl"
-  MIKAN_SDK_SPEC="$build/openapi.json" python -I -m unittest discover -s "$here/python/tests" -v
+  pip install --quiet --disable-pip-version-check --no-deps --force-reinstall "$dist/scilla_sdk-$py_version-py3-none-any.whl"
+  SCILLA_SDK_SPEC="$build/openapi.json" python -I -m unittest discover -s "$here/python/tests" -v
 }
 
 node "$here/spec.mjs" "$version" "$build/openapi.json"

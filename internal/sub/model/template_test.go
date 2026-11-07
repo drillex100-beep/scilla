@@ -75,7 +75,7 @@ func TestParseJSONTemplate(t *testing.T) {
 	}
 }
 
-// A group's "mikan" is read whole: a key nobody knows refuses it, so that a typo does not
+// A group's "scilla" is read whole: a key nobody knows refuses it, so that a typo does not
 // widen the group to every server.
 func TestReadAsk(t *testing.T) {
 	a, ok := ReadAsk(map[string]any{"nodes": []any{"🇺🇸 США", json.Number("2")}, "types": "vless", "filter": "🇺🇸"}, nil)
@@ -99,7 +99,7 @@ func TestReadAsk(t *testing.T) {
 	}
 }
 
-// The tag mikan adds to a template is its own name while the template leaves it free, then
+// The tag scilla adds to a template is its own name while the template leaves it free, then
 // the first numbered one nobody took.
 func TestFreeTag(t *testing.T) {
 	for _, c := range []struct {

@@ -5,11 +5,11 @@ import (
 	"database/sql"
 	"time"
 
-	"mikan/internal/panel/presets"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/textutil"
+	"scilla/internal/panel/presets"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/textutil"
 )
 
 // Seed creates the default inbounds, tariffs and slot pool on a fresh install.

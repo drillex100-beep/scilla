@@ -10,9 +10,9 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // Who goes through a node and which nodes a user goes through: user_node_traffic, the bytes

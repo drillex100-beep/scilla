@@ -7,10 +7,10 @@ import (
 	"errors"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // A refund takes back what the payment gave. Apply records, on the transaction that

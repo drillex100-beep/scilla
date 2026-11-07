@@ -1,10 +1,10 @@
 package subtest
 
 import (
-	"mikan/internal/proto"
-	"mikan/internal/sub/apps"
-	"mikan/internal/sub/build"
-	"mikan/internal/sub/model"
+	"scilla/internal/proto"
+	"scilla/internal/sub/apps"
+	"scilla/internal/sub/build"
+	"scilla/internal/sub/model"
 )
 
 // AllTypes are one inbound of each kind the default presets leave out, on the node: TLS of
@@ -12,8 +12,8 @@ import (
 // protocols of mihomo's newer cores. A core that has no word for one leaves it out.
 func AllTypes(node, firstID int64) []model.Inbound {
 	return []model.Inbound{
-		Inbound(firstID, node, "VLESS TLS", 443, proto.Template{"type": "vless", "mikan": map[string]any{"tls": "node"}}),
-		Inbound(firstID+1, node, "VLESS WS", 2053, proto.Template{"type": "vless", "ws-path": "/golden-ws", "mikan": map[string]any{"tls": "node"}}),
+		Inbound(firstID, node, "VLESS TLS", 443, proto.Template{"type": "vless", "scilla": map[string]any{"tls": "node"}}),
+		Inbound(firstID+1, node, "VLESS WS", 2053, proto.Template{"type": "vless", "ws-path": "/golden-ws", "scilla": map[string]any{"tls": "node"}}),
 		Inbound(firstID+2, node, "Hysteria2 Gecko", 8443, proto.Template{"type": "hysteria2", "obfs": "gecko", "obfs-password": "golden-gecko-password", "obfs-min-packet-size": 600, "obfs-max-packet-size": 1100}),
 		// The server's key is 16 bytes: the user's own goes next to it.
 		Inbound(firstID+3, node, "Shadowsocks 2022", 8388, proto.Template{"type": "shadowsocks", "cipher": "2022-blake3-aes-128-gcm", "password": "AAECAwQFBgcICQoLDA0ODw=="}),

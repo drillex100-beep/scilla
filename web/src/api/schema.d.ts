@@ -986,7 +986,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Режим разработчика: подключить свой процесс на 127.0.0.1, без проверки mikan */
+        /** Режим разработчика: подключить свой процесс на 127.0.0.1, без проверки scilla */
         post: operations["install-external-addon"];
         delete?: never;
         options?: never;
@@ -1269,7 +1269,7 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * mikan doctor на сервере ноды
+         * scilla doctor на сервере ноды
          * @description То же для сервера удалённой ноды; для своей ноды панели это сервер панели. Оператору поддержки с доступом «просмотр» разрешён.
          */
         post: operations["doctor-node"];
@@ -2386,8 +2386,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * mikan doctor на сервере панели
-         * @description Хост запускает mikan doctor и отдаёт отчёт (Docker, контейнеры, порты, файрвол, часы, DNS, GitHub, диск, память); ждём до минуты. Нужна команда mikan 0.5.1.1 или новее на сервере: mikan update. Оператору поддержки с доступом «просмотр» разрешён: отчёт ничего не меняет.
+         * scilla doctor на сервере панели
+         * @description Хост запускает scilla doctor и отдаёт отчёт (Docker, контейнеры, порты, файрвол, часы, DNS, GitHub, диск, память); ждём до минуты. Нужна команда scilla 0.5.1.1 или новее на сервере: scilla update. Оператору поддержки с доступом «просмотр» разрешён: отчёт ничего не меняет.
          */
         post: operations["doctor-server"];
         delete?: never;
@@ -3370,7 +3370,7 @@ export interface components {
         AddSourceInputBody: {
             /** @description Публичный ключ автора, ed25519 в base64, если админ знает его заранее: источник принимается, только если подписан им */
             key?: string;
-            /** @description https://…/mikan-addon.json, https://…/index.json или github.com/<владелец>/<репозиторий> (последний релиз) */
+            /** @description https://…/scilla-addon.json, https://…/index.json или github.com/<владелец>/<репозиторий> (последний релиз) */
             url: string;
         };
         AddonCatalogEntry: {
@@ -4301,7 +4301,7 @@ export interface components {
         CreateSupportGrantInputBody: {
             /** @description Одноразовый код из обращения в боте поддержки: без него доступ не открывается */
             code: string;
-            /** @description Расширенный режим, уровни change и terminal: ещё и ключи нод, адрес и домен ноды, свои сертификаты и WireGuard, оплата и балансы, бот, аддоны не из каталога mikan. Нужен пароль */
+            /** @description Расширенный режим, уровни change и terminal: ещё и ключи нод, адрес и домен ноды, свои сертификаты и WireGuard, оплата и балансы, бот, аддоны не из каталога scilla. Нужен пароль */
             extended?: boolean;
             /**
              * Format: int64
@@ -4809,7 +4809,7 @@ export interface components {
             auto_sni: boolean;
             /** @description Можно ли поставить подключение за CDN: VLESS или Trojan на сертификате ноды по XHTTP, WebSocket или gRPC */
             cdn_possible: boolean;
-            /** @description Куда подключаются клиенты, если не к ноде напрямую (mikan.client в шаблоне) */
+            /** @description Куда подключаются клиенты, если не к ноде напрямую (scilla.client в шаблоне) */
             client: components["schemas"]["ClientEndpoint"];
             /** @description Можно ли задать клиентам свой HTTP Host: VLESS и Trojan по WebSocket и XHTTP */
             client_host: boolean;
@@ -5078,7 +5078,7 @@ export interface components {
             wider: boolean;
         };
         MarketExternalInputBody: {
-            /** @description Админ подтвердил, что доверяет этому коду: mikan его не проверял */
+            /** @description Админ подтвердил, что доверяет этому коду: scilla его не проверял */
             confirm: boolean;
             /** @description Имя аддона: a-z, 0-9 и дефис, не из каталога и не из источника */
             id: string;
@@ -5122,7 +5122,7 @@ export interface components {
             /** @description Откуда поставлен аддон (custom): источник или реестр сообщества */
             origin?: components["schemas"]["MarketOrigin"];
             /**
-             * @description official — из подписанного каталога; custom — образ из источника или, у старых установок, свой образ админа; external — свой процесс админа; mikan неофициальные не проверял
+             * @description official — из подписанного каталога; custom — образ из источника или, у старых установок, свой образ админа; external — свой процесс админа; scilla неофициальные не проверял
              * @enum {string}
              */
             source: "official" | "custom" | "external";
@@ -5146,7 +5146,7 @@ export interface components {
             kind: "source" | "community";
             /** @description Репозиторий автора (community) */
             repo?: string;
-            /** @description mikan убрал аддон из реестра, причина: ставить и обновлять нельзя, установленный лучше удалить */
+            /** @description scilla убрал аддон из реестра, причина: ставить и обновлять нельзя, установленный лучше удалить */
             revoked?: string;
             /** @description Подписан закреплённым ключом автора; без подписи тот, кто управляет адресом, управляет и обновлениями */
             signed: boolean;
@@ -5158,11 +5158,11 @@ export interface components {
             catalog: components["schemas"]["MarketEntry"][];
             /** @description catalog_unavailable — каталог не загрузился */
             catalog_error?: string;
-            /** @description Реестр аддонов сообщества: сторонние авторы, mikan их код не проверял */
+            /** @description Реестр аддонов сообщества: сторонние авторы, scilla их код не проверял */
             community: components["schemas"]["MarketEntry"][];
             /** @description community_unavailable — реестр не загрузился */
             community_error?: string;
-            /** @description mikan на сервере умеет аддоны протокола 2; иначе сначала обновить сервер */
+            /** @description scilla на сервере умеет аддоны протокола 2; иначе сначала обновить сервер */
             host_ready: boolean;
             installed: components["schemas"]["MarketInstalled"][];
             /** @description Как сервер выполнил последнюю заявку */
@@ -5356,7 +5356,7 @@ export interface components {
             /** @description Нода старее панели */
             behind: boolean;
             billing: components["schemas"]["NodeBilling"];
-            /** @description Панель может обновить ноду сама: удалённая, отвечает, версия 0.5.0.2 или новее; старую обновляют один раз вручную командой mikan update на её сервере */
+            /** @description Панель может обновить ноду сама: удалённая, отвечает, версия 0.5.0.2 или новее; старую обновляют один раз вручную командой scilla update на её сервере */
             can_update: boolean;
             /**
              * Format: int64
@@ -5825,10 +5825,10 @@ export interface components {
              */
             mode: "light" | "dark" | "system";
             /**
-             * @description Тема, как темы панели. mikan, ocean, sakura и forest следуют mode; остальные светлые или тёмные сами
+             * @description Тема, как темы панели. scilla, ocean, sakura и forest следуют mode; остальные светлые или тёмные сами
              * @enum {string}
              */
-            palette: "mikan" | "ocean" | "sakura" | "forest" | "latte" | "snow" | "dawn" | "dune" | "graphite" | "abyss" | "ember" | "plum" | "moss" | "terminal" | "nord" | "mocha" | "tokyo" | "dracula" | "aurora" | "cosmos";
+            palette: "scilla" | "ocean" | "sakura" | "forest" | "latte" | "snow" | "dawn" | "dune" | "graphite" | "abyss" | "ember" | "plum" | "moss" | "terminal" | "nord" | "mocha" | "tokyo" | "dracula" | "aurora" | "cosmos";
             /** @enum {string} */
             radius: "small" | "medium" | "large";
         };
@@ -6343,7 +6343,7 @@ export interface components {
             name: string;
         };
         Preview: {
-            /** @description Пользователи, которых mikan не примет, с причиной */
+            /** @description Пользователи, которых scilla не примет, с причиной */
             invalid: components["schemas"]["List"];
             /**
              * Format: int64
@@ -6354,13 +6354,13 @@ export interface components {
             no_link: components["schemas"]["List"];
             /**
              * Format: int64
-             * @description Пользователи «на паузе»: в mikan их срок пойдёт с момента импорта
+             * @description Пользователи «на паузе»: в scilla их срок пойдёт с момента импорта
              */
             on_hold: number;
             statuses: {
                 [key: string]: number;
             };
-            /** @description Имена, которые уже есть в mikan */
+            /** @description Имена, которые уже есть в scilla */
             taken: components["schemas"]["List"];
             /** Format: int64 */
             total: number;
@@ -6599,7 +6599,7 @@ export interface components {
         };
         ReadySubTemplate: {
             author: string;
-            /** @description Свой шаблон mikan: панель собирает его из своих настроек, когда его загружают */
+            /** @description Свой шаблон scilla: панель собирает его из своих настроек, когда его загружают */
             builtin: boolean;
             /** @enum {string} */
             core: "mihomo" | "singbox" | "xray";
@@ -6614,9 +6614,9 @@ export interface components {
         };
         ReadySubTemplateOutputBody: {
             author: string;
-            /** @description Текст шаблона: для своего шаблона mikan собран из текущих настроек панели */
+            /** @description Текст шаблона: для своего шаблона scilla собран из текущих настроек панели */
             body: string;
-            /** @description Свой шаблон mikan: панель собирает его из своих настроек, когда его загружают */
+            /** @description Свой шаблон scilla: панель собирает его из своих настроек, когда его загружают */
             builtin: boolean;
             /** @enum {string} */
             core: "mihomo" | "singbox" | "xray";
@@ -6726,7 +6726,7 @@ export interface components {
             links: number;
             /** @description Перенесены без старой ссылки: её токен слишком короткий, чтобы быть секретом */
             no_link: components["schemas"]["List"];
-            /** @description Имена, которые уже есть в mikan: эти пользователи не перенесены */
+            /** @description Имена, которые уже есть в scilla: эти пользователи не перенесены */
             skipped: components["schemas"]["List"];
         };
         ResetConnectionsInputBody: {
@@ -6997,7 +6997,7 @@ export interface components {
             happ_routing: string;
             /** @description Как часто подписчик может сменить свою ссылку подписки сам (бот и Mini App) */
             link_reissue: components["schemas"]["ReissueRules"];
-            /** @description Название панели, установленной как приложение (ярлык на рабочем столе, в меню, на главном экране); пусто — бренд, без бренда — mikan */
+            /** @description Название панели, установленной как приложение (ярлык на рабочем столе, в меню, на главном экране); пусто — бренд, без бренда — scilla */
             panel_app_name: string;
             /** Format: int64 */
             panel_port: number;
@@ -7058,7 +7058,7 @@ export interface components {
             sub_title: string;
             /** @description Happ и INCY получают полные конфиги Xray (JSON) вместо ссылок: маршрутизация, DNS и «Авто» панели доходят до них; запрос с ?format= получает свой формат в любом случае */
             sub_xray_json: boolean;
-            /** @description Разрешить доступ для поддержки (Настройки → Безопасность). Выключено: новый доступ не выдать, действующий закрывается. MIKAN_SUPPORT_ACCESS=off в .env сервера выключает его независимо от этой настройки */
+            /** @description Разрешить доступ для поддержки (Настройки → Безопасность). Выключено: новый доступ не выдать, действующий закрывается. SCILLA_SUPPORT_ACCESS=off в .env сервера выключает его независимо от этой настройки */
             support_access: boolean;
             support_url: string;
             /** @description Искать сайты маскировки REALITY не только в /24 ноды, но и в соседних /24 её /16, до 20 найденных сайтов или 2 минут. Много подключений: хостер может принять это за сканирование сети */
@@ -7389,7 +7389,7 @@ export interface components {
             entered_at: string | null;
             /** Format: date-time */
             expires_at: string;
-            /** @description Расширенный режим: ещё и то, что иначе может только сессия админа: ключи нод, адрес и домен ноды, свои сертификаты и WireGuard, оплата и балансы, бот, аддоны не из каталога mikan */
+            /** @description Расширенный режим: ещё и то, что иначе может только сессия админа: ключи нод, адрес и домен ноды, свои сертификаты и WireGuard, оплата и балансы, бот, аддоны не из каталога scilla */
             extended: boolean;
             /** Format: int64 */
             id: number;
@@ -7421,7 +7421,7 @@ export interface components {
             /** @description Последний выданный доступ, активный или нет; null: ещё не выдавался */
             grant: components["schemas"]["SupportGrantView"];
             /**
-             * @description Выключен ли доступ для поддержки: пусто — включён, env — MIKAN_SUPPORT_ACCESS=off в .env сервера, setting — настройкой support_access
+             * @description Выключен ли доступ для поддержки: пусто — включён, env — SCILLA_SUPPORT_ACCESS=off в .env сервера, setting — настройкой support_access
              * @enum {string}
              */
             off: "" | "env" | "setting";
@@ -7442,7 +7442,7 @@ export interface components {
             level: "view" | "change" | "terminal";
             nodes: components["schemas"]["SupportNode"][];
             panel_version: string;
-            /** @description Отпечаток ключа подписи релизов, которому верит эта сборка: у официального mikan он один, у форка свой */
+            /** @description Отпечаток ключа подписи релизов, которому верит эта сборка: у официального scilla он один, у форка свой */
             release_key: string;
             show_people: boolean;
             terminal_targets: string[];

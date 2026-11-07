@@ -7,16 +7,16 @@ import (
 	"sync/atomic"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/pace"
-	"mikan/internal/panel/acme"
-	"mikan/internal/panel/autotune"
-	"mikan/internal/panel/nodesync"
-	"mikan/internal/panel/nodeupdate"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/updates"
-	"mikan/internal/tgapi"
+	"scilla/internal/nodeapi"
+	"scilla/internal/pace"
+	"scilla/internal/panel/acme"
+	"scilla/internal/panel/autotune"
+	"scilla/internal/panel/nodesync"
+	"scilla/internal/panel/nodeupdate"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/updates"
+	"scilla/internal/tgapi"
 )
 
 // roundInterval is how often the monitor samples. Node health arrives every five seconds.

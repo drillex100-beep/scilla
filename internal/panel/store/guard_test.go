@@ -111,8 +111,8 @@ func TestSessionSettings(t *testing.T) {
 		if err := c.conn.QueryRowContext(ctx, "SELECT current_setting('application_name'), current_setting('statement_timeout'), current_setting('lock_timeout'), current_setting('idle_in_transaction_session_timeout')").Scan(&app, &statement, &lock, &idle); err != nil {
 			t.Fatal(err)
 		}
-		if app != "mikan" || statement != c.statement || lock != c.lock || idle != c.idle {
-			t.Errorf("session: %s %s %s %s, want mikan %s %s %s", app, statement, lock, idle, c.statement, c.lock, c.idle)
+		if app != "scilla" || statement != c.statement || lock != c.lock || idle != c.idle {
+			t.Errorf("session: %s %s %s %s, want scilla %s %s %s", app, statement, lock, idle, c.statement, c.lock, c.idle)
 		}
 	}
 }

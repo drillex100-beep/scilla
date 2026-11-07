@@ -9,8 +9,8 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/panel/hysteresis"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/hysteresis"
+	"scilla/internal/panel/store/db"
 )
 
 // publicStatus keeps the public channel's side of the state in step with the servers: the text

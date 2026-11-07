@@ -4,7 +4,7 @@ import "testing"
 
 func TestConfigValidate(t *testing.T) {
 	c := Default("ru")
-	c.Buttons = append(c.Buttons, MenuButton{Action: "url", Label: "Канал", URL: "https://t.me/mikan", On: true},
+	c.Buttons = append(c.Buttons, MenuButton{Action: "url", Label: "Канал", URL: "https://t.me/scilla", On: true},
 		MenuButton{Action: "page", Label: "Правила", Text: "Не делитесь ссылкой", On: true})
 	if err := c.Validate(); err != nil {
 		t.Fatal(err)

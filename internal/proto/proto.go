@@ -1,7 +1,7 @@
 // Package proto describes inbounds as mihomo listener templates. A template is a mihomo
-// listener config without the fields mikan manages: the node fills in name, port,
+// listener config without the fields scilla manages: the node fills in name, port,
 // listen, users and the certificate, and subscriptions derive client configs from the
-// same template. mikan's own settings live under the "mikan" key and never reach mihomo.
+// same template. scilla's own settings live under the "scilla" key and never reach mihomo.
 package proto
 
 import (
@@ -14,12 +14,12 @@ import (
 	"go.yaml.in/yaml/v3"
 )
 
-// Template is a parsed listener template: mihomo keys plus the "mikan" section.
+// Template is a parsed listener template: mihomo keys plus the "scilla" section.
 type Template map[string]any
 
-const extKey = "mikan"
+const extKey = "scilla"
 
-// Ext is the "mikan" section.
+// Ext is the "scilla" section.
 type Ext struct {
 	Flow   string          `json:"flow,omitempty" yaml:"flow,omitempty"` // vless: xtls-rprx-vision
 	TLS    string          `json:"tls,omitempty" yaml:"tls,omitempty"`   // "node": use the node certificate
@@ -61,10 +61,10 @@ func (e *Error) Error() string {
 func fail(code, field string) error { return &Error{Code: code, Field: field} }
 
 type rule struct {
-	keys    []string // allowed top-level keys besides type and mikan
+	keys    []string // allowed top-level keys besides type and scilla
 	network string   // tcp | udp
 	cert    bool     // always runs on the node certificate
-	secured bool     // needs reality-config or mikan.tls: node
+	secured bool     // needs reality-config or scilla.tls: node
 	shared  bool     // one key for everyone: no per-user accounting or limits (see extra.go)
 }
 
@@ -209,7 +209,7 @@ func (t Template) str(key string) string {
 	return s
 }
 
-// Validate checks a template against the per-type allow list and mikan's rules. The node
+// Validate checks a template against the per-type allow list and scilla's rules. The node
 // still parses it with mihomo before applying (see node.Validate).
 func Validate(t Template, o Options) error {
 	typ := t.Type()
@@ -329,7 +329,7 @@ func Transport(t Template) string {
 }
 
 // Marshal renders a template as YAML with a stable, readable key order: type first, the
-// transport and security next, mikan's section last.
+// transport and security next, scilla's section last.
 func Marshal(t Template) string {
 	order := func(k string) int {
 		switch k {

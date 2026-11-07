@@ -4,10 +4,10 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/subtest"
-	"mikan/internal/sub/subtest/corecheck"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/subtest"
+	"scilla/internal/sub/subtest/corecheck"
 )
 
 // The share links, which do not depend on the mode: one list for each user, of all its

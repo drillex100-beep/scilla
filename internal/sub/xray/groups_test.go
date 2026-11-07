@@ -6,8 +6,8 @@ import (
 	"slices"
 	"testing"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/routing"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/routing"
 )
 
 var groupTags = map[string]bool{"a": true, "b": true, "c": true, "entry": true}

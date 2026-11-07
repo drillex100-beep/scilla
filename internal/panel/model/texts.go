@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"mikan/internal/textutil"
+	"scilla/internal/textutil"
 )
 
 // What a purchase is called in invoices, the bot and the Mini App: the term and the limits of

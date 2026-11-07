@@ -3,9 +3,9 @@
 package profile
 
 import (
-	"mikan/internal/sub/apps"
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/routing"
+	"scilla/internal/sub/apps"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/routing"
 )
 
 // Profile is what a client profile is made of.

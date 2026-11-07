@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/store/db"
 )
 
 // The removal reaches a subscription the rules' days after both its end and its last

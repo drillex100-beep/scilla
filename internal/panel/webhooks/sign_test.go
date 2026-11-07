@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/events"
+	"scilla/internal/panel/events"
 )
 
 // tolerance is how far a receiver lets a timestamp be from its clock: the five minutes the
@@ -72,11 +72,11 @@ func TestSetHeaders(t *testing.T) {
 	h := http.Header{}
 	setHeaders(h, secret, ev, now, body)
 	for name, want := range map[string]string{
-		"Content-Type":      "application/json",
-		"X-Mikan-Event":     "payment.paid",
-		"X-Mikan-Event-Id":  "17",
-		"X-Mikan-Timestamp": "1800000000",
-		"X-Mikan-Signature": "v1=" + sign(secret, now, body),
+		"Content-Type":       "application/json",
+		"X-Scilla-Event":     "payment.paid",
+		"X-Scilla-Event-Id":  "17",
+		"X-Scilla-Timestamp": "1800000000",
+		"X-Scilla-Signature": "v1=" + sign(secret, now, body),
 	} {
 		if got := h.Get(name); got != want {
 			t.Errorf("%s = %q, want %q", name, got, want)

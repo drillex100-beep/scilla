@@ -1,8 +1,8 @@
 package serve
 
-import "mikan/internal/sub/model"
+import "scilla/internal/sub/model"
 
-// AppGroups is the JSON of X-Mikan-Groups. V changes only when an app that reads version 1
+// AppGroups is the JSON of X-Scilla-Groups. V changes only when an app that reads version 1
 // would read the new one wrong; fields are only ever added.
 type AppGroups struct {
 	V int `json:"v"`

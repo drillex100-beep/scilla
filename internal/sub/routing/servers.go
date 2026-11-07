@@ -7,7 +7,7 @@ import (
 	"slices"
 	"strings"
 
-	"mikan/internal/sub/model"
+	"scilla/internal/sub/model"
 )
 
 // Servers is how the apps pick a server. The zero value is the profile as it was: a group

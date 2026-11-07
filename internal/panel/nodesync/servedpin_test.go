@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 // refusingNode is a node that does not take a state while down is set.

@@ -8,8 +8,8 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // AuditEntry is a line of the admin's journal.

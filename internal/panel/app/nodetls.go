@@ -8,12 +8,12 @@ import (
 	"strconv"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/acme"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/tlscert"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/acme"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/tlscert"
 )
 
 // NodeTLS picks the certificate a node serves on its protocols on TLS (Hysteria2, TUIC,

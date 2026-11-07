@@ -7,7 +7,7 @@ import (
 )
 
 // The panel and the bot addon that runs next to it must not link the GPL core, the Citrus
-// fork included (it keeps the mihomo import path through a replace): only mikan-node does.
+// fork included (it keeps the mihomo import path through a replace): only scilla-node does.
 // A failure names the chain of imports from the binary to where the core comes in.
 func TestDepsLinkNoCore(t *testing.T) {
 	gobin, err := exec.LookPath("go")
@@ -15,7 +15,7 @@ func TestDepsLinkNoCore(t *testing.T) {
 		t.Skip("no go tool to list the imports with")
 	}
 	out, err := exec.Command(gobin, "list", "-deps", "-f", "{{.ImportPath}} {{join .Imports \" \"}}",
-		"mikan/cmd/mikan", "mikan/cmd/mikan-telegram").CombinedOutput()
+		"scilla/cmd/scilla", "scilla/cmd/scilla-telegram").CombinedOutput()
 	if err != nil {
 		t.Fatalf("go list: %v\n%s", err, out)
 	}

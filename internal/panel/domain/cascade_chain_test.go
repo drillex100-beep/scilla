@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/store/db"
 )
 
 // A chain longer than maxChain is refused as too long, not as a loop: the admin who sees

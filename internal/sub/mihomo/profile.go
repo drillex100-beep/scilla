@@ -3,9 +3,9 @@ package mihomo
 import (
 	_ "embed"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/profile"
-	"mikan/internal/sub/routing"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/profile"
+	"scilla/internal/sub/routing"
 )
 
 // base is base.yaml, the start of every built-in profile, and baseKeys its keys in the

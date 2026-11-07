@@ -20,10 +20,10 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/panel/audit"
-	"mikan/internal/panel/secure"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/audit"
+	"scilla/internal/panel/secure"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 const (
@@ -56,7 +56,7 @@ var (
 	ErrUsed = errors.New("support link already used")
 	// ErrNotLive: nothing to revoke, the grant had ended already.
 	ErrNotLive = errors.New("support grant not live")
-	// ErrDisabled: support access is turned off (Settings or MIKAN_SUPPORT_ACCESS=off).
+	// ErrDisabled: support access is turned off (Settings or SCILLA_SUPPORT_ACCESS=off).
 	ErrDisabled = errors.New("support access disabled")
 )
 

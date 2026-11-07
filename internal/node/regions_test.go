@@ -54,7 +54,7 @@ func TestRegionReplies(t *testing.T) {
 		r           regionReply
 		open, known bool
 	}{
-		"search":           {"google_search", regionReply{status: 200, final: at("https://www.google.com/search?q=mikan")}, true, true},
+		"search":           {"google_search", regionReply{status: 200, final: at("https://www.google.com/search?q=scilla")}, true, true},
 		"search captcha":   {"google_search", regionReply{status: 200, final: at("https://www.google.com/sorry/index?continue=x")}, false, true},
 		"search 429":       {"google_search", regionReply{status: 429}, false, true},
 		"premium":          {"youtube_premium", regionReply{status: 200, body: "<html>YouTube Premium</html>"}, true, true},

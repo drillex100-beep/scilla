@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/sub/routing"
+	"scilla/internal/sub/routing"
 )
 
 // action is where a rule to t sends traffic: an outbound or a reject; false for a group

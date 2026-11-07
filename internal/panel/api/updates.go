@@ -9,9 +9,9 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/updates"
-	"mikan/internal/release"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/updates"
+	"scilla/internal/release"
 )
 
 type UpdatesView struct {

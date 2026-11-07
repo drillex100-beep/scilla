@@ -6,8 +6,8 @@ import (
 	"slices"
 	"testing"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // A remote node with the API lock on gets the panel's own addresses (its public address and

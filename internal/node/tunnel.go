@@ -7,7 +7,7 @@ import (
 	N "github.com/metacubex/mihomo/common/net"
 	C "github.com/metacubex/mihomo/constant"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 // Tunnel sits between the core's listeners and its tunnel. The core counts, limits and

@@ -26,7 +26,7 @@ type Cert struct {
 // exposed. A template may set its own value.
 const RealityMaxTimeDiff = int64(2 * 60 * 60 * 1_000)
 
-// Listener renders the mihomo listener: the template minus mikan's section, plus name,
+// Listener renders the mihomo listener: the template minus scilla's section, plus name,
 // port, listen address, users and, where the protocol needs it, the node certificate.
 func Listener(t Template, name, listen, port string, slots []Slot, cert Cert, o Options) (map[string]any, error) {
 	if err := Validate(t, o); err != nil {

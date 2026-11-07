@@ -6,10 +6,10 @@ import (
 	"errors"
 	"strconv"
 
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/events/feed"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/events/feed"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/store/db"
 )
 
 // The internal balance of a Telegram account. The account tops it up by hand: it says how

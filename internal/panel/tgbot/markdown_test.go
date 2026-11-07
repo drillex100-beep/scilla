@@ -5,7 +5,7 @@ import (
 	"testing"
 	"unicode/utf8"
 
-	"mikan/internal/tgapi"
+	"scilla/internal/tgapi"
 )
 
 // The admin's Markdown becomes the bot's HTML; what is not Markdown stays as typed.
@@ -162,9 +162,9 @@ func balanced(out string) string {
 // The variables are filled after the Markdown: a subscriber's name with marks or tags in
 // it stays text, and a variable inside a mark is formatted with it.
 func TestRenderVariables(t *testing.T) {
-	vars := map[string]string{"name": "**<b>Ivan</b>** _x_ [a](https://e.com)", "brand": "Mikan & Co"}
+	vars := map[string]string{"name": "**<b>Ivan</b>** _x_ [a](https://e.com)", "brand": "Scilla & Co"}
 	got := render("**{name}** of {brand}: `{brand}` [{brand}](https://e.com/{brand})", vars)
-	want := `<b>**&lt;b&gt;Ivan&lt;/b&gt;** _x_ [a](https://e.com)</b> of Mikan &amp; Co: <code>Mikan &amp; Co</code> <a href="https://e.com/{brand}">Mikan &amp; Co</a>`
+	want := `<b>**&lt;b&gt;Ivan&lt;/b&gt;** _x_ [a](https://e.com)</b> of Scilla &amp; Co: <code>Scilla &amp; Co</code> <a href="https://e.com/{brand}">Scilla &amp; Co</a>`
 	if got != want {
 		t.Fatalf("\n got %s\nwant %s", got, want)
 	}

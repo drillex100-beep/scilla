@@ -13,40 +13,40 @@ import (
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humago"
 
-	"mikan/internal/hostchan"
-	"mikan/internal/logbuf"
-	"mikan/internal/nodeapi"
-	"mikan/internal/nodetls"
-	"mikan/internal/panel/acme"
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/addons/pages"
-	"mikan/internal/panel/audit"
-	"mikan/internal/panel/auth"
-	"mikan/internal/panel/autotune"
-	"mikan/internal/panel/billing"
-	"mikan/internal/panel/botpanel"
-	"mikan/internal/panel/certcheck"
-	"mikan/internal/panel/dnscheck"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/ipgeo"
-	"mikan/internal/panel/nodesync"
-	"mikan/internal/panel/nodeupdate"
-	"mikan/internal/panel/panelimport"
-	"mikan/internal/panel/reach"
-	"mikan/internal/panel/secure"
-	"mikan/internal/panel/server"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/subsrc"
-	"mikan/internal/panel/support"
-	"mikan/internal/panel/tgate"
-	"mikan/internal/panel/tgbackup"
-	"mikan/internal/panel/tlscert"
-	"mikan/internal/panel/updates"
-	"mikan/internal/panel/warp"
-	"mikan/internal/panel/webhooks"
-	submodel "mikan/internal/sub/model"
+	"scilla/internal/hostchan"
+	"scilla/internal/logbuf"
+	"scilla/internal/nodeapi"
+	"scilla/internal/nodetls"
+	"scilla/internal/panel/acme"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/addons/pages"
+	"scilla/internal/panel/audit"
+	"scilla/internal/panel/auth"
+	"scilla/internal/panel/autotune"
+	"scilla/internal/panel/billing"
+	"scilla/internal/panel/botpanel"
+	"scilla/internal/panel/certcheck"
+	"scilla/internal/panel/dnscheck"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/ipgeo"
+	"scilla/internal/panel/nodesync"
+	"scilla/internal/panel/nodeupdate"
+	"scilla/internal/panel/panelimport"
+	"scilla/internal/panel/reach"
+	"scilla/internal/panel/secure"
+	"scilla/internal/panel/server"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/subsrc"
+	"scilla/internal/panel/support"
+	"scilla/internal/panel/tgate"
+	"scilla/internal/panel/tgbackup"
+	"scilla/internal/panel/tlscert"
+	"scilla/internal/panel/updates"
+	"scilla/internal/panel/warp"
+	"scilla/internal/panel/webhooks"
+	submodel "scilla/internal/sub/model"
 )
 
 type Deps struct {
@@ -170,7 +170,7 @@ type Deps struct {
 	Support *support.Service
 	// Logs holds the last lines of the panel's log for the Diagnostics page; nil: none.
 	Logs *logbuf.Buffer
-	// Host asks the panel's own server for `mikan doctor` and a restart of the containers
+	// Host asks the panel's own server for `scilla doctor` and a restart of the containers
 	// (the files its units watch); nil: not offered.
 	Host *hostchan.Channel
 }
@@ -201,7 +201,7 @@ type NodeRuntime interface {
 	Diagnose(ctx context.Context, id int64) (nodeapi.Diagnosis, error)
 	// Logs is a node's own log, the last tail lines, secrets cut out.
 	Logs(ctx context.Context, id int64, tail int) (nodeapi.Logs, error)
-	// HostDoctor has a node's server run `mikan doctor` and returns its report.
+	// HostDoctor has a node's server run `scilla doctor` and returns its report.
 	HostDoctor(ctx context.Context, id int64) (nodeapi.HostReport, error)
 	// HostRestart has a node's server restart its containers.
 	HostRestart(ctx context.Context, id int64) (nodeapi.RestartAccepted, error)
@@ -248,18 +248,18 @@ type handlers struct {
 	terms terminalHub
 }
 
-// Config builds the huma config shared by the server and the `mikan openapi` command.
+// Config builds the huma config shared by the server and the `scilla openapi` command.
 func Config(version string) huma.Config {
 	// Handlers always return non-nil slices; nullable arrays would force null checks in the UI.
 	huma.DefaultArrayNullable = false
-	cfg := huma.DefaultConfig("mikan", version)
+	cfg := huma.DefaultConfig("scilla", version)
 	// No docs UI, no spec endpoint and no $schema links at runtime: the spec is
 	// exported by the CLI at build time for the TypeScript client.
 	cfg.DocsPath = ""
 	cfg.OpenAPIPath = ""
 	cfg.SchemasPath = ""
 	cfg.CreateHooks = nil
-	cfg.Info.Description = "REST API панели mikan. Все пути — под секретным адресом админки: https://<панель>/<секретный путь>/api/v1/…\n\n" +
+	cfg.Info.Description = "REST API панели scilla. Все пути — под секретным адресом админки: https://<панель>/<секретный путь>/api/v1/…\n\n" +
 		"Скрипты и интеграции авторизуются ключом API (Настройки → API): заголовок `Authorization: Bearer mk_…`. " +
 		"Ключ «чтение» выполняет только GET и не получает ссылок подписок и секретных адресов; «полный» меняет данные, кроме входа, сессий, самих ключей и операций, где уходят деньги, ключи и адреса клиентов (они помечены «только сессия»).\n\n" +
 		"Админка в браузере ходит с cookie сессии; изменяющие запросы тогда требуют заголовок `X-CSRF-Token` из `GET /auth/me`.\n\n" +
@@ -270,7 +270,7 @@ func Config(version string) huma.Config {
 		"Ссылка подписки (`sub_url` пользователя) отдаёт конфиг и заголовки, которые читают приложения: " +
 		"`profile-title` — название профиля (настройка `sub_title`, пусто — бренд), `announce` — строка над профилем или под его названием (`sub_announce`), " +
 		"`subscription-userinfo` — трафик и срок, `support-url`, `profile-web-page-url`. Настраиваются в `PATCH /api/v1/settings`.\n\n" +
-		"Приложение Mikan, приславшее `X-Mikan-Features: groups`, получает ещё `X-Mikan-Groups`: `base64:` и JSON групп серверов подписки — " +
+		"Приложение Scilla, приславшее `X-Scilla-Features: groups`, получает ещё `X-Scilla-Groups`: `base64:` и JSON групп серверов подписки — " +
 		"`v` (1), `resets_at` (когда трафик периода начнётся заново, unix), `groups[]`: `id`, `name`, `mode` (`own` — свой лимит, `unlimited` — отдельно без лимита, `main` — общий трафик), " +
 		"`used`, `limit`, `extra` (осталось в пакетах группы), `left`, `state` (`active` или `exhausted` — лимит кончился, серверов группы нет в профиле) и `proxies` — имена серверов группы в этом же профиле " +
 		"(`null`, если имена не уместились: заголовок держится в 1,5 КБ). Закрытые для клиента группы не передаются. Другим приложениям ответ не меняется.\n\n" +

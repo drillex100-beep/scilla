@@ -11,11 +11,11 @@ import (
 	"strconv"
 	"time"
 
-	"mikan/internal/textutil"
+	"scilla/internal/textutil"
 )
 
 // What the panel and its nodes can show and do about the server they run on without SSH:
-// their own logs, the host's `mikan doctor` and a restart of the containers. The doctor and
+// their own logs, the host's `scilla doctor` and a restart of the containers. The doctor and
 // the restart go through files that the host's systemd units watch (internal/hostchan);
 // the node API only carries the questions.
 
@@ -44,7 +44,7 @@ const (
 	HostError = "error"
 )
 
-// HostItem is one line of `mikan doctor`.
+// HostItem is one line of `scilla doctor`.
 type HostItem struct {
 	Level  string `json:"level" enum:"ok,warn,error"`
 	Label  string `json:"label"`
@@ -52,7 +52,7 @@ type HostItem struct {
 	Fix    string `json:"fix,omitempty" doc:"Что сделать; пусто, если всё хорошо"`
 }
 
-// HostReport is what `mikan doctor --json` said about the server of a panel or a node:
+// HostReport is what `scilla doctor --json` said about the server of a panel or a node:
 // Docker, containers, ports, the firewall, the clock, DNS, GitHub and GHCR, disk and memory.
 type HostReport struct {
 	ID       string     `json:"id" doc:"Заявка, на которую это ответ"`
@@ -119,7 +119,7 @@ func (c *Client) Logs(ctx context.Context, tail int) (Logs, error) {
 	return r, err
 }
 
-// HostDoctor has the host of the node run `mikan doctor` and returns its report; it takes
+// HostDoctor has the host of the node run `scilla doctor` and returns its report; it takes
 // up to a minute. Nodes that predate it answer 404, a host without the unit that runs it
 // *Error{Code: CodeDoctorTimeout}, one that is being asked already CodeDoctorBusy.
 func (c *Client) HostDoctor(ctx context.Context) (HostReport, error) {
@@ -138,7 +138,7 @@ func (c *Client) HostRestart(ctx context.Context) (RestartAccepted, error) {
 // The codes of the host operations of a node.
 const (
 	// CodeDoctorTimeout: the host did not answer in time: its unit is missing (an older
-	// installer: mikan update brings it) or stuck.
+	// installer: scilla update brings it) or stuck.
 	CodeDoctorTimeout = "doctor_timeout"
 	// CodeDoctorBusy: a doctor run is going on already.
 	CodeDoctorBusy = "doctor_busy"
@@ -155,7 +155,7 @@ const (
 
 // TerminalProtocol is the Upgrade of POST /v1/terminal: after the 101 answer the connection
 // is the frame stream, until either side closes it.
-const TerminalProtocol = "mikan-terminal"
+const TerminalProtocol = "scilla-terminal"
 
 // TerminalOpen is what the panel asks a node for: the grant the session belongs to, the
 // target (node:<id>) and when the grant ends, in unix seconds; the host's agent ends the
@@ -184,7 +184,7 @@ const (
 	// CodeTerminalBusy: a session is open on this node's server.
 	CodeTerminalBusy = "terminal_busy"
 	// CodeTerminalTimeout: the host's agent did not come up: its unit is missing (an older
-	// installer: mikan update brings it).
+	// installer: scilla update brings it).
 	CodeTerminalTimeout = "terminal_timeout"
 	// CodeNoRecording: there is no such recording.
 	CodeNoRecording = "no_recording"

@@ -11,10 +11,10 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/textutil"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/textutil"
 )
 
 // The speed test of a node's own way to the internet: run on the admin's word, the

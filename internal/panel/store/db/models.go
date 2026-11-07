@@ -267,7 +267,7 @@ type LinkReissue struct {
 	At     int64
 }
 
-type MikanSqliteImport struct {
+type ScillaSqliteImport struct {
 	ID     int64
 	Report string
 }

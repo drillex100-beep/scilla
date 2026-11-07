@@ -9,11 +9,11 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/audit"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/audit"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // A port another program holds on a node's server (nginx or caddy on 443, say) keeps an
@@ -30,7 +30,7 @@ const ReasonBusy = "busy"
 const (
 	BusyStale  = "stale"   // the inbound moved since its listener failed: the node is catching up
 	BusyOff    = "off"     // automatic moves are off for it, or its port is not one to move
-	BusyMikan  = "mikan"   // the port is mikan's own: another inbound, the relay, the panel
+	BusyScilla = "scilla"  // the port is scilla's own: another inbound, the relay, the panel
 	BusyNoPort = "no_port" // every port of the pool is taken or was left lately
 )
 
@@ -48,7 +48,7 @@ func BusyMove(ports domain.PortMap, x db.Inbound, failed string, portOn, anyPort
 	}
 	network := domain.InboundNetwork(x)
 	if _, mine := ports.Busy(x.Port, network, domain.InboundHolder(x)); mine {
-		return "", BusyMikan
+		return "", BusyScilla
 	}
 	skip := map[string]bool{x.Port: true}
 	for p := range left {
@@ -74,7 +74,7 @@ func BusyRelayMove(ports domain.PortMap, relay, failed string, portOn bool, left
 	}
 	self := domain.PortHolder{Kind: domain.PortRelay}
 	if _, mine := ports.Busy(relay, "tcp", self); mine {
-		return "", BusyMikan
+		return "", BusyScilla
 	}
 	skip := map[string]bool{relay: true}
 	for p := range left {

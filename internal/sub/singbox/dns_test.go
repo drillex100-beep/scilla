@@ -6,10 +6,10 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/subtest"
-	"mikan/internal/sub/subtest/corecheck"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/subtest"
+	"scilla/internal/sub/subtest/corecheck"
 )
 
 // A resolver given as a bare IPv6 address is that address, with its port when it has one,
@@ -94,7 +94,7 @@ func TestDNSPolicyKeys(t *testing.T) {
 			{Match: "+.e.com,*.f.com", Servers: []string{"1.0.0.1"}},
 			{Match: "geosite:!cn", Servers: []string{"8.8.8.8"}},
 			{Match: "geosite:category-ai-!cn,+.x.com", Servers: []string{"8.8.4.4"}},
-			{Match: "rule-set:mikan-ru-core", Servers: []string{"9.9.9.9"}},
+			{Match: "rule-set:scilla-ru-core", Servers: []string{"9.9.9.9"}},
 			{Match: "+.g.com,geosite:category-games", Servers: []string{"1.1.1.2"}},
 			{Match: "GEOSITE:private", Servers: []string{"1.1.1.3"}},
 			{Match: "h.com,GEOSITE:private", Servers: []string{"1.1.1.4"}},

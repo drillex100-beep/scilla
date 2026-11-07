@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // Load balancing between nodes. Nodes that share a balance group share its clients out:

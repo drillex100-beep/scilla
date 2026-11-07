@@ -3,7 +3,7 @@ package serve
 import (
 	"testing"
 
-	"mikan/internal/sub/apps"
+	"scilla/internal/sub/apps"
 )
 
 func TestStubText(t *testing.T) {

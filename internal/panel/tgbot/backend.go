@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	"mikan/internal/panel/model"
+	"scilla/internal/panel/model"
 )
 
 // The bot's screens, which run as the bot addon, see the panel through Backend: its data

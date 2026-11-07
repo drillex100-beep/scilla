@@ -10,9 +10,9 @@ type App = {
 export const enc = encodeURIComponent;
 const clash = (url: string, brand: string) => `clash://install-config?url=${enc(url)}&name=${enc(brand)}`;
 const slothClash = (url: string, brand: string) => `slothclash://install-config?url=${enc(url)}&name=${enc(brand)}`;
-// Mikan (Android) and Kabosu (desktop) are mikan's own apps, each with a scheme no other
+// Scilla (Android) and Kabosu (desktop) are scilla's own apps, each with a scheme no other
 // Clash app takes: the profile lands in them, not in whichever app holds clash://.
-const mikan = (url: string, brand: string) => `mikan://install-config?url=${enc(url)}&name=${enc(brand)}`;
+const scilla = (url: string, brand: string) => `scilla://install-config?url=${enc(url)}&name=${enc(brand)}`;
 const kabosu = (url: string, brand: string) => `kabosu://install-config?url=${enc(url)}&name=${enc(brand)}`;
 const incy = (url: string) => `incy://add/${url}`;
 
@@ -27,7 +27,7 @@ export const APPS: Record<Platform, App[]> = {
     { id: "v2raytun", name: "v2RayTun", note: "stable", link: (u) => `v2raytun://import/${u}` },
   ],
   android: [
-    { id: "mikan", name: "Mikan", note: "everything", link: mikan },
+    { id: "scilla", name: "Scilla", note: "everything", link: scilla },
     { id: "happ", name: "Happ", note: "easiest", link: happ },
     { id: "clashfest", name: "ClashFest", note: "allProtocols", link: (u, b) => `clashfest://install-config?url=${enc(u)}&name=${enc(b)}` },
     { id: "incy", name: "INCY", note: "modern", link: incy },

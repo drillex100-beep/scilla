@@ -18,14 +18,14 @@ use crate::system::{self, Proto};
 use crate::{DIR, acme, docker, hello, host, panelfs, release};
 
 /// Present from the first file written until the last step is done: a server with it and
-/// a .env is an install that stopped half way, and `mikan install` continues it.
+/// a .env is an install that stopped half way, and `scilla install` continues it.
 const UNFINISHED: &str = ".installing";
 
 fn unfinished(root: &Path) -> bool {
     crate::config::installed(root) && root.join(UNFINISHED).exists()
 }
 
-/// The flags of `mikan install`; the installer asks for what they leave out.
+/// The flags of `scilla install`; the installer asks for what they leave out.
 #[derive(clap::Args, Clone, Debug, Default)]
 pub struct Options {
     /// Default language of the panel: en or ru
@@ -54,8 +54,8 @@ pub struct Options {
     #[arg(long)]
     pub no_proxy_rule: bool,
     /// Install a node of another panel with the key from its Nodes page. The key holds the
-    /// node's private key: MIKAN_JOIN_KEY keeps it out of the process list.
-    #[arg(long, value_name = "KEY", env = "MIKAN_JOIN_KEY", hide_env_values = true)]
+    /// node's private key: SCILLA_JOIN_KEY keeps it out of the process list.
+    #[arg(long, value_name = "KEY", env = "SCILLA_JOIN_KEY", hide_env_values = true)]
     pub join: Option<String>,
     /// A node: open its API port in ufw for this address only, the panel's (all by default)
     #[arg(long, value_name = "IP", requires = "join")]
@@ -138,8 +138,8 @@ impl Plan {
         if let Some(p) = env.get("PANEL_PORT").and_then(|p| p.parse().ok()) {
             self.port = p;
         }
-        if env.get("MIKAN_MODE") == Some("node") {
-            self.join = env.get("MIKAN_NODE_JOIN").map(str::to_owned).or(self.join);
+        if env.get("SCILLA_MODE") == Some("node") {
+            self.join = env.get("SCILLA_NODE_JOIN").map(str::to_owned).or(self.join);
         }
         self
     }
@@ -206,8 +206,8 @@ impl Step {
         match self {
             Step::Packages => "Package manager",
             Step::Docker => "Docker",
-            Step::Image => "mikan image",
-            Step::Files => "Files in /opt/mikan",
+            Step::Image => "scilla image",
+            Step::Files => "Files in /opt/scilla",
             Step::Bootstrap => "Admin and secret links",
             Step::System => "Network tuning and firewall",
             Step::Start => "Start",
@@ -255,13 +255,13 @@ fn port80(plan: &Plan) -> Option<Port80> {
     }
     let who = system::port_owner(80, Proto::Tcp)?;
     // The panel of the attempt before this one.
-    if who == "mikan" {
+    if who == "scilla" {
         return None;
     }
     let Some(front) = acme::Front::from_process(&who) else { return Some(Port80::Other(who)) };
     // A continued install keeps the port the attempt before it chose.
     let earlier =
-        plan.resume.then(|| Config::load(DIR).ok()).flatten().and_then(|e| e.get("MIKAN_ACME_LISTEN").and_then(acme::listen_port));
+        plan.resume.then(|| Config::load(DIR).ok()).flatten().and_then(|e| e.get("SCILLA_ACME_LISTEN").and_then(acme::listen_port));
     Some(Port80::Front(front, earlier.unwrap_or_else(acme::free_port)))
 }
 
@@ -279,7 +279,9 @@ pub fn execute(plan: Plan, tx: Sender<Event>) {
                 Err((CURRENT.with(std::cell::Cell::get), anyhow!("the installer stopped unexpectedly: {}", why.unwrap_or_default())))
             })
         }
-        Ok(None) => Err((Step::Packages, anyhow!("another mikan operation is running: wait for it to finish and run the installer again"))),
+        Ok(None) => {
+            Err((Step::Packages, anyhow!("another scilla operation is running: wait for it to finish and run the installer again")))
+        }
         Err(e) => Err((Step::Packages, e)),
     };
     if let Err((step, e)) = result {
@@ -362,7 +364,7 @@ fn run(plan: &Plan, tx: &Sender<Event>) -> StepResult<()> {
         let progress = |p| {
             let _ = tx.send(Event::Progress(Step::Image, p));
         };
-        let earlier = plan.resume.then(|| Config::load(DIR).ok()).flatten().and_then(|e| e.get("MIKAN_IMAGE").map(str::to_owned));
+        let earlier = plan.resume.then(|| Config::load(DIR).ok()).flatten().and_then(|e| e.get("SCILLA_IMAGE").map(str::to_owned));
         let image = if let Some(tar) = &plan.image_tar {
             note(tx, Step::Image, format!("loading {tar}"));
             docker::load(tar)?
@@ -375,12 +377,12 @@ fn run(plan: &Plan, tx: &Sender<Event>) -> StepResult<()> {
             image.clone()
         } else {
             let m = release::latest()?;
-            note(tx, Step::Image, format!("mikan {}, signed release", m.version));
+            note(tx, Step::Image, format!("scilla {}, signed release", m.version));
             docker::pull(&m.reference(), progress)?;
             m.reference()
         };
         let version = image_version(&image)?;
-        note(tx, Step::Image, format!("mikan {version}"));
+        note(tx, Step::Image, format!("scilla {version}"));
         if !node {
             note(tx, Step::Image, "PostgreSQL 18");
             docker::pull_postgres(progress)?;
@@ -411,7 +413,7 @@ fn run(plan: &Plan, tx: &Sender<Event>) -> StepResult<()> {
         // new one does not open it. The data are never removed for the admin.
         if !node && !plan.resume && docker::volume_mountpoint(docker::PG_VOLUME).is_some() {
             bail!(
-                "the Docker volume {v} holds the database of an earlier mikan, whose password was in the .env that is gone, so this install cannot open it. To keep those data, put the old .env and compose.yaml back in {DIR} (every mikan backup archive has them) and run the installer again; if they are not needed: docker volume rm {v}, then run the installer again",
+                "the Docker volume {v} holds the database of an earlier scilla, whose password was in the .env that is gone, so this install cannot open it. To keep those data, put the old .env and compose.yaml back in {DIR} (every scilla backup archive has them) and run the installer again; if they are not needed: docker volume rm {v}, then run the installer again",
                 v = docker::PG_VOLUME
             );
         }
@@ -434,7 +436,7 @@ fn run(plan: &Plan, tx: &Sender<Event>) -> StepResult<()> {
         Some((c, p)) => (
             s,
             anyhow!(
-                "{e:#}\n\nThe admin was created before this: login {}, password {p} (shown once, keep it). The install continues where it stopped: mikan install",
+                "{e:#}\n\nThe admin was created before this: login {}, password {p} (shown once, keep it). The install continues where it stopped: scilla install",
                 c.login
             ),
         ),
@@ -523,7 +525,7 @@ fn bootstrap(plan: &Plan, tx: &Sender<Event>) -> Result<Credentials> {
     let known = docker::admin_once(&["url"], None)?;
     if known.status.success() {
         let c = credentials_from_url(&known, None);
-        note(tx, Step::Bootstrap, "the admin exists from the earlier attempt: a new password with mikan reset-password");
+        note(tx, Step::Bootstrap, "the admin exists from the earlier attempt: a new password with scilla reset-password");
         return Ok(c);
     }
     let login = token(1, LOWER) + &token(11, LOWER_DIGITS);
@@ -545,7 +547,7 @@ fn bootstrap(plan: &Plan, tx: &Sender<Event>) -> Result<Credentials> {
     Ok(c)
 }
 
-/// What `mikan admin url` printed: the address on stdout, "Login: x" on stderr.
+/// What `scilla admin url` printed: the address on stdout, "Login: x" on stderr.
 fn credentials_from_url(out: &std::process::Output, password: Option<String>) -> Credentials {
     let url = String::from_utf8_lossy(&out.stdout).lines().rev().find(|l| l.starts_with("https://")).unwrap_or_default().trim().to_owned();
     let login = String::from_utf8_lossy(&out.stderr).lines().find_map(|l| l.strip_prefix("Login: ")).unwrap_or_default().trim().to_owned();
@@ -604,8 +606,8 @@ pub fn image_version(image: &str) -> Result<String> {
 /// panel, or an image that does not tell.
 fn node_host(image: &str, key: &str) -> Option<String> {
     let out = sandboxed()
-        .env("MIKAN_NODE_JOIN", key)
-        .args(["-e", "MIKAN_NODE_JOIN", "--entrypoint", "/usr/local/bin/mikan-node", image, "key-host"])
+        .env("SCILLA_NODE_JOIN", key)
+        .args(["-e", "SCILLA_NODE_JOIN", "--entrypoint", "/usr/local/bin/scilla-node", image, "key-host"])
         .output()
         .ok()?;
     let host = String::from_utf8_lossy(&out.stdout).trim().to_owned();
@@ -615,8 +617,8 @@ fn node_host(image: &str, key: &str) -> Option<String> {
 /// What a node with port 80 held by another program needs for its public certificate: the
 /// node takes the port only while Let's Encrypt checks it. None when the port is free.
 pub fn node_port80(owner: Option<&str>, host: Option<&str>) -> Option<String> {
-    let who = owner.filter(|w| !matches!(*w, "mikan" | "mikan-node"))?;
-    let command = format!("mikan cert proxy {}", host.unwrap_or("<the node's domain>"));
+    let who = owner.filter(|w| !matches!(*w, "scilla" | "scilla-node"))?;
+    let command = format!("scilla cert proxy {}", host.unwrap_or("<the node's domain>"));
     Some(match acme::Front::from_process(who) {
         Some(front) => format!(
             "Let's Encrypt: {} holds port 80, where it checks this node for its public certificate. To pass those checks on to the node, run: {command}",
@@ -632,8 +634,8 @@ pub fn node_port80(owner: Option<&str>, host: Option<&str>) -> Option<String> {
 /// key goes through the environment, not the command line.
 pub fn node_port(image: &str, key: &str) -> Result<u16> {
     let out = sandboxed()
-        .env("MIKAN_NODE_JOIN", key)
-        .args(["-e", "MIKAN_NODE_JOIN", "--entrypoint", "/usr/local/bin/mikan-node", image, "key-port"])
+        .env("SCILLA_NODE_JOIN", key)
+        .args(["-e", "SCILLA_NODE_JOIN", "--entrypoint", "/usr/local/bin/scilla-node", image, "key-port"])
         .output()?;
     let port = String::from_utf8_lossy(&out.stdout).trim().parse().ok();
     match port {
@@ -658,11 +660,11 @@ fn write_files(plan: &Plan, image: &str, version: &str, api_port: Option<u16>, a
 fn write_files_in(root: &Path, plan: &Plan, image: &str, version: &str, api_port: Option<u16>, acme_port: Option<u16>) -> Result<()> {
     use std::os::unix::fs::{DirBuilderExt, PermissionsExt};
     if crate::config::installed(root) && !(plan.resume && unfinished(root)) {
-        bail!("mikan is already installed in {}", root.display());
+        bail!("scilla is already installed in {}", root.display());
     }
     fs::create_dir_all(root)?;
     // Before the first file, so that an install that stops from here on is known as such.
-    write_private(&root.join(UNFINISHED), b"an install of mikan did not finish: run `mikan install` to continue\n")?;
+    write_private(&root.join(UNFINISHED), b"an install of scilla did not finish: run `scilla install` to continue\n")?;
     match fs::DirBuilder::new().mode(0o700).create(root.join("backups")) {
         Ok(()) => {}
         Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => {
@@ -671,21 +673,21 @@ fn write_files_in(root: &Path, plan: &Plan, image: &str, version: &str, api_port
         Err(e) => return Err(e.into()),
     }
     let mut env = if plan.resume { Config::load(root)? } else { Config::new(root) };
-    env.set("MIKAN_IMAGE", image)?;
-    env.set("MIKAN_VERSION", version)?;
-    env.set("MIKAN_UFW", if plan.firewall { "1" } else { "0" })?;
+    env.set("SCILLA_IMAGE", image)?;
+    env.set("SCILLA_VERSION", version)?;
+    env.set("SCILLA_UFW", if plan.firewall { "1" } else { "0" })?;
     let node = match (&plan.join, api_port) {
         (Some(key), Some(port)) => {
-            env.set("MIKAN_MODE", "node")?;
+            env.set("SCILLA_MODE", "node")?;
             env.set("NODE_API_PORT", &port.to_string())?;
-            env.set("MIKAN_NODE_JOIN", key)?;
+            env.set("SCILLA_NODE_JOIN", key)?;
             true
         }
         _ => {
             env.set("PANEL_PORT", &plan.port.to_string())?;
             match acme_port {
-                Some(p) => env.set("MIKAN_ACME_LISTEN", &acme::listen(p))?,
-                None => env.remove("MIKAN_ACME_LISTEN"),
+                Some(p) => env.set("SCILLA_ACME_LISTEN", &acme::listen(p))?,
+                None => env.remove("SCILLA_ACME_LISTEN"),
             }
             false
         }
@@ -700,13 +702,13 @@ fn write_files_in(root: &Path, plan: &Plan, image: &str, version: &str, api_port
 
 /// Credentials persist across updates and resumed installs; never rotate a live database.
 pub fn postgres_env(env: &mut Config) -> Result<()> {
-    if env.get("MIKAN_POSTGRES_PASSWORD").is_none() {
-        env.set("MIKAN_POSTGRES_PASSWORD", &token(48, ALNUM))?;
+    if env.get("SCILLA_POSTGRES_PASSWORD").is_none() {
+        env.set("SCILLA_POSTGRES_PASSWORD", &token(48, ALNUM))?;
     }
-    if env.get("MIKAN_DATABASE_URL").is_none() {
-        let password = env.get("MIKAN_POSTGRES_PASSWORD").context("postgres password missing")?;
-        let url = format!("postgresql://mikan:{password}@localhost/mikan?host=/run/postgresql");
-        env.set("MIKAN_DATABASE_URL", &url)?;
+    if env.get("SCILLA_DATABASE_URL").is_none() {
+        let password = env.get("SCILLA_POSTGRES_PASSWORD").context("postgres password missing")?;
+        let url = format!("postgresql://scilla:{password}@localhost/scilla?host=/run/postgresql");
+        env.set("SCILLA_DATABASE_URL", &url)?;
     }
     Ok(())
 }
@@ -731,7 +733,7 @@ pub fn wait_ready(node_port: Option<u16>, limit: Duration) -> Result<()> {
                 .output()
                 .map(|o| String::from_utf8_lossy(&o.stdout).into_owned())
                 .unwrap_or_default();
-            return Err(anyhow!("mikan did not start in {} s. Its last logs:\n{}", limit.as_secs(), logs.trim_end()));
+            return Err(anyhow!("scilla did not start in {} s. Its last logs:\n{}", limit.as_secs(), logs.trim_end()));
         }
         thread::sleep(pause);
         if node_port.is_none() {
@@ -752,20 +754,20 @@ pub fn summary(o: &Outcome, with_password: bool) -> String {
                 None => "The panel connects within 30 seconds: see its Nodes page.".to_owned(),
             };
             format!(
-                "mikan {} node is running and waits for its panel on port {p}.\n{contact}\nCommands on this server: mikan (menu), mikan status, mikan doctor, mikan update",
+                "scilla {} node is running and waits for its panel on port {p}.\n{contact}\nCommands on this server: scilla (menu), scilla status, scilla doctor, scilla update",
                 o.version
             )
         }
         None => {
             let password = if o.password.is_empty() {
-                "not known: the admin was made by the attempt before this one; set a new password with: mikan reset-password".to_owned()
+                "not known: the admin was made by the attempt before this one; set a new password with: scilla reset-password".to_owned()
             } else if with_password {
                 format!("{}   ← shown once, keep it in a password manager", o.password)
             } else {
-                "shown on the installer's last screen only; a new one: mikan reset-password".to_owned()
+                "shown on the installer's last screen only; a new one: scilla reset-password".to_owned()
             };
             format!(
-                "mikan {} is running.\n\n  Panel     {}\n  Login     {}\n  Password  {password}\n\nCommands on this server: mikan (menu), mikan status, mikan doctor, mikan update",
+                "scilla {} is running.\n\n  Panel     {}\n  Login     {}\n  Password  {password}\n\nCommands on this server: scilla (menu), scilla status, scilla doctor, scilla update",
                 o.version, o.url, o.login
             )
         }
@@ -777,12 +779,12 @@ pub fn summary(o: &Outcome, with_password: bool) -> String {
     text
 }
 
-/// Whether an install stopped half way here: `mikan install` continues it.
+/// Whether an install stopped half way here: `scilla install` continues it.
 pub fn unfinished_install() -> bool {
     unfinished(Path::new(DIR))
 }
 
-/// `mikan install`: the TUI in a terminal, the plain mode with --yes or without one. On
+/// `scilla install`: the TUI in a terminal, the plain mode with --yes or without one. On
 /// an installed server it opens the menu, or with --yes updates: the one-line install
 /// is also how a server of 0.3.8 and before moves to this installer. An install that
 /// stopped half way is continued, in the plain mode, from what its settings say.
@@ -798,12 +800,12 @@ pub fn install(opts: Options) -> Result<()> {
             None => None,
         };
         if join == Some(false) {
-            bail!("this server runs a mikan panel: a node of another panel needs a server of its own");
+            bail!("this server runs a scilla panel: a node of another panel needs a server of its own");
         }
         if join.is_none() && crate::tui::interactive() && !opts.yes {
             return crate::tui::menu();
         }
-        crate::out(&format!("mikan is already installed in {DIR}: updating it."));
+        crate::out(&format!("scilla is already installed in {DIR}: updating it."));
         let args = crate::update::UpdateArgs { target: opts.image_tar.or(opts.image), ..Default::default() };
         crate::update::update(&args, &mut crate::out, &mut |_| {})?;
         // The panel's node command run again on a node (a second try, a new key): the key
@@ -917,12 +919,12 @@ mod tests {
         let mut env = Config::new("unused");
         postgres_env(&mut env).unwrap();
         let before = env.to_env_text();
-        let password = env.get("MIKAN_POSTGRES_PASSWORD").unwrap();
+        let password = env.get("SCILLA_POSTGRES_PASSWORD").unwrap();
         assert_eq!(password.len(), 48);
         assert!(password.bytes().all(|b| b.is_ascii_alphanumeric()));
         assert_eq!(
-            env.get("MIKAN_DATABASE_URL"),
-            Some(format!("postgresql://mikan:{password}@localhost/mikan?host=/run/postgresql").as_str())
+            env.get("SCILLA_DATABASE_URL"),
+            Some(format!("postgresql://scilla:{password}@localhost/scilla?host=/run/postgresql").as_str())
         );
         postgres_env(&mut env).unwrap();
         assert_eq!(env.to_env_text(), before, "live credentials must never rotate");
@@ -967,18 +969,18 @@ mod tests {
     }
 
     // A first install leaves the marker of an unfinished one until the last step removes
-    // it; a second `mikan install` on such a server continues with what .env chose.
+    // it; a second `scilla install` on such a server continues with what .env chose.
     #[test]
     fn an_install_that_stopped_is_continued_not_refused_and_not_redone() {
         let root = tmpdir("resume");
         let mut p = plan();
         // nginx holds port 80: the panel answers Let's Encrypt on a local port behind it
-        write_files_in(&root, &p, "ghcr.io/miroshka000/mikan@sha256:aa", "0.4.4", None, Some(18080)).unwrap();
+        write_files_in(&root, &p, "ghcr.io/drillex100-beep/scilla@sha256:aa", "0.4.4", None, Some(18080)).unwrap();
         assert!(unfinished(&root), "the marker is there from the first file");
         let env = Config::load(&root).unwrap();
         assert_eq!(env.get("PANEL_PORT"), Some("21355"));
-        assert_eq!(env.get("MIKAN_ACME_LISTEN"), Some("127.0.0.1:18080"));
-        assert!(docker::PANEL_COMPOSE.contains("MIKAN_ACME_LISTEN: \"${MIKAN_ACME_LISTEN:-:80}\""), "compose passes it on");
+        assert_eq!(env.get("SCILLA_ACME_LISTEN"), Some("127.0.0.1:18080"));
+        assert!(docker::PANEL_COMPOSE.contains("SCILLA_ACME_LISTEN: \"${SCILLA_ACME_LISTEN:-:80}\""), "compose passes it on");
         assert_eq!(fs::read_to_string(root.join("compose.yaml")).unwrap(), docker::compose_text(&env).unwrap());
         assert!(
             root.join(crate::config::SECRETS).join("database_url").exists() && !root.join(".env").exists(),
@@ -990,10 +992,10 @@ mod tests {
         p = Plan::from(&Options { port: Some(30000), ..Default::default() }).resumed(&env);
         assert!(p.resume);
         assert_eq!(p.port, 21355);
-        write_files_in(&root, &p, "ghcr.io/miroshka000/mikan@sha256:bb", "0.4.5", None, None).unwrap();
+        write_files_in(&root, &p, "ghcr.io/drillex100-beep/scilla@sha256:bb", "0.4.5", None, None).unwrap();
         let again = Config::load(&root).unwrap();
-        assert_eq!((again.get("PANEL_PORT"), again.get("MIKAN_VERSION")), (Some("21355"), Some("0.4.5")));
-        assert_eq!(again.get("MIKAN_ACME_LISTEN"), None, "port 80 is free now: the panel takes it");
+        assert_eq!((again.get("PANEL_PORT"), again.get("SCILLA_VERSION")), (Some("21355"), Some("0.4.5")));
+        assert_eq!(again.get("SCILLA_ACME_LISTEN"), None, "port 80 is free now: the panel takes it");
         // done: the last step removes the marker, and the server is an installed one
         fs::remove_file(root.join(UNFINISHED)).unwrap();
         assert!(!unfinished(&root));
@@ -1004,11 +1006,14 @@ mod tests {
     #[test]
     fn a_node_install_continues_in_node_mode() {
         let root = tmpdir("resume-node");
-        let key = "mikan1.AbC_-9";
+        let key = "scilla1.AbC_-9";
         let p = Plan::from(&Options { join: Some(key.into()), ..Default::default() });
-        write_files_in(&root, &p, "ghcr.io/miroshka000/mikan", "0.4.4", Some(25305), None).unwrap();
+        write_files_in(&root, &p, "ghcr.io/drillex100-beep/scilla", "0.4.4", Some(25305), None).unwrap();
         let env = Config::load(&root).unwrap();
-        assert_eq!((env.get("MIKAN_MODE"), env.get("NODE_API_PORT"), env.get("MIKAN_NODE_JOIN")), (Some("node"), Some("25305"), Some(key)));
+        assert_eq!(
+            (env.get("SCILLA_MODE"), env.get("NODE_API_PORT"), env.get("SCILLA_NODE_JOIN")),
+            (Some("node"), Some("25305"), Some(key))
+        );
         assert_eq!(fs::read_to_string(root.join("compose.yaml")).unwrap(), docker::compose_text(&env).unwrap());
         assert_eq!(fs::read_to_string(root.join(crate::config::SECRETS).join("node_join")).unwrap(), key);
         let resumed = Plan::from(&Options::default()).resumed(&env);
@@ -1036,7 +1041,7 @@ mod tests {
         assert!(after_tui.contains("  Panel     https://h:1/x/\n  Login     l\n"), "no link and login after the screen");
         assert!(!after_tui.contains("p4ssw0rd") && after_tui.contains("last screen only"));
         let lost = Outcome { password: String::new(), ..shown.clone() };
-        assert!(summary(&lost, true).contains("mikan reset-password") && !summary(&lost, true).contains("shown once"));
+        assert!(summary(&lost, true).contains("scilla reset-password") && !summary(&lost, true).contains("shown once"));
         // a rule for Let's Encrypt left to the admin comes last
         let report = acme::Report::other("apache2");
         let with_acme = summary(&Outcome { acme: Some(report.clone()), ..shown }, false);
@@ -1068,14 +1073,14 @@ mod tests {
             Outcome { hello: Some(vec![(system::Level::Error, "The panel could not reach port 31234 here".into())]), ..silent.clone() };
         assert!(summary(&blocked, true).contains("\n✗ The panel could not reach port 31234 here\n"));
         let behind = Outcome { port80: node_port80(Some("nginx"), Some("node.example.com")), ..silent };
-        assert!(summary(&behind, true).ends_with("To pass those checks on to the node, run: mikan cert proxy node.example.com"));
+        assert!(summary(&behind, true).ends_with("To pass those checks on to the node, run: scilla cert proxy node.example.com"));
     }
 
     #[test]
     fn a_node_behind_a_web_server_is_told_the_command() {
         assert_eq!(node_port80(None, Some("node.example.com")), None);
-        assert_eq!(node_port80(Some("mikan-node"), None), None);
-        assert!(node_port80(Some("caddy"), None).unwrap().ends_with("mikan cert proxy <the node's domain>"));
+        assert_eq!(node_port80(Some("scilla-node"), None), None);
+        assert!(node_port80(Some("caddy"), None).unwrap().ends_with("scilla cert proxy <the node's domain>"));
         assert!(node_port80(Some("apache2"), None).unwrap().contains("port 80 is taken (apache2)"));
     }
 

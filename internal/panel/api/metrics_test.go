@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/store/storetest"
+	"scilla/internal/panel/store/storetest"
 )
 
 // The store's retried transactions are a counter of the scrape, not a number for tests.
@@ -23,7 +23,7 @@ func TestMetricsCountSerializationRetries(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := "# TYPE mikan_db_serialization_retries_total counter\nmikan_db_serialization_retries_total 0\n"
+	want := "# TYPE scilla_db_serialization_retries_total counter\nscilla_db_serialization_retries_total 0\n"
 	if !strings.Contains(string(body), want) {
 		t.Fatalf("no retries counter in:\n%s", body)
 	}

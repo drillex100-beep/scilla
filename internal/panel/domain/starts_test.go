@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // startsOf are the user.started events of the feed, oldest first.

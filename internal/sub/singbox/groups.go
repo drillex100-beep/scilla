@@ -3,9 +3,9 @@ package singbox
 import (
 	"strconv"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/profile"
-	"mikan/internal/sub/routing"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/profile"
+	"scilla/internal/sub/routing"
 )
 
 // The core's name in the notes of the admin panel's preview.

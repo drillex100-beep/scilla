@@ -19,8 +19,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"mikan/internal/fsutil"
-	"mikan/internal/nodetls"
+	"scilla/internal/fsutil"
+	"scilla/internal/nodetls"
 )
 
 // Holder lets the certificate be swapped (ACME renewal, host change) without a restart.

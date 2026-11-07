@@ -8,19 +8,19 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/profile"
-	"mikan/internal/sub/routing"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/profile"
+	"scilla/internal/sub/routing"
 )
 
 // An own xray template (model.CoreXray) is one xray config without the servers, the frame
 // of every config of the list. The panel makes a config of it for each server the user has,
 // named by the server (remarks): the server's outbound goes first, tagged proxy, for xray
 // sends what no rule takes to the first outbound. A balancer of routing.balancers with
-// "mikan": {} asks for servers: every one, narrowed by nodes, types and filter (model.Ask);
+// "scilla": {} asks for servers: every one, narrowed by nodes, types and filter (model.Ask);
 // a config whose rules name it carries those servers, tagged proxy-1, proxy-2… (a selector
 // or an observatory subject "proxy" takes them all), and its selector lists them. One with
-// "choice": true in its mikan also gets a config of its own at the head of the list, named
+// "choice": true in its scilla also gets a config of its own at the head of the list, named
 // by its tag, in which it stands for proxy. A balancer left with no servers selects the
 // blackhole: closed, not open. The panel's and the nodes' hosts go direct ahead of the
 // template's rules. The tags beginning with proxy are the panel's.
@@ -138,7 +138,7 @@ func readFrame(p profile.Profile, src string) (frame, error) {
 		if fb := text(b["fallbackTag"]); fb != "" && !tags[fb] {
 			return frame{}, model.TemplateErr("template_detour", tag+" → "+fb)
 		}
-		if v, asks := b["mikan"]; asks {
+		if v, asks := b["scilla"]; asks {
 			choice := false
 			ask, ok := model.ReadAsk(v, func(k string, v any) bool {
 				on, isBool := v.(bool)
@@ -166,7 +166,7 @@ func readFrame(p profile.Profile, src string) (frame, error) {
 				f.choices = append(f.choices, tag)
 			}
 			b["selector"] = selector
-			delete(b, "mikan")
+			delete(b, "scilla")
 		}
 		f.balancers = append(f.balancers, b)
 	}
@@ -335,7 +335,7 @@ func Example(g model.GroupNames) []byte {
       {"network": "tcp,udp", "outboundTag": "proxy"}
     ],
     "balancers": [
-      {"tag": %[1]s, "mikan": {"choice": true}, "strategy": {"type": "leastPing"}}
+      {"tag": %[1]s, "scilla": {"choice": true}, "strategy": {"type": "leastPing"}}
     ]
   },
   "observatory": {"subjectSelector": ["proxy"], "probeUrl": "https://www.gstatic.com/generate_204", "probeInterval": "5m", "enableConcurrency": true}

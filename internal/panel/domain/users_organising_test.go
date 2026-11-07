@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store/db"
 )
 
 // Where a user came from is set by the path that made the user, and nothing else decides

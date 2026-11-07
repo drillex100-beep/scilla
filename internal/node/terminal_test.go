@@ -13,9 +13,9 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/hostchan"
-	"mikan/internal/hostchan/hosttest"
-	"mikan/internal/nodeapi"
+	"scilla/internal/hostchan"
+	"scilla/internal/hostchan/hosttest"
+	"scilla/internal/nodeapi"
 )
 
 // serveNode serves the Node API of e on a unix socket and over mTLS and returns the panel's

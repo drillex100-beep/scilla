@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/diag"
-	"mikan/internal/nodeapi"
+	"scilla/internal/diag"
+	"scilla/internal/nodeapi"
 )
 
 // The panel asks the node to look at its server. Whatever the request says, the node goes

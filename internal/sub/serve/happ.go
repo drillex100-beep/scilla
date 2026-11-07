@@ -1,8 +1,8 @@
 package serve
 
 import (
-	"mikan/internal/sub/profile"
-	"mikan/internal/sub/xray"
+	"scilla/internal/sub/profile"
+	"scilla/internal/sub/xray"
 )
 
 // happAutoRouting is the happ://routing/onadd/ link of cfg's routing, or of the own Clash

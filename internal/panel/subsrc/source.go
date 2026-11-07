@@ -5,13 +5,13 @@ import (
 	"errors"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/proto"
-	submodel "mikan/internal/sub/model"
-	"mikan/internal/sub/serve"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/proto"
+	submodel "scilla/internal/sub/model"
+	"scilla/internal/sub/serve"
 )
 
 // Subscription is the subscription of token over the panel's database (serve.Source).

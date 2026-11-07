@@ -218,7 +218,7 @@ function EditorForm({ v, core, saved, onClose, onCreated }: { v: View; core: Cor
     onError: (e) => toast.error(errorText(e)),
   });
   const pick = (id: string) => (body.trim() ? setReplace(id) : load.mutate(id));
-  // mikan's own is what the button beside gives: the catalog is offered when it has more.
+  // scilla's own is what the button beside gives: the catalog is offered when it has more.
   const readyList = useReadySubTemplates();
   const readyMore = (readyList.data?.templates ?? []).some((r) => r.core === core && !r.builtin);
   const leave = useBlocker({ shouldBlockFn: () => dirty && !save.isPending, enableBeforeUnload: () => dirty, withResolver: true });
@@ -328,7 +328,7 @@ function EditorForm({ v, core, saved, onClose, onCreated }: { v: View; core: Cor
 }
 
 /** The ready templates of a core, each with its author, license and source: picking one puts
- * its text in the editor and saves nothing. mikan's own is made of the panel's settings. */
+ * its text in the editor and saves nothing. scilla's own is made of the panel's settings. */
 function ReadyTemplates({
   core,
   open,
@@ -452,17 +452,17 @@ function HowItWorks({ core, names }: { core: Core; names: string[] }) {
 
 - name: ${t("settings.subTemplates.sample.fast")}
   type: url-test
-  mikan:
+  scilla:
     nodes: [${names.slice(0, 2).map((n) => `"${n}"`).join(", ") || '"1"'}]
     types: [vless, hysteria2]`
       : core === "singbox"
-        ? `{"type": "urltest", "tag": "${auto}", "mikan": {}},
+        ? `{"type": "urltest", "tag": "${auto}", "scilla": {}},
 {"type": "selector", "tag": "🔒 VLESS",
- "mikan": {"nodes": ["${node}"], "types": ["vless"]}}`
+ "scilla": {"nodes": ["${node}"], "types": ["vless"]}}`
         : `"balancers": [
-  {"tag": "${auto}", "mikan": {"choice": true},
+  {"tag": "${auto}", "scilla": {"choice": true},
    "strategy": {"type": "leastPing"}},
-  {"tag": "${country}", "mikan": {"filter": "🇩🇪"},
+  {"tag": "${country}", "scilla": {"filter": "🇩🇪"},
    "strategy": {"type": "random"}}
 ]`;
   return (
@@ -566,7 +566,7 @@ function ClashSnippets({ names, current, onApply }: { names: string[]; current: 
           `  - name: ${t("settings.subTemplates.sample.country")}\n    type: url-test\n    include-all-proxies: true\n    filter: "🇩🇪"\n    url: https://www.gstatic.com/generate_204\n    interval: 300`,
         ),
     },
-    { id: "node", apply: (v: string) => addToList(v, "proxy-groups", `  - name: 📺 YouTube\n    type: select\n    mikan:\n      nodes: ["${names[0] ?? "1"}"]`) },
+    { id: "node", apply: (v: string) => addToList(v, "proxy-groups", `  - name: 📺 YouTube\n    type: select\n    scilla:\n      nodes: ["${names[0] ?? "1"}"]`) },
   ] as const;
   return (
     <div className="flex flex-wrap gap-2" role="group" aria-label={t("settings.subTemplates.snippets")}>

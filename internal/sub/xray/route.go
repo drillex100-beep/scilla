@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/sub/routing"
+	"scilla/internal/sub/routing"
 )
 
 // The routing of an xray JSON config is the panel's (routing.Intent) as xray matches it:

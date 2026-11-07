@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
 )
 
 // The support link goes to the subscription page and into a header of every subscription,

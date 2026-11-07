@@ -16,7 +16,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 // pipeConn is a connection that closes at once: the first step of a probe only needs

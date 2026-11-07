@@ -142,7 +142,7 @@ export function SiteCard({ s }: { s: Schemas["SettingsView"] }) {
       )}
       <p className="mt-3 text-xs text-[var(--ink-500)]">{t("settings.site.nodeHint")}</p>
       {root ? (
-        <a className="mt-3 inline-flex items-center gap-2 text-[13px] font-medium text-[var(--mikan-700)] hover:underline" href={root} target="_blank" rel="noreferrer">
+        <a className="mt-3 inline-flex items-center gap-2 text-[13px] font-medium text-[var(--scilla-700)] hover:underline" href={root} target="_blank" rel="noreferrer">
           <ExternalLink size={16} aria-hidden /> {t("settings.site.open")}
         </a>
       ) : null}

@@ -11,10 +11,10 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/nodehello"
-	"mikan/internal/nodetls"
-	"mikan/internal/panel/domain"
+	"scilla/internal/nodeapi"
+	"scilla/internal/nodehello"
+	"scilla/internal/nodetls"
+	"scilla/internal/panel/domain"
 )
 
 // sick is a node whose health check fails while err is set.
@@ -102,7 +102,7 @@ func TestResetSlotsAsksTheNodes(t *testing.T) {
 	ctx := context.Background()
 	local := &resetter{fakeNode: fake, closed: 4}
 	s.node = local
-	panel, _ := nodetls.Generate("mikan-panel", x509.ExtKeyUsageClientAuth, time.Now())
+	panel, _ := nodetls.Generate("scilla-panel", x509.ExtKeyUsageClientAuth, time.Now())
 	var ids []int64
 	for i, host := range []string{"198.51.100.20", "198.51.100.21"} {
 		n, _, err := domain.AddNode(ctx, st, panel, domain.NodeInput{Name: fmt.Sprint("n", i), Host: host, APIPort: 40000}, time.Now())

@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/tgate"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/tgate"
 )
 
 // The free plan over HTTP: the admin picks its tariff (one with a term) and may not ask

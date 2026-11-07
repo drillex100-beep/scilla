@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/promo"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/promo"
+	"scilla/internal/panel/store/db"
 )
 
 // sellTerms puts the tariff on sale for 7, 30 and 90 days: the 30-day term at the price of

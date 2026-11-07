@@ -12,7 +12,7 @@ import (
 	"slices"
 	"time"
 
-	"mikan/internal/release"
+	"scilla/internal/release"
 )
 
 // seed is the index the first release that keeps one starts from, when the "updates"
@@ -285,7 +285,7 @@ func mustJSON(v any) []byte {
 // release key the clients carry.
 func legacyCheckFile(args []string) error {
 	if len(args) != 1 {
-		return errors.New("usage: mikan-release legacy-check manifest.json")
+		return errors.New("usage: scilla-release legacy-check manifest.json")
 	}
 	data, err := os.ReadFile(args[0])
 	if err != nil {
@@ -301,8 +301,8 @@ func legacyCheckFile(args []string) error {
 		return err
 	}
 	if err := legacyCheck(data, string(sig), pub); err != nil {
-		return fmt.Errorf("%s would not be read by mikan 0.4.5 and 0.5.0.0, which read the latest release: %w", args[0], err)
+		return fmt.Errorf("%s would not be read by scilla 0.4.5 and 0.5.0.0, which read the latest release: %w", args[0], err)
 	}
-	fmt.Println("ok: mikan 0.4.5 and 0.5.0.0 read this manifest")
+	fmt.Println("ok: scilla 0.4.5 and 0.5.0.0 read this manifest")
 	return nil
 }

@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"mikan/internal/sub/apps"
+	"scilla/internal/sub/apps"
 )
 
 // Outcome is how a request for a subscription ended.

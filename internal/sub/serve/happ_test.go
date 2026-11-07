@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/routing"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/routing"
 )
 
 // happRouting reads the lists of a Happ routing link.
@@ -40,11 +40,11 @@ func decodeHapp(t *testing.T, link string) happRouting {
 
 // The rules come from the profile the settings make: the simple ones, or an own profile.
 func TestHappAutoRouting(t *testing.T) {
-	cfg := Config{Brand: "Mikan", Direct: []string{"203.0.113.7"}, Mode: routing.Blocked,
+	cfg := Config{Brand: "Scilla", Direct: []string{"203.0.113.7"}, Mode: routing.Blocked,
 		Routes: routing.Routes{Services: map[string]string{"youtube": routing.TargetVPN, "ads": routing.TargetBlock, "ai": "node:2"}},
 		Nodes:  []model.Node{{ID: 1, Name: "🇳🇱 Нидерланды"}, {ID: 2, Name: "🇺🇸 США"}}}
 	p := decodeHapp(t, happAutoRouting(cfg, ""))
-	if p.Name != "Mikan" || p.GlobalProxy != "false" || !slices.Contains(p.ProxySites, "geosite:youtube") || !slices.Contains(p.ProxySites, "geosite:category-ai-!cn") ||
+	if p.Name != "Scilla" || p.GlobalProxy != "false" || !slices.Contains(p.ProxySites, "geosite:youtube") || !slices.Contains(p.ProxySites, "geosite:category-ai-!cn") ||
 		!slices.Contains(p.ProxySites, "geosite:ru-blocked") || !slices.Contains(p.BlockSites, "geosite:category-ads-all") || !slices.Contains(p.DirectIP, "203.0.113.7/32") {
 		t.Fatalf("simple: %+v", p)
 	}

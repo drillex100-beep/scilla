@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/acmechallenge"
-	"mikan/internal/panel/settings"
+	"scilla/internal/acmechallenge"
+	"scilla/internal/panel/settings"
 )
 
 // newTestChallenge answers on a free loopback port instead of port 80.

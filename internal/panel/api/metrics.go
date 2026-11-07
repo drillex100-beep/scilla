@@ -13,8 +13,8 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/nodesync"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/nodesync"
 )
 
 // Metrics in the Prometheus text format, for Prometheus, VictoriaMetrics, Grafana Agent
@@ -67,44 +67,44 @@ func (h *handlers) metrics(ctx context.Context, _ *struct{}) (*metricsOutput, er
 
 func (h *handlers) renderMetrics(ctx context.Context, now time.Time) ([]byte, error) {
 	var m promWriter
-	m.gauge("mikan_info", "The panel's version.", 1, "version", h.d.Version)
+	m.gauge("scilla_info", "The panel's version.", 1, "version", h.d.Version)
 
 	// Counted by the database, as on the dashboard: a scrape does not load every user.
 	counts, err := domain.CountStates(ctx, h.d.Store.Q, now)
 	if err != nil {
 		return nil, err
 	}
-	m.help("mikan_users", "Users by state.", "gauge")
+	m.help("scilla_users", "Users by state.", "gauge")
 	for _, s := range []struct {
 		state string
 		n     int64
 	}{{domain.StateActive, counts.Active}, {domain.StateExpiring, counts.Expiring}, {domain.StateLimited, counts.Limited},
 		{domain.StateExpired, counts.Expired}, {domain.StateDisabled, counts.Disabled}} {
-		m.sample("mikan_users", float64(s.n), "state", s.state)
+		m.sample("scilla_users", float64(s.n), "state", s.state)
 	}
 	traffic, err := h.d.Store.Q.SumUserTraffic(ctx)
 	if err != nil {
 		return nil, err
 	}
-	m.help("mikan_traffic_bytes_total", "Traffic of all users, all time. Drops when a user is deleted.", "counter")
-	m.sample("mikan_traffic_bytes_total", float64(traffic.Up), "direction", "up")
-	m.sample("mikan_traffic_bytes_total", float64(traffic.Down), "direction", "down")
+	m.help("scilla_traffic_bytes_total", "Traffic of all users, all time. Drops when a user is deleted.", "counter")
+	m.sample("scilla_traffic_bytes_total", float64(traffic.Up), "direction", "up")
+	m.sample("scilla_traffic_bytes_total", float64(traffic.Down), "direction", "down")
 
 	if h.d.Online != nil {
 		n, err := h.onlineUsers(ctx)
 		if err != nil {
 			return nil, err
 		}
-		m.gauge("mikan_users_online", "Users with a connection now.", float64(n))
+		m.gauge("scilla_users_online", "Users with a connection now.", float64(n))
 	}
 	if h.d.Pool != nil {
 		ps, err := h.d.Pool.Stats(ctx)
 		if err != nil {
 			return nil, err
 		}
-		m.help("mikan_slots", "Key slots by state.", "gauge")
-		m.sample("mikan_slots", float64(ps.Free), "state", "free")
-		m.sample("mikan_slots", float64(ps.Assigned), "state", "assigned")
+		m.help("scilla_slots", "Key slots by state.", "gauge")
+		m.sample("scilla_slots", float64(ps.Free), "state", "free")
+		m.sample("scilla_slots", float64(ps.Assigned), "state", "assigned")
 	}
 
 	nodes, err := h.d.Store.Q.ListNodes(ctx)
@@ -116,7 +116,7 @@ func (h *handlers) renderMetrics(ctx context.Context, now time.Time) ([]byte, er
 		hv       nodesync.HealthView
 	}
 	var live []liveNode
-	m.help("mikan_node_up", "1 when the panel reaches the node and its core runs.", "gauge")
+	m.help("scilla_node_up", "1 when the panel reaches the node and its core runs.", "gauge")
 	for _, n := range nodes {
 		if n.Enabled == 0 {
 			continue
@@ -129,28 +129,28 @@ func (h *handlers) renderMetrics(ctx context.Context, now time.Time) ([]byte, er
 				live = append(live, liveNode{id, n.Name, hv})
 			}
 		}
-		m.sample("mikan_node_up", b2f(ok), "node_id", id, "node", n.Name)
+		m.sample("scilla_node_up", b2f(ok), "node_id", id, "node", n.Name)
 	}
 	// Counted from the day the panel started to count by node, so a counter and not the
 	// rows of node_traffic_*, which are cut when old.
-	m.help("mikan_node_traffic_bytes_total", "Traffic the node carried for users since it was counted by node. Drops when the node is deleted.", "counter")
+	m.help("scilla_node_traffic_bytes_total", "Traffic the node carried for users since it was counted by node. Drops when the node is deleted.", "counter")
 	for _, n := range nodes {
 		id := strconv.FormatInt(n.ID, 10)
-		m.sample("mikan_node_traffic_bytes_total", float64(n.TotalUp), "node_id", id, "node", n.Name, "direction", "up")
-		m.sample("mikan_node_traffic_bytes_total", float64(n.TotalDown), "node_id", id, "node", n.Name, "direction", "down")
+		m.sample("scilla_node_traffic_bytes_total", float64(n.TotalUp), "node_id", id, "node", n.Name, "direction", "up")
+		m.sample("scilla_node_traffic_bytes_total", float64(n.TotalDown), "node_id", id, "node", n.Name, "direction", "down")
 	}
 	if len(live) > 0 {
 		for _, f := range []struct {
 			name, help string
 			v          func(nodesync.HealthView) float64
 		}{
-			{"mikan_node_connections", "Open connections on the node.", func(hv nodesync.HealthView) float64 { return float64(hv.Health.Conns) }},
-			{"mikan_node_cpu_percent", "CPU use of the node's server.", func(hv nodesync.HealthView) float64 { return hv.Health.System.CPUPercent }},
-			{"mikan_node_process_cpu_percent", "CPU use of the node process itself, on the server's scale.", func(hv nodesync.HealthView) float64 { return hv.Health.System.ProcCPUPercent }},
-			{"mikan_node_memory_used_bytes", "Memory used on the node's server.", func(hv nodesync.HealthView) float64 { return float64(hv.Health.System.MemUsed) }},
-			{"mikan_node_memory_total_bytes", "Memory of the node's server.", func(hv nodesync.HealthView) float64 { return float64(hv.Health.System.MemTotal) }},
-			{"mikan_node_receive_bytes_per_second", "Network in on the node's server.", func(hv nodesync.HealthView) float64 { return float64(hv.Health.System.NetRxBps) }},
-			{"mikan_node_transmit_bytes_per_second", "Network out on the node's server.", func(hv nodesync.HealthView) float64 { return float64(hv.Health.System.NetTxBps) }},
+			{"scilla_node_connections", "Open connections on the node.", func(hv nodesync.HealthView) float64 { return float64(hv.Health.Conns) }},
+			{"scilla_node_cpu_percent", "CPU use of the node's server.", func(hv nodesync.HealthView) float64 { return hv.Health.System.CPUPercent }},
+			{"scilla_node_process_cpu_percent", "CPU use of the node process itself, on the server's scale.", func(hv nodesync.HealthView) float64 { return hv.Health.System.ProcCPUPercent }},
+			{"scilla_node_memory_used_bytes", "Memory used on the node's server.", func(hv nodesync.HealthView) float64 { return float64(hv.Health.System.MemUsed) }},
+			{"scilla_node_memory_total_bytes", "Memory of the node's server.", func(hv nodesync.HealthView) float64 { return float64(hv.Health.System.MemTotal) }},
+			{"scilla_node_receive_bytes_per_second", "Network in on the node's server.", func(hv nodesync.HealthView) float64 { return float64(hv.Health.System.NetRxBps) }},
+			{"scilla_node_transmit_bytes_per_second", "Network out on the node's server.", func(hv nodesync.HealthView) float64 { return float64(hv.Health.System.NetTxBps) }},
 		} {
 			m.help(f.name, f.help, "gauge")
 			for _, n := range live {
@@ -168,7 +168,7 @@ func (h *handlers) renderMetrics(ctx context.Context, now time.Time) ([]byte, er
 		for _, in := range inbounds {
 			ids[in.Name] = strconv.FormatInt(in.ID, 10)
 		}
-		m.help("mikan_inbound_up", "1 when the inbound listens on its node.", "gauge")
+		m.help("scilla_inbound_up", "1 when the inbound listens on its node.", "gauge")
 		for _, n := range live {
 			seen := map[string]bool{}
 			for _, l := range n.hv.Listeners {
@@ -176,14 +176,14 @@ func (h *handlers) renderMetrics(ctx context.Context, now time.Time) ([]byte, er
 					continue
 				}
 				seen[l.Name] = true
-				m.sample("mikan_inbound_up", b2f(l.OK), "node_id", n.id, "node", n.name, "inbound_id", ids[l.Name], "inbound", l.Name)
+				m.sample("scilla_inbound_up", b2f(l.OK), "node_id", n.id, "node", n.name, "inbound_id", ids[l.Name], "inbound", l.Name)
 			}
 		}
 	}
 
 	// Retries are harmless one by one; a steady climb means writers keep colliding.
-	m.help("mikan_db_serialization_retries_total", "Database transactions retried after a serialization conflict or a deadlock since the panel started.", "counter")
-	m.sample("mikan_db_serialization_retries_total", float64(h.d.Store.Conflicts()))
+	m.help("scilla_db_serialization_retries_total", "Database transactions retried after a serialization conflict or a deadlock since the panel started.", "counter")
+	m.sample("scilla_db_serialization_retries_total", float64(h.d.Store.Conflicts()))
 
 	var ms runtime.MemStats
 	runtime.ReadMemStats(&ms)

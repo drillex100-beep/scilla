@@ -3,8 +3,8 @@ package routing
 import (
 	"strings"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/textutil"
+	"scilla/internal/sub/model"
+	"scilla/internal/textutil"
 )
 
 // Groups are the groups of the built-in profile, and the group each route's target goes to.

@@ -13,22 +13,22 @@ import { Steps } from '@astrojs/starlight/components';
 
 ## Свой токен или свой код
 
-- **Нужен только свой бот в Telegram** со своим именем и аватаркой, а отвечать подписчикам будет бот панели: создайте бота у [@BotFather](https://t.me/BotFather) и вставьте его токен в **Telegram → Подключение** ([подробнее](/mikan/billing/telegram/)). Больше ничего не нужно, дальше эта страница не понадобится.
+- **Нужен только свой бот в Telegram** со своим именем и аватаркой, а отвечать подписчикам будет бот панели: создайте бота у [@BotFather](https://t.me/BotFather) и вставьте его токен в **Telegram → Подключение** ([подробнее](/scilla/billing/telegram/)). Больше ничего не нужно, дальше эта страница не понадобится.
 - **Нужна своя логика**: свои команды, свои ответы, своя база. Тогда к тому же боту подключается ваш код, как описано ниже. Токен по-прежнему вводится в **Telegram → Подключение**, ваш код получает отдельный токен аддона.
 
-## Что такое MIKAN_BOT_API_URL
+## Что такое SCILLA_BOT_API_URL
 
-Это адрес прокси Bot API в самой панели. Он отвечает на те же запросы, что `api.telegram.org` (`<адрес>/bot<токен>/<метод>`), поэтому любой фреймворк работает с ним без доработок: ему достаточно сменить адрес сервера Bot API. Снаружи прокси не виден: он слушает на `127.0.0.1` сервера панели (и на мосте Docker, пока работают аддоны-образы), поэтому свой процесс запускается на том же сервере. Адрес выдаётся вместе с первым аддоном протокола 2 и дальше не меняется. Вместе с ним задаётся `MIKAN_BOT_TOKEN`: это токен аддона, а не токен от BotFather. Настоящий токен бота прокси подставляет сам, а лишнего (вебхуки, платежи, `logOut`) не пропускает.
+Это адрес прокси Bot API в самой панели. Он отвечает на те же запросы, что `api.telegram.org` (`<адрес>/bot<токен>/<метод>`), поэтому любой фреймворк работает с ним без доработок: ему достаточно сменить адрес сервера Bot API. Снаружи прокси не виден: он слушает на `127.0.0.1` сервера панели (и на мосте Docker, пока работают аддоны-образы), поэтому свой процесс запускается на том же сервере. Адрес выдаётся вместе с первым аддоном протокола 2 и дальше не меняется. Вместе с ним задаётся `SCILLA_BOT_TOKEN`: это токен аддона, а не токен от BotFather. Настоящий токен бота прокси подставляет сам, а лишнего (вебхуки, платежи, `logOut`) не пропускает.
 
-Те же две переменные получает и официальный бот mikan, и любой бот-аддон из образа: контейнеру их задаёт mikan.
+Те же две переменные получает и официальный бот scilla, и любой бот-аддон из образа: контейнеру их задаёт scilla.
 
 :::caution
-Код своего бота mikan не проверяет. Аддон с правом «Telegram-бот» видит сообщения всех подписчиков и отвечает от имени бота, поэтому ставьте только тот код, которому доверяете как себе.
+Код своего бота scilla не проверяет. Аддон с правом «Telegram-бот» видит сообщения всех подписчиков и отвечает от имени бота, поэтому ставьте только тот код, которому доверяете как себе.
 :::
 
 ## Что нужно
 
-- Бот подключён в панели: **Telegram → Подключение**, токен от [@BotFather](https://t.me/BotFather) ([подробнее](/mikan/billing/telegram/)). Настоящий токен нужен только панели, вашему боту он не понадобится.
+- Бот подключён в панели: **Telegram → Подключение**, токен от [@BotFather](https://t.me/BotFather) ([подробнее](/scilla/billing/telegram/)). Настоящий токен нужен только панели, вашему боту он не понадобится.
 - Бот написан на long polling (`getUpdates`). Вебхуки прокси не принимает: настоящий токен у панели.
 - Доступ к серверу панели под root: токен аддона лежит в файле, который читает только root.
 
@@ -41,15 +41,15 @@ import { Steps } from '@astrojs/starlight/components';
    - **Вид**: «Telegram-бот»;
    - **Режим**: «Работает в фоне», если у бота нет своего HTTP-сервера (так у ботов на aiogram, grammY и python-telegram-bot с long polling). Тогда адрес можно не указывать;
    - **Права**: «Telegram-бот» и только то, что боту ещё нужно;
-   - отметку, что вы понимаете: код не проверен mikan.
+   - отметку, что вы понимаете: код не проверен scilla.
 
-2. **Возьмите адрес и токен.** На сервере, под root, откройте `/opt/mikan/addons/state.json`. Адрес прокси лежит в поле `panel_api`, токен аддона в `adapters` → имя аддона → `panel_token`. В файле токены всех аддонов, не показывайте его никому.
+2. **Возьмите адрес и токен.** На сервере, под root, откройте `/opt/scilla/addons/state.json`. Адрес прокси лежит в поле `panel_api`, токен аддона в `adapters` → имя аддона → `panel_token`. В файле токены всех аддонов, не показывайте его никому.
 
 3. **Запустите бота с двумя переменными:**
 
    ```bash
-   MIKAN_BOT_API_URL=http://127.0.0.1:41990   # panel_api с приставкой http://
-   MIKAN_BOT_TOKEN=0:<panel_token>            # токен аддона после «0:»
+   SCILLA_BOT_API_URL=http://127.0.0.1:41990   # panel_api с приставкой http://
+   SCILLA_BOT_TOKEN=0:<panel_token>            # токен аддона после «0:»
    ```
 
    «0:» нужно только для вида: фреймворки проверяют, что токен состоит из числа, двоеточия и строки. Номер бота фреймворк узнаёт у `getMe`.
@@ -73,8 +73,8 @@ from aiogram.client.telegram import TelegramAPIServer
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 
-session = AiohttpSession(api=TelegramAPIServer.from_base(os.environ["MIKAN_BOT_API_URL"]))
-bot = Bot(os.environ["MIKAN_BOT_TOKEN"], session=session)
+session = AiohttpSession(api=TelegramAPIServer.from_base(os.environ["SCILLA_BOT_API_URL"]))
+bot = Bot(os.environ["SCILLA_BOT_TOKEN"], session=session)
 dp = Dispatcher()
 
 
@@ -90,8 +90,8 @@ asyncio.run(dp.start_polling(bot))
 // grammY
 import { Bot } from "grammy";
 
-const bot = new Bot(process.env.MIKAN_BOT_TOKEN!, {
-  client: { apiRoot: process.env.MIKAN_BOT_API_URL! },
+const bot = new Bot(process.env.SCILLA_BOT_TOKEN!, {
+  client: { apiRoot: process.env.SCILLA_BOT_API_URL! },
 });
 
 bot.command("start", (ctx) => ctx.reply("Привет из своего бота"));
@@ -106,7 +106,7 @@ bot.start();
 
 **Сразу к Telegram:** `getMe`, `getChat`, `getChatMember`, `answerCallbackQuery`, `setMyCommands`, `getMyCommands`, `deleteMyCommands`, `setChatMenuButton`, `getChatMenuButton`.
 
-**Через очередь панели** (в запросе нужен `chat_id`, очередь держит лимиты Telegram): `sendMessage`, `editMessageText`, `editMessageReplyMarkup`, `editMessageCaption`, `editMessageMedia`, `deleteMessage`, `deleteMessages`, `sendPhoto`, `sendDocument`, `sendMediaGroup`, `sendChatAction`, `sendSticker`, `sendAnimation`, `sendVideo`, `sendAudio`, `sendVoice`, `sendLocation`, `pinChatMessage`, `unpinChatMessage`. Заголовок `X-Mikan-Priority: notice` или `bulk` выбирает полосу очереди для уведомлений и рассылок, без него запрос идёт как ответ пользователю.
+**Через очередь панели** (в запросе нужен `chat_id`, очередь держит лимиты Telegram): `sendMessage`, `editMessageText`, `editMessageReplyMarkup`, `editMessageCaption`, `editMessageMedia`, `deleteMessage`, `deleteMessages`, `sendPhoto`, `sendDocument`, `sendMediaGroup`, `sendChatAction`, `sendSticker`, `sendAnimation`, `sendVideo`, `sendAudio`, `sendVoice`, `sendLocation`, `pinChatMessage`, `unpinChatMessage`. Заголовок `X-Scilla-Priority: notice` или `bulk` выбирает полосу очереди для уведомлений и рассылок, без него запрос идёт как ответ пользователю.
 
 **Остальное запрещено**: ответ 403 `Forbidden: <метод> is not allowed for addons`. Среди запрещённых `setWebhook`, `sendInvoice`, `createInvoiceLink`, `answerPreCheckoutQuery`, `refundStarPayment`, `logOut`, `close`. Платежи ведёт сама панель: `pre_checkout_query` и `successful_payment` до бота не доходят, о платежах аддон узнаёт из событий панели (право «События»).
 
@@ -118,4 +118,4 @@ bot.start();
 
 ## Образом вместо своего процесса
 
-Бота, упакованного в Docker-образ, можно опубликовать как аддон протокола 2: панель сама запустит контейнер и сама выдаст ему эти переменные, а устанавливать его можно из источника или из [реестра сообществ](/mikan/operations/community-addons/). Протокол описан в [PROTOCOL-v2.md](https://github.com/getmikan/marketplace/blob/main/PROTOCOL-v2.md).
+Бота, упакованного в Docker-образ, можно опубликовать как аддон протокола 2: панель сама запустит контейнер и сама выдаст ему эти переменные, а устанавливать его можно из источника или из [реестра сообществ](/scilla/operations/community-addons/). Протокол описан в [PROTOCOL-v2.md](https://github.com/getmikan/marketplace/blob/main/PROTOCOL-v2.md).

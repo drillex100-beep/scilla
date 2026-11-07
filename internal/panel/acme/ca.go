@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/httpjson"
-	"mikan/internal/panel/settings"
+	"scilla/internal/httpjson"
+	"scilla/internal/panel/settings"
 )
 
 // The certificate authorities the panel orders from. Let's Encrypt needs nothing; ZeroSSL

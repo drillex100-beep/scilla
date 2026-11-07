@@ -5,10 +5,10 @@ import (
 	"reflect"
 	"testing"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/sub/apps"
-	submodel "mikan/internal/sub/model"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/sub/apps"
+	submodel "scilla/internal/sub/model"
 )
 
 // The templates come back as they were saved, the defaults marked; a response rule may name

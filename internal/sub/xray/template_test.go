@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/subtest"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/subtest"
 )
 
 // own is the own xray template src as the template it is.
@@ -107,7 +107,7 @@ func TestCheckOwnXrayTemplate(t *testing.T) {
 		{"the panel's tag", `{"outbounds": [{"tag": "proxy-eu", "protocol": "freedom"}]}`, "template_proxy_tag", "proxy-eu"},
 		{"a tag twice", `{"outbounds": [{"tag": "a", "protocol": "freedom"}, {"tag": "a", "protocol": "blackhole"}]}`, "template_tag_dup", "a"},
 		{"a balancer without a tag", `{"routing": {"balancers": [{"selector": ["proxy"]}]}}`, "template_balancer_tag", "1"},
-		{"a typo in the ask", `{"routing": {"balancers": [{"tag": "b", "mikan": {"choise": true}}]}}`, "template_ask", "b"},
+		{"a typo in the ask", `{"routing": {"balancers": [{"tag": "b", "scilla": {"choise": true}}]}}`, "template_ask", "b"},
 		{"a fallback to nowhere", `{"routing": {"balancers": [{"tag": "b", "selector": ["proxy"], "fallbackTag": "x"}]}}`, "template_detour", "b → x"},
 		{"a rule to nothing", `{"routing": {"rules": [{"domain": ["x.com"]}]}}`, "template_rule_to", "1"},
 		{"a rule to nowhere", `{"routing": {"rules": [{"domain": ["x.com"], "outboundTag": "x"}]}}`, "template_rule_target", "1 (x)"},

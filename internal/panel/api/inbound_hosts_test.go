@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/support"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/support"
 )
 
 // The hosts of an inbound over the API: listed by whoever may read the inbound, changed only

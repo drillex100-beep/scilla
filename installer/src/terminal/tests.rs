@@ -19,7 +19,7 @@ fn tmpdir(name: &str) -> PathBuf {
     d
 }
 
-/// A server's directories as `mikan update` leaves them, and the parameters of a run over
+/// A server's directories as `scilla update` leaves them, and the parameters of a run over
 /// them with a fake shell, a short idle time and no wait worth the name.
 struct Rig {
     root: PathBuf,
@@ -587,7 +587,7 @@ fn the_layout_is_root_for_support_and_the_panel_for_its_requests() {
     fs::remove_dir_all(&d).unwrap();
 }
 
-// mikan update gives data/panel to the panel's user with all it holds; support/ stays root's
+// scilla update gives data/panel to the panel's user with all it holds; support/ stays root's
 // (and the recordings in it), terminal/ is made the panel's again.
 #[test]
 fn handing_data_to_the_panel_leaves_support_to_root() {
@@ -758,5 +758,5 @@ fn the_shell_is_a_login_shell_of_root() {
     let p = Params::production(false);
     assert_eq!(p.peers, [PANEL_UID], "only the panel's user reaches the socket");
     assert_eq!((p.idle, p.accept_wait), (Duration::from_secs(900), Duration::from_secs(60)));
-    assert_eq!(p.root, Path::new("/opt/mikan"));
+    assert_eq!(p.root, Path::new("/opt/scilla"));
 }

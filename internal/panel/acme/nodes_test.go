@@ -11,10 +11,10 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/storetest"
-	"mikan/internal/panel/tlscert"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/storetest"
+	"scilla/internal/panel/tlscert"
 )
 
 // fakeNode is a node's challenge endpoint: what the panel put there, or the error it answers.
@@ -214,7 +214,7 @@ func TestNodeRenewWaits(t *testing.T) {
 	}
 }
 
-// The panel answers its own challenge on its port (MIKAN_ACME_LISTEN), and "Request now"
+// The panel answers its own challenge on its port (SCILLA_ACME_LISTEN), and "Request now"
 // returns the certificate it got.
 func TestPanelOrderOnItsOwnPort(t *testing.T) {
 	ln, err := net.Listen("tcp", "127.0.0.1:0")
@@ -223,7 +223,7 @@ func TestPanelOrderOnItsOwnPort(t *testing.T) {
 	}
 	addr := ln.Addr().String()
 	ln.Close()
-	t.Setenv("MIKAN_ACME_LISTEN", addr)
+	t.Setenv("SCILLA_ACME_LISTEN", addr)
 	newFakeCA(t, func(_, token, _ string) bool {
 		resp, err := http.Get("http://" + addr + "/.well-known/acme-challenge/" + token)
 		if err != nil {

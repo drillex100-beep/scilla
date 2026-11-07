@@ -12,9 +12,9 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/sub/profile"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/subtest"
+	"scilla/internal/sub/profile"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/subtest"
 )
 
 func TestValidHappRouting(t *testing.T) {
@@ -87,7 +87,7 @@ func TestHappRoutingOf(t *testing.T) {
 		"GEOSITE,no-such-category,VPN",
 		"PROCESS-NAME,Telegram.exe,VPN",
 		"AND,((NETWORK,UDP),(DST-PORT,443)),REJECT",
-		"RULE-SET,mikan-blocked,VPN",
+		"RULE-SET,scilla-blocked,VPN",
 		"GEOSITE,category-ru,DIRECT",
 		"MATCH,DIRECT",
 		"MATCH,REJECT",

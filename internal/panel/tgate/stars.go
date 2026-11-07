@@ -5,8 +5,8 @@ import (
 	"errors"
 	"time"
 
-	"mikan/internal/panel/billing"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/billing"
+	"scilla/internal/tgapi"
 )
 
 // Telegram Stars: the invoice links, Telegram's questions and reports about a payment, and

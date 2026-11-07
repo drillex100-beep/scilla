@@ -8,11 +8,11 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/tgate"
-	"mikan/internal/panel/tgbot"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/tgate"
+	"scilla/internal/panel/tgbot"
 )
 
 // panelEmitting is the panel's side of the bot with its feed replaced.

@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/routing"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/routing"
 )
 
 // The core's name in the notes of the admin panel's preview.

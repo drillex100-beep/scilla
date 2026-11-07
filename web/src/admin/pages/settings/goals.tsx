@@ -9,7 +9,7 @@ import { CardHead } from "../../../components/layout";
 type Goal = Schemas["Goal"];
 
 /** The docs site's page with every goal and what is done. */
-const goalsPage = (lang: string) => `https://miroshka000.github.io/mikan/${lang === "en" ? "en/" : ""}support/`;
+const goalsPage = (lang: string) => `https://drillex100-beep.github.io/scilla/${lang === "en" ? "en/" : ""}support/`;
 
 /**
  * What the project collects money for, as the signed release index says (it comes with

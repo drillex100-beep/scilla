@@ -16,7 +16,7 @@ import (
 // core's own goroutines (a proxy closed by its finalizer) read the log level while tests
 // run, so setting it per test is a data race.
 func TestMain(m *testing.M) {
-	home, err := os.MkdirTemp("", "mikan-core-")
+	home, err := os.MkdirTemp("", "scilla-core-")
 	if err != nil {
 		panic(err)
 	}

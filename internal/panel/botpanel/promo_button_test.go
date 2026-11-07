@@ -5,12 +5,12 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/tgate"
-	"mikan/internal/panel/tgbot"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/tgate"
+	"scilla/internal/panel/tgbot"
+	"scilla/internal/tgapi"
 )
 
 // menuTexts is the main menu as rows of button labels, and fails on an empty row.

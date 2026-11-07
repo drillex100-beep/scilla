@@ -14,8 +14,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodehello"
-	"mikan/internal/nodetls"
+	"scilla/internal/nodehello"
+	"scilla/internal/nodetls"
 )
 
 type stand struct {
@@ -34,11 +34,11 @@ type stand struct {
 func newStand(t *testing.T) *stand {
 	t.Helper()
 	now := time.Now()
-	panel, err := nodetls.Generate("mikan-panel", x509.ExtKeyUsageClientAuth, now)
+	panel, err := nodetls.Generate("scilla-panel", x509.ExtKeyUsageClientAuth, now)
 	if err != nil {
 		t.Fatal(err)
 	}
-	node, err := nodetls.Generate("node-2.mikan", x509.ExtKeyUsageServerAuth, now)
+	node, err := nodetls.Generate("node-2.scilla", x509.ExtKeyUsageServerAuth, now)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -134,9 +134,9 @@ func TestHelloRefused(t *testing.T) {
 		return req
 	}
 	// Signed with another key than the certificate's.
-	other, _ := nodetls.Generate("node-3.mikan", x509.ExtKeyUsageServerAuth, s.now)
+	other, _ := nodetls.Generate("node-3.scilla", x509.ExtKeyUsageServerAuth, s.now)
 	forged := valid()
-	sig, _ := nodetls.Sign(other.KeyPEM, []byte("mikan-hello/1\n"+strconv.FormatInt(forged.Time, 10)+"\n"+forged.Nonce))
+	sig, _ := nodetls.Sign(other.KeyPEM, []byte("scilla-hello/1\n"+strconv.FormatInt(forged.Time, 10)+"\n"+forged.Nonce))
 	forged.Sig = base64.StdEncoding.EncodeToString(sig)
 	// Out of the time window either way.
 	expired, err := nodehello.NewRequest(s.key, s.now.Add(-6*time.Minute))
@@ -206,7 +206,7 @@ func TestHelloRateLimited(t *testing.T) {
 // The node believes only answers signed by the panel its key pins.
 func TestHelloAnswerMustBeThePanels(t *testing.T) {
 	s := newStand(t)
-	other, _ := nodetls.Generate("mikan-panel", x509.ExtKeyUsageClientAuth, s.now)
+	other, _ := nodetls.Generate("scilla-panel", x509.ExtKeyUsageClientAuth, s.now)
 	s.key.PanelPin, _ = nodetls.Fingerprint(other.CertPEM)
 	if r := s.send(); r.Code != nodehello.PanelUnverified {
 		t.Fatalf("another panel's answer: %+v", r)

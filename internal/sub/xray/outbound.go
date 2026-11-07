@@ -4,8 +4,8 @@ import (
 	"encoding/hex"
 	"strings"
 
-	"mikan/internal/proto"
-	"mikan/internal/sub/model"
+	"scilla/internal/proto"
+	"scilla/internal/sub/model"
 )
 
 // outbound is p as an outbound of an xray JSON config, tagged tag; false for what xray

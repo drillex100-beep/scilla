@@ -150,7 +150,7 @@ func (q *Queries) ListLegacySubTokensOf(ctx context.Context, userID int64) ([]Li
 }
 
 const lockUserName = `-- name: LockUserName :exec
-SELECT pg_advisory_xact_lock(hashtextextended('mikan-user-name:' || $1::text, 0))
+SELECT pg_advisory_xact_lock(hashtextextended('scilla-user-name:' || $1::text, 0))
 `
 
 // Holds a name until the transaction ends: two imports (or retries) at once cannot both

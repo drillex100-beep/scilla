@@ -13,10 +13,10 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/storetest"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/storetest"
+	"scilla/internal/tgapi"
 )
 
 // fakeTelegram is the Bot API for tests: it hands out queued updates and records calls.
@@ -44,7 +44,7 @@ func (f *fakeTelegram) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	ok := func(result any) { _ = json.NewEncoder(w).Encode(map[string]any{"ok": true, "result": result}) }
 	switch method {
 	case "getMe":
-		ok(tgapi.User{ID: 1, IsBot: true, FirstName: "Mikan", Username: "mikan_test_bot"})
+		ok(tgapi.User{ID: 1, IsBot: true, FirstName: "Scilla", Username: "scilla_test_bot"})
 		return
 	case "getUpdates":
 		f.mu.Lock()

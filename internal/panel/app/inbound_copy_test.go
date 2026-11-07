@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/proto"
+	"scilla/internal/proto"
 )
 
 // A copy has the original's settings with keys of its own, a port of its own when the

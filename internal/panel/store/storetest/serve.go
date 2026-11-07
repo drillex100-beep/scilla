@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"strconv"
 
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store/db"
 )
 
 // ServePool puts a protocol that is on, on a server of its own, into group poolID: a group

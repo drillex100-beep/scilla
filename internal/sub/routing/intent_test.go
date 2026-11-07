@@ -4,7 +4,7 @@ import (
 	"slices"
 	"testing"
 
-	"mikan/internal/sub/model"
+	"scilla/internal/sub/model"
 )
 
 // The routes go in the order their rules apply: the services in the catalog's order, the

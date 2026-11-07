@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strings"
 
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/secure"
-	"mikan/internal/panel/server"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/secure"
+	"scilla/internal/panel/server"
 )
 
 // Webhook serves the providers' notifications at <sub path>/pay/addon/<id>/<token>. The

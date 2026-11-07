@@ -374,11 +374,11 @@ CREATE INDEX users_expires ON users(expires_at);
 
 CREATE INDEX users_status ON users(status);
 
-CREATE TABLE mikan_sqlite_import (id BIGINT PRIMARY KEY CHECK (id = 1), report TEXT NOT NULL);
+CREATE TABLE scilla_sqlite_import (id BIGINT PRIMARY KEY CHECK (id = 1), report TEXT NOT NULL);
 
 -- +goose Down
 DROP TABLE infrastructure_alert_state;
-DROP TABLE mikan_sqlite_import;
+DROP TABLE scilla_sqlite_import;
 DROP TABLE traffic_grants;
 DROP TABLE user_pools;
 DROP TABLE traffic_hourly;

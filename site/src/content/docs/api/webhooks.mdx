@@ -34,11 +34,11 @@ Webhooks появились в 0.5.2.1.
 | Заголовок | Значение |
 |---|---|
 | `Content-Type` | `application/json` |
-| `User-Agent` | `mikan-webhooks/<версия панели>` |
-| `X-Mikan-Event` | тип события, например `payment.paid` |
-| `X-Mikan-Event-Id` | номер события, он же `id` в теле |
-| `X-Mikan-Timestamp` | время этой попытки, секунды Unix |
-| `X-Mikan-Signature` | подпись: `v1=<hex>` |
+| `User-Agent` | `scilla-webhooks/<версия панели>` |
+| `X-Scilla-Event` | тип события, например `payment.paid` |
+| `X-Scilla-Event-Id` | номер события, он же `id` в теле |
+| `X-Scilla-Timestamp` | время этой попытки, секунды Unix |
+| `X-Scilla-Signature` | подпись: `v1=<hex>` |
 
 Тело одинаково для всех событий, различается только `data`:
 
@@ -73,7 +73,7 @@ Webhooks появились в 0.5.2.1.
 Подпись это HMAC-SHA256 в hex, ключом служит весь секрет вместе с `whsec_`, а подписывается строка из времени в секундах, точки и тела запроса ровно в тех байтах, в каких оно пришло:
 
 ```text
-hex( HMAC-SHA256( секрет, X-Mikan-Timestamp + "." + тело ) )
+hex( HMAC-SHA256( секрет, X-Scilla-Timestamp + "." + тело ) )
 ```
 
 Время входит в подпись, поэтому перехваченный запрос нельзя ни пересобрать с другим телом, ни выдать за новый позже. Каждая попытка подписывается заново: повтор через несколько часов тоже приходит со свежим временем, и окно в пять минут его не отбросит.
@@ -81,7 +81,7 @@ hex( HMAC-SHA256( секрет, X-Mikan-Timestamp + "." + тело ) )
 Проверяйте по порядку:
 
 1. Возьмите **тело как байты**, до разбора JSON: если пересобрать его из объекта, байты изменятся и подпись не сойдётся.
-2. Отбросьте запрос, у которого `X-Mikan-Timestamp` отличается от вашего времени больше чем на 5 минут.
+2. Отбросьте запрос, у которого `X-Scilla-Timestamp` отличается от вашего времени больше чем на 5 минут.
 3. Посчитайте подпись и сравните с `v1=...` **посимвольно за постоянное время** (`timingSafeEqual`, `compare_digest`), не оператором `==`.
 4. Не сошлось: ответьте 401 и ничего не делайте.
 
@@ -94,13 +94,13 @@ hex( HMAC-SHA256( секрет, X-Mikan-Timestamp + "." + тело ) )
 import crypto from "node:crypto";
 import express from "express";
 
-const SECRET = process.env.MIKAN_WEBHOOK_SECRET; // whsec_...
+const SECRET = process.env.SCILLA_WEBHOOK_SECRET; // whsec_...
 const app = express();
 
 // The signature covers the bytes as they came: take the body raw, not parsed.
-app.post("/mikan-webhook", express.raw({ type: "application/json" }), (req, res) => {
-  const stamp = req.get("X-Mikan-Timestamp") ?? "";
-  const given = /(?:^|[ ,])v1=([0-9a-f]+)/.exec(req.get("X-Mikan-Signature") ?? "")?.[1] ?? "";
+app.post("/scilla-webhook", express.raw({ type: "application/json" }), (req, res) => {
+  const stamp = req.get("X-Scilla-Timestamp") ?? "";
+  const given = /(?:^|[ ,])v1=([0-9a-f]+)/.exec(req.get("X-Scilla-Signature") ?? "")?.[1] ?? "";
   const expected = crypto.createHmac("sha256", SECRET).update(`${stamp}.`).update(req.body).digest("hex");
 
   const a = Buffer.from(given);
@@ -129,16 +129,16 @@ import time
 
 from flask import Flask, abort, request
 
-SECRET = os.environ["MIKAN_WEBHOOK_SECRET"].encode()  # whsec_...
+SECRET = os.environ["SCILLA_WEBHOOK_SECRET"].encode()  # whsec_...
 app = Flask(__name__)
 
 
-@app.post("/mikan-webhook")
-def mikan_webhook():
+@app.post("/scilla-webhook")
+def scilla_webhook():
     # The signature covers the bytes as they came: take the body raw, not parsed.
     body = request.get_data()
-    stamp = request.headers.get("X-Mikan-Timestamp", "")
-    match = re.search(r"(?:^|[ ,])v1=([0-9a-f]+)", request.headers.get("X-Mikan-Signature", ""))
+    stamp = request.headers.get("X-Scilla-Timestamp", "")
+    match = re.search(r"(?:^|[ ,])v1=([0-9a-f]+)", request.headers.get("X-Scilla-Signature", ""))
     given = match.group(1) if match else ""
     expected = hmac.new(SECRET, stamp.encode() + b"." + body, hashlib.sha256).hexdigest()
 

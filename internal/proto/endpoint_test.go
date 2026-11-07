@@ -7,7 +7,7 @@ import (
 // Behind a TCP proxy (GitHub issue #11) clients get the proxy's address, port and TLS
 // name; the node keeps listening where it does.
 func TestSetClientEndpoint(t *testing.T) {
-	tpl := mustParse(t, "type: trojan\nws-path: /ws\nmikan:\n  tls: node\n  client:\n    fingerprint: ios\n")
+	tpl := mustParse(t, "type: trojan\nws-path: /ws\nscilla:\n  tls: node\n  client:\n    fingerprint: ios\n")
 	if err := SetClientEndpoint(tpl, "vpn.example.com", 443, "trojan.example.com", ""); err != nil {
 		t.Fatal(err)
 	}
@@ -77,10 +77,10 @@ func TestClientSNIByProtocol(t *testing.T) {
 // Only VLESS and Trojan over WebSocket or XHTTP send an HTTP Host of the client side's own.
 func TestClientHostByProtocol(t *testing.T) {
 	for src, want := range map[string]bool{
-		"type: vless\nws-path: /w\nmikan: {tls: node}\n":                               true,
-		"type: vless\nxhttp-config: {path: /x, mode: packet-up}\nmikan: {tls: node}\n": true,
-		"type: trojan\nmikan: {tls: node}\n":                                           false,
-		"type: hysteria2\n":                                                            false,
+		"type: vless\nws-path: /w\nscilla: {tls: node}\n":                               true,
+		"type: vless\nxhttp-config: {path: /x, mode: packet-up}\nscilla: {tls: node}\n": true,
+		"type: trojan\nscilla: {tls: node}\n":                                           false,
+		"type: hysteria2\n":                                                             false,
 	} {
 		if got := ClientHost(mustParse(t, src)); got != want {
 			t.Errorf("%q: %v, want %v", src, got, want)

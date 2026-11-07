@@ -8,8 +8,8 @@ import (
 	"encoding/json"
 	"time"
 
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/store/db"
 )
 
 // emitLock is the advisory lock emitters take till their commit: ids are then committed in

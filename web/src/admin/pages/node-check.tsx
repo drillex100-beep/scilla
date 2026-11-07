@@ -36,19 +36,19 @@ function commands(fix: string | undefined, p: Params): string[] {
     case "open_port":
       return p.port ? [`ufw allow ${p.port}/tcp`] : [];
     case "start_node":
-      return ["mikan status", "mikan logs node"];
+      return ["scilla status", "scilla logs node"];
     case "old_node":
-      return ["mikan update"];
+      return ["scilla update"];
     case "free_port":
       return p.port ? [`ss -ltnp 'sport = :${p.port}'`] : [];
     case "sync_time":
       return ["timedatectl set-ntp true"];
     case "free_disk":
-      return ["df -h /opt/mikan", "docker image prune"];
+      return ["df -h /opt/scilla", "docker image prune"];
     case "check_outbound":
-      return ["mikan doctor"];
+      return ["scilla doctor"];
     case "restart_panel":
-      return ["mikan status", "mikan restart"];
+      return ["scilla status", "scilla restart"];
   }
   return [];
 }
@@ -60,7 +60,7 @@ function factsOf(it: { params?: Params | null }): Params {
   if (p.free) p.free = bytes(Number(p.free));
   if (p.available) p.available = bytes(Number(p.available));
   if (p.at) p.ago = ago(p.at);
-  if (p.name === "mikan~relay") p.name = "relay";
+  if (p.name === "scilla~relay") p.name = "relay";
   return p;
 }
 

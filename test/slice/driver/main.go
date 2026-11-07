@@ -77,7 +77,7 @@ var protos = []struct {
 
 // customTemplate is the own template of the custom inbound: VLESS over WebSocket on the
 // node's TLS (what the core runs of the old vmess one).
-const customTemplate = "type: vless\nws-path: /vm\nmikan:\n  tls: node\n"
+const customTemplate = "type: vless\nws-path: /vm\nscilla:\n  tls: node\n"
 
 // localProtos run on the panel's own node; a new node gets remoteInbounds defaults.
 const (
@@ -695,7 +695,7 @@ func addNode() {
 		Key string `json:"key"`
 	}
 	p.call("POST", "/api/v1/nodes", map[string]any{"name": "🇺🇸 US", "host": "node2.slice", "api_port": 7443}, &out)
-	if !strings.HasPrefix(out.Key, "mikan1.") {
+	if !strings.HasPrefix(out.Key, "scilla1.") {
 		log.Fatalf("join key: %q", out.Key)
 	}
 	// Test key in a throwaway volume: node2 runs as the image user, not as the driver.

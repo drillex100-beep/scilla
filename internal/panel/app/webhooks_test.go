@@ -11,9 +11,9 @@ import (
 	"sync"
 	"testing"
 
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/webhooks"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/webhooks"
 )
 
 // webhookEndpoint is an address of the API's answers.
@@ -57,7 +57,7 @@ func (r refusal) code(location string) string {
 // server, and a request without the page's CSRF header is refused too.
 func TestWebhooksAreTheSessionsAlone(t *testing.T) {
 	k := newKeyHarness(t)
-	created := mustWebhook(t, k, map[string]any{"name": "mine", "url": "https://hooks.example.com/mikan"})
+	created := mustWebhook(t, k, map[string]any{"name": "mine", "url": "https://hooks.example.com/scilla"})
 	id := strconv.FormatInt(created.ID, 10)
 	for name, c := range map[string]struct {
 		method, path string
@@ -92,7 +92,7 @@ func TestWebhooksAreTheSessionsAlone(t *testing.T) {
 	}
 	// Nothing the keys tried left a trace.
 	rows, err := k.st.Q.ListWebhooks(context.Background())
-	if err != nil || len(rows) != 1 || rows[0].Url != "https://hooks.example.com/mikan" || rows[0].Secret != created.Secret {
+	if err != nil || len(rows) != 1 || rows[0].Url != "https://hooks.example.com/scilla" || rows[0].Secret != created.Secret {
 		t.Fatalf("the endpoints after the refused requests: %+v %v", rows, err)
 	}
 }
@@ -131,7 +131,7 @@ func TestWebhooksAPI(t *testing.T) {
 
 	// What is refused, with the code of the field.
 	good := func(change func(map[string]any)) map[string]any {
-		m := map[string]any{"name": "billing", "url": "https://hooks.example.com/mikan"}
+		m := map[string]any{"name": "billing", "url": "https://hooks.example.com/scilla"}
 		change(m)
 		return m
 	}
@@ -143,7 +143,7 @@ func TestWebhooksAPI(t *testing.T) {
 	}{
 		"a blank name":      {good(func(m map[string]any) { m["name"] = "   " }), "body.name", "name_blank", nil},
 		"ftp":               {good(func(m map[string]any) { m["url"] = "ftp://files.example.com/x" }), "body.url", "webhook_url_scheme", nil},
-		"no scheme":         {good(func(m map[string]any) { m["url"] = "hooks.example.com/mikan" }), "body.url", "webhook_url_scheme", nil},
+		"no scheme":         {good(func(m map[string]any) { m["url"] = "hooks.example.com/scilla" }), "body.url", "webhook_url_scheme", nil},
 		"credentials":       {good(func(m map[string]any) { m["url"] = "https://user:pass@hooks.example.com/" }), "body.url", "webhook_url_invalid", nil},
 		"a port of none":    {good(func(m map[string]any) { m["url"] = "https://hooks.example.com:70000/" }), "body.url", "webhook_url_port", nil},
 		"localhost":         {good(func(m map[string]any) { m["url"] = "http://localhost:8080/x" }), "body.url", "webhook_url_local", nil},
@@ -184,7 +184,7 @@ func TestWebhooksAPI(t *testing.T) {
 	}
 
 	// A good one: on by default, told of every event, with a secret that is shown now.
-	ep := mustWebhook(t, k, map[string]any{"name": " billing ", "url": "https://hooks.example.com/mikan/TOKEN-IN-THE-PATH", "events": []string{"node.up", "payment.paid", "node.up"}})
+	ep := mustWebhook(t, k, map[string]any{"name": " billing ", "url": "https://hooks.example.com/scilla/TOKEN-IN-THE-PATH", "events": []string{"node.up", "payment.paid", "node.up"}})
 	if ep.Name != "billing" || !ep.Enabled || ep.AllowLocal || !slices.Equal(ep.Events, []string{"payment.paid", "node.up"}) || ep.Waiting != 0 || ep.Last != nil {
 		t.Errorf("created %+v", ep)
 	}
@@ -323,7 +323,7 @@ func TestWebhookTestAndLog(t *testing.T) {
 	var seen []string
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		mu.Lock()
-		seen = append(seen, r.Header.Get("X-Mikan-Event")+" "+r.URL.Path)
+		seen = append(seen, r.Header.Get("X-Scilla-Event")+" "+r.URL.Path)
 		status := http.StatusNoContent
 		if len(statuses) > 0 {
 			status, statuses = statuses[0], statuses[1:]

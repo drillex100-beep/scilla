@@ -9,9 +9,9 @@ import (
 
 	"go.yaml.in/yaml/v3"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/profile"
-	"mikan/internal/sub/routing"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/profile"
+	"scilla/internal/sub/routing"
 )
 
 // An own Clash template (model.CoreMihomo, a subscription template of the admin's): a
@@ -20,7 +20,7 @@ import (
 //
 //   - include-all-proxies: true (or include-all) takes every proxy of the user; filter,
 //     exclude-filter and exclude-type narrow them, as mihomo itself does;
-//   - mikan: {nodes: [...], types: [...]} takes the proxies of those nodes (by the name the
+//   - scilla: {nodes: [...], types: [...]} takes the proxies of those nodes (by the name the
 //     panel shows, or the id) and of those types (vless, hysteria2…).
 //
 // Next to proxy-providers, include-all in a group the panel fills leaves mihomo only the
@@ -140,7 +140,7 @@ func fillTemplate(cfg map[string]any, p profile.Profile) ([]model.Proxy, error) 
 // fillGroup puts the user's proxies the group asks for into it.
 func fillGroup(g map[string]any, nodes []model.Node, ps []model.Proxy, providers bool) error {
 	all := g["include-all-proxies"] == true || g["include-all"] == true && !providers
-	ext, _ := g["mikan"].(map[string]any)
+	ext, _ := g["scilla"].(map[string]any)
 	if !all && ext == nil {
 		return nil
 	}
@@ -168,7 +168,7 @@ func fillGroup(g map[string]any, nodes []model.Node, ps []model.Proxy, providers
 	drop, ok2 := re("exclude-filter")
 	if !ok1 || !ok2 {
 		// A pattern Go cannot read (mihomo's regexp2 knows more): mihomo applies it itself,
-		// but then it cannot know which nodes "mikan" picked, and the group would take every
+		// but then it cannot know which nodes "scilla" picked, and the group would take every
 		// server of the user.
 		if ext != nil {
 			return templateErr("template_filter", str(g["name"]))
@@ -192,7 +192,7 @@ func fillGroup(g map[string]any, nodes []model.Node, ps []model.Proxy, providers
 		}
 		list = append(list, x.Name)
 	}
-	delete(g, "mikan")
+	delete(g, "scilla")
 	delete(g, "include-all-proxies")
 	switch {
 	case !providers:
@@ -359,7 +359,7 @@ func checkFilled(cfg map[string]any, p profile.Profile) error {
 
 // Starter is the template of the profile Render makes for p with g and m: the start of an
 // admin's own. The proxies go, and the groups ask for them: every proxy of the user
-// (include-all-proxies), or those of some nodes (mikan: nodes).
+// (include-all-proxies), or those of some nodes (scilla: nodes).
 func Starter(p profile.Profile, g model.GroupNames, m routing.Mode) ([]byte, error) {
 	cfg, err := renderConfig(p, g.WithDefaults(p.Lang), m)
 	if err != nil {
@@ -415,10 +415,10 @@ func Starter(p profile.Profile, g model.GroupNames, m routing.Mode) ([]byte, err
 					refs = append(refs, nodeRef(n.ID))
 				}
 			}
-			grp["proxies"], grp["mikan"] = others, map[string]any{"nodes": refs}
+			grp["proxies"], grp["scilla"] = others, map[string]any{"nodes": refs}
 		}
 		if len(others) == 0 {
-			if _, asks := grp["proxies"].([]string); asks && (grp["include-all-proxies"] == true || grp["mikan"] != nil) {
+			if _, asks := grp["proxies"].([]string); asks && (grp["include-all-proxies"] == true || grp["scilla"] != nil) {
 				delete(grp, "proxies")
 			}
 		}

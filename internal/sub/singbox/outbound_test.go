@@ -8,14 +8,14 @@ import (
 	"slices"
 	"testing"
 
-	"mikan/internal/proto"
-	"mikan/internal/sub/mihomo"
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/profile"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/subtest"
-	"mikan/internal/sub/subtest/corecheck"
-	"mikan/internal/sub/xray"
+	"scilla/internal/proto"
+	"scilla/internal/sub/mihomo"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/profile"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/subtest"
+	"scilla/internal/sub/subtest/corecheck"
+	"scilla/internal/sub/xray"
 )
 
 // carried is a proxy of an own Clash profile as sing-box gets it: read into the model, then

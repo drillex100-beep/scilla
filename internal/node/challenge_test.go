@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/acmechallenge"
-	"mikan/internal/nodeapi"
+	"scilla/internal/acmechallenge"
+	"scilla/internal/nodeapi"
 )
 
 const (

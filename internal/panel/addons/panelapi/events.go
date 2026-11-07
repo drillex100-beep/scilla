@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // The feed of events (permission events), read by pulling: an addon with no HTTP server of

@@ -1,4 +1,4 @@
-# The package's project file. sdk/build.sh generates the client into mikan_sdk/ in a copy of
+# The package's project file. sdk/build.sh generates the client into scilla_sdk/ in a copy of
 # this folder and builds the wheel and the sdist there; nothing generated is kept in git.
 [build-system]
 # The same pin as requirements.in: the build runs without isolation, with what that file installs.
@@ -6,15 +6,15 @@ requires = ["hatchling==1.32.4"]
 build-backend = "hatchling.build"
 
 [project]
-name = "mikan-sdk"
+name = "scilla-sdk"
 # The panel's release: sdk/build.sh sets it in the copy it builds from.
 version = "0.0.0"
-description = "Typed Python client for the mikan panel API"
+description = "Typed Python client for the scilla panel API"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "GPL-3.0-only"
 license-files = ["LICENSE", "NOTICE.md"]
-keywords = ["mikan", "vpn", "panel", "api", "sdk", "openapi"]
+keywords = ["scilla", "vpn", "panel", "api", "sdk", "openapi"]
 classifiers = [
   "Intended Audience :: Developers",
   "Operating System :: OS Independent",
@@ -30,13 +30,13 @@ dependencies = [
 ]
 
 [project.urls]
-Documentation = "https://miroshka000.github.io/mikan/api/sdk/"
+Documentation = "https://miroshka000.github.io/scilla/api/sdk/"
 Source = "https://github.com/Miroshka000/mikan/tree/main/sdk/python"
-Changelog = "https://miroshka000.github.io/mikan/changelog/"
+Changelog = "https://miroshka000.github.io/scilla/changelog/"
 Issues = "https://github.com/Miroshka000/mikan/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["mikan_sdk"]
+packages = ["scilla_sdk"]
 
 [tool.hatch.build.targets.sdist]
-include = ["mikan_sdk", "README.md", "LICENSE", "NOTICE.md"]
+include = ["scilla_sdk", "README.md", "LICENSE", "NOTICE.md"]

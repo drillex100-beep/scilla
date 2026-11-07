@@ -14,11 +14,11 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/auth"
-	"mikan/internal/panel/secure"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/support"
+	"scilla/internal/panel/auth"
+	"scilla/internal/panel/secure"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/support"
 )
 
 // API keys let scripts call the API with "Authorization: Bearer <key>" instead of an

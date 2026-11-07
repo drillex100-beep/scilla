@@ -16,9 +16,9 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
 )
 
 func TestPostgresArchiveActuallyRestores(t *testing.T) {
@@ -30,8 +30,8 @@ func TestPostgresArchiveActuallyRestores(t *testing.T) {
 	}
 	defer st.Close()
 	dsn := schemaDSN(t, st)
-	t.Setenv("MIKAN_DATABASE_URL", dsn)
-	t.Setenv("MIKAN_DATA_DIR", dir)
+	t.Setenv("SCILLA_DATABASE_URL", dsn)
+	t.Setenv("SCILLA_DATA_DIR", dir)
 	if err := st.Q.SetSetting(ctx, db.SetSettingParams{Key: "preserved", Value: "42"}); err != nil {
 		t.Fatal(err)
 	}
@@ -52,7 +52,7 @@ func TestPostgresArchiveActuallyRestores(t *testing.T) {
 	}
 	// A server that migrated once still has the original SQLite and marker. A fresh
 	// PG dump contains no import record: explicit restore must establish provenance.
-	if err := os.WriteFile(filepath.Join(dir, "mikan.db"), []byte("original SQLite preserved"), 0600); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, "scilla.db"), []byte("original SQLite preserved"), 0600); err != nil {
 		t.Fatal(err)
 	}
 	if err := os.WriteFile(filepath.Join(dir, store.MigrationMarker), []byte("stale"), 0600); err != nil {
@@ -88,17 +88,17 @@ func TestPostgresArchiveActuallyRestores(t *testing.T) {
 	}
 }
 
-// An installation in the public schema (a MIKAN_DATABASE_URL without a search path, as the
+// An installation in the public schema (a SCILLA_DATABASE_URL without a search path, as the
 // installer writes it) backs up and restores like a fixture's own schema does.
 func TestPublicSchemaBackupAndRestore(t *testing.T) {
 	ctx := context.Background()
-	base := os.Getenv("MIKAN_TEST_DATABASE_URL")
+	base := os.Getenv("SCILLA_TEST_DATABASE_URL")
 	admin, err := pgx.Connect(ctx, base)
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer admin.Close(context.Background())
-	name := fmt.Sprintf("mikan_public_%d", time.Now().UnixNano())
+	name := fmt.Sprintf("scilla_public_%d", time.Now().UnixNano())
 	if _, err := admin.Exec(ctx, "CREATE DATABASE "+name); err != nil {
 		t.Skip("CREATE DATABASE is not permitted here:", err)
 	}
@@ -110,8 +110,8 @@ func TestPublicSchemaBackupAndRestore(t *testing.T) {
 	u.Path = "/" + name
 	dsn := u.String()
 	dir := t.TempDir()
-	t.Setenv("MIKAN_DATABASE_URL", dsn)
-	t.Setenv("MIKAN_DATA_DIR", dir)
+	t.Setenv("SCILLA_DATABASE_URL", dsn)
+	t.Setenv("SCILLA_DATA_DIR", dir)
 	st, err := store.OpenPostgres(ctx, dir, dsn)
 	if err != nil {
 		t.Fatal(err)
@@ -152,7 +152,7 @@ func TestPublicSchemaBackupAndRestore(t *testing.T) {
 	live.Close()
 }
 
-// schemaDSN reaches st's schema the way an installation's MIKAN_DATABASE_URL reaches its
+// schemaDSN reaches st's schema the way an installation's SCILLA_DATABASE_URL reaches its
 // own: pg_dump and pg_restore get the search path too.
 func schemaDSN(t *testing.T, st *store.Store) string {
 	t.Helper()
@@ -160,7 +160,7 @@ func schemaDSN(t *testing.T, st *store.Store) string {
 	if err := st.DB.QueryRowContext(context.Background(), "SELECT current_schema()").Scan(&schema); err != nil {
 		t.Fatal(err)
 	}
-	u, err := url.Parse(os.Getenv("MIKAN_TEST_DATABASE_URL"))
+	u, err := url.Parse(os.Getenv("SCILLA_TEST_DATABASE_URL"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -171,16 +171,16 @@ func schemaDSN(t *testing.T, st *store.Store) string {
 }
 
 func TestToolOutputMasksThePassword(t *testing.T) {
-	got := toolOutput("postgresql://mikan:test-secret@localhost/mikan", "pg_restore: error: test-secret rejected\n")
+	got := toolOutput("postgresql://scilla:test-secret@localhost/scilla", "pg_restore: error: test-secret rejected\n")
 	if strings.Contains(got, "test-secret") || !strings.Contains(got, "pg_restore: error: *** rejected") {
 		t.Fatal(got)
 	}
-	if toolOutput("postgresql://mikan:x@localhost/mikan", " \n") != "" {
+	if toolOutput("postgresql://scilla:x@localhost/scilla", " \n") != "" {
 		t.Fatal("empty diagnostics produce text")
 	}
 	// The tail starts on a whole character, not in the middle of one.
 	long := strings.Repeat("я", toolOutputLimit/2+1) + "!" // the limit falls inside a "я"
-	if got := toolOutput("postgresql://mikan:x@localhost/mikan", long); !utf8.ValidString(got) || !strings.HasSuffix(got, "я!") {
+	if got := toolOutput("postgresql://scilla:x@localhost/scilla", long); !utf8.ValidString(got) || !strings.HasSuffix(got, "я!") {
 		t.Fatalf("cut diagnostics: %q", got[:16])
 	}
 }
@@ -189,13 +189,13 @@ func TestToolOutputMasksThePassword(t *testing.T) {
 func TestHealthChecksTheDatabase(t *testing.T) {
 	srv := httptest.NewServer(http.NotFoundHandler())
 	defer srv.Close()
-	t.Setenv("MIKAN_DEV", "1")
-	t.Setenv("MIKAN_PANEL_LISTEN", strings.TrimPrefix(srv.URL, "http://"))
-	t.Setenv("MIKAN_DATABASE_URL", os.Getenv("MIKAN_TEST_DATABASE_URL"))
+	t.Setenv("SCILLA_DEV", "1")
+	t.Setenv("SCILLA_PANEL_LISTEN", strings.TrimPrefix(srv.URL, "http://"))
+	t.Setenv("SCILLA_DATABASE_URL", os.Getenv("SCILLA_TEST_DATABASE_URL"))
 	if err := health(); err != nil {
 		t.Fatal(err)
 	}
-	t.Setenv("MIKAN_DATABASE_URL", "postgresql://mikan:x@127.0.0.1:1/mikan?sslmode=disable")
+	t.Setenv("SCILLA_DATABASE_URL", "postgresql://scilla:x@127.0.0.1:1/scilla?sslmode=disable")
 	if err := health(); err == nil || !strings.Contains(err.Error(), "database") {
 		t.Fatal("healthy without a database:", err)
 	}
@@ -206,20 +206,20 @@ func TestRestoreRefusesATooShortFile(t *testing.T) {
 	if err := os.WriteFile(path, []byte("PGDMP"), 0600); err != nil {
 		t.Fatal(err)
 	}
-	t.Setenv("MIKAN_DATABASE_URL", "postgresql://mikan:x@localhost/mikan")
-	t.Setenv("MIKAN_DATA_DIR", t.TempDir())
+	t.Setenv("SCILLA_DATABASE_URL", "postgresql://scilla:x@localhost/scilla")
+	t.Setenv("SCILLA_DATA_DIR", t.TempDir())
 	if err := databaseCmd(context.Background(), []string{"restore", path}); err == nil || !strings.Contains(err.Error(), "too short") {
 		t.Fatal(err)
 	}
 }
 
 func TestPostgresToolCredentialsStayOutOfArguments(t *testing.T) {
-	env, err := postgresEnv("postgresql://mikan:test-secret@localhost/mikan?host=/run/postgresql&sslmode=disable")
+	env, err := postgresEnv("postgresql://scilla:test-secret@localhost/scilla?host=/run/postgresql&sslmode=disable")
 	if err != nil {
 		t.Fatal(err)
 	}
 	joined := strings.Join(env, "\n")
-	for _, want := range []string{"PGHOST=/run/postgresql", "PGUSER=mikan", "PGPASSWORD=test-secret", "PGDATABASE=mikan", "PGSSLMODE=disable"} {
+	for _, want := range []string{"PGHOST=/run/postgresql", "PGUSER=scilla", "PGPASSWORD=test-secret", "PGDATABASE=scilla", "PGSSLMODE=disable"} {
 		if !strings.Contains(joined, want) {
 			t.Errorf("missing libpq parameter %s", want)
 		}
@@ -229,16 +229,16 @@ func TestPostgresToolCredentialsStayOutOfArguments(t *testing.T) {
 // A PostgreSQL client gets what it needs from the environment and none of the panel's
 // secrets.
 func TestPostgresToolsGetNoPanelSecrets(t *testing.T) {
-	t.Setenv("MIKAN_DATABASE_URL", "postgresql://mikan:db-secret@localhost/mikan")
-	t.Setenv("MIKAN_JOIN_KEY", "join-secret")
+	t.Setenv("SCILLA_DATABASE_URL", "postgresql://scilla:db-secret@localhost/scilla")
+	t.Setenv("SCILLA_JOIN_KEY", "join-secret")
 	t.Setenv("PGPASSFILE", "/somewhere/else")
 	t.Setenv("PATH", "/usr/bin")
-	env, err := postgresEnv("postgresql://mikan:db-secret@localhost/mikan")
+	env, err := postgresEnv("postgresql://scilla:db-secret@localhost/scilla")
 	if err != nil {
 		t.Fatal(err)
 	}
 	joined := strings.Join(env, "\n")
-	for _, leaked := range []string{"MIKAN_", "join-secret", "PGPASSFILE"} {
+	for _, leaked := range []string{"SCILLA_", "join-secret", "PGPASSFILE"} {
 		if strings.Contains(joined, leaked) {
 			t.Errorf("%s reaches the client", leaked)
 		}
@@ -252,19 +252,19 @@ func TestCheckDumpList(t *testing.T) {
 	good := ";\n; Archive created at 2026-10-03\n;\n" +
 		"3557; 2615 2200 SCHEMA - public pg_database_owner\n" +
 		"3558; 0 0 COMMENT - SCHEMA public pg_database_owner\n" +
-		"220; 1259 16390 TABLE public users mikan\n" +
-		"221; 1259 16389 SEQUENCE public users_id_seq mikan\n" +
-		"3400; 0 16390 TABLE DATA public users mikan\n" +
-		"3560; 0 0 SEQUENCE SET public users_id_seq mikan\n" +
-		"3201; 2606 16420 CONSTRAINT public users users_pkey mikan\n" +
-		"3301; 1259 16430 INDEX public users_status mikan\n" +
-		"3350; 2606 16440 FK CONSTRAINT public slots slots_user_fkey mikan\n"
+		"220; 1259 16390 TABLE public users scilla\n" +
+		"221; 1259 16389 SEQUENCE public users_id_seq scilla\n" +
+		"3400; 0 16390 TABLE DATA public users scilla\n" +
+		"3560; 0 0 SEQUENCE SET public users_id_seq scilla\n" +
+		"3201; 2606 16420 CONSTRAINT public users users_pkey scilla\n" +
+		"3301; 1259 16430 INDEX public users_status scilla\n" +
+		"3350; 2606 16440 FK CONSTRAINT public slots slots_user_fkey scilla\n"
 	if err := checkDumpList([]byte(good)); err != nil {
 		t.Fatal(err)
 	}
 	for _, bad := range []string{
-		"230; 1255 16500 FUNCTION public evil() mikan\n",
-		"231; 2620 16501 TRIGGER public users run_evil mikan\n",
+		"230; 1255 16500 FUNCTION public evil() scilla\n",
+		"231; 2620 16501 TRIGGER public users run_evil scilla\n",
 		"232; 3079 16502 EXTENSION - plpython3u\n",
 		"233; 0 0 ACL - SCHEMA public postgres\n",
 		"not a toc line\n",
@@ -291,8 +291,8 @@ func TestRestoreRefusesADumpWithCode(t *testing.T) {
 	if _, err := st.DB.ExecContext(ctx, "CREATE FUNCTION evil() RETURNS int LANGUAGE sql AS 'SELECT 1'"); err != nil {
 		t.Fatal(err)
 	}
-	t.Setenv("MIKAN_DATABASE_URL", dsn)
-	t.Setenv("MIKAN_DATA_DIR", dir)
+	t.Setenv("SCILLA_DATABASE_URL", dsn)
+	t.Setenv("SCILLA_DATA_DIR", dir)
 	path := filepath.Join(t.TempDir(), "with-code.dump")
 	if err := databaseCmd(ctx, []string{"backup", path}); err != nil {
 		t.Fatal(err)

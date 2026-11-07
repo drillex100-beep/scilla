@@ -1,11 +1,11 @@
-// Command mikan-telegram is the official bot addon of mikan (getmikan/marketplace, id
+// Command scilla-telegram is the official bot addon of scilla (getmikan/marketplace, id
 // telegram): the subscribers' bot, with the menu, the shop and the notices. It runs next to
 // the panel as an addon of protocol 2 in client mode and sees the panel only through what
 // the host hands it:
 //
-//	MIKAN_PANEL_URL, MIKAN_PANEL_TOKEN  the Panel API: the bot's data (POST /bot/{method})
+//	SCILLA_PANEL_URL, SCILLA_PANEL_TOKEN  the Panel API: the bot's data (POST /bot/{method})
 //	                                     and the feed of events (payment messages, notices)
-//	MIKAN_BOT_API_URL, MIKAN_BOT_TOKEN  the Bot API proxy: the updates and the sends; the
+//	SCILLA_BOT_API_URL, SCILLA_BOT_TOKEN  the Bot API proxy: the updates and the sends; the
 //	                                     panel keeps the real token and the payments
 package main
 
@@ -18,9 +18,9 @@ import (
 	"syscall"
 	"time"
 
-	"mikan/internal/pace"
-	"mikan/internal/panel/tgbot"
-	"mikan/internal/tgapi"
+	"scilla/internal/pace"
+	"scilla/internal/panel/tgbot"
+	"scilla/internal/tgapi"
 )
 
 // version is set at build time (-ldflags -X main.version=...).
@@ -40,14 +40,14 @@ func main() {
 		}
 		return v
 	}
-	panelURL, panelToken := env("MIKAN_PANEL_URL"), env("MIKAN_PANEL_TOKEN")
-	botURL, botToken := env("MIKAN_BOT_API_URL"), env("MIKAN_BOT_TOKEN")
+	panelURL, panelToken := env("SCILLA_PANEL_URL"), env("SCILLA_PANEL_TOKEN")
+	botURL, botToken := env("SCILLA_BOT_API_URL"), env("SCILLA_BOT_TOKEN")
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
-	log.Info("mikan-telegram starting", "version", version)
+	log.Info("scilla-telegram starting", "version", version)
 	a := newAddon(panelURL, panelToken, botURL, botToken, log)
 	a.Run(ctx)
-	log.Info("mikan-telegram stopped")
+	log.Info("scilla-telegram stopped")
 }
 
 // addon is the bot's screens on the panel's data and the Bot API proxy.

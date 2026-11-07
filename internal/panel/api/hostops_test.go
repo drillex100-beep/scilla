@@ -13,14 +13,14 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/hostchan"
-	"mikan/internal/logbuf"
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/auth"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
+	"scilla/internal/hostchan"
+	"scilla/internal/logbuf"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/auth"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
 )
 
 // hostNodes is the nodes as the host operations see them: what each call returns.

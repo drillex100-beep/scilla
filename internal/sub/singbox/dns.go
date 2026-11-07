@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/sub/routing"
+	"scilla/internal/sub/routing"
 )
 
 // dnsOf is the DNS of r as sing-box servers: the first nameserver for everything, a plain

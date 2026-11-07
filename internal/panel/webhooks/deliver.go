@@ -11,10 +11,10 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/pace"
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/pace"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // Delivery follows the push to addons (addons/panelapi/push.go) in everything but the shape
@@ -149,7 +149,7 @@ func (s *Service) Test(ctx context.Context, id int64) (Result, error) {
 	data, err := json.Marshal(struct {
 		EndpointID int64  `json:"endpoint_id"`
 		Message    string `json:"message"`
-	}{id, "A test event from the mikan panel: nothing happened."})
+	}{id, "A test event from the scilla panel: nothing happened."})
 	if err != nil {
 		return Result{}, err
 	}

@@ -127,7 +127,7 @@ export function WebhookDrawer({ target, onClose, onSecret }: { target: Webhook |
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               maxLength={2048}
-              placeholder="https://example.com/mikan-webhook"
+              placeholder="https://example.com/scilla-webhook"
               autoComplete="off"
               autoCapitalize="off"
               spellCheck={false}

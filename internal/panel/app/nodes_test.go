@@ -11,10 +11,10 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodetls"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/tgate"
+	"scilla/internal/nodetls"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/tgate"
 )
 
 // Deleting a node moves what left through it to another enabled remote node, never the
@@ -32,7 +32,7 @@ func TestDeleteNodeInUse(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	panel, _ := nodetls.Generate("mikan-panel", x509.ExtKeyUsageClientAuth, time.Now())
+	panel, _ := nodetls.Generate("scilla-panel", x509.ExtKeyUsageClientAuth, time.Now())
 	b, _, err := domain.AddNode(ctx, h.st, panel, domain.NodeInput{Name: "B", Host: "198.51.100.20", APIPort: 40000}, time.Now())
 	if err != nil {
 		t.Fatal(err)
@@ -111,7 +111,7 @@ func TestSetInboundExits(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	panel, _ := nodetls.Generate("mikan-panel", x509.ExtKeyUsageClientAuth, time.Now())
+	panel, _ := nodetls.Generate("scilla-panel", x509.ExtKeyUsageClientAuth, time.Now())
 	b, _, err := domain.AddNode(ctx, h.st, panel, domain.NodeInput{Name: "B", Host: "198.51.100.20", APIPort: 40000}, time.Now())
 	if err != nil {
 		t.Fatal(err)

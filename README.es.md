@@ -2,15 +2,15 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset=".github/assets/banner-en-dark.svg">
-  <img alt="mikan: panel VPN sobre el núcleo Citrus" src=".github/assets/banner-en-light.svg" width="100%">
+  <img alt="scilla: panel VPN sobre el núcleo Citrus" src=".github/assets/banner-en-light.svg" width="100%">
 </picture>
 
 <br>
 
 **Un panel VPN rápido y bonito sobre el núcleo [Citrus](https://github.com/getmikan/Citrus): se instala con un solo comando y no hay que vigilarlo.**
 
-[![Versión](https://img.shields.io/github/v/release/Miroshka000/mikan?color=f07a2e&label=versión&style=flat-square)](https://github.com/Miroshka000/mikan/releases)
-[![Imagen](https://img.shields.io/badge/ghcr.io-miroshka000%2Fmikan-2b8c9e?style=flat-square&logo=docker&logoColor=white)](https://github.com/Miroshka000/mikan/pkgs/container/mikan)
+[![Versión](https://img.shields.io/github/v/release/Miroshka000/mikan?color=f07a2e&label=versión&style=flat-square)](https://github.com/drillex100-beep/scilla/releases)
+[![Imagen](https://img.shields.io/badge/ghcr.io-miroshka000%2Fmikan-2b8c9e?style=flat-square&logo=docker&logoColor=white)](https://github.com/drillex100-beep/scilla/pkgs/container/scilla)
 [![Licencia](https://img.shields.io/badge/licencia-GPL--3.0-2f9e6b?style=flat-square)](LICENSE)
 [![Citrus](https://img.shields.io/badge/núcleo-Citrus-9e8eff?style=flat-square)](https://github.com/getmikan/Citrus)
 [![Telegram](https://img.shields.io/badge/Telegram-canal-26a5e4?style=flat-square&logo=telegram&logoColor=white)](https://t.me/mikanvpn)
@@ -27,27 +27,27 @@
 En un servidor nuevo con Ubuntu 22.04+ o Debian 12+ (amd64 o arm64):
 
 ```bash
-curl -fsSL https://github.com/Miroshka000/mikan/releases/latest/download/install.sh | sudo bash
+curl -fsSL https://github.com/drillex100-beep/scilla/releases/latest/download/install.sh | sudo bash
 ```
 
-El instalador pregunta el idioma del panel y un dominio opcional, comprueba que el dominio apunte al servidor, instala Docker si hace falta, elige sitios de camuflaje REALITY cerca de tu servidor e imprime tu enlace de administrador. Ejecuta `mikan` de nuevo en cualquier momento para abrir el menú de gestión.
+El instalador pregunta el idioma del panel y un dominio opcional, comprueba que el dominio apunte al servidor, instala Docker si hace falta, elige sitios de camuflaje REALITY cerca de tu servidor e imprime tu enlace de administrador. Ejecuta `scilla` de nuevo en cualquier momento para abrir el menú de gestión.
 
-Para añadir un nodo a un panel existente: la página **Nodos** del panel (o `mikan node add`) te da el comando con su clave:
+Para añadir un nodo a un panel existente: la página **Nodos** del panel (o `scilla node add`) te da el comando con su clave:
 
 ```bash
-curl -fsSL https://github.com/Miroshka000/mikan/releases/latest/download/install.sh | sudo bash -s -- --join KEY
+curl -fsSL https://github.com/drillex100-beep/scilla/releases/latest/download/install.sh | sudo bash -s -- --join KEY
 ```
 
-Sin preguntas, para scripts: `… | sudo bash -s -- --yes --lang en --domain vpn.example.com --email you@example.com` (todos los parámetros: `mikan install --help`).
+Sin preguntas, para scripts: `… | sudo bash -s -- --yes --lang en --domain vpn.example.com --email you@example.com` (todos los parámetros: `scilla install --help`).
 
-## Por qué mikan
+## Por qué scilla
 
 <table>
 <tr>
 <td width="50%" valign="top">
 
 ### 🛡️ Sobrevive a los bloqueos por sí solo
-mikan comprueba si los clientes reales siguen llegando a cada protocolo. Cuando un puerto se bloquea por el camino, mueve el protocolo a un puerto HTTPS libre; cuando un sitio de camuflaje REALITY deja de funcionar, elige uno nuevo cerca de tu servidor.
+scilla comprueba si los clientes reales siguen llegando a cada protocolo. Cuando un puerto se bloquea por el camino, mueve el protocolo a un puerto HTTPS libre; cuando un sitio de camuflaje REALITY deja de funcionar, elige uno nuevo cerca de tu servidor.
 
 </td>
 <td width="50%" valign="top">
@@ -108,12 +108,12 @@ bonificación. Los suscriptores aplican los códigos en la Mini App de Telegram,
 muestra su historial de canjes. El tráfico de bonificación puede ir al saldo principal o a
 un pool elegido. Las facturas con descuento solo están disponibles con métodos de pago que
 admiten reembolsos: Telegram Stars y los adaptadores que declaran soporte de reembolsos.
-Así, Mikan puede devolver un pago si la reserva del código vence antes de que el proveedor
+Así, Scilla puede devolver un pago si la reserva del código vence antes de que el proveedor
 lo confirme.
 
 ## Acceso de soporte
 
-Si necesitas ayuda, tú mismo abres un acceso temporal: Ajustes → Soporte, por 2, 6 o 24 horas, con el nivel «ver», «cambiar» o «terminal». Sin ese botón nadie, ni siquiera los desarrolladores de mikan, entra en el panel: el proyecto no tiene acceso permanente a tus servidores y el panel no se conecta a ningún sitio por sí mismo. Cada acción del operador queda en el registro, el acceso se revoca con un botón y la terminal exige tu contraseña y 2FA y se graba. Para desactivar la función por completo, usa el interruptor de la misma tarjeta o ejecuta `mikan support-access off` en el servidor. Reglas del soporte de pago: [en el sitio](https://miroshka000.github.io/mikan/support/paid/).
+Si necesitas ayuda, tú mismo abres un acceso temporal: Ajustes → Soporte, por 2, 6 o 24 horas, con el nivel «ver», «cambiar» o «terminal». Sin ese botón nadie, ni siquiera los desarrolladores de scilla, entra en el panel: el proyecto no tiene acceso permanente a tus servidores y el panel no se conecta a ningún sitio por sí mismo. Cada acción del operador queda en el registro, el acceso se revoca con un botón y la terminal exige tu contraseña y 2FA y se graba. Para desactivar la función por completo, usa el interruptor de la misma tarjeta o ejecuta `scilla support-access off` en el servidor. Reglas del soporte de pago: [en el sitio](https://drillex100-beep.github.io/scilla/support/paid/).
 
 ## Capturas de pantalla
 
@@ -164,8 +164,8 @@ Diecisiete protocolos, cada uno un preset con las claves generadas por ti. La su
 
 ```mermaid
 flowchart LR
-    A[Browser] -- HTTPS, secret link --> P[mikan panel<br>users · plans · subscriptions]
-    P -- unix socket / pinned TLS --> N1[mikan node<br>Citrus inside]
+    A[Browser] -- HTTPS, secret link --> P[scilla panel<br>users · plans · subscriptions]
+    P -- unix socket / pinned TLS --> N1[scilla node<br>Citrus inside]
     P -- pinned TLS --> N2[remote node]
     C[VPN apps] -- REALITY · QUIC · … --> N1
     C --> N2
@@ -176,25 +176,25 @@ El panel y el nodo son dos procesos de una misma imagen. Actualiza o reinicia el
 
 ## Gestión del servidor
 
-Ejecuta `mikan` para abrir el menú, o usa los comandos directamente:
+Ejecuta `scilla` para abrir el menú, o usa los comandos directamente:
 
 | Comando | Qué hace |
 |---|---|
-| `mikan status` | contenedores, versiones, estado de salud, actualización disponible |
-| `mikan logs [panel\|node]` | registros en vivo |
-| `mikan url` | enlace de administrador |
-| `mikan reset-password` · `reset-path` · `disable-2fa` | recuperar el acceso |
-| `mikan update` | actualizar ahora (copia de seguridad antes, reversión automática) |
-| `mikan backup` · `restore FILE` | copias de seguridad en `/opt/mikan/backups` |
-| `mikan node …` · `mikan inbound …` | nodos y protocolos |
-| `mikan targets scan` · `apply` | sitios de camuflaje REALITY cerca del servidor |
-| `mikan join KEY` | en un nodo: tomar una clave nueva del panel |
-| `mikan restart` | reiniciar los contenedores |
-| `mikan doctor` | revisar el servidor: Docker, puertos, firewall, reloj, DNS, disco |
-| `mikan support CÓDIGO` | enviar el diagnóstico a un ticket de soporte cuando el panel no responde |
-| `mikan support-access on\|off` | permitir o prohibir el acceso de soporte en este servidor |
-| `mikan api-lockdown [status\|off]` | en un nodo: el estado de la regla «API del nodo solo desde la IP del panel», o quitarla de inmediato |
-| `mikan uninstall` | detener y quitar el comando, conservando los datos |
+| `scilla status` | contenedores, versiones, estado de salud, actualización disponible |
+| `scilla logs [panel\|node]` | registros en vivo |
+| `scilla url` | enlace de administrador |
+| `scilla reset-password` · `reset-path` · `disable-2fa` | recuperar el acceso |
+| `scilla update` | actualizar ahora (copia de seguridad antes, reversión automática) |
+| `scilla backup` · `restore FILE` | copias de seguridad en `/opt/scilla/backups` |
+| `scilla node …` · `scilla inbound …` | nodos y protocolos |
+| `scilla targets scan` · `apply` | sitios de camuflaje REALITY cerca del servidor |
+| `scilla join KEY` | en un nodo: tomar una clave nueva del panel |
+| `scilla restart` | reiniciar los contenedores |
+| `scilla doctor` | revisar el servidor: Docker, puertos, firewall, reloj, DNS, disco |
+| `scilla support CÓDIGO` | enviar el diagnóstico a un ticket de soporte cuando el panel no responde |
+| `scilla support-access on\|off` | permitir o prohibir el acceso de soporte en este servidor |
+| `scilla api-lockdown [status\|off]` | en un nodo: el estado de la regla «API del nodo solo desde la IP del panel», o quitarla de inmediato |
+| `scilla uninstall` | detener y quitar el comando, conservando los datos |
 
 ## Actualizaciones
 
@@ -205,9 +205,9 @@ Si estás en la 0.4.4 o anterior, actualiza primero a la 0.4.5; el paso a la 0.5
 ## Compilar desde el código fuente
 
 ```bash
-docker buildx build -t mikan:dev .            # panel + node image
+docker buildx build -t scilla:dev .            # panel + node image
 cd web && pnpm install && pnpm dev            # admin UI with hot reload
-MIKAN_TEST_DATABASE_URL=postgres://… go test ./...   # Go 1.27, a test PostgreSQL 18 and pg_dump
+SCILLA_TEST_DATABASE_URL=postgres://… go test ./...   # Go 1.27, a test PostgreSQL 18 and pg_dump
 cd installer && cargo test                    # the installer (Rust)
 ```
 
@@ -216,21 +216,21 @@ El desarrollo se hace en la rama `dev`; los pull requests hacia `main` se compil
 ## ⛔ Forks y compilaciones de terceros
 
 > [!CAUTION]
-> **El mikan oficial está solo aquí:** el repositorio `Miroshka000/mikan`, la imagen `ghcr.io/miroshka000/mikan` y las versiones firmadas con la clave de mikan. Los complementos oficiales solo vienen del catálogo `getmikan/marketplace`; el registro comunitario `getmikan/marketplace-community` lista complementos de terceros que mikan no revisa ni respalda. Todo lo demás no es mikan, se llame como se llame.
+> **El scilla oficial está solo aquí:** el repositorio `Miroshka000/mikan`, la imagen `ghcr.io/miroshka000/scilla` y las versiones firmadas con la clave de scilla. Los complementos oficiales solo vienen del catálogo `getmikan/marketplace`; el registro comunitario `getmikan/marketplace-community` lista complementos de terceros que scilla no revisa ni respalda. Todo lo demás no es scilla, se llame como se llame.
 >
-> **El proyecto mikan considera potencialmente inseguro todo fork y toda compilación de otras fuentes.**
+> **El proyecto scilla considera potencialmente inseguro todo fork y toda compilación de otras fuentes.**
 >
 > **Las compilaciones oficiales se pueden comprobar.** Cada versión se compila automáticamente a partir del código abierto de este repositorio y se firma, y el panel y el instalador solo aceptan actualizaciones con esa firma. De qué está hecha una compilación ajena solo lo sabe su autor.
 >
-> **Un fork no recibe nuestras actualizaciones.** No puede firmar versiones con la clave de mikan, así que las correcciones de errores y vulnerabilidades no le llegan hasta que su autor las traslade, si es que lo hace.
+> **Un fork no recibe nuestras actualizaciones.** No puede firmar versiones con la clave de scilla, así que las correcciones de errores y vulnerabilidades no le llegan hasta que su autor las traslade, si es que lo hace.
 >
 > **No damos soporte a forks.** No los revisamos y no somos responsables de errores, vulnerabilidades ni pérdida de datos en ellos. Las preguntas sobre compilaciones ajenas no se atienden ni en el chat ni en los issues.
 >
-> **El nombre no forma parte de la licencia.** La GPL v3 cubre el código, no el nombre mikan ni su logotipo (sección 7 de la GPL v3, ver [NOTICE.md](NOTICE.md) y [TRADEMARK.md](TRADEMARK.md)). Un fork debe usar otro nombre y no hacerse pasar por mikan.
+> **El nombre no forma parte de la licencia.** La GPL v3 cubre el código, no el nombre scilla ni su logotipo (sección 7 de la GPL v3, ver [NOTICE.md](NOTICE.md) y [TRADEMARK.md](TRADEMARK.md)). Un fork debe usar otro nombre y no hacerse pasar por scilla.
 
 ## Licencia
 
-mikan es software libre bajo la [GNU GPL v3](LICENSE) con los términos adicionales de [NOTICE.md](NOTICE.md): conservar la atribución, no hacer pasar una versión modificada por la original, sin derechos sobre el nombre y el logotipo. Copyright (C) 2026 Miroshka and Mikan. Incluye [Citrus](https://github.com/getmikan/Citrus), fork de [mihomo](https://github.com/MetaCubeX/mihomo), (GPL-3.0) y adapta partes de [3x-ui](https://github.com/MHSanaei/3x-ui) (GPL-3.0). Fuentes: Unbounded, Onest, JetBrains Mono (SIL OFL 1.1).
+scilla es software libre bajo la [GNU GPL v3](LICENSE) con los términos adicionales de [NOTICE.md](NOTICE.md): conservar la atribución, no hacer pasar una versión modificada por la original, sin derechos sobre el nombre y el logotipo. Copyright (C) 2026 Miroshka and Scilla. Incluye [Citrus](https://github.com/getmikan/Citrus), fork de [mihomo](https://github.com/MetaCubeX/mihomo), (GPL-3.0) y adapta partes de [3x-ui](https://github.com/MHSanaei/3x-ui) (GPL-3.0). Fuentes: Unbounded, Onest, JetBrains Mono (SIL OFL 1.1).
 
 <div align="center">
 <sub>Hecho con 🍊</sub>

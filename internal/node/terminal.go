@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/hostchan"
-	"mikan/internal/nodeapi"
+	"scilla/internal/hostchan"
+	"scilla/internal/nodeapi"
 )
 
 // The support terminal of a node's server: the panel opens the stream, this passes it to the
@@ -18,7 +18,7 @@ import (
 // that only the panel reaches it (the API's own access), a request of the right shape, and
 // that the stream is closed when either side goes.
 
-// terminalHandler is POST /v1/terminal with Upgrade: mikan-terminal; the grant, target and
+// terminalHandler is POST /v1/terminal with Upgrade: scilla-terminal; the grant, target and
 // the end of the grant (unix seconds) are in the query.
 func terminalHandler(e *Engine) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -40,7 +40,7 @@ func terminalHandler(e *Engine) http.HandlerFunc {
 			writeJSON(w, http.StatusConflict, nodeapi.Error{Code: nodeapi.CodeTerminalBusy, Message: "a terminal session is open on this server"})
 			return
 		case errors.Is(err, hostchan.ErrTerminalTimeout):
-			writeJSON(w, http.StatusGatewayTimeout, nodeapi.Error{Code: nodeapi.CodeTerminalTimeout, Message: "the host did not answer: run mikan update on the server"})
+			writeJSON(w, http.StatusGatewayTimeout, nodeapi.Error{Code: nodeapi.CodeTerminalTimeout, Message: "the host did not answer: run scilla update on the server"})
 			return
 		case errors.Is(err, hostchan.ErrUnavailable):
 			writeJSON(w, http.StatusConflict, nodeapi.Error{Code: nodeapi.CodeHostUnavailable, Message: "this node has no directory its host watches"})

@@ -10,10 +10,10 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/nodeupdate"
-	"mikan/internal/panel/store"
-	"mikan/internal/release"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/nodeupdate"
+	"scilla/internal/panel/store"
+	"scilla/internal/release"
 )
 
 func (h *handlers) registerNodeUpdates() {

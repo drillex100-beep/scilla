@@ -15,9 +15,9 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/acme"
-	"mikan/internal/panel/settings"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/acme"
+	"scilla/internal/panel/settings"
+	"scilla/internal/tgapi"
 )
 
 // fakeDiscord records the posts and answers with err.

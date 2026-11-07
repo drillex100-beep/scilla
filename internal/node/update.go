@@ -7,13 +7,13 @@ import (
 	"os"
 	"path/filepath"
 
-	"mikan/internal/fsutil"
-	"mikan/internal/nodeapi"
-	"mikan/internal/release"
+	"scilla/internal/fsutil"
+	"scilla/internal/nodeapi"
+	"scilla/internal/release"
 )
 
 // The node meets the updater on its server through files in its data directory, which the
-// server sees as /opt/mikan/data/node/update (a path unit there starts `mikan update
+// server sees as /opt/scilla/data/node/update (a path unit there starts `scilla update
 // --requested` when the request appears):
 //
 //	update/request      the node writes {"version": "X"} for the panel's Update button; the

@@ -7,12 +7,12 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/hysteresis"
-	"mikan/internal/panel/nodesync"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/hysteresis"
+	"scilla/internal/panel/nodesync"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 type warpRuntime struct {

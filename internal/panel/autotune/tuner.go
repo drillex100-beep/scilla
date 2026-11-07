@@ -9,17 +9,17 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/pace"
-	"mikan/internal/panel/audit"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/nodesync"
-	"mikan/internal/panel/presets"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/proto"
-	"mikan/internal/scan"
+	"scilla/internal/nodeapi"
+	"scilla/internal/pace"
+	"scilla/internal/panel/audit"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/nodesync"
+	"scilla/internal/panel/presets"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/proto"
+	"scilla/internal/scan"
 )
 
 // Nodes is what the tuner needs from the running nodes (nodesync.Manager).

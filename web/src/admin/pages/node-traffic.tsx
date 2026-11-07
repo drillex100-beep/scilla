@@ -36,7 +36,7 @@ export function NodeTrafficDrawer({ node, onClose }: { node: { id: number; name:
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex gap-4 text-[13px] text-[var(--ink-600)]">
             <span className="inline-flex items-center gap-2">
-              <i className="h-2 w-2 rounded-full bg-[var(--mikan-500)]" /> {t("chart.down")}
+              <i className="h-2 w-2 rounded-full bg-[var(--scilla-500)]" /> {t("chart.down")}
             </span>
             <span className="inline-flex items-center gap-2">
               <i className="h-2 w-2 rounded-full bg-[var(--lagoon-500)]" /> {t("chart.up")}

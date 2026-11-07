@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/store/db"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/tgapi"
 )
 
 func (e *env) link(tg int64) {

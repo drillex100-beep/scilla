@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store/db"
 )
 
 // The tables keyed by (user_id, time) are read and pruned by time alone: the primary key

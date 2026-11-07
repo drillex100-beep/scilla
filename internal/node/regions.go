@@ -13,7 +13,7 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 // What the sites themselves make of the node's address: a geo base says where an IP is, a
@@ -100,7 +100,7 @@ func notIn(phrases ...string) func(r regionReply) (bool, bool) {
 
 var regionChecks = []regionCheck{
 	{id: "google", url: "https://www.google.com/", country: first(regexp.MustCompile(`"MgUcDb":"([A-Z]{2})"`))},
-	{id: "google_search", url: "https://www.google.com/search?q=mikan", access: func(r regionReply) (bool, bool) {
+	{id: "google_search", url: "https://www.google.com/search?q=scilla", access: func(r regionReply) (bool, bool) {
 		if r.status == http.StatusTooManyRequests || (r.final != nil && strings.HasPrefix(r.final.Path, "/sorry")) {
 			return false, true
 		}
@@ -120,7 +120,7 @@ var regionChecks = []regionCheck{
 	{id: "tiktok", url: "https://www.tiktok.com/", country: first(regexp.MustCompile(`"region":"([A-Z]{2})"`))},
 	{id: "ookla", url: "https://www.speedtest.net/api/js/config-sdk", country: jsonField("location", "countryCode")},
 	{id: "jetbrains", url: "https://data.services.jetbrains.com/geo", country: jsonField("code")},
-	{id: "bing", url: "https://www.bing.com/search?q=mikan", country: first(regexp.MustCompile(`Region:"([A-Z]{2})"`))},
+	{id: "bing", url: "https://www.bing.com/search?q=scilla", country: first(regexp.MustCompile(`Region:"([A-Z]{2})"`))},
 	{id: "reddit", url: "https://www.reddit.com/", access: func(r regionReply) (bool, bool) {
 		switch r.status {
 		case http.StatusOK:

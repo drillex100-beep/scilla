@@ -13,9 +13,9 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/nodehello"
-	"mikan/internal/nodetls"
-	"mikan/internal/panel/auth"
+	"scilla/internal/nodehello"
+	"scilla/internal/nodetls"
+	"scilla/internal/panel/auth"
 )
 
 // Node is a node of the panel as a hello needs it.

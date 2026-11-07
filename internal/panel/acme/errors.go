@@ -12,9 +12,9 @@ import (
 	legoacme "github.com/go-acme/lego/v4/acme"
 	"github.com/go-acme/lego/v4/acme/api"
 
-	"mikan/internal/acmechallenge"
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/dnscheck"
+	"scilla/internal/acmechallenge"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/dnscheck"
 )
 
 // Problem is why a certificate was not issued, as the admin panel tells it: a code it

@@ -8,7 +8,7 @@ import (
 	"sync"
 	"unicode"
 
-	"mikan/internal/sub/model"
+	"scilla/internal/sub/model"
 )
 
 // The admin's own Clash rules: one per line, TYPE,VALUE,TARGET with no-resolve where mihomo

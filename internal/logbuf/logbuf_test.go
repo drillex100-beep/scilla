@@ -20,7 +20,7 @@ func TestRedactCutsSecrets(t *testing.T) {
 		{"bearer in text", "got bearer " + tok + " from 1.2.3.4", tok, "1.2.3.4"},
 		{"token field", `msg="login" token=` + tok + ` ip=1.2.3.4`, tok, "ip=1.2.3.4"},
 		{"quoted password", `err="bad" password="hunter 2 hunter" user=root`, "hunter", "user=root"},
-		{"cookie", "cookie=mikan_session=" + tok, tok, "cookie="},
+		{"cookie", "cookie=scilla_session=" + tok, tok, "cookie="},
 		{"secret in JSON", `{"api_key":"` + tok + `","name":"x"}`, tok, `"name":"x"`},
 		{"JSON in a slog value", `body="{\"token\":\"` + tok + `\"}"`, tok, "body="},
 		{"vless link", "link vless://2f1b9f0e-1111-4222-8333-444455556666@host:443?security=reality&pbk=" + tok + "#name", tok, "link vless://"},
@@ -32,7 +32,7 @@ func TestRedactCutsSecrets(t *testing.T) {
 		{"admin path", "request path=/" + tok + "/api/v1/users", tok, "/api/v1/users"},
 		{"wireguard key", "warp private " + strings.Repeat("A", 43) + "= done", strings.Repeat("A", 43), "done"},
 		{"jwt", "id_token eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dBjftJeZ4CVPmB92K27uhbUJU1p1r_wW1gFWFOEjXk x", "eyJzdWIi", "x"},
-		{"bare key", "fix: mikan join eyAbCdEfGhIjKlMnOpQrStUvWxYz0123456789_-AbCdEfGhIjKl now", "AbCdEfGhIjKl", "fix: mikan join"},
+		{"bare key", "fix: scilla join eyAbCdEfGhIjKlMnOpQrStUvWxYz0123456789_-AbCdEfGhIjKl now", "AbCdEfGhIjKl", "fix: scilla join"},
 		{"private key", "key -----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASC\n-----END PRIVATE KEY----- end", "MIIEvQ", " end"},
 	}
 	for _, c := range cases {
@@ -50,11 +50,11 @@ func TestRedactCutsSecrets(t *testing.T) {
 func TestRedactLeavesOrdinaryLines(t *testing.T) {
 	for _, line := range []string{
 		`time=2026-10-14T10:00:00Z level=INFO msg="panel started" listen=0.0.0.0:21355 tls=true version=0.5.1.1`,
-		"msg=update unit=mikan-update-request.service path=/opt/mikan/data/panel/update/request",
-		"image ghcr.io/miroshka000/mikan-panel:0.5.1.0 pulled",
+		"msg=update unit=scilla-update-request.service path=/opt/scilla/data/panel/update/request",
+		"image ghcr.io/drillex100-beep/scilla-panel:0.5.1.0 pulled",
 		"node 4 health ok users=120 inbounds=3",
-		"image ghcr.io/miroshka000/mikan-panel@sha256:0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c4b5a69788796a5b4c3d2e1f0 runs",
-		"unit mikan-update-request-and-a-very-long-name-of-letters-only started",
+		"image ghcr.io/drillex100-beep/scilla-panel@sha256:0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c4b5a69788796a5b4c3d2e1f0 runs",
+		"unit scilla-update-request-and-a-very-long-name-of-letters-only started",
 	} {
 		if got := Redact(line); got != line {
 			t.Errorf("changed an ordinary line:\n%s\n%s", line, got)
@@ -88,7 +88,7 @@ func TestRedactPeople(t *testing.T) {
 	}
 	for _, line := range []string{
 		`time=2026-10-14T10:00:00.123Z level=INFO msg="panel started" listen=0.0.0.0:21355 version=0.5.1.1`,
-		"msg=update unit=mikan-update-request.service path=/opt/mikan/data/panel/update/request",
+		"msg=update unit=scilla-update-request.service path=/opt/scilla/data/panel/update/request",
 		"node 4 health ok users=120 inbounds=3 description=fine",
 	} {
 		if got := RedactPeople(line); got != line {

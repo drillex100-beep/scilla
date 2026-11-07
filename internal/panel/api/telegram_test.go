@@ -12,13 +12,13 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/botpanel"
-	"mikan/internal/panel/infraalerts"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
-	"mikan/internal/panel/tgate"
-	"mikan/internal/panel/tgbot"
+	"scilla/internal/panel/botpanel"
+	"scilla/internal/panel/infraalerts"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
+	"scilla/internal/panel/tgate"
+	"scilla/internal/panel/tgbot"
 )
 
 // fakeDiscordCheck answers a webhook check with name or err.

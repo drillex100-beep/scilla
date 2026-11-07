@@ -15,16 +15,16 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/netaddr"
-	"mikan/internal/panel/addons/panelapi"
-	"mikan/internal/panel/botpanel"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/infraalerts"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/tgate"
-	"mikan/internal/panel/tgbot"
-	"mikan/internal/tgapi"
+	"scilla/internal/netaddr"
+	"scilla/internal/panel/addons/panelapi"
+	"scilla/internal/panel/botpanel"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/infraalerts"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/tgate"
+	"scilla/internal/panel/tgbot"
+	"scilla/internal/tgapi"
 )
 
 // TelegramView is the bot as the admin panel shows it. The token itself never leaves

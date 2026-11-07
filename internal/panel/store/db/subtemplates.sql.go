@@ -178,7 +178,7 @@ func (q *Queries) ListSubTemplates(ctx context.Context) ([]SubTemplate, error) {
 }
 
 const lockSubTemplates = `-- name: LockSubTemplates :exec
-SELECT pg_advisory_xact_lock(hashtextextended('mikan-sub-templates', 0))
+SELECT pg_advisory_xact_lock(hashtextextended('scilla-sub-templates', 0))
 `
 
 // Serialises what changes the templates or the rules that name them: the count per core

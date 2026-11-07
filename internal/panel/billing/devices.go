@@ -5,10 +5,10 @@ import (
 	"database/sql"
 	"errors"
 
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/secure"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/secure"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // Extra devices: the owner of a subscription buys one more place in the bot or the Mini

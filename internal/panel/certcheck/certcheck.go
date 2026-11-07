@@ -24,9 +24,9 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/acmechallenge"
-	"mikan/internal/panel/acme"
-	"mikan/internal/panel/dnscheck"
+	"scilla/internal/acmechallenge"
+	"scilla/internal/panel/acme"
+	"scilla/internal/panel/dnscheck"
 )
 
 // The outcomes of a check: ok, info (worth knowing, nothing broken), warn (works, but not

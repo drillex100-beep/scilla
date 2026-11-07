@@ -11,8 +11,8 @@ import (
 	"net"
 	"strings"
 
-	"mikan/internal/panel/secure"
-	"mikan/internal/proto"
+	"scilla/internal/panel/secure"
+	"scilla/internal/proto"
 )
 
 type Info struct {
@@ -52,7 +52,7 @@ const PresetPQ = "vless_reality_xhttp_pq"
 const PresetGecko = "hysteria2_gecko"
 
 // PresetTLSXHTTP and PresetTLSVision are VLESS on plain TLS with the node certificate
-// (mikan.tls: node): on the panel's node with a domain it is the panel's public one, so a
+// (scilla.tls: node): on the panel's node with a domain it is the panel's public one, so a
 // probe sees the same site as on the panel's port; on a node with an own certificate,
 // that one; otherwise a self-signed one, pinned in links.
 const (
@@ -131,25 +131,25 @@ func NewConfig(id, dest string) (string, error) {
 		t = proto.Template{"type": "vless", "xhttp-config": map[string]any{"path": randomPath(), "mode": "stream-one"},
 			"decryption": proto.VLESSEncMethod + ".native.600s." + key}
 	case "vless_reality_vision":
-		t = proto.Template{"type": "vless", "mikan": map[string]any{"flow": "xtls-rprx-vision"}}
+		t = proto.Template{"type": "vless", "scilla": map[string]any{"flow": "xtls-rprx-vision"}}
 	case "vless_reality_grpc":
 		t = proto.Template{"type": "vless", "grpc-service-name": strings.ToLower(secure.Token(8))}
 	case "trojan_reality":
 		t = proto.Template{"type": "trojan"}
 	case PresetTLSXHTTP:
 		return proto.Marshal(proto.Template{"type": "vless", "xhttp-config": map[string]any{"path": randomPath(), "mode": "stream-one"},
-			"mikan": map[string]any{"tls": "node"}}), nil
+			"scilla": map[string]any{"tls": "node"}}), nil
 	case PresetTLSVision:
-		return proto.Marshal(proto.Template{"type": "vless", "mikan": map[string]any{"flow": "xtls-rprx-vision", "tls": "node"}}), nil
+		return proto.Marshal(proto.Template{"type": "vless", "scilla": map[string]any{"flow": "xtls-rprx-vision", "tls": "node"}}), nil
 	case PresetTLSWS:
-		return proto.Marshal(proto.Template{"type": "vless", "ws-path": randomPath(), "mikan": map[string]any{"tls": "node"}}), nil
+		return proto.Marshal(proto.Template{"type": "vless", "ws-path": randomPath(), "scilla": map[string]any{"tls": "node"}}), nil
 	case PresetCDNXHTTP:
 		return proto.Marshal(proto.Template{"type": "vless", "xhttp-config": map[string]any{"path": randomPath(), "mode": "packet-up"},
-			"mikan": map[string]any{"tls": "node"}}), nil
+			"scilla": map[string]any{"tls": "node"}}), nil
 	case PresetCDNGet:
 		return proto.Marshal(proto.Template{"type": "vless", "xhttp-config": map[string]any{"path": randomPath(), "mode": "packet-up",
 			"uplink-http-method": "GET", "uplink-data-placement": "header", "uplink-data-key": "X-Data"},
-			"mikan": map[string]any{"tls": "node"}}), nil
+			"scilla": map[string]any{"tls": "node"}}), nil
 	case "hysteria2":
 		return proto.Marshal(proto.Template{"type": "hysteria2", "alpn": []any{"h3"}, "obfs": proto.ObfsSalamander, "obfs-password": secure.Token(24)}), nil
 	case PresetGecko:

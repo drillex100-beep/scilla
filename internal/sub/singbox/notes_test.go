@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/sub/model"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/subtest"
+	"scilla/internal/sub/model"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/subtest"
 )
 
 // The preview of an own Clash profile is told what sing-box makes of its groups: a

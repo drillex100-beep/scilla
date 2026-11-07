@@ -11,9 +11,9 @@ import { reference } from './integrations/reference.mjs';
 // these groups stand, and src/starlightRoute.ts shows a page the one of its own language.
 const referenceGroup = { ru: createOpenAPISidebarGroup(), en: createOpenAPISidebarGroup() };
 
-// GitHub Pages serves the project at miroshka000.github.io/mikan/. Links inside the docs are
-// written with the base (/mikan/...), and the link validator checks them on every build.
-const base = '/mikan';
+// GitHub Pages serves the project at drillex100-beep.github.io/scilla/. Links inside the docs are
+// written with the base (/scilla/...), and the link validator checks them on every build.
+const base = '/scilla';
 
 export default defineConfig({
 	site: 'https://miroshka000.github.io',
@@ -24,7 +24,7 @@ export default defineConfig({
 		// Before Starlight: the reference reads the specs this writes.
 		openapi(),
 		starlight({
-			title: 'mikan',
+			title: 'scilla',
 			description:
 				'VPN-панель на ядре mihomo: установка одной командой, ноды и каскады, Telegram-бот с оплатой. Свободная, GPL-3.0.',
 			logo: { src: './src/assets/logo.webp', alt: '' },
@@ -34,7 +34,7 @@ export default defineConfig({
 				root: { label: 'Русский', lang: 'ru' },
 				en: { label: 'English', lang: 'en' },
 			},
-			editLink: { baseUrl: 'https://github.com/Miroshka000/mikan/edit/dev/site/' },
+			editLink: { baseUrl: 'https://github.com/drillex100-beep/scilla/edit/dev/site/' },
 			lastUpdated: false,
 			credits: false,
 			routeMiddleware: './src/starlightRoute.ts',

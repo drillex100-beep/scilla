@@ -56,9 +56,9 @@ const pairs = [
   ["--ink-500", "--bg", 4.5],
   ["--ink-400", "--surface-solid", 3],
   ["--on-fill", "--fill", 4.5],
-  ["--mikan-700", "--surface-solid", 4.5],
-  // The focus ring and the active icons; --mikan-500 fills bars that always have a number beside them.
-  ["--mikan-600", "--surface-solid", 3],
+  ["--scilla-700", "--surface-solid", 4.5],
+  // The focus ring and the active icons; --scilla-500 fills bars that always have a number beside them.
+  ["--scilla-600", "--surface-solid", 3],
   ["--leaf-700", "--leaf-50", 4.5],
   ["--honey-600", "--honey-50", 4.5],
   ["--berry-600", "--berry-50", 4.5],
@@ -69,7 +69,7 @@ const pairs = [
 
 let failed = 0;
 const rows = [];
-for (const name of ["mikan", ...themes]) {
+for (const name of ["scilla", ...themes]) {
   const tokens = { ...light, ...(darkThemes.has(name) ? dark : {}), ...block(`[data-theme="${name}"]`) };
   let worst = Infinity;
   for (const [fg, bg, min] of pairs) {

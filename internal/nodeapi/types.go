@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/proto"
-	"mikan/internal/scan"
-	"mikan/internal/textutil"
+	"scilla/internal/proto"
+	"scilla/internal/scan"
+	"scilla/internal/textutil"
 )
 
 // DesiredState is the complete configuration of a node. Applying the same state twice
@@ -42,7 +42,7 @@ type DesiredState struct {
 	// DNS is how the node names the sites users reach (ExitDNS); nil: as before it, the
 	// address the user's device sent and the host's resolver. Nodes older than it ignore it.
 	DNS *ExitDNS `json:"dns,omitempty"`
-	// HTTPRedirect: the node holds port 80 (or MIKAN_ACME_LISTEN) for good and answers plain
+	// HTTPRedirect: the node holds port 80 (or SCILLA_ACME_LISTEN) for good and answers plain
 	// HTTP with 301 to https, the ACME challenges as before. Nodes older than it ignore it.
 	HTTPRedirect bool `json:"http_redirect,omitempty"`
 	// Detail: the node sums each slot's bytes by site (Counters.Sites). Off by default;
@@ -490,7 +490,7 @@ type WarpStatus struct {
 
 // RelayListener names the relay's listener. It cannot clash with an inbound: their
 // names are [a-z0-9-].
-const RelayListener = "mikan~relay"
+const RelayListener = "scilla~relay"
 
 // Relay is a node's door for other nodes of the panel: a VLESS REALITY listener with a
 // key per source node. Its connections carry no subscriber, so they pass the per-user

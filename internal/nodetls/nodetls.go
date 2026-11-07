@@ -26,7 +26,7 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/fsutil"
+	"scilla/internal/fsutil"
 )
 
 // Pair is a certificate with its private key, both PEM.
@@ -98,7 +98,7 @@ func LoadOrCreate(dir string, now time.Time) (Pair, error) {
 		}
 		return Pair{CertPEM: string(c), KeyPEM: string(k)}, nil
 	}
-	p, err := Generate("mikan-panel", x509.ExtKeyUsageClientAuth, now)
+	p, err := Generate("scilla-panel", x509.ExtKeyUsageClientAuth, now)
 	if err != nil {
 		return Pair{}, err
 	}
@@ -129,7 +129,7 @@ type Key struct {
 	Host string `json:"host,omitempty"`
 }
 
-const keyPrefix = "mikan1."
+const keyPrefix = "scilla1."
 
 // Encode renders the join key as one shell-safe word.
 func (k Key) Encode() (string, error) {
@@ -145,7 +145,7 @@ func DecodeKey(s string) (Key, error) {
 	var k Key
 	body, ok := strings.CutPrefix(strings.TrimSpace(s), keyPrefix)
 	if !ok {
-		return k, errors.New("not a mikan node key")
+		return k, errors.New("not a scilla node key")
 	}
 	raw, err := base64.RawURLEncoding.DecodeString(body)
 	if err != nil {

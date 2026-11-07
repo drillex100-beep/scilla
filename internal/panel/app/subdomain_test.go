@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"mikan/internal/panel/tlscert"
+	"scilla/internal/panel/tlscert"
 )
 
 // The subscription domain leads to the subscriptions alone: the admin panel stays on the

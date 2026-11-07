@@ -3,7 +3,7 @@ package build
 import (
 	"sync"
 
-	"mikan/internal/proto"
+	"scilla/internal/proto"
 )
 
 // A subscription is fetched by every app every hour or so, and each fetch reads every

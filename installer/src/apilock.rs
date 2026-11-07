@@ -8,11 +8,11 @@
 //!                                  the node wants; "allow": null takes it away
 //!   data/node/apilock/seen         {"at": <unix seconds>}: when the panel last reached the API
 //!   data/node/apilock/status.json  written here: whether the rule is in, and why not
-//!   data/node/apilock/lifted       written by `mikan api-lockdown off`: the node opens its
+//!   data/node/apilock/lifted       written by `scilla api-lockdown off`: the node opens its
 //!                                  listener too
-//!   /opt/mikan/apilock.json        the host's own copy of what the node asked for
+//!   /opt/scilla/apilock.json        the host's own copy of what the node asked for
 //!
-//! The rule is an nftables table of its own (inet mikan_api) that drops TCP to NODE_API_PORT
+//! The rule is an nftables table of its own (inet scilla_api) that drops TCP to NODE_API_PORT
 //! from anywhere but the networks asked for and loopback; it changes nothing else of the
 //! firewall, and ufw's rules still apply to what it lets through. Lockout protection: the
 //! rule stays only while the panel keeps coming. When it has not reached the node for
@@ -38,7 +38,7 @@ use crate::system::Level;
 use crate::{DIR, clock, hostreq};
 
 /// The nftables table of the rule.
-pub const TABLE: &str = "mikan_api";
+pub const TABLE: &str = "scilla_api";
 
 /// How long the panel may stay away before the rule goes (nodeapi.APILockStale).
 pub const STALE_SECS: i64 = 15 * 60;
@@ -56,7 +56,7 @@ const LIMIT: u64 = 16 << 10;
 const STATE: &str = "apilock.json";
 
 /// Takes the table away, and is harmless when there is none: nft creates it first.
-const REMOVE: &str = "table inet mikan_api {}\ndelete table inet mikan_api\n";
+const REMOVE: &str = "table inet scilla_api {}\ndelete table inet scilla_api\n";
 
 /// A network of the rule: an address and how many of its bits count, the rest cleared.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
@@ -245,7 +245,7 @@ fn reconcile(st: &mut State, seen: Option<i64>, port: Option<u16>, now: i64, fw:
         return (status, change);
     }
     if hold {
-        fail(&mut status, st, "NODE_API_PORT is not set in /opt/mikan/config.json".into());
+        fail(&mut status, st, "NODE_API_PORT is not set in /opt/scilla/config.json".into());
     } else {
         st.error.clear();
         status.lifted = wanted.is_some();
@@ -281,7 +281,7 @@ fn seen(dir: &Dir) -> Option<i64> {
     dir.read("seen", LIMIT).ok().flatten().and_then(|d| seen_at(&d))
 }
 
-/// `mikan api-lockdown --requested` (the apilock path unit and its timer): takes the node's
+/// `scilla api-lockdown --requested` (the apilock path unit and its timer): takes the node's
 /// request when there is one and brings the firewall in line.
 pub fn requested() -> Result<()> {
     let install = Install::load()?;
@@ -329,7 +329,7 @@ fn say(change: &Change, st: &State) {
     }
 }
 
-/// `mikan api-lockdown off`: the escape hatch on the node's server. The rule goes at once and
+/// `scilla api-lockdown off`: the escape hatch on the node's server. The rule goes at once and
 /// the node stops refusing within seconds; the rule comes back when the panel reaches the
 /// node with the setting still on.
 pub fn off() -> Result<()> {
@@ -356,7 +356,7 @@ pub fn off() -> Result<()> {
     Ok(())
 }
 
-/// `mikan api-lockdown` and `mikan api-lockdown status`.
+/// `scilla api-lockdown` and `scilla api-lockdown status`.
 pub fn show() -> Result<()> {
     let install = Install::load()?;
     if !install.node {
@@ -370,7 +370,7 @@ pub fn show() -> Result<()> {
     Ok(())
 }
 
-/// The state of the rule in words, for `mikan doctor` and `mikan api-lockdown status`.
+/// The state of the rule in words, for `scilla doctor` and `scilla api-lockdown status`.
 pub struct Report {
     pub level: Level,
     pub detail: String,
@@ -395,7 +395,7 @@ fn describe(st: &State, seen: Option<i64>, port: Option<u16>, now: i64, present:
             return Report {
                 level: Level::Warn,
                 detail: format!("off, but a rule of before still holds {port}"),
-                fix: Some("mikan api-lockdown off".into()),
+                fix: Some("scilla api-lockdown off".into()),
             };
         }
         return Report {
@@ -412,7 +412,7 @@ fn describe(st: &State, seen: Option<i64>, port: Option<u16>, now: i64, present:
         };
     }
     if !present {
-        let fix = if st.error.contains("not installed") { "apt install nftables" } else { "journalctl -u mikan-apilock -n 20" };
+        let fix = if st.error.contains("not installed") { "apt install nftables" } else { "journalctl -u scilla-apilock -n 20" };
         let why = if st.error.is_empty() { "the rule is not in the firewall yet".to_owned() } else { st.error.clone() };
         return Report {
             level: Level::Warn,
@@ -427,7 +427,7 @@ fn describe(st: &State, seen: Option<i64>, port: Option<u16>, now: i64, present:
     }
 }
 
-/// Takes the rule away for good (`mikan uninstall`).
+/// Takes the rule away for good (`scilla uninstall`).
 pub fn remove() {
     let mut fw = Nft;
     if fw.present() {
@@ -522,7 +522,7 @@ mod tests {
     #[test]
     fn the_rule_drops_the_port_from_anywhere_but_the_panel() {
         let s = render(25305, &nets(&["203.0.113.5", "2001:db8::/32"]));
-        assert!(s.starts_with("table inet mikan_api {}\ndelete table inet mikan_api\ntable inet mikan_api {\n"), "{s}");
+        assert!(s.starts_with("table inet scilla_api {}\ndelete table inet scilla_api\ntable inet scilla_api {\n"), "{s}");
         assert!(s.contains("type filter hook input priority -10; policy accept;"));
         let rules: Vec<&str> = s.lines().map(str::trim).filter(|l| l.starts_with("tcp dport")).collect();
         assert_eq!(
@@ -614,7 +614,7 @@ mod tests {
         let now = 1_800_000_000;
         let off = State::default();
         assert_eq!(describe(&off, None, Some(25305), now, false).level, Level::Ok);
-        assert_eq!(describe(&off, None, Some(25305), now, true).fix.as_deref(), Some("mikan api-lockdown off"));
+        assert_eq!(describe(&off, None, Some(25305), now, true).fix.as_deref(), Some("scilla api-lockdown off"));
         let on = State { allow: Some(vec!["203.0.113.5/32".into(), "198.51.100.0/24".into()]), ..State::default() };
         let r = describe(&on, Some(now - 120), Some(25305), now, true);
         assert!(

@@ -12,8 +12,8 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/tlscert"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/tlscert"
 )
 
 // A public certificate for each remote node, for its protocols on TLS (Hysteria2, TUIC,
@@ -289,7 +289,7 @@ func (n *Nodes) attemptOnce(ctx context.Context, t NodeTarget) {
 
 // probeToken is a token no CA hands out: the panel takes it off the node to learn whether
 // the node answers and knows the challenge endpoint, before the CA gets an order.
-const probeToken = "mikan-probe-0000000000000000"
+const probeToken = "scilla-probe-0000000000000000"
 
 // ensure orders the node's certificate when it has none valid for its host, from the CA
 // chosen, or when it is due for renewal. It returns when to look again.

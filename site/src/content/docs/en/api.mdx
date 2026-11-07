@@ -3,7 +3,7 @@ title: API
 description: The panel's REST API, keys with "Read" and "Full access" scopes, the methods reference, the OpenAPI file, SDKs and request examples.
 ---
 
-The panel has a REST API for bots, billing and monitoring. All the methods with their parameters and answers are in the [reference](/mikan/en/api/reference/) on this site, and the same reference is built into the panel itself. Guides: [create a user](/mikan/en/api/create-user/), [your own bot](/mikan/en/api/own-bot/), [SDK](/mikan/en/api/sdk/), [webhooks](/mikan/en/api/webhooks/), [stability and changes](/mikan/en/api/stability/).
+The panel has a REST API for bots, billing and monitoring. All the methods with their parameters and answers are in the [reference](/scilla/en/api/reference/) on this site, and the same reference is built into the panel itself. Guides: [create a user](/scilla/en/api/create-user/), [your own bot](/scilla/en/api/own-bot/), [SDK](/scilla/en/api/sdk/), [webhooks](/scilla/en/api/webhooks/), [stability and changes](/scilla/en/api/stability/).
 
 ## Where the documentation is
 
@@ -11,13 +11,13 @@ The panel has a REST API for bots, billing and monitoring. All the methods with 
 The methods reference on this site and the guides are new in 0.5.2.1, and so are the SDKs and webhooks.
 :::
 
-The methods reference: [all API methods](/mikan/en/api/reference/). Every method has its parameters, request body, answers and examples, and it says which key it needs.
+The methods reference: [all API methods](/scilla/en/api/reference/). Every method has its parameters, request body, answers and examples, and it says which key it needs.
 
 In the panel itself: **Settings → Security → API → Open**. The page has:
 
 - the API address and keys;
 - a list of all methods with parameters, responses and curl examples, and a "Try it" button for GET requests;
-- "Download OpenAPI": a `mikan-openapi.json` file with your panel's address already filled in. It works with Postman, Insomnia, Swagger UI and client generators.
+- "Download OpenAPI": a `scilla-openapi.json` file with your panel's address already filled in. It works with Postman, Insomnia, Swagger UI and client generators.
 
 :::caution
 The downloaded file contains your panel's secret path. Do not publish it.
@@ -34,7 +34,7 @@ On the API page, the **New key** button:
 - **Expires**: when I revoke it, 30, 90 or 365 days.
 - The administrator password and the 2FA code, if it is on.
 
-The key is shown once, and the panel keeps only its hash. Keys are created and revoked only from the panel, not through the API. When the password changes, you can revoke the administrator's keys with a checkbox, and `mikan reset-password` always revokes them.
+The key is shown once, and the panel keeps only its hash. Keys are created and revoked only from the panel, not through the API. When the password changes, you can revoke the administrator's keys with a checkbox, and `scilla reset-password` always revokes them.
 
 | Access | What it allows |
 |---|---|
@@ -72,7 +72,7 @@ curl -X POST "$BASE/users" \
   -d '{"name": "Anna", "tariff_id": 2, "contact": "@anna"}'
 ```
 
-The response has the user with an `id` and the subscription link `sub_url`. More in [Create a user with a key](/mikan/en/api/create-user/).
+The response has the user with an `id` and the subscription link `sub_url`. More in [Create a user with a key](/scilla/en/api/create-user/).
 
 Extend by 30 days or by a month (one of the two is required):
 
@@ -92,13 +92,13 @@ curl -X POST "$BASE/users/42/grants" \
 
 ## All methods
 
-The list of methods is not kept by hand: the reference is built at every build of the site from the file `web/src/api/openapi.json`, which the panel exports itself with the `mikan openapi` command. The methods are grouped by the panel's sections, and each says which key it takes: any, only "Full access", or only the administrator's session.
+The list of methods is not kept by hand: the reference is built at every build of the site from the file `web/src/api/openapi.json`, which the panel exports itself with the `scilla openapi` command. The methods are grouped by the panel's sections, and each says which key it takes: any, only "Full access", or only the administrator's session.
 
-[Open the reference](/mikan/en/api/reference/)
+[Open the reference](/scilla/en/api/reference/)
 
 ## Client balances and promo code statistics
 
-The panel has no screens for these methods: they are for scripts, for example to reconcile balances with your books or to build a report on promo codes. They are the [summary of the promo codes](/mikan/en/api/reference/operations/promocode-stats/), [a Telegram account's balance with its last operations](/mikan/en/api/reference/operations/get-balance/) and [the manual change of a balance](/mikan/en/api/reference/operations/adjust-balance/).
+The panel has no screens for these methods: they are for scripts, for example to reconcile balances with your books or to build a report on promo codes. They are the [summary of the promo codes](/scilla/en/api/reference/operations/promocode-stats/), [a Telegram account's balance with its last operations](/scilla/en/api/reference/operations/get-balance/) and [the manual change of a balance](/scilla/en/api/reference/operations/adjust-balance/).
 
 Both GET methods are open to any key, "Read" or "Full access":
 

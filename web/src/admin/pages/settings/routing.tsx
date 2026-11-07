@@ -315,7 +315,7 @@ function ModePart({ mode, setMode, routes, setRoutes }: { mode: Schemas["Setting
             const id = `s-svc-${svc.id}`;
             const value = routes.services?.[svc.id] ?? "";
             return (
-              <div key={svc.id} className="panel-soft flex flex-col gap-2 p-3" style={value ? { borderColor: "var(--mikan-400)" } : undefined}>
+              <div key={svc.id} className="panel-soft flex flex-col gap-2 p-3" style={value ? { borderColor: "var(--scilla-400)" } : undefined}>
                 <label htmlFor={id} className="flex min-w-0 items-center gap-2 text-sm font-medium text-[var(--ink-900)]">
                   <span className="text-lg leading-none" aria-hidden>
                     {svc.icon}
@@ -392,7 +392,7 @@ function ListsPart({ routes, setRoutes, error }: { routes: Routes; setRoutes: Se
           {(catalog.data?.direct ?? []).map((d) => {
             const on = (routes.direct ?? []).includes(d.id);
             return (
-              <label key={d.id} className="panel-soft flex cursor-pointer items-start gap-3 p-3 text-sm" style={on ? { borderColor: "var(--mikan-400)" } : undefined}>
+              <label key={d.id} className="panel-soft flex cursor-pointer items-start gap-3 p-3 text-sm" style={on ? { borderColor: "var(--scilla-400)" } : undefined}>
                 <input type="checkbox" className="check mt-0.5 shrink-0" checked={on} onChange={() => toggleDirect(d.id)} />
                 <span>{locale === "en" ? d.name_en : d.name}</span>
               </label>

@@ -10,13 +10,13 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/presets"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/proto"
-	"mikan/internal/sub/apps"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/presets"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/proto"
+	"scilla/internal/sub/apps"
 )
 
 type InboundView struct {
@@ -52,7 +52,7 @@ type InboundView struct {
 	ExitNodeID  *int64         `json:"exit_node_id,omitempty" doc:"Нода, через которую выходит трафик, если outbound=node"`
 	PoolID      *int64         `json:"pool_id,omitempty" doc:"Группа серверов подключения: какой трафик оно тратит; нет — основной трафик"`
 	InAuto      bool           `json:"in_auto" doc:"Подключение входит в «Авто» подписки; выключено — только в списке и группе страны (выключенная нода убирает все свои)"`
-	Client      ClientEndpoint `json:"client" doc:"Куда подключаются клиенты, если не к ноде напрямую (mikan.client в шаблоне)"`
+	Client      ClientEndpoint `json:"client" doc:"Куда подключаются клиенты, если не к ноде напрямую (scilla.client в шаблоне)"`
 	ClientSNI   bool           `json:"client_sni" doc:"Можно ли задать клиентам свой SNI: у REALITY имя задаёт сайт маскировки"`
 	ClientHost  bool           `json:"client_host" doc:"Можно ли задать клиентам свой HTTP Host: VLESS и Trojan по WebSocket и XHTTP"`
 	CDNPossible bool           `json:"cdn_possible" doc:"Можно ли поставить подключение за CDN: VLESS или Trojan на сертификате ноды по XHTTP, WebSocket или gRPC"`
@@ -647,18 +647,18 @@ func inboundError(err error, dest bool) error {
 	case errors.As(err, &edit):
 		// The client endpoint names its part: body.client.sni.
 		location := "body." + edit.Field
-		if part, ok := strings.CutPrefix(edit.Err.Field, "mikan.client."); ok && edit.Field == "client" {
+		if part, ok := strings.CutPrefix(edit.Err.Field, "scilla.client."); ok && edit.Field == "client" {
 			location += "." + part
 		}
 		// And the CDN behind it: body.client.cdn.trusted.
-		if part, ok := strings.CutPrefix(edit.Err.Field, "mikan.cdn"); ok && edit.Field == "client" {
+		if part, ok := strings.CutPrefix(edit.Err.Field, "scilla.cdn"); ok && edit.Field == "client" {
 			location += ".cdn" + part
 		}
 		// The XHTTP form names the setting: one location holds all of them.
 		var value any
 		if edit.Field == "xhttp" {
 			key := edit.Err.Field
-			for _, p := range []string{"xhttp-config.", "mikan.client.xhttp.xmux.", "mikan.client.xhttp."} {
+			for _, p := range []string{"xhttp-config.", "scilla.client.xhttp.xmux.", "scilla.client.xhttp."} {
 				key = strings.TrimPrefix(key, p)
 			}
 			value = key
@@ -672,7 +672,7 @@ func inboundError(err error, dest bool) error {
 	return configError(portError(cascadeError(err, "exit_node_id")))
 }
 
-// configError maps a template's refusal, mikan's own or the node's mihomo's, to the
+// configError maps a template's refusal, scilla's own or the node's mihomo's, to the
 // API's code; other errors pass through.
 func configError(err error) error {
 	var pe *proto.Error

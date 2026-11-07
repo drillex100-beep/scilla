@@ -18,8 +18,8 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/httpjson"
-	"mikan/internal/textutil"
+	"scilla/internal/httpjson"
+	"scilla/internal/textutil"
 )
 
 // DefaultAPI is Telegram's Bot API; tests point the bot at a fake one.

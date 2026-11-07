@@ -170,7 +170,7 @@ export function Devices({ info, subURL, reload, title }: { info: Info; subURL: s
       {full ? <p className="mb-3 rounded-2xl bg-[var(--hover)] p-3 text-[13px] text-[var(--ink-700)]">{t("sub.devicesFull")}</p> : null}
       {wait && list.length > 0 ? (
         <div className="mb-3 flex items-start gap-2 rounded-2xl bg-[var(--hover)] p-3" role="status">
-          <Hourglass size={18} className="mt-0.5 shrink-0 text-[var(--mikan-600)]" aria-hidden />
+          <Hourglass size={18} className="mt-0.5 shrink-0 text-[var(--scilla-600)]" aria-hidden />
           <div className="text-[13px]">
             <p className="font-medium text-[var(--ink-800)]">{t("sub.unbindLimitTitle")}</p>
             <p className="text-[var(--ink-600)]">{t("sub.unbindAfter", { date: dateShort(wait), time: time(wait) })}</p>

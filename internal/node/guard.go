@@ -24,7 +24,7 @@ import (
 
 // guardOptions are the guard's settings for the panel's list of ports and the server's public
 // addresses. No list means an older panel, which says nothing of what must stay open:
-// the guard stays off, as it is with MIKAN_ALLOW_PRIVATE, where the rules let users reach
+// the guard stays off, as it is with SCILLA_ALLOW_PRIVATE, where the rules let users reach
 // the server's private networks.
 func guardOptions(ports []int, allowPrivate bool, own []netip.Addr) egress.Options {
 	if ports == nil || allowPrivate {

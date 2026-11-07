@@ -10,9 +10,9 @@ import (
 	"slices"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store/db"
 )
 
 // User is what the detector needs to know about one slot: a subscription's own keys,

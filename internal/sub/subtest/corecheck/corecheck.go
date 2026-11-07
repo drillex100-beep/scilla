@@ -21,7 +21,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/sub/routing"
+	"scilla/internal/sub/routing"
 )
 
 const (

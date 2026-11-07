@@ -10,9 +10,9 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/ipgeo"
-	"mikan/internal/panel/reach"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/ipgeo"
+	"scilla/internal/panel/reach"
 )
 
 type geoOutput struct{ Body ipgeo.GeoCheck }

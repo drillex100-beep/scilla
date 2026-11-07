@@ -5,16 +5,16 @@ import (
 	"log/slog"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/panelimport"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/subpage"
-	"mikan/internal/release"
-	"mikan/internal/sub/apps"
-	submodel "mikan/internal/sub/model"
-	"mikan/internal/sub/routing"
-	"mikan/internal/sub/serve"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/panelimport"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/subpage"
+	"scilla/internal/release"
+	"scilla/internal/sub/apps"
+	submodel "scilla/internal/sub/model"
+	"scilla/internal/sub/routing"
+	"scilla/internal/sub/serve"
 )
 
 // ConfigDeps is what LoadConfig reads the subscriptions' config from.

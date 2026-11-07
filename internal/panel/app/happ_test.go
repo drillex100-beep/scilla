@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
+	"scilla/internal/panel/domain"
 )
 
 // Happ over the API: the settings are checked and session only, Happ alone gets its

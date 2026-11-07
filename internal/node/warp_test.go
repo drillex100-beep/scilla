@@ -7,8 +7,8 @@ import (
 
 	"github.com/metacubex/mihomo/hub/executor"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/proto"
+	"scilla/internal/nodeapi"
+	"scilla/internal/proto"
 )
 
 func warpState() nodeapi.DesiredState {

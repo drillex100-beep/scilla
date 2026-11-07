@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/billing"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/tgate"
+	"scilla/internal/panel/billing"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/tgate"
 )
 
 // Settings that cannot be read are an error, never the defaults: a change built on the

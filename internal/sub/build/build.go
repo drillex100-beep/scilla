@@ -6,9 +6,9 @@ import (
 	"strings"
 	"unicode"
 
-	"mikan/internal/proto"
-	"mikan/internal/sub/apps"
-	"mikan/internal/sub/model"
+	"scilla/internal/proto"
+	"scilla/internal/sub/apps"
+	"scilla/internal/sub/model"
 )
 
 // Profile is what the proxies of one user are made of.

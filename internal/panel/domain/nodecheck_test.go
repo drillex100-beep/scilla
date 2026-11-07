@@ -11,10 +11,10 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodetls"
-	"mikan/internal/panel/dnscheck"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
+	"scilla/internal/nodetls"
+	"scilla/internal/panel/dnscheck"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
 )
 
 // The rules of a node are one for the panel and the shell: a name is taken once and is no
@@ -31,7 +31,7 @@ func TestNodeRules(t *testing.T) {
 	if err := Seed(ctx, st, now); err != nil {
 		t.Fatal(err)
 	}
-	panel, _ := nodetls.Generate("mikan-panel", x509.ExtKeyUsageClientAuth, now)
+	panel, _ := nodetls.Generate("scilla-panel", x509.ExtKeyUsageClientAuth, now)
 	records := map[string]string{"b.example.com": "198.51.100.20", "other.example.com": "198.51.100.7"}
 	doh := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ans := map[string]any{"Status": 3, "Answer": []any{}}

@@ -4,8 +4,8 @@ import (
 	"context"
 	"slices"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // webPorts stay open to a node's users on the node's own address, on every node: a site or a
