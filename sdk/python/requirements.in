@@ -4,4 +4,4 @@
 #     'pip install -q uv==0.13.5 && uv pip compile requirements.in --universal --generate-hashes --exclude-newer 2026-11-03T00:00:00Z -o requirements.txt'
 openapi-python-client==0.29.1
 build==1.6.1
-hatchling==1.32.4
+hatchling==1.33.0
