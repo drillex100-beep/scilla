@@ -10,12 +10,12 @@ import (
 
 const (
 	// DefaultDataDir is where the panel and the node keep their files in the containers;
-	// MIKAN_DATA_DIR moves it. The node binary shares it, which is why it lives in a
+	// SCILLA_DATA_DIR moves it. The node binary shares it, which is why it lives in a
 	// package that imports nothing of the panel.
 	DefaultDataDir = "/data"
 	// DefaultNodeSocket is the unix socket the panel reaches its own node by;
-	// MIKAN_NODE_SOCKET moves it.
-	DefaultNodeSocket = "/run/mikan/node.sock"
+	// SCILLA_NODE_SOCKET moves it.
+	DefaultNodeSocket = "/run/scilla/node.sock"
 )
 
 type Config struct {
@@ -30,46 +30,46 @@ type Config struct {
 	AutotuneScale float64
 	// TelegramAPI is the Bot API the bot talks to; a fake one in tests.
 	TelegramAPI string
-	// SupportOff: MIKAN_SUPPORT_ACCESS=off turns support access off for good on this server,
+	// SupportOff: SCILLA_SUPPORT_ACCESS=off turns support access off for good on this server,
 	// whatever the panel's setting says.
 	SupportOff bool
-	// SupportBotURL is the support bot (MIKAN_SUPPORT_BOT_URL, for tests and development);
+	// SupportBotURL is the support bot (SCILLA_SUPPORT_BOT_URL, for tests and development);
 	// "" is the official one.
 	SupportBotURL string
 }
 
 func FromEnv() (Config, error) {
 	c := Config{
-		DataDir:    env("MIKAN_DATA_DIR", DefaultDataDir),
-		Listen:     env("MIKAN_PANEL_LISTEN", "0.0.0.0:2053"),
-		NodeSocket: env("MIKAN_NODE_SOCKET", DefaultNodeSocket),
+		DataDir:    env("SCILLA_DATA_DIR", DefaultDataDir),
+		Listen:     env("SCILLA_PANEL_LISTEN", "0.0.0.0:2053"),
+		NodeSocket: env("SCILLA_NODE_SOCKET", DefaultNodeSocket),
 	}
-	if err := c.LogLevel.UnmarshalText([]byte(env("MIKAN_LOG_LEVEL", "info"))); err != nil {
-		return c, fmt.Errorf("MIKAN_LOG_LEVEL: %w", err)
+	if err := c.LogLevel.UnmarshalText([]byte(env("SCILLA_LOG_LEVEL", "info"))); err != nil {
+		return c, fmt.Errorf("SCILLA_LOG_LEVEL: %w", err)
 	}
 	var err error
-	if c.TrustProxy, err = boolEnv("MIKAN_TRUST_PROXY"); err != nil {
+	if c.TrustProxy, err = boolEnv("SCILLA_TRUST_PROXY"); err != nil {
 		return c, err
 	}
-	if c.Dev, err = boolEnv("MIKAN_DEV"); err != nil {
+	if c.Dev, err = boolEnv("SCILLA_DEV"); err != nil {
 		return c, err
 	}
 	if _, _, err := net.SplitHostPort(c.Listen); err != nil {
-		return c, fmt.Errorf("MIKAN_PANEL_LISTEN: %w", err)
+		return c, fmt.Errorf("SCILLA_PANEL_LISTEN: %w", err)
 	}
-	c.TelegramAPI = os.Getenv("MIKAN_TG_API")
-	c.SupportBotURL = os.Getenv("MIKAN_SUPPORT_BOT_URL")
-	switch v := os.Getenv("MIKAN_SUPPORT_ACCESS"); v {
+	c.TelegramAPI = os.Getenv("SCILLA_TG_API")
+	c.SupportBotURL = os.Getenv("SCILLA_SUPPORT_BOT_URL")
+	switch v := os.Getenv("SCILLA_SUPPORT_ACCESS"); v {
 	case "", "on":
 	case "off":
 		c.SupportOff = true
 	default:
-		return c, fmt.Errorf("MIKAN_SUPPORT_ACCESS: want on or off, got %q", v)
+		return c, fmt.Errorf("SCILLA_SUPPORT_ACCESS: want on or off, got %q", v)
 	}
 	c.AutotuneScale = 1
-	if v := os.Getenv("MIKAN_AUTOTUNE_SCALE"); v != "" {
+	if v := os.Getenv("SCILLA_AUTOTUNE_SCALE"); v != "" {
 		if c.AutotuneScale, err = strconv.ParseFloat(v, 64); err != nil || c.AutotuneScale <= 0 || c.AutotuneScale > 1 {
-			return c, fmt.Errorf("MIKAN_AUTOTUNE_SCALE: want a number in (0, 1], got %q", v)
+			return c, fmt.Errorf("SCILLA_AUTOTUNE_SCALE: want a number in (0, 1], got %q", v)
 		}
 	}
 	// "off" runs the panel without a node (UI development on a machine without mihomo).
@@ -77,7 +77,7 @@ func FromEnv() (Config, error) {
 		c.NodeSocket = ""
 	}
 	if c.Dev && !loopback(c.Listen) {
-		return c, fmt.Errorf("MIKAN_DEV=1 allowed only with a loopback MIKAN_PANEL_LISTEN, got %q", c.Listen)
+		return c, fmt.Errorf("SCILLA_DEV=1 allowed only with a loopback SCILLA_PANEL_LISTEN, got %q", c.Listen)
 	}
 	return c, nil
 }

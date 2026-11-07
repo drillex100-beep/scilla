@@ -14,8 +14,8 @@ import (
 	"github.com/metacubex/mihomo/hub/executor"
 	"github.com/metacubex/mihomo/tunnel"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/proto"
+	"scilla/internal/nodeapi"
+	"scilla/internal/proto"
 )
 
 func TestExitDNSConfigParses(t *testing.T) {

@@ -11,8 +11,8 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // Folders of the users' list: named groups the admin makes to keep users apart (family,

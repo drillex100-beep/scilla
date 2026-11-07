@@ -10,7 +10,7 @@ import (
 	"strings"
 	"sync"
 
-	"mikan/internal/netaddr"
+	"scilla/internal/netaddr"
 )
 
 // Options relax checks for one installation.

@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/auth"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
+	"scilla/internal/panel/auth"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
 )
 
 // A reset ends every session and every API key of the admin: it is what the owner runs on

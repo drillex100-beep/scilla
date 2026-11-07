@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/nodetls"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/presets"
+	"scilla/internal/nodeapi"
+	"scilla/internal/nodetls"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/presets"
 )
 
 // slowNodes answers target checks slowly, and notes how many were open at once and what
@@ -50,7 +50,7 @@ func (s *slowNodes) CheckTarget(ctx context.Context, id int64, req nodeapi.Targe
 func twoNodes(t *testing.T, delay time.Duration) (*env, *slowNodes) {
 	t.Helper()
 	e := setup(t)
-	panel, err := nodetls.Generate("mikan-panel", x509.ExtKeyUsageClientAuth, time.Now())
+	panel, err := nodetls.Generate("scilla-panel", x509.ExtKeyUsageClientAuth, time.Now())
 	if err != nil {
 		t.Fatal(err)
 	}

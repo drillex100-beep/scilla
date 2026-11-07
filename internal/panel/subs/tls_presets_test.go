@@ -4,8 +4,8 @@ import (
 	"net/url"
 	"testing"
 
-	"mikan/internal/panel/presets"
-	"mikan/internal/proto"
+	"scilla/internal/panel/presets"
+	"scilla/internal/proto"
 )
 
 // VLESS TLS runs on the node certificate: the listener gets the certificate files and no

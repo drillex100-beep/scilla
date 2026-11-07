@@ -27,7 +27,7 @@ const NAV = [
 ] as const;
 
 // The sidebar folded to its icons on a wide screen, as the admin left it; per browser.
-const FOLD_KEY = "mikan.sidebar";
+const FOLD_KEY = "scilla.sidebar";
 
 function readFolded(): boolean {
   try {
@@ -59,7 +59,7 @@ export function Shell() {
         <aside className="sidebar glass" aria-label={t("shell.sidebar")}>
           <div className="brand">
             <Logo />
-            <span className="brand-name">mikan</span>
+            <span className="brand-name">scilla</span>
             <button type="button" className="icon-btn fold-btn" onClick={fold} aria-label={foldLabel} title={foldLabel}>
               {folded ? <PanelLeftOpen size={18} aria-hidden /> : <PanelLeftClose size={18} aria-hidden />}
             </button>

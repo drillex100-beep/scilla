@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/proto"
+	"scilla/internal/nodeapi"
+	"scilla/internal/proto"
 )
 
 func quiet() *slog.Logger { return slog.New(slog.NewTextHandler(io.Discard, nil)) }

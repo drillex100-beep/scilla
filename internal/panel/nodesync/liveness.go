@@ -9,10 +9,10 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/events/feed"
-	"mikan/internal/panel/hysteresis"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/events/feed"
+	"scilla/internal/panel/hysteresis"
+	"scilla/internal/panel/store/db"
 )
 
 // liveness turns the node's health checks into the two events of its life, events.NodeDown

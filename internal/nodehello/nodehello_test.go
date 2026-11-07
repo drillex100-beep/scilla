@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodetls"
+	"scilla/internal/nodetls"
 )
 
 func TestStatusFile(t *testing.T) {
@@ -57,8 +57,8 @@ func TestHelloToAnUntrustedPanel(t *testing.T) {
 	}))
 	defer panel.Close()
 	now := time.Now()
-	pc, _ := nodetls.Generate("mikan-panel", x509.ExtKeyUsageClientAuth, now)
-	nc, _ := nodetls.Generate("node-2.mikan", x509.ExtKeyUsageServerAuth, now)
+	pc, _ := nodetls.Generate("scilla-panel", x509.ExtKeyUsageClientAuth, now)
+	nc, _ := nodetls.Generate("node-2.scilla", x509.ExtKeyUsageServerAuth, now)
 	pin, _ := nodetls.Fingerprint(pc.CertPEM)
 	key := nodetls.Key{Port: 40123, PanelPin: pin, CertPEM: nc.CertPEM, KeyPEM: nc.KeyPEM, PanelURL: panel.URL}
 	r := Send(context.Background(), key, Client(), now)

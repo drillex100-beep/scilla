@@ -216,7 +216,7 @@
             ]
           }
         ],
-        "tag": "list-mikan-blocked",
+        "tag": "list-scilla-blocked",
         "type": "inline"
       },
       {
@@ -227,7 +227,7 @@
             ]
           }
         ],
-        "tag": "list-mikan-blocked-apps",
+        "tag": "list-scilla-blocked-apps",
         "type": "inline"
       },
       {
@@ -271,25 +271,25 @@
       {
         "outbound": "VPN",
         "rule_set": [
-          "list-mikan-blocked"
+          "list-scilla-blocked"
         ]
       },
       {
         "action": "reject",
         "rule_set": [
-          "list-mikan-blocked"
+          "list-scilla-blocked"
         ]
       },
       {
         "outbound": "VPN",
         "rule_set": [
-          "list-mikan-blocked-apps"
+          "list-scilla-blocked-apps"
         ]
       },
       {
         "action": "reject",
         "rule_set": [
-          "list-mikan-blocked-apps"
+          "list-scilla-blocked-apps"
         ]
       }
     ]

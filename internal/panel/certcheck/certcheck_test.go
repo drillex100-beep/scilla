@@ -19,9 +19,9 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/acmechallenge"
-	"mikan/internal/panel/acme"
-	"mikan/internal/panel/dnscheck"
+	"scilla/internal/acmechallenge"
+	"scilla/internal/panel/acme"
+	"scilla/internal/panel/dnscheck"
 )
 
 type pki struct {

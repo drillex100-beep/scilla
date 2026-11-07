@@ -20,8 +20,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"mikan/internal/fsutil"
-	"mikan/internal/nodetls"
+	"scilla/internal/fsutil"
+	"scilla/internal/nodetls"
 )
 
 // The admin's own certificate, instead of Let's Encrypt or the self-signed one (GitHub

@@ -5,7 +5,7 @@ import (
 
 	"github.com/metacubex/mihomo/component/sniffer"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 // The torrent blocker: the core's BitTorrent sniffer recognises the peer wire handshake

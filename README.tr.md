@@ -2,19 +2,17 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset=".github/assets/banner-en-dark.svg">
-  <img alt="mikan: mihomo çekirdeği üzerinde VPN paneli" src=".github/assets/banner-en-light.svg" width="100%">
+  <img alt="scilla: mihomo çekirdeği üzerinde VPN paneli" src=".github/assets/banner-en-light.svg" width="100%">
 </picture>
 
 <br>
 
 **[mihomo](https://github.com/MetaCubeX/mihomo) çekirdeği üzerinde hızlı ve güzel bir VPN paneli: tek komutla kurulur, başında beklemek gerekmez.**
 
-[![Sürüm](https://img.shields.io/github/v/release/Miroshka000/mikan?color=f07a2e&label=sürüm&style=flat-square)](https://github.com/Miroshka000/mikan/releases)
-[![İmaj](https://img.shields.io/badge/ghcr.io-miroshka000%2Fmikan-2b8c9e?style=flat-square&logo=docker&logoColor=white)](https://github.com/Miroshka000/mikan/pkgs/container/mikan)
+[![Sürüm](https://img.shields.io/github/v/release/drillex100-beep/scilla?color=f07a2e&label=sürüm&style=flat-square)](https://github.com/drillex100-beep/scilla/releases)
+[![İmaj](https://img.shields.io/badge/ghcr.io-drillex100-beep%2Fscilla-2b8c9e?style=flat-square&logo=docker&logoColor=white)](https://github.com/drillex100-beep/scilla/pkgs/container/scilla)
 [![Lisans](https://img.shields.io/badge/lisans-GPL--3.0-2f9e6b?style=flat-square)](LICENSE)
 [![mihomo](https://img.shields.io/badge/çekirdek-mihomo%201.19.32-9e8eff?style=flat-square)](https://github.com/MetaCubeX/mihomo)
-[![Telegram](https://img.shields.io/badge/Telegram-kanal-26a5e4?style=flat-square&logo=telegram&logoColor=white)](https://t.me/mikanvpn)
-[![Telegram](https://img.shields.io/badge/Telegram-forum-26a5e4?style=flat-square&logo=telegram&logoColor=white)](https://t.me/+I2JFR7DbPow1ZmQy)
 
 [English](README.md) · [Русский](README.ru.md) · [简体中文](README.zh-CN.md) · [فارسی](README.fa.md) · **Türkçe** · [Español](README.es.md)
 
@@ -27,27 +25,27 @@
 Yeni bir Ubuntu 22.04+ veya Debian 12+ sunucuda (amd64 veya arm64):
 
 ```bash
-curl -fsSL https://github.com/Miroshka000/mikan/releases/latest/download/install.sh | sudo bash
+curl -fsSL https://github.com/drillex100-beep/scilla/releases/latest/download/install.sh | sudo bash
 ```
 
-Kurulum betiği panel dilini ve isteğe bağlı bir alan adını sorar, alan adının sunucuyu gösterdiğini kontrol eder, gerekirse Docker'ı kurar, sunucunuzun yakınında REALITY kamuflaj siteleri seçer ve yönetici bağlantınızı yazdırır. Yönetim menüsü için `mikan` komutunu istediğiniz zaman yeniden çalıştırabilirsiniz.
+Kurulum betiği panel dilini ve isteğe bağlı bir alan adını sorar, alan adının sunucuyu gösterdiğini kontrol eder, gerekirse Docker'ı kurar, sunucunuzun yakınında REALITY kamuflaj siteleri seçer ve yönetici bağlantınızı yazdırır. Yönetim menüsü için `scilla` komutunu istediğiniz zaman yeniden çalıştırabilirsiniz.
 
-Mevcut bir panele düğüm eklemek için: panelin **Düğümler** sayfası (veya `mikan node add`) anahtarıyla birlikte komutu verir:
+Mevcut bir panele düğüm eklemek için: panelin **Düğümler** sayfası (veya `scilla node add`) anahtarıyla birlikte komutu verir:
 
 ```bash
-curl -fsSL https://github.com/Miroshka000/mikan/releases/latest/download/install.sh | sudo bash -s -- --join KEY
+curl -fsSL https://github.com/drillex100-beep/scilla/releases/latest/download/install.sh | sudo bash -s -- --join KEY
 ```
 
-Soru sormadan, betikler için: `… | sudo bash -s -- --yes --lang en --domain vpn.example.com --email you@example.com` (tüm bayraklar: `mikan install --help`).
+Soru sormadan, betikler için: `… | sudo bash -s -- --yes --lang en --domain vpn.example.com --email you@example.com` (tüm bayraklar: `scilla install --help`).
 
-## Neden mikan
+## Neden scilla
 
 <table>
 <tr>
 <td width="50%" valign="top">
 
 ### 🛡️ Engellemeden kendi başına kurtulur
-mikan, gerçek istemcilerin her protokole hâlâ ulaşıp ulaşamadığını izler. Bir port yolda engellendiğinde protokolü boş bir HTTPS portuna taşır; bir REALITY kamuflaj sitesi çalışmayı bırakırsa sunucunuzun yakınında yenisini seçer.
+scilla, gerçek istemcilerin her protokole hâlâ ulaşıp ulaşamadığını izler. Bir port yolda engellendiğinde protokolü boş bir HTTPS portuna taşır; bir REALITY kamuflaj sitesi çalışmayı bırakırsa sunucunuzun yakınında yenisini seçer.
 
 </td>
 <td width="50%" valign="top">
@@ -74,7 +72,7 @@ Aboneler planlarını, cihazlarını ve bağlantı rehberlerini panelde kurduğu
 <tr>
 <td valign="top">
 
-### 🪶 Mandalina kadar hafif
+### 🪶 Tüy kadar hafif
 Go ve PostgreSQL, üç küçük konteyner. İstemcileri olan çalışan bir sunucuda: panel için **~14 MB RAM**, veritabanı için **~50 MB**, VPN çekirdeği için **~40 MB**.
 
 </td>
@@ -108,11 +106,11 @@ kodları Telegram Mini App'te kullanır, uygulama kullanım geçmişini de göst
 trafik ana bakiyeye ya da seçilen bir havuza eklenebilir. İndirimli faturalar yalnızca
 iade destekleyen ödeme yöntemleriyle ödenebilir: Telegram Stars ve iade desteği bildiren
 adaptörler. Böylece sağlayıcı ödemeyi onaylamadan promosyon rezervasyonunun süresi dolarsa
-Mikan ödemeyi iade edebilir.
+Scilla ödemeyi iade edebilir.
 
 ## Destek erişimi
 
-Yardıma ihtiyacın olduğunda geçici erişimi kendin açarsın: Ayarlar → Destek, 2, 6 veya 24 saatliğine, «görüntüleme», «değiştirme» veya «terminal» seviyesinde. Bu düğme olmadan mikan geliştiricileri dahil kimse panele giremez: projenin sunucularına kalıcı erişimi yoktur ve panel kendiliğinden hiçbir yere bağlanmaz. Operatörün her işlemi denetim günlüğüne yazılır, erişim tek düğmeyle geri alınır, terminal parolan ve 2FA ile açılır ve kaydedilir. Özelliği tamamen kapatmak için aynı karttaki anahtarı kullan veya sunucuda `mikan support-access off` çalıştır. Ücretli destek kuralları: [sitede](https://miroshka000.github.io/mikan/support/paid/).
+Yardıma ihtiyacın olduğunda geçici erişimi kendin açarsın: Ayarlar → Destek, 2, 6 veya 24 saatliğine, «görüntüleme», «değiştirme» veya «terminal» seviyesinde. Bu düğme olmadan scilla geliştiricileri dahil kimse panele giremez: projenin sunucularına kalıcı erişimi yoktur ve panel kendiliğinden hiçbir yere bağlanmaz. Operatörün her işlemi denetim günlüğüne yazılır, erişim tek düğmeyle geri alınır, terminal parolan ve 2FA ile açılır ve kaydedilir. Özelliği tamamen kapatmak için aynı karttaki anahtarı kullan veya sunucuda `scilla support-access off` çalıştır. Ücretli destek kuralları: [sitede](https://miroshka000.github.io/mikan/support/paid/).
 
 ## Ekran görüntüleri
 
@@ -163,8 +161,8 @@ On yedi protokol, her biri sizin için üretilmiş anahtarlarla hazır bir ön a
 
 ```mermaid
 flowchart LR
-    A[Browser] -- HTTPS, secret link --> P[mikan panel<br>users · plans · subscriptions]
-    P -- unix socket / pinned TLS --> N1[mikan node<br>mihomo inside]
+    A[Browser] -- HTTPS, secret link --> P[scilla panel<br>users · plans · subscriptions]
+    P -- unix socket / pinned TLS --> N1[scilla node<br>mihomo inside]
     P -- pinned TLS --> N2[remote node]
     C[VPN apps] -- REALITY · QUIC · … --> N1
     C --> N2
@@ -175,25 +173,25 @@ Panel ve düğüm, aynı imajdan çalışan iki işlemdir. Paneli güncelleyin v
 
 ## Sunucuyu yönetme
 
-Menü için `mikan` komutunu çalıştırın veya komutları doğrudan kullanın:
+Menü için `scilla` komutunu çalıştırın veya komutları doğrudan kullanın:
 
 | Komut | Ne yapar |
 |---|---|
-| `mikan status` | konteynerler, sürümler, sağlık durumu, mevcut güncelleme |
-| `mikan logs [panel\|node]` | canlı günlükler |
-| `mikan url` | yönetici bağlantısı |
-| `mikan reset-password` · `reset-path` · `disable-2fa` | erişimi geri kazanma |
-| `mikan update` | şimdi güncelle (önce yedek, otomatik geri alma) |
-| `mikan backup` · `restore FILE` | yedekler `/opt/mikan/backups` içinde |
-| `mikan node …` · `mikan inbound …` | düğümler ve protokoller |
-| `mikan targets scan` · `apply` | sunucunun yakınındaki REALITY kamuflaj siteleri |
-| `mikan join KEY` | düğümde: panelden yeni bir anahtar al |
-| `mikan restart` | konteynerleri yeniden başlat |
-| `mikan doctor` | sunucuyu denetle: Docker, portlar, güvenlik duvarı, saat, DNS, disk |
-| `mikan support KOD` | panel erişilemezken tanılamayı destek talebine gönder |
-| `mikan support-access on\|off` | bu sunucuda destek erişimine izin ver veya yasakla |
-| `mikan api-lockdown [status\|off]` | bir düğümde: «düğüm API'si yalnızca panel IP'sinden» kuralının durumu veya kuralı hemen kaldırma |
-| `mikan uninstall` | durdur ve komutu kaldır, veriyi koru |
+| `scilla status` | konteynerler, sürümler, sağlık durumu, mevcut güncelleme |
+| `scilla logs [panel\|node]` | canlı günlükler |
+| `scilla url` | yönetici bağlantısı |
+| `scilla reset-password` · `reset-path` · `disable-2fa` | erişimi geri kazanma |
+| `scilla update` | şimdi güncelle (önce yedek, otomatik geri alma) |
+| `scilla backup` · `restore FILE` | yedekler `/opt/scilla/backups` içinde |
+| `scilla node …` · `scilla inbound …` | düğümler ve protokoller |
+| `scilla targets scan` · `apply` | sunucunun yakınındaki REALITY kamuflaj siteleri |
+| `scilla join KEY` | düğümde: panelden yeni bir anahtar al |
+| `scilla restart` | konteynerleri yeniden başlat |
+| `scilla doctor` | sunucuyu denetle: Docker, portlar, güvenlik duvarı, saat, DNS, disk |
+| `scilla support KOD` | panel erişilemezken tanılamayı destek talebine gönder |
+| `scilla support-access on\|off` | bu sunucuda destek erişimine izin ver veya yasakla |
+| `scilla api-lockdown [status\|off]` | bir düğümde: «düğüm API'si yalnızca panel IP'sinden» kuralının durumu veya kuralı hemen kaldırma |
+| `scilla uninstall` | durdur ve komutu kaldır, veriyi koru |
 
 ## Güncellemeler
 
@@ -204,33 +202,27 @@ Panel günde bir kez yeni sürüm olup olmadığına bakar ve nelerin değişti�
 ## Kaynaktan derleme
 
 ```bash
-docker buildx build -t mikan:dev .            # panel + node image
+docker buildx build -t scilla:dev .            # panel + node image
 cd web && pnpm install && pnpm dev            # admin UI with hot reload
-MIKAN_TEST_DATABASE_URL=postgres://… go test ./...   # Go 1.27, a test PostgreSQL 18 and pg_dump
+SCILLA_TEST_DATABASE_URL=postgres://… go test ./...   # Go 1.27, a test PostgreSQL 18 and pg_dump
 cd installer && cargo test                    # the installer (Rust)
 ```
 
 Geliştirme `dev` dalında yapılır. `main` dalına açılan çekme istekleri derlenir ve test edilir, sürümler etiketlerden yayımlanır.
 
-## ⛔ Fork'lar ve üçüncü taraf derlemeler
+## About this fork
 
-> [!CAUTION]
-> **Resmî mikan yalnızca burada:** `Miroshka000/mikan` deposu, `ghcr.io/miroshka000/mikan` imajı ve mikan anahtarıyla imzalanmış sürümler. Resmî eklentiler yalnızca `getmikan/marketplace` kataloğundan gelir; topluluk kaydı `getmikan/marketplace-community`, mikan'ın incelemediği ve sorumluluğunu almadığı üçüncü taraf eklentileri listeler. Geri kalan her şey, adı ne olursa olsun, mikan değildir.
+> [!NOTE]
+> **Scilla is a fork of [mikan](https://github.com/Miroshka000/mikan)** by drillex100-beep, renamed as required by the original project's additional license terms ([NOTICE.md](NOTICE.md), [TRADEMARK.md](TRADEMARK.md)). It is not the official mikan and is not affiliated with or supported by the mikan project.
 >
-> **mikan projesi, her fork'u ve başka kaynaklardan gelen her derlemeyi potansiyel olarak güvensiz kabul eder.**
+> mikan is free software under the [GNU GPL v3](LICENSE) with additional terms: keep the attribution, do not pass a modified version off as the original, and no rights to the name and the logo of the original project. Scilla keeps the code under the same terms and carries its own name and branding.
 >
-> **Resmî derlemeler doğrulanabilir.** Her sürüm bu deponun açık kodundan otomatik olarak derlenir ve imzalanır; panel ve kurulum aracı yalnızca bu imzayı taşıyan güncellemeleri kabul eder. Başkasının derlemesinin neyden yapıldığını yalnızca yazarı bilir.
->
-> **Fork'lar güncellemelerimizi almaz.** Bir fork, sürümlerini mikan anahtarıyla imzalayamaz; bu yüzden hata ve güvenlik açığı düzeltmeleri, yazarı onları taşımadıkça ona ulaşmaz.
->
-> **Fork'ları desteklemiyoruz.** Onları incelemiyoruz ve içlerindeki hatalardan, güvenlik açıklarından veya veri kaybından sorumlu değiliz. Başkalarının derlemeleriyle ilgili sorular sohbette ve issue'larda ele alınmaz.
->
-> **Ad lisansın parçası değildir.** GPL v3 kodu kapsar, mikan adını ve logosunu değil (GPL v3 bölüm 7, bkz. [NOTICE.md](NOTICE.md) ve [TRADEMARK.md](TRADEMARK.md)). Bir fork başka bir ad kullanmalı ve kendini mikan olarak tanıtmamalıdır.
+> The upstream project, its documentation and community: [Miroshka000/mikan](https://github.com/Miroshka000/mikan) · [docs](https://miroshka000.github.io/mikan/).
 
 ## Lisans
 
-mikan, [GNU GPL v3](LICENSE) ve [NOTICE.md](NOTICE.md) dosyasındaki ek koşullar altında özgür yazılımdır: atıf korunur, değiştirilmiş bir sürüm orijinal gibi tanıtılmaz, ad ve logo üzerinde hak verilmez. Copyright (C) 2026 Miroshka and Mikan. İçine [mihomo](https://github.com/MetaCubeX/mihomo) (GPL-3.0) gömülüdür ve [3x-ui](https://github.com/MHSanaei/3x-ui) (GPL-3.0) kodunun bazı bölümleri uyarlanmıştır. Yazı tipleri: Unbounded, Onest, JetBrains Mono (SIL OFL 1.1).
+Scilla is free software under the [GNU GPL v3](LICENSE) with the additional terms in [NOTICE.md](NOTICE.md). It is derived from mikan (Copyright (C) 2026 Miroshka and the mikan contributors); Scilla modifications are Copyright (C) 2026 drillex100-beep. It embeds [mihomo](https://github.com/MetaCubeX/mihomo) (GPL-3.0) and adapts parts of [3x-ui](https://github.com/MHSanaei/3x-ui) (GPL-3.0). Fonts: Unbounded, Onest, JetBrains Mono (SIL OFL 1.1).
 
 <div align="center">
-<sub>🍊 ile yapıldı</sub>
+<sub>🐙 ile yapıldı</sub>
 </div>

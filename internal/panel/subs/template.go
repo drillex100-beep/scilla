@@ -16,7 +16,7 @@ import (
 //
 //   - include-all-proxies: true (or include-all) takes every proxy of the user; filter,
 //     exclude-filter and exclude-type narrow them, as mihomo itself does;
-//   - mikan: {nodes: [...], types: [...]} takes the proxies of those nodes (by the name the
+//   - scilla: {nodes: [...], types: [...]} takes the proxies of those nodes (by the name the
 //     panel shows, or the id) and of those types (vless, hysteria2…).
 //
 // The panel lists the proxies in the group itself, so every core gets the same groups, and
@@ -137,7 +137,7 @@ func fillTemplate(cfg map[string]any, p Profile, ps []proxy) ([]proxy, error) {
 // fillGroup puts the user's proxies the group asks for into it.
 func fillGroup(g map[string]any, nodes []Node, ps []proxy, providers bool) error {
 	all := g["include-all-proxies"] == true || g["include-all"] == true && !providers
-	ext, _ := g["mikan"].(map[string]any)
+	ext, _ := g["scilla"].(map[string]any)
 	if !all && ext == nil {
 		return nil
 	}
@@ -165,7 +165,7 @@ func fillGroup(g map[string]any, nodes []Node, ps []proxy, providers bool) error
 	drop, ok2 := re("exclude-filter")
 	if !ok1 || !ok2 {
 		// A pattern Go cannot read (mihomo's regexp2 knows more): mihomo applies it itself,
-		// but then it cannot know which nodes "mikan" picked, and the group would take every
+		// but then it cannot know which nodes "scilla" picked, and the group would take every
 		// server of the user.
 		if ext != nil {
 			return templateErr("template_filter", str(g["name"]))
@@ -193,7 +193,7 @@ func fillGroup(g map[string]any, nodes []Node, ps []proxy, providers bool) error
 		list = []any{"REJECT"}
 	}
 	g["proxies"] = list
-	for _, k := range []string{"mikan", "include-all-proxies", "filter", "exclude-filter", "exclude-type"} {
+	for _, k := range []string{"scilla", "include-all-proxies", "filter", "exclude-filter", "exclude-type"} {
 		delete(g, k)
 	}
 	if !providers {
@@ -381,7 +381,7 @@ func splitRule(r string) []string {
 
 // Starter is the template of the profile Mihomo makes for p with g and r: the start of an
 // admin's own. The proxies go, and the groups ask for them: every proxy of the user
-// (include-all-proxies), or those of some nodes (mikan: nodes).
+// (include-all-proxies), or those of some nodes (scilla: nodes).
 func Starter(p Profile, g Groups, r Routing) ([]byte, error) {
 	cfg, ps, err := mihomoConfig(p, g.WithDefaults(p.Lang), r)
 	if err != nil {
@@ -436,10 +436,10 @@ func Starter(p Profile, g Groups, r Routing) ([]byte, error) {
 					refs = append(refs, nodeRef(n.ID))
 				}
 			}
-			grp["proxies"], grp["mikan"] = others, map[string]any{"nodes": refs}
+			grp["proxies"], grp["scilla"] = others, map[string]any{"nodes": refs}
 		}
 		if len(others) == 0 {
-			if _, asks := grp["proxies"].([]string); asks && (grp["include-all-proxies"] == true || grp["mikan"] != nil) {
+			if _, asks := grp["proxies"].([]string); asks && (grp["include-all-proxies"] == true || grp["scilla"] != nil) {
 				delete(grp, "proxies")
 			}
 		}

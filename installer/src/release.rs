@@ -13,10 +13,8 @@ use serde::Deserialize;
 use sha2::{Digest, Sha256};
 
 /// The public halves of the release keys, the same as internal/release.ReleaseKeys: a
-/// manifest or the release index signed by any of them is the project's. The first signs the
-/// releases now; the second is trusted ahead, so the releases can move to it and leave no
-/// installer behind.
-pub const RELEASE_KEYS: [&str; 2] = ["Z3wSIPBSaJxh5CsGO8eINI0aM0kyrQ46EcJSNeH85W8=", "J4DbLqhnFdx8ncEiF4BQOW1aucukNCCgMhcZ18pCWFw="];
+/// manifest or the release index signed by any of them is the project's.
+pub const RELEASE_KEYS: [&str; 1] = ["CZjICHekgJUNVH5SxLFzmH5jVQ1weVpcKyMmG3Tpiw8="];
 
 /// The public half of the official catalog's key (internal/release.CatalogKey). The catalog is
 /// signed in its context (CATALOG_CONTEXT), and its signature is published as SIG_SUFFIX.
@@ -24,17 +22,17 @@ pub const CATALOG_KEY: &str = "Z4QfL07dI/IRReSe6Gr76UcxxPoy4i2GiClBv8RcNuo=";
 
 /// What a catalog's signature covers before its bytes (internal/release.CatalogContext): a
 /// signature made for another kind of document never passes for the catalog.
-pub const CATALOG_CONTEXT: &str = "mikan catalog v1\n";
+pub const CATALOG_CONTEXT: &str = "scilla catalog v1\n";
 
 /// Names the signature in a context next to its file (internal/release.SigSuffix); a release's
 /// own (".sig") is over the bytes alone.
 pub const SIG_SUFFIX: &str = ".sig2";
 
-pub const REPO: &str = "Miroshka000/mikan";
+pub const REPO: &str = "drillex100-beep/scilla";
 
 /// The project's own namespace on GitHub Packages: ghcr.io/<owner of REPO in lowercase>/,
 /// as internal/release checks it.
-const IMAGE_PREFIX: &str = "ghcr.io/miroshka000/";
+const IMAGE_PREFIX: &str = "ghcr.io/drillex100-beep/";
 
 /// Installs a node of an existing panel on a fresh server (internal/release.JoinCommand).
 pub fn join_command(key: &str) -> String {
@@ -287,7 +285,7 @@ pub fn find_upto_with(current: &str, channel: Channel, upto: &str, keys: &[Verif
             let manifest = latest_with(keys, fetch).with_context(|| format!("the release index is unavailable ({why})"))?;
             if newer(&manifest.version, upto) || newer(upto, &manifest.version) {
                 bail!(
-                    "the release index is unavailable ({why}) and the latest release is mikan {}, not the mikan {upto} that was asked for",
+                    "the release index is unavailable ({why}) and the latest release is scilla {}, not the scilla {upto} that was asked for",
                     manifest.version
                 );
             }
@@ -320,7 +318,7 @@ fn from_index(current: &str, channel: Channel, upto: Option<&str>, keys: &[Verif
     if let Some(upto) = upto {
         // Never a release the index does not list for the channel, and never past it.
         if !entries.iter().any(|e| (beta || e.channel != "beta") && !newer(&e.version, upto) && !newer(upto, &e.version)) {
-            return Err(Refused(format!("mikan {upto} is not a release of this server's channel in the signed release index")).into());
+            return Err(Refused(format!("scilla {upto} is not a release of this server's channel in the signed release index")).into());
         }
         entries.retain(|e| !newer(&e.version, upto));
     }
@@ -347,13 +345,13 @@ fn from_index(current: &str, channel: Channel, upto: Option<&str>, keys: &[Verif
 
 /// The newest release index this server has accepted ("published"); tests keep none.
 fn index_seen() -> Option<&'static Path> {
-    if cfg!(test) { None } else { Some(Path::new("/opt/mikan/release/index-published")) }
+    if cfg!(test) { None } else { Some(Path::new("/opt/scilla/release/index-published")) }
 }
 
 /// The newest manifest of GitHub's latest release this server has accepted: a stale one
 /// handed in when the index fails must not take the place of a newer one.
 fn latest_seen() -> Option<&'static Path> {
-    if cfg!(test) { None } else { Some(Path::new("/opt/mikan/release/latest-published")) }
+    if cfg!(test) { None } else { Some(Path::new("/opt/scilla/release/latest-published")) }
 }
 
 /// A signed document stays validly signed for ever: an old copy served again (a cache, a
@@ -559,7 +557,7 @@ mod tests {
 
     fn manifest(version: &str, image: &str) -> Vec<u8> {
         format!(
-            r#"{{"version":"{version}","published":"2026-09-29T10:00:00Z","image":"{image}","digest":"sha256:{}","installer":{{"x86_64":{{"url":"https://github.com/Miroshka000/mikan/releases/download/v{version}/mikan-x86_64","sha256":"{}"}}}},"notes":{{"en":"- x"}}}}"#,
+            r#"{{"version":"{version}","published":"2026-09-29T10:00:00Z","image":"{image}","digest":"sha256:{}","installer":{{"x86_64":{{"url":"https://github.com/drillex100-beep/scilla/releases/download/v{version}/scilla-x86_64","sha256":"{}"}}}},"notes":{{"en":"- x"}}}}"#,
             "a".repeat(64),
             "b".repeat(64)
         )
@@ -570,10 +568,10 @@ mod tests {
     fn signed_manifests_only() {
         let signer = SigningKey::from_bytes(&[7; 32]);
         let key = signer.verifying_key();
-        let data = manifest("0.3.9", "ghcr.io/miroshka000/mikan");
+        let data = manifest("0.3.9", "ghcr.io/drillex100-beep/scilla");
         let sig = STANDARD.encode(signer.sign(&data).to_bytes());
         let m = parse(&data, &format!("{sig}\n"), &[key]).unwrap();
-        assert_eq!(m.reference(), format!("ghcr.io/miroshka000/mikan@sha256:{}", "a".repeat(64)));
+        assert_eq!(m.reference(), format!("ghcr.io/drillex100-beep/scilla@sha256:{}", "a".repeat(64)));
         assert_eq!(m.installer["x86_64"].sha256, "b".repeat(64));
 
         let mut tampered = data.clone();
@@ -583,7 +581,7 @@ mod tests {
         assert!(parse(&data, &sig, &[other]).is_err());
         assert!(parse(&data, "not base64!", &[key]).is_err());
 
-        let docker_hub = manifest("0.3.9", "docker.io/someone/mikan");
+        let docker_hub = manifest("0.3.9", "docker.io/someone/scilla");
         let sig = STANDARD.encode(signer.sign(&docker_hub).to_bytes());
         assert!(parse(&docker_hub, &sig, &[key]).is_err());
     }
@@ -594,7 +592,7 @@ mod tests {
     fn new_fields_do_not_break_old_installers() {
         let signer = SigningKey::from_bytes(&[7; 32]);
         let key = signer.verifying_key();
-        let text = String::from_utf8(manifest("0.4.4", "ghcr.io/miroshka000/mikan")).unwrap();
+        let text = String::from_utf8(manifest("0.4.4", "ghcr.io/drillex100-beep/scilla")).unwrap();
         let extended = text.replacen("{\"version\"", "{\"min_installer\":\"0.4.4\",\"channel\":\"stable\",\"version\"", 1).replacen(
             "\"sha256\":",
             "\"size\":123,\"sha256\":",
@@ -619,19 +617,19 @@ mod tests {
         let signer = SigningKey::from_bytes(&[7; 32]);
         let key = signer.verifying_key();
         let accept = |data: &[u8]| parse(data, &STANDARD.encode(signer.sign(data).to_bytes()), &[key]).is_ok();
-        assert!(accept(&manifest("0.4.4", "ghcr.io/miroshka000/mikan")));
+        assert!(accept(&manifest("0.4.4", "ghcr.io/drillex100-beep/scilla")));
         for bad in [
-            "ghcr.io/someone-else/mikan",
-            "ghcr.io/miroshka000/../x",
-            "ghcr.io/miroshka000/Mi kan",
-            "ghcr.io/miroshka000/",
-            "ghcr.io/miroshka000/m$x",
+            "ghcr.io/someone-else/scilla",
+            "ghcr.io/drillex100-beep/../x",
+            "ghcr.io/drillex100-beep/Mi kan",
+            "ghcr.io/drillex100-beep/",
+            "ghcr.io/drillex100-beep/m$x",
         ] {
             assert!(!accept(&manifest("0.4.4", bad)), "{bad}");
         }
-        let short_hash = String::from_utf8(manifest("0.4.4", "ghcr.io/miroshka000/mikan")).unwrap().replace(&"b".repeat(64), "bb");
+        let short_hash = String::from_utf8(manifest("0.4.4", "ghcr.io/drillex100-beep/scilla")).unwrap().replace(&"b".repeat(64), "bb");
         assert!(!accept(short_hash.as_bytes()));
-        let plain_http = String::from_utf8(manifest("0.4.4", "ghcr.io/miroshka000/mikan")).unwrap().replace("https://", "http://");
+        let plain_http = String::from_utf8(manifest("0.4.4", "ghcr.io/drillex100-beep/scilla")).unwrap().replace("https://", "http://");
         assert!(!accept(plain_http.as_bytes()));
     }
 
@@ -800,7 +798,7 @@ mod tests {
         }
         fn release(&self, version: &str) -> String {
             let url = format!("https://github.com/{REPO}/releases/download/v{version}/manifest.json");
-            self.put(&url, manifest(version, "ghcr.io/miroshka000/mikan"));
+            self.put(&url, manifest(version, "ghcr.io/drillex100-beep/scilla"));
             url
         }
         /// An index of "version channel from" entries.
@@ -827,7 +825,7 @@ mod tests {
         for v in ["0.4.5", "0.5.0.0", "0.5.0.1", "0.5.0.2-rc.1", "0.6.0.0"] {
             f.release(v);
         }
-        let latest = manifest("0.5.0.0", "ghcr.io/miroshka000/mikan");
+        let latest = manifest("0.5.0.0", "ghcr.io/drillex100-beep/scilla");
         f.put(&latest_url(), latest);
         f.index(&[
             "0.4.5 stable 0.4.0",
@@ -868,7 +866,7 @@ mod tests {
         f.index(&["0.5.0.1 stable 0.4.5"]);
         f.put(
             &format!("https://github.com/{REPO}/releases/download/v0.5.0.1/manifest.json"),
-            manifest("0.5.0.2", "ghcr.io/miroshka000/mikan"),
+            manifest("0.5.0.2", "ghcr.io/drillex100-beep/scilla"),
         );
         fallback("a manifest of another version");
         f.files.borrow_mut().clear();

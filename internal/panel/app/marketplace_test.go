@@ -17,10 +17,10 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/release"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/release"
 )
 
 // The marketplace of protocol 2: the admin approves exactly the permissions shown, the grant

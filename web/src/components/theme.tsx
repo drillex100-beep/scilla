@@ -12,10 +12,10 @@ import { CardHead } from "./layout";
 
 const LIGHT = LIGHT_THEMES;
 const DARK = DARK_THEMES;
-/** What the admin picks: a theme, or the device's light or dark (Mikan or Midnight). */
+/** What the admin picks: a theme, or the device's light or dark (Scilla or Midnight). */
 type ThemeChoice = Theme | "system";
 
-const KEY = "mikan-theme";
+const KEY = "scilla-theme";
 
 function valid(value: string | null): value is ThemeChoice {
   return value === "system" || (value !== null && (THEMES as readonly string[]).includes(value));
@@ -24,12 +24,12 @@ function valid(value: string | null): value is ThemeChoice {
 const isDark = (theme: Theme) => isDarkTheme(theme);
 
 export function getTheme(): ThemeChoice {
-  if (typeof window === "undefined") return "mikan";
+  if (typeof window === "undefined") return "scilla";
   try {
     const value = window.localStorage.getItem(KEY);
-    return valid(value) ? value : "mikan";
+    return valid(value) ? value : "scilla";
   } catch {
-    return "mikan";
+    return "scilla";
   }
 }
 
@@ -40,7 +40,7 @@ const darkQuery = () => (darkList ??= window.matchMedia?.("(prefers-color-scheme
 
 function resolve(choice: ThemeChoice): Theme {
   if (choice !== "system") return choice;
-  return darkQuery()?.matches ? "midnight" : "mikan";
+  return darkQuery()?.matches ? "midnight" : "scilla";
 }
 
 function apply(theme: Theme) {
@@ -59,7 +59,7 @@ const onSchemeChange = () => {
 
 /** Applies a choice to the page and keeps it; "system" also follows the device from now on. */
 export function setTheme(choice: ThemeChoice, opts: { animate?: boolean; keep?: boolean } = {}) {
-  const next: ThemeChoice = valid(choice) ? choice : "mikan";
+  const next: ThemeChoice = valid(choice) ? choice : "scilla";
   // keep: false only shows it. Another tab's choice is applied without writing it back, so
   // two tabs of different versions never overwrite each other's theme.
   if (opts.keep !== false) {
@@ -209,7 +209,7 @@ export function ThemeCard() {
                   >
                     {o.id === "system" ? (
                       <span className="theme-mock-split" aria-hidden>
-                        <Mock theme="mikan" />
+                        <Mock theme="scilla" />
                         <Mock theme="midnight" />
                       </span>
                     ) : (
@@ -234,7 +234,7 @@ export function ThemeCard() {
 /** Every theme's name, in the admin's language. */
 export function themeNames(): Record<Theme, string> {
   return {
-    mikan: t("settings.themeMikan"),
+    scilla: t("settings.themeScilla"),
     ocean: t("settings.themeOcean"),
     sakura: t("settings.themeSakura"),
     forest: t("settings.themeForest"),

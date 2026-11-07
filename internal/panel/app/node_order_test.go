@@ -14,10 +14,10 @@ import (
 
 	"go.yaml.in/yaml/v3"
 
-	"mikan/internal/nodetls"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/nodetls"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // The admin orders the servers: the API takes every node once, a new node goes last, and
@@ -34,7 +34,7 @@ func TestNodeOrder(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	panel, _ := nodetls.Generate("mikan-panel", x509.ExtKeyUsageClientAuth, time.Now())
+	panel, _ := nodetls.Generate("scilla-panel", x509.ExtKeyUsageClientAuth, time.Now())
 	add := func(name, host string) db.Node {
 		n, _, err := domain.AddNode(ctx, h.st, panel, domain.NodeInput{Name: name, Host: host, APIPort: 40000}, time.Now())
 		if err != nil {

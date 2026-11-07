@@ -9,10 +9,10 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/acmechallenge"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/storetest"
-	"mikan/internal/panel/tlscert"
+	"scilla/internal/acmechallenge"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/storetest"
+	"scilla/internal/panel/tlscert"
 )
 
 // The subscription domain's certificate is its own: none while the domain is unset, the
@@ -20,7 +20,7 @@ import (
 // domain goes.
 func TestSubDomainCertificate(t *testing.T) {
 	ctx := context.Background()
-	t.Setenv("MIKAN_ACME_DIRECTORY", "http://127.0.0.1:1/directory") // the CA is unreachable here
+	t.Setenv("SCILLA_ACME_DIRECTORY", "http://127.0.0.1:1/directory") // the CA is unreachable here
 	st, err := storetest.Open(ctx, t.TempDir())
 	if err != nil {
 		t.Fatal(err)

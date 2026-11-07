@@ -6,7 +6,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 // Speed caps and the fair share of a node's channel.
@@ -48,7 +48,7 @@ type group struct {
 func newGroup(key string) *group { return &group{key: key} }
 
 // speedGroup is the name the core shares the group's buckets under.
-func (g *group) speedGroup() string { return "mikan/" + g.key }
+func (g *group) speedGroup() string { return "scilla/" + g.key }
 
 // moved counts bytes the group moved; share turns them into its rate and its activity.
 func (g *group) moved(up, down int64) {

@@ -8,15 +8,15 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/release"
+	"scilla/internal/release"
 )
 
 // The registry of community addons (getmikan/marketplace-community): addons of third-party
-// authors that mikan lists and does not vouch for. A mikan workflow reads the authors'
+// authors that scilla lists and does not vouch for. A scilla workflow reads the authors'
 // releases and publishes a snapshot of each addon (its image by digest, its permissions) in
 // one index.json signed with the catalog's key, so the panel reads one file from GitHub and
 // never the authors' hosts. An addon from it installs as an unofficial one, as an addon of a
-// source does; revoked lists what mikan took out, which a panel that has it installed shows.
+// source does; revoked lists what scilla took out, which a panel that has it installed shows.
 
 // CommunityURL is where the registry's signed index is published, next to its signature
 // (release.SigSuffix).
@@ -44,7 +44,7 @@ type CommunityAddon struct {
 	UpdatedAt int64           `json:"updated_at"`
 }
 
-// CommunityRevoked is an addon mikan took out of the registry, by id or by repository.
+// CommunityRevoked is an addon scilla took out of the registry, by id or by repository.
 type CommunityRevoked struct {
 	ID     string `json:"id,omitempty"`
 	Repo   string `json:"repo,omitempty"`

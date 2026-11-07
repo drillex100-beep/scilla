@@ -98,7 +98,7 @@ export function TemplateCard({ s, text, setText, starter }: { s: Schemas["Settin
     },
     {
       id: "node",
-      apply: (v: string) => addToList(v, "proxy-groups", `  - name: 📺 YouTube\n    type: select\n    mikan:\n      nodes: ["${names[0] ?? "1"}"]`),
+      apply: (v: string) => addToList(v, "proxy-groups", `  - name: 📺 YouTube\n    type: select\n    scilla:\n      nodes: ["${names[0] ?? "1"}"]`),
     },
   ] as const;
   const submit = (e: FormEvent) => {
@@ -145,7 +145,7 @@ export function TemplateCard({ s, text, setText, starter }: { s: Schemas["Settin
 
 - name: 🔒 Быстрые
   type: url-test
-  mikan:
+  scilla:
     nodes: [${names.slice(0, 2).map((n) => `"${n}"`).join(", ") || '"1"'}]
     types: [vless, hysteria2]`}</pre>
           <p className="mt-2">{t("settings.templateHowNodes")}</p>

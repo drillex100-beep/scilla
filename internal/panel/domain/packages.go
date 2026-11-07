@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // Packages is the catalog of traffic packages (GitHub issue #12): extra traffic for the

@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/settings"
+	"scilla/internal/panel/settings"
 )
 
 // A hello the handler does not take gets the answer of any unknown path, byte for byte;
@@ -34,12 +34,12 @@ func TestHelloRoute(t *testing.T) {
 		s.ServeHTTP(rec, req)
 		return rec.Code, rec.Body.String()
 	}
-	code, body := get(http.MethodPost, "/.well-known/mikan-node-hello", false)
+	code, body := get(http.MethodPost, "/.well-known/scilla-node-hello", false)
 	otherCode, otherBody := get(http.MethodPost, "/anything", false)
 	if code != http.StatusNotFound || code != otherCode || body != otherBody {
 		t.Fatalf("a refused hello: %d %q, any path: %d %q", code, body, otherCode, otherBody)
 	}
-	if code, body := get(http.MethodPost, "/.well-known/mikan-node-hello", true); code != http.StatusOK || body != "hello" {
+	if code, body := get(http.MethodPost, "/.well-known/scilla-node-hello", true); code != http.StatusOK || body != "hello" {
 		t.Fatalf("a hello: %d %q", code, body)
 	}
 	before := asked

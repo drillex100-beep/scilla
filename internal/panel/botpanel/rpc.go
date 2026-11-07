@@ -9,9 +9,9 @@ import (
 	"reflect"
 	"strings"
 
-	"mikan/internal/panel/billing"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/tgbot"
+	"scilla/internal/panel/billing"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/tgbot"
 )
 
 // The bot's screens as an addon see the panel over the Panel API: POST /panel/v2/bot/<method>

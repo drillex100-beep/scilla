@@ -9,7 +9,7 @@ import (
 	"sync"
 	"testing"
 
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store/db"
 )
 
 // A slot belongs to one buyer even when two purchases reach PostgreSQL together.
@@ -95,7 +95,7 @@ func fixtureDSN(t *testing.T, s *Store) string {
 	if err := s.DB.QueryRowContext(context.Background(), "SELECT current_schema()").Scan(&schema); err != nil {
 		t.Fatal(err)
 	}
-	u, err := url.Parse(os.Getenv("MIKAN_TEST_DATABASE_URL"))
+	u, err := url.Parse(os.Getenv("SCILLA_TEST_DATABASE_URL"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -114,7 +114,7 @@ func TestRuntimeRefusesIncompleteOrLostMigration(t *testing.T) {
 	defer s.Close()
 	dir := t.TempDir()
 	dsn := fixtureDSN(t, s)
-	if err := os.WriteFile(filepath.Join(dir, "mikan.db"), []byte("legacy"), 0600); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, "scilla.db"), []byte("legacy"), 0600); err != nil {
 		t.Fatal(err)
 	}
 	if live, err := OpenPostgres(ctx, dir, dsn); !errors.Is(err, ErrSQLiteData) {
@@ -126,7 +126,7 @@ func TestRuntimeRefusesIncompleteOrLostMigration(t *testing.T) {
 	if _, err := Migrate(ctx, dsn, dir); !errors.Is(err, ErrSQLiteData) {
 		t.Fatal("migrated data still in SQLite:", err)
 	}
-	if err := os.Remove(filepath.Join(dir, "mikan.db")); err != nil {
+	if err := os.Remove(filepath.Join(dir, "scilla.db")); err != nil {
 		t.Fatal(err)
 	}
 	if err := os.WriteFile(filepath.Join(dir, MigrationMarker), []byte("{}"), 0600); err != nil {

@@ -8,7 +8,7 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store/db"
 )
 
 // What a term may cost. Traffic packages and the trial are sold on the same scale, so the

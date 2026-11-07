@@ -6,9 +6,9 @@ import (
 	"errors"
 	"strings"
 
-	"mikan/internal/panel/presets"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/proto"
+	"scilla/internal/panel/presets"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/proto"
 )
 
 // CopyInbound is what may differ in a copy of an inbound; zero values keep the original's.

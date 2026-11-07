@@ -39,7 +39,7 @@ func TestHappRoutingOf(t *testing.T) {
 		"GEOSITE,no-such-category,VPN",
 		"PROCESS-NAME,Telegram.exe,VPN",
 		"AND,((NETWORK,UDP),(DST-PORT,443)),REJECT",
-		"RULE-SET,mikan-blocked,VPN",
+		"RULE-SET,scilla-blocked,VPN",
 		"GEOSITE,category-ru,DIRECT",
 		"MATCH,DIRECT",
 		"MATCH,REJECT",
@@ -96,11 +96,11 @@ func TestHappKnowsThePanelsCategories(t *testing.T) {
 
 // The rules come from the profile the settings make: the simple ones, or an own profile.
 func TestProfileRules(t *testing.T) {
-	cfg := Config{Brand: "Mikan", Direct: []string{"203.0.113.7"}, Routing: RoutingBlocked,
+	cfg := Config{Brand: "Scilla", Direct: []string{"203.0.113.7"}, Routing: RoutingBlocked,
 		Routes: Routes{Services: map[string]string{"youtube": TargetVPN, "ads": TargetBlock, "ai": NodeTarget(2)}},
 		Nodes:  []Node{{ID: 1, Name: "🇳🇱 Нидерланды"}, {ID: 2, Name: "🇺🇸 США"}}}
 	p := decodeHapp(t, happAutoRouting(cfg))
-	if p.Name != "Mikan" || p.GlobalProxy != "false" || !slices.Contains(p.ProxySites, "geosite:youtube") || !slices.Contains(p.ProxySites, "geosite:category-ai-!cn") ||
+	if p.Name != "Scilla" || p.GlobalProxy != "false" || !slices.Contains(p.ProxySites, "geosite:youtube") || !slices.Contains(p.ProxySites, "geosite:category-ai-!cn") ||
 		!slices.Contains(p.ProxySites, "geosite:ru-blocked") || !slices.Contains(p.BlockSites, "geosite:category-ads-all") || !slices.Contains(p.DirectIP, "203.0.113.7/32") {
 		t.Fatalf("simple: %+v", p)
 	}

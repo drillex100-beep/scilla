@@ -12,22 +12,22 @@ import (
 	"syscall"
 	"time"
 
-	"mikan/internal/panel/audit"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/tlscert"
+	"scilla/internal/panel/audit"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/tlscert"
 )
 
 // certCmd installs the admin's own certificate from the server (GitHub issue #9): the
-// host's `mikan cert set` pipes the chain and the key in, which suits a certbot or
+// host's `scilla cert set` pipes the chain and the key in, which suits a certbot or
 // acme.sh renewal hook. The running panel is told to serve it at once.
 func certCmd(ctx context.Context, st *store.Store, set *settings.Settings, dataDir string, args []string, stdin io.Reader, stdout io.Writer) error {
 	if len(args) == 0 {
-		return errors.New("mikan admin cert set|clear|show [--node NODE]; set reads the chain and the key (PEM) on stdin")
+		return errors.New("scilla admin cert set|clear|show [--node NODE]; set reads the chain and the key (PEM) on stdin")
 	}
 	fs := flag.NewFlagSet("cert "+args[0], flag.ContinueOnError)
-	node := fs.Int64("node", 0, "a node's own certificate instead of the panel's (see mikan admin node list)")
+	node := fs.Int64("node", 0, "a node's own certificate instead of the panel's (see scilla admin node list)")
 	if err := fs.Parse(args[1:]); err != nil {
 		return err
 	}
@@ -39,7 +39,7 @@ func certCmd(ctx context.Context, st *store.Store, set *settings.Settings, dataD
 	if *node != 0 {
 		n, err := st.Q.GetNode(ctx, *node)
 		if err != nil {
-			return fmt.Errorf("no node %d: see mikan admin node list", *node)
+			return fmt.Errorf("no node %d: see scilla admin node list", *node)
 		}
 		nodeHost = domain.NodeHost(n)
 		if n.Address == "" { // the panel's own node

@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/nodehello"
+	"scilla/internal/nodeapi"
+	"scilla/internal/nodehello"
 )
 
 // sick is a node whose health check fails while err is set.

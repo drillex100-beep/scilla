@@ -40,7 +40,7 @@ function offlinePage() {
 <meta name="color-scheme" content="light dark">
 <title>${t.title}</title>
 <style>
-  /* The panel's own themes (src/styles/themes.css): mikan, and midnight for a dark system. */
+  /* The panel's own themes (src/styles/themes.css): scilla, and midnight for a dark system. */
   :root { --bg: #fbf1e8; --card: #ffffff; --ink: #161a24; --muted: #5c6474; --icon: #f07a2e; --fill: #161a24; --on-fill: #ffffff; --line: rgba(22, 26, 36, 0.08); }
   @media (prefers-color-scheme: dark) { :root { --bg: #0d1118; --card: #161d27; --ink: #f4f7fb; --muted: #8b97a8; --icon: #ff843d; --fill: #ff843d; --on-fill: #161a24; --line: rgba(244, 247, 251, 0.1); } }
   * { box-sizing: border-box; }

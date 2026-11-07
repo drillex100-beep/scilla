@@ -8,13 +8,13 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/pace"
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/tgate"
-	"mikan/internal/panel/tgbot"
-	"mikan/internal/tgapi"
+	"scilla/internal/pace"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/tgate"
+	"scilla/internal/panel/tgbot"
+	"scilla/internal/tgapi"
 )
 
 // Emit writes an event of the panel's feed; dedupe makes a second emit of it a no-op.

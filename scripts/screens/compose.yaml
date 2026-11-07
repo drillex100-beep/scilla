@@ -1,26 +1,26 @@
 # A demo panel with its node for the README screenshots (scripts/screens/shoot.mjs).
 # Only the panel's port leaves Docker, on 127.0.0.1; the node's VPN ports stay inside.
-name: mikan-screens
+name: scilla-screens
 
 services:
   node:
-    image: ${MIKAN_IMAGE:-mikan:dev}
-    entrypoint: ["/usr/local/bin/mikan-node"]
+    image: ${SCILLA_IMAGE:-scilla:dev}
+    entrypoint: ["/usr/local/bin/scilla-node"]
     environment:
-      MIKAN_DATA_DIR: /data/node
-    volumes: ["data:/data", "run:/run/mikan"]
+      SCILLA_DATA_DIR: /data/node
+    volumes: ["data:/data", "run:/run/scilla"]
 
   panel:
-    image: ${MIKAN_IMAGE:-mikan:dev}
+    image: ${SCILLA_IMAGE:-scilla:dev}
     depends_on:
       node: {condition: service_started}
       postgres: {condition: service_healthy}
     environment:
-      MIKAN_DATA_DIR: /data/panel
-      MIKAN_PANEL_LISTEN: 0.0.0.0:2053
-      MIKAN_DATABASE_URL: postgresql://mikan:${MIKAN_TEST_POSTGRES_PASSWORD:?set demo database password}@localhost/mikan?host=/run/postgresql
+      SCILLA_DATA_DIR: /data/panel
+      SCILLA_PANEL_LISTEN: 0.0.0.0:2053
+      SCILLA_DATABASE_URL: postgresql://scilla:${SCILLA_TEST_POSTGRES_PASSWORD:?set demo database password}@localhost/scilla?host=/run/postgresql
     ports: ["127.0.0.1:2090:2053"]
-    volumes: ["data:/data", "run:/run/mikan", "pg-run:/run/postgresql"]
+    volumes: ["data:/data", "run:/run/scilla", "pg-run:/run/postgresql"]
 
   # As the installer runs it (installer/src/docker.rs): no network, the panel talks to it
   # over the shared unix socket with a scram-sha-256 password.
@@ -29,14 +29,14 @@ services:
     network_mode: none
     security_opt: ["no-new-privileges:true"]
     environment:
-      POSTGRES_USER: mikan
-      POSTGRES_DB: mikan
-      POSTGRES_PASSWORD: ${MIKAN_TEST_POSTGRES_PASSWORD:?set demo database password}
+      POSTGRES_USER: scilla
+      POSTGRES_DB: scilla
+      POSTGRES_PASSWORD: ${SCILLA_TEST_POSTGRES_PASSWORD:?set demo database password}
       POSTGRES_INITDB_ARGS: --auth-local=scram-sha-256 --auth-host=scram-sha-256
     command: ["postgres", "-c", "listen_addresses=", "-c", "unix_socket_directories=/run/postgresql", "-c", "unix_socket_permissions=0777"]
     volumes: ["pg-data:/var/lib/postgresql", "pg-run:/run/postgresql"]
     healthcheck:
-      test: ["CMD", "pg_isready", "-h", "/run/postgresql", "-U", "mikan", "-d", "mikan"]
+      test: ["CMD", "pg_isready", "-h", "/run/postgresql", "-U", "scilla", "-d", "scilla"]
       interval: 2s
       timeout: 5s
       retries: 60

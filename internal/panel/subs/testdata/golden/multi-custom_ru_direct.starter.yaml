@@ -43,7 +43,7 @@ proxy-groups:
   - name: "\U0001F1F3\U0001F1F1 Нидерланды"
     type: url-test
     interval: 120
-    mikan:
+    scilla:
       nodes:
         - "\U0001F1F3\U0001F1F1 Нидерланды"
     tolerance: 50
@@ -51,7 +51,7 @@ proxy-groups:
   - name: "\U0001F1FA\U0001F1F8 США"
     type: url-test
     interval: 120
-    mikan:
+    scilla:
       nodes:
         - "\U0001F1FA\U0001F1F8 США"
     tolerance: 50
@@ -60,7 +60,7 @@ proxy-groups:
     type: select
     proxies:
       - Прокси
-    mikan:
+    scilla:
       nodes:
         - "\U0001F1FA\U0001F1F8 США"
   - name: PROXY
@@ -78,106 +78,26 @@ rules:
   - GEOSITE,youtube,Прокси
   - GEOSITE,telegram,Прокси
   - GEOIP,telegram,Прокси,no-resolve
-  - RULE-SET,mikan-telegram-ip,Прокси,no-resolve
+  - RULE-SET,scilla-telegram-ip,Прокси,no-resolve
   - "GEOSITE,category-ai-!cn,\U0001F916 ChatGPT · Claude · Gemini"
-  - "RULE-SET,mikan-ai,\U0001F916 ChatGPT · Claude · Gemini"
-  - "RULE-SET,mikan-gemini,\U0001F916 ChatGPT · Claude · Gemini"
-  - RULE-SET,mikan-torrent-apps,DIRECT
+  - "RULE-SET,scilla-ai,\U0001F916 ChatGPT · Claude · Gemini"
+  - "RULE-SET,scilla-gemini,\U0001F916 ChatGPT · Claude · Gemini"
+  - RULE-SET,scilla-torrent-apps,DIRECT
   - GEOSITE,category-public-tracker,DIRECT
   - RULE-SET,own-wl,Прокси
   - RULE-SET,own-ru-ip,DIRECT,no-resolve
   - RULE-SET,own-ads,REJECT
-  - RULE-SET,mikan-ru-apps,DIRECT
-  - RULE-SET,mikan-ru-apps-wildcard,DIRECT
-  - RULE-SET,mikan-ru-pc,DIRECT
-  - RULE-SET,mikan-ru-sites,DIRECT
-  - RULE-SET,mikan-ru-keywords,DIRECT
-  - RULE-SET,mikan-ru-core,DIRECT
+  - RULE-SET,scilla-ru-apps,DIRECT
+  - RULE-SET,scilla-ru-apps-wildcard,DIRECT
+  - RULE-SET,scilla-ru-pc,DIRECT
+  - RULE-SET,scilla-ru-sites,DIRECT
+  - RULE-SET,scilla-ru-keywords,DIRECT
+  - RULE-SET,scilla-ru-core,DIRECT
   - GEOSITE,category-ru,DIRECT
   - GEOIP,ru,DIRECT
   - MATCH,Прокси
   - MATCH,REJECT
 rule-providers:
-  mikan-ai:
-    type: http
-    behavior: classical
-    format: yaml
-    interval: 86400
-    path: ./ruleset/mikan-ai.yaml
-    proxy: Прокси
-    url: https://raw.githubusercontent.com/Nemu-x/privWL-clash/5d0a5924b6c87e4abed0d3c87989ce2469679828/routing/ai.yaml
-  mikan-gemini:
-    type: http
-    behavior: classical
-    format: yaml
-    interval: 86400
-    path: ./ruleset/mikan-gemini.yaml
-    proxy: Прокси
-    url: https://raw.githubusercontent.com/Nemu-x/privWL-clash/5d0a5924b6c87e4abed0d3c87989ce2469679828/routing/gemini.yaml
-  mikan-ru-apps:
-    type: http
-    behavior: classical
-    format: yaml
-    interval: 86400
-    path: ./ruleset/mikan-ru-apps.yaml
-    proxy: Прокси
-    url: https://raw.githubusercontent.com/Nemu-x/privWL-clash/5d0a5924b6c87e4abed0d3c87989ce2469679828/ru/process-direct-apk.yaml
-  mikan-ru-apps-wildcard:
-    type: http
-    behavior: classical
-    format: yaml
-    interval: 86400
-    path: ./ruleset/mikan-ru-apps-wildcard.yaml
-    proxy: Прокси
-    url: https://raw.githubusercontent.com/Nemu-x/privWL-clash/5d0a5924b6c87e4abed0d3c87989ce2469679828/ru/process-direct-apk-wildcard.yaml
-  mikan-ru-core:
-    type: http
-    behavior: classical
-    format: yaml
-    interval: 86400
-    path: ./ruleset/mikan-ru-core.yaml
-    proxy: Прокси
-    url: https://raw.githubusercontent.com/Nemu-x/privWL-clash/5d0a5924b6c87e4abed0d3c87989ce2469679828/ru/ru-core.yaml
-  mikan-ru-keywords:
-    type: http
-    behavior: classical
-    format: yaml
-    interval: 86400
-    path: ./ruleset/mikan-ru-keywords.yaml
-    proxy: Прокси
-    url: https://raw.githubusercontent.com/Nemu-x/privWL-clash/5d0a5924b6c87e4abed0d3c87989ce2469679828/ru/domain-direct-keyword.yaml
-  mikan-ru-pc:
-    type: http
-    behavior: classical
-    format: yaml
-    interval: 86400
-    path: ./ruleset/mikan-ru-pc.yaml
-    proxy: Прокси
-    url: https://raw.githubusercontent.com/Nemu-x/privWL-clash/5d0a5924b6c87e4abed0d3c87989ce2469679828/ru/process-direct-pc.yaml
-  mikan-ru-sites:
-    type: http
-    behavior: classical
-    format: yaml
-    interval: 86400
-    path: ./ruleset/mikan-ru-sites.yaml
-    proxy: Прокси
-    url: https://raw.githubusercontent.com/Nemu-x/privWL-clash/5d0a5924b6c87e4abed0d3c87989ce2469679828/ru/domain-direct-suffix.yaml
-  mikan-telegram-ip:
-    type: http
-    behavior: classical
-    format: yaml
-    interval: 86400
-    path: ./ruleset/mikan-telegram-ip.yaml
-    proxy: Прокси
-    url: https://raw.githubusercontent.com/Nemu-x/privWL-clash/5d0a5924b6c87e4abed0d3c87989ce2469679828/tgprx.yaml
-  mikan-torrent-apps:
-    type: http
-    behavior: classical
-    format: yaml
-    interval: 86400
-    path: ./ruleset/mikan-torrent-apps.yaml
-    proxy: Прокси
-    url: https://raw.githubusercontent.com/legiz-ru/mihomo-rule-sets/a80b3c1d7a70ce83b1d1a45ff113a2fe5b312154/other/torrent-clients.yaml
   own-ads:
     type: http
     behavior: domain
@@ -202,6 +122,86 @@ rule-providers:
     path: ./ruleset/own-wl.yaml
     proxy: Прокси
     url: https://example.com/wl.yaml
+  scilla-ai:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/scilla-ai.yaml
+    proxy: Прокси
+    url: https://raw.githubusercontent.com/Nemu-x/privWL-clash/5d0a5924b6c87e4abed0d3c87989ce2469679828/routing/ai.yaml
+  scilla-gemini:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/scilla-gemini.yaml
+    proxy: Прокси
+    url: https://raw.githubusercontent.com/Nemu-x/privWL-clash/5d0a5924b6c87e4abed0d3c87989ce2469679828/routing/gemini.yaml
+  scilla-ru-apps:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/scilla-ru-apps.yaml
+    proxy: Прокси
+    url: https://raw.githubusercontent.com/Nemu-x/privWL-clash/5d0a5924b6c87e4abed0d3c87989ce2469679828/ru/process-direct-apk.yaml
+  scilla-ru-apps-wildcard:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/scilla-ru-apps-wildcard.yaml
+    proxy: Прокси
+    url: https://raw.githubusercontent.com/Nemu-x/privWL-clash/5d0a5924b6c87e4abed0d3c87989ce2469679828/ru/process-direct-apk-wildcard.yaml
+  scilla-ru-core:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/scilla-ru-core.yaml
+    proxy: Прокси
+    url: https://raw.githubusercontent.com/Nemu-x/privWL-clash/5d0a5924b6c87e4abed0d3c87989ce2469679828/ru/ru-core.yaml
+  scilla-ru-keywords:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/scilla-ru-keywords.yaml
+    proxy: Прокси
+    url: https://raw.githubusercontent.com/Nemu-x/privWL-clash/5d0a5924b6c87e4abed0d3c87989ce2469679828/ru/domain-direct-keyword.yaml
+  scilla-ru-pc:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/scilla-ru-pc.yaml
+    proxy: Прокси
+    url: https://raw.githubusercontent.com/Nemu-x/privWL-clash/5d0a5924b6c87e4abed0d3c87989ce2469679828/ru/process-direct-pc.yaml
+  scilla-ru-sites:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/scilla-ru-sites.yaml
+    proxy: Прокси
+    url: https://raw.githubusercontent.com/Nemu-x/privWL-clash/5d0a5924b6c87e4abed0d3c87989ce2469679828/ru/domain-direct-suffix.yaml
+  scilla-telegram-ip:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/scilla-telegram-ip.yaml
+    proxy: Прокси
+    url: https://raw.githubusercontent.com/Nemu-x/privWL-clash/5d0a5924b6c87e4abed0d3c87989ce2469679828/tgprx.yaml
+  scilla-torrent-apps:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/scilla-torrent-apps.yaml
+    proxy: Прокси
+    url: https://raw.githubusercontent.com/legiz-ru/mihomo-rule-sets/a80b3c1d7a70ce83b1d1a45ff113a2fe5b312154/other/torrent-clients.yaml
 sniffer:
   enable: true
   parse-pure-ip: true

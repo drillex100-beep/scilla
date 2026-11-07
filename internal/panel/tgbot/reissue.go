@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"time"
 
-	"mikan/internal/panel/model"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/model"
+	"scilla/internal/tgapi"
 )
 
 // The subscriber's own new link: a button on the subscription screen, a confirmation that

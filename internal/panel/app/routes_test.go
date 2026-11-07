@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
 )
 
 // Routing over the API: the catalog, a preview before saving, refusals with a code, and
@@ -87,7 +87,7 @@ func TestRoutesOverHTTP(t *testing.T) {
 		Rules []string `json:"rules"`
 	}
 	if resp.StatusCode != http.StatusOK || unmarshalProfile(body, &cfg) != nil || cfg.Rules[len(cfg.Rules)-1] != "MATCH,DIRECT" ||
-		!strings.Contains(strings.Join(cfg.Rules, "\n"), "RULE-SET,mikan-ru-apps,DIRECT") {
+		!strings.Contains(strings.Join(cfg.Rules, "\n"), "RULE-SET,scilla-ru-apps,DIRECT") {
 		t.Fatalf("profile: %d %s", resp.StatusCode, body)
 	}
 }

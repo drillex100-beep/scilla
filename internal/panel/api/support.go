@@ -12,13 +12,13 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/audit"
-	"mikan/internal/panel/auth"
-	"mikan/internal/panel/server"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/support"
-	"mikan/internal/release"
+	"scilla/internal/panel/audit"
+	"scilla/internal/panel/auth"
+	"scilla/internal/panel/server"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/support"
+	"scilla/internal/release"
 )
 
 // Support access (internal/panel/support keeps the grants). Whoever the admin lets in works
@@ -49,7 +49,7 @@ const (
 // node's own switches, the official addons, the way back to an automatic certificate, an
 // import's progress, the updates. The other sessionOnly ones decide where money goes or
 // outlast the grant (a node's key, an own WireGuard exit or certificate, the payment details
-// and the balances, the bot, an addon from outside mikan's catalog, the page every subscriber
+// and the balances, the bot, an addon from outside scilla's catalog, the page every subscriber
 // opens): the extended mode only. A new sessionOnly operation stays closed until it is named
 // here. Inside an operation let through, requireSession keeps the same line field by field:
 // a node's address and domain, an addon's settings, another author's code.
@@ -280,7 +280,7 @@ type SupportGrantView struct {
 	ID              int64      `json:"id"`
 	Level           string     `json:"level" enum:"view,change,terminal" doc:"view: только чтение; change: ещё и изменения; terminal: ещё и терминал на серверах из terminal_targets"`
 	ShowPeople      bool       `json:"show_people" doc:"Оператор видит имена, Telegram и ссылки подписок; иначе они скрыты"`
-	Extended        bool       `json:"extended" doc:"Расширенный режим: ещё и то, что иначе может только сессия админа: ключи нод, адрес и домен ноды, свои сертификаты и WireGuard, оплата и балансы, бот, аддоны не из каталога mikan"`
+	Extended        bool       `json:"extended" doc:"Расширенный режим: ещё и то, что иначе может только сессия админа: ключи нод, адрес и домен ноды, свои сертификаты и WireGuard, оплата и балансы, бот, аддоны не из каталога scilla"`
 	TerminalTargets []string   `json:"terminal_targets" doc:"Где разрешён терминал: panel или node:<id>; пусто вне уровня terminal"`
 	Note            string     `json:"note"`
 	Status          string     `json:"status" enum:"active,expired,revoked"`
@@ -315,7 +315,7 @@ type createSupportGrantInput struct {
 		Hours           int      `json:"hours" enum:"2,6,24" doc:"Срок доступа в часах"`
 		Level           string   `json:"level" enum:"view,change,terminal"`
 		ShowPeople      bool     `json:"show_people,omitempty" doc:"Показывать оператору имена, Telegram и ссылки подписчиков"`
-		Extended        bool     `json:"extended,omitempty" doc:"Расширенный режим, уровни change и terminal: ещё и ключи нод, адрес и домен ноды, свои сертификаты и WireGuard, оплата и балансы, бот, аддоны не из каталога mikan. Нужен пароль"`
+		Extended        bool     `json:"extended,omitempty" doc:"Расширенный режим, уровни change и terminal: ещё и ключи нод, адрес и домен ноды, свои сертификаты и WireGuard, оплата и балансы, бот, аддоны не из каталога scilla. Нужен пароль"`
 		TerminalTargets []string `json:"terminal_targets,omitempty" maxItems:"64" doc:"Уровень terminal: где разрешён терминал, panel и/или node:<id>. Полный доступ к этим серверам"`
 		Note            string   `json:"note,omitempty" maxLength:"200" doc:"Пометка для себя, например номер обращения"`
 		Password        string   `json:"password,omitempty" maxLength:"256" doc:"Пароль админа: нужен для уровня terminal и для расширенного режима"`
@@ -336,7 +336,7 @@ type supportGrantIDInput struct {
 
 type supportGrantsOutput struct {
 	Body struct {
-		Off     string            `json:"off" enum:",env,setting" doc:"Выключен ли доступ для поддержки: пусто — включён, env — MIKAN_SUPPORT_ACCESS=off в .env сервера, setting — настройкой support_access"`
+		Off     string            `json:"off" enum:",env,setting" doc:"Выключен ли доступ для поддержки: пусто — включён, env — SCILLA_SUPPORT_ACCESS=off в .env сервера, setting — настройкой support_access"`
 		Grant   *SupportGrantView `json:"grant" doc:"Последний выданный доступ, активный или нет; null: ещё не выдавался"`
 		Actions []AuditEntry      `json:"actions" doc:"Что делал оператор и что было с доступом, от новых к старым"`
 	}
@@ -364,7 +364,7 @@ type SupportWhoami struct {
 	ShowPeople      bool          `json:"show_people"`
 	Extended        bool          `json:"extended" doc:"Расширенный режим: ещё и то, что иначе может только сессия админа"`
 	PanelVersion    string        `json:"panel_version"`
-	ReleaseKey      string        `json:"release_key" doc:"Отпечаток ключа подписи релизов, которому верит эта сборка: у официального mikan он один, у форка свой"`
+	ReleaseKey      string        `json:"release_key" doc:"Отпечаток ключа подписи релизов, которому верит эта сборка: у официального scilla он один, у форка свой"`
 	Nodes           []SupportNode `json:"nodes"`
 	TerminalTargets []string      `json:"terminal_targets"`
 	CSRFToken       string        `json:"csrf_token,omitempty" doc:"Для изменяющих запросов сессии оператора; у ключа ms_… нет"`

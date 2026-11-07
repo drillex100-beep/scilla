@@ -1,8 +1,8 @@
 package subs
 
 import (
-	"mikan/internal/panel/domain"
-	"mikan/internal/textutil"
+	"scilla/internal/panel/domain"
+	"scilla/internal/textutil"
 )
 
 // A subscription that cannot connect (its term over, its traffic used up, turned off) gets

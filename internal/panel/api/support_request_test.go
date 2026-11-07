@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/auth"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
-	"mikan/internal/panel/support"
+	"scilla/internal/panel/auth"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
+	"scilla/internal/panel/support"
 )
 
 // A request outside huma (a WebSocket's upgrade) finds its support grant from the cookie

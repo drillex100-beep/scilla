@@ -32,10 +32,10 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/httpjson"
-	"mikan/internal/netaddr"
-	"mikan/internal/nodeapi"
-	"mikan/internal/textutil"
+	"scilla/internal/httpjson"
+	"scilla/internal/netaddr"
+	"scilla/internal/nodeapi"
+	"scilla/internal/textutil"
 )
 
 // Base is the real service.

@@ -4,9 +4,9 @@ import (
 	"reflect"
 	"testing"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/proto"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/proto"
 )
 
 func TestDetectApp(t *testing.T) {
@@ -22,7 +22,7 @@ func TestDetectApp(t *testing.T) {
 		"mihomo ClashFest/1.2.0":               {Family: FamilyMihomo}, // a build off a release tag names no core
 		"clash.meta/v1.19.32 SlothClash/0.9.4": {Family: FamilyMihomo, Core: Version{1, 19, 32}},
 		"clash.meta/mihomo SlothClash/0.9.4":   {Family: FamilyMihomo},
-		"mihomo/1.19.32 Mikan/0.1.3":           {Family: FamilyMihomo, Core: Version{1, 19, 32}},
+		"mihomo/1.19.32 Scilla/0.1.3":          {Family: FamilyMihomo, Core: Version{1, 19, 32}},
 		"mihomo/1.19.33 Kabosu/1.0.0":          {Family: FamilyMihomo, Core: Version{1, 19, 33}},
 		"kabosu/1.0.0":                         {Family: FamilyMihomo}, // a desktop app that names no core still gets Clash
 		"Happ/3.4.1":                           {Family: FamilyXray},

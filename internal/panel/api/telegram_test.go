@@ -8,12 +8,12 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/botpanel"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
-	"mikan/internal/panel/tgate"
-	"mikan/internal/panel/tgbot"
+	"scilla/internal/panel/botpanel"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
+	"scilla/internal/panel/tgate"
+	"scilla/internal/panel/tgbot"
 )
 
 // The sub path is the one thing about the panel a scanner cannot guess, and the bot's

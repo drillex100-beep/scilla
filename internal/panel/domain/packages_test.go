@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store/db"
 )
 
 // The catalog checks its input, and offers a user only packages for quotas it has.

@@ -4,9 +4,9 @@ import (
 	"context"
 	"strings"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/subs"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/subs"
 )
 
 // settingField is one field of PATCH /settings, declared once: whether only the session

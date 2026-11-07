@@ -8,13 +8,13 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/billing"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/billing"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
+	"scilla/internal/tgapi"
 )
 
 // "Докупить трафик" in the subscription screen lists the packages for the main traffic

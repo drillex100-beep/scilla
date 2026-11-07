@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/settings"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/settings"
 )
 
 // kvWorld is a server with a real database, two approved addons and a clock to move.

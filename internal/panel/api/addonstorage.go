@@ -6,8 +6,8 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/addons/panelapi"
-	"mikan/internal/panel/settings"
+	"scilla/internal/panel/addons/panelapi"
+	"scilla/internal/panel/settings"
 )
 
 // How much one addon may keep in its own store (the panel's API for addons, /kv). 256 MiB

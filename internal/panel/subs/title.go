@@ -6,10 +6,10 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/textutil"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/textutil"
 )
 
 // TitleMax bounds a filled title or announcement: apps show one line.
@@ -166,7 +166,7 @@ func fileName(title string) string {
 		return r
 	}, title))
 	if name == "" {
-		return "mikan"
+		return "scilla"
 	}
 	return name
 }

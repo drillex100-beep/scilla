@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/billing"
-	"mikan/internal/panel/settings"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/billing"
+	"scilla/internal/panel/settings"
+	"scilla/internal/tgapi"
 )
 
 func until(t *testing.T, what string, ok func() bool) {

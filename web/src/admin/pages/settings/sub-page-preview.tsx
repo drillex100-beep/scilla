@@ -69,7 +69,7 @@ export function PagePreview(props: PreviewProps) {
     if (!doc || !doc.getElementById("root") || root.current) return;
     for (const n of document.querySelectorAll('link[rel="stylesheet"], style')) doc.head.appendChild(n.cloneNode(true));
     const own = doc.createElement("style");
-    own.id = "mikan-css";
+    own.id = "scilla-css";
     doc.head.appendChild(own);
     root.current = createRoot(doc.getElementById("root")!);
     setReady(true);
@@ -100,7 +100,7 @@ export function PagePreview(props: PreviewProps) {
   }, [ready, locale]);
 
   useEffect(() => {
-    const own = frame.current?.contentDocument?.getElementById("mikan-css");
+    const own = frame.current?.contentDocument?.getElementById("scilla-css");
     if (!ready || !own) return;
     // Setting the text restyles the whole frame, so only a change is written.
     const text = cleanCSS(css);

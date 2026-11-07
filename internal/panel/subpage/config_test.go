@@ -32,7 +32,7 @@ func TestZeroIsDefault(t *testing.T) {
 	if got := strings.Join(order, ","); got != "status,promo,shop,traffic,devices,apps,guide,instructions,link,reissue,telegram,support" {
 		t.Fatalf("default sections: %s", got)
 	}
-	if def := Default(); def.Look != (PageLook{Palette: "mikan", Mode: "light", Accent: "theme", Font: "default", Radius: "medium", Cards: "glass", Background: PageBackground{Kind: "theme", Angle: 160, Dim: 30}}) || !def.Apps.QR || def.Apps.Platform != "auto" || def.CSS != "" {
+	if def := Default(); def.Look != (PageLook{Palette: "scilla", Mode: "light", Accent: "theme", Font: "default", Radius: "medium", Cards: "glass", Background: PageBackground{Kind: "theme", Angle: 160, Dim: 30}}) || !def.Apps.QR || def.Apps.Platform != "auto" || def.CSS != "" {
 		t.Fatalf("default look changed: %+v", def)
 	}
 }
@@ -111,7 +111,7 @@ func TestNormalizeKeepsWhatIsRight(t *testing.T) {
 	c := Default()
 	c.Look = PageLook{Palette: "ocean", Mode: "system", Accent: "brand", Font: "rounded", Radius: "large", Cards: "solid", Background: PageBackground{Kind: "gradient", From: "#0f6272", To: "#eaf5f8", Angle: 90}}
 	c.Blocks = append([]PageBlock{
-		{ID: "links-x1", Type: TypeLinks, On: true, Title: " Каналы ", Links: []PageLink{{Label: "Канал", URL: "https://t.me/mikan", Emoji: "📣"}, {Label: "Бот", URL: "tg://resolve?domain=mikan_bot"}, {Label: "Сайт", URL: "http://example.com"}}},
+		{ID: "links-x1", Type: TypeLinks, On: true, Title: " Каналы ", Links: []PageLink{{Label: "Канал", URL: "https://t.me/scilla", Emoji: "📣"}, {Label: "Бот", URL: "tg://resolve?domain=scilla_bot"}, {Label: "Сайт", URL: "http://example.com"}}},
 		{ID: "text-1", Type: TypeText, On: true, Text: "# Привет\r\n![](https://example.com/a.png)", Links: []PageLink{{Label: "dropped", URL: "https://x"}}},
 	}, c.Blocks[:3]...) // the other built-ins are left out: they come back at the end
 	c.Apps.Android = PageAppList{Order: []string{"INCY", "Happ", "INCY"}, Hidden: []string{"Hiddify"}}
@@ -225,12 +225,12 @@ func TestHeadEscapes(t *testing.T) {
 	if bytes.Count(head, []byte("<script")) != 1 || bytes.Count(head, []byte("</script>")) != 1 || bytes.Count(head, []byte("</style>")) != 1 {
 		t.Fatalf("markup leaked into the head: %s", head)
 	}
-	for _, want := range []string{`<meta property="og:title" content="&#34;&gt;&lt;script&gt;`, `<meta property="og:image" content="https://vpn.example.com/sub/brand/logo?v=abc">`, `<meta property="og:description" content="Быстрый VPN">`, `<style id="mikan-css">a{}/style>b></style>`} {
+	for _, want := range []string{`<meta property="og:title" content="&#34;&gt;&lt;script&gt;`, `<meta property="og:image" content="https://vpn.example.com/sub/brand/logo?v=abc">`, `<meta property="og:description" content="Быстрый VPN">`, `<style id="scilla-css">a{}/style>b></style>`} {
 		if !bytes.Contains(head, []byte(want)) {
 			t.Errorf("head lacks %s:\n%s", want, head)
 		}
 	}
-	start := bytes.Index(head, []byte(`id="mikan-page">`)) + len(`id="mikan-page">`)
+	start := bytes.Index(head, []byte(`id="scilla-page">`)) + len(`id="scilla-page">`)
 	end := bytes.Index(head, []byte("</script>"))
 	var back Public
 	if err := json.Unmarshal(head[start:end], &back); err != nil || back.Brand != "</script>" || back.Config.CSS != "" {

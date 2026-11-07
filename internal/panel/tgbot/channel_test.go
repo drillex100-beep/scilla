@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/tgapi"
+	"scilla/internal/tgapi"
 )
 
 // The channel's and the free plan's texts are there in both languages, without a dash.
@@ -29,11 +29,11 @@ func TestChannelValidate(t *testing.T) {
 		{tgapi.Channel{}, nil},
 		{tgapi.Channel{Required: true}, tgapi.ErrChannel},
 		{tgapi.Channel{Chat: "@abc"}, tgapi.ErrChannel},
-		{tgapi.Channel{Chat: "mikan_news"}, tgapi.ErrChannel},
-		{tgapi.Channel{Required: true, Chat: " @mikan_news "}, nil},
+		{tgapi.Channel{Chat: "scilla_news"}, tgapi.ErrChannel},
+		{tgapi.Channel{Required: true, Chat: " @scilla_news "}, nil},
 		{tgapi.Channel{Chat: "-1001234567890"}, tgapi.ErrChannelURL},
 		{tgapi.Channel{Chat: "-1001234567890", URL: "https://t.me/+abcdef"}, nil},
-		{tgapi.Channel{Chat: "@mikan_news", URL: "http://t.me/mikan_news"}, tgapi.ErrChannelURL},
+		{tgapi.Channel{Chat: "@scilla_news", URL: "http://t.me/scilla_news"}, tgapi.ErrChannelURL},
 	} {
 		cfg := Default("ru")
 		cfg.Channel = c.ch

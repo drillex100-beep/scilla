@@ -9,9 +9,9 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/textutil"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/textutil"
 )
 
 // AppBrand is the brand the apps that read operator headers show in place of their own:

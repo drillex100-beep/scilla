@@ -11,13 +11,13 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/nodehello"
-	"mikan/internal/nodetls"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/nodesync"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/nodeapi"
+	"scilla/internal/nodehello"
+	"scilla/internal/nodetls"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/nodesync"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // chkNode answers its health a minute ahead of the panel's clock, with one listener whose
@@ -66,7 +66,7 @@ type checkView struct {
 func TestCheckNodeAndHello(t *testing.T) {
 	ctx, stop := context.WithCancel(context.Background())
 	defer stop()
-	panel, _ := nodetls.Generate("mikan-panel", x509.ExtKeyUsageClientAuth, time.Now())
+	panel, _ := nodetls.Generate("scilla-panel", x509.ExtKeyUsageClientAuth, time.Now())
 	fake := &chkNode{}
 	h := newHarness(t, func(o *Options) {
 		o.PanelCert = func() (nodetls.Pair, error) { return panel, nil }
@@ -162,7 +162,7 @@ func TestCheckNodeAndHello(t *testing.T) {
 	}
 
 	// Another key, or a stranger: the route is any unknown path.
-	other, _ := nodetls.Generate("node-9.mikan", x509.ExtKeyUsageServerAuth, time.Now())
+	other, _ := nodetls.Generate("node-9.scilla", x509.ExtKeyUsageServerAuth, time.Now())
 	stranger := key
 	stranger.CertPEM, stranger.KeyPEM = other.CertPEM, other.KeyPEM
 	if r := nodehello.Send(ctx, stranger, h.ts.Client(), time.Now()); r.Code != nodehello.PanelRejected {

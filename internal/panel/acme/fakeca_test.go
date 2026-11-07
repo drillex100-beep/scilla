@@ -64,7 +64,7 @@ func newFakeCA(t *testing.T, validate func(host, token, keyAuth string) bool) *f
 		t.Fatal(err)
 	}
 	t.Setenv("LEGO_CA_CERTIFICATES", ca)
-	t.Setenv("MIKAN_ACME_DIRECTORY", f.srv.URL+"/directory")
+	t.Setenv("SCILLA_ACME_DIRECTORY", f.srv.URL+"/directory")
 	return f
 }
 

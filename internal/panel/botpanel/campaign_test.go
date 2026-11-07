@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
+	"scilla/internal/panel/domain"
 )
 
 // /start c_<code>: an ad's link makes a new account the campaign's and greets it with the

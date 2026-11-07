@@ -6,8 +6,8 @@ import (
 	"html"
 	"time"
 
-	"mikan/internal/panel/support"
-	"mikan/internal/textutil"
+	"scilla/internal/panel/support"
+	"scilla/internal/textutil"
 )
 
 // supportNoticeTimeout bounds one message to the admin: a slow Telegram holds nothing else.

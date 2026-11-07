@@ -19,17 +19,17 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/panel/billing"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/panelimport"
-	"mikan/internal/panel/promo"
-	"mikan/internal/panel/server"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/subpage"
-	"mikan/internal/proto"
-	"mikan/internal/textutil"
+	"scilla/internal/panel/billing"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/panelimport"
+	"scilla/internal/panel/promo"
+	"scilla/internal/panel/server"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/subpage"
+	"scilla/internal/proto"
+	"scilla/internal/textutil"
 )
 
 // Config is resolved per request, so settings changes apply without a restart.
@@ -339,7 +339,7 @@ func (h *Handler) serveProfile(w http.ResponseWriter, r *http.Request, u db.User
 			h.profileFailed(w, u, cfg, format, err)
 			return
 		}
-		h.mikanGroups(w, r, u, prof, ps)
+		h.scillaGroups(w, r, u, prof, ps)
 		w.Header().Set("Content-Type", "text/yaml; charset=utf-8")
 		// Clash apps name the profile after the file: the same name as Profile-Title.
 		w.Header().Set("Content-Disposition", "attachment; filename*=UTF-8''"+url.PathEscape(fileName(profileTitle(cfg, vars)))+".yaml")
@@ -360,7 +360,7 @@ func (h *Handler) serveProfile(w http.ResponseWriter, r *http.Request, u db.User
 			h.profileFailed(w, u, cfg, format, err)
 			return
 		}
-		h.mikanGroups(w, r, u, prof, ps)
+		h.scillaGroups(w, r, u, prof, ps)
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 		_, _ = w.Write([]byte(base64.StdEncoding.EncodeToString([]byte(links))))
 	}

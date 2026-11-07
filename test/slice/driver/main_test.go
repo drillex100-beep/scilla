@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/presets"
-	"mikan/internal/proto"
+	"scilla/internal/panel/presets"
+	"scilla/internal/proto"
 )
 
 // remoteFlag starts the proxy names of the remote node's inbounds in the subscription.

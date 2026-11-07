@@ -1,11 +1,11 @@
 ---
 title: Paid support
-description: How paid help with mikan works. What is included, the price, what the operator sees and how to revoke access.
+description: How paid help with scilla works. What is included, the price, what the operator sees and how to revoke access.
 ---
 
 import { Steps } from '@astrojs/starlight/components';
 
-Most questions get solved in the [forum](https://t.me/+I2JFR7DbPow1ZmQy), and help there is free. Sometimes, though, a problem is only visible from the inside: someone has to open the panel and look. That is what paid support in the bot [@MikanSup_bot](https://t.me/MikanSup_bot) is for. You open temporary access to your panel and an operator deals with the problem. No password, SSH or server keys are needed.
+Most questions get solved in the [forum](https://t.me/+I2JFR7DbPow1ZmQy), and help there is free. Sometimes, though, a problem is only visible from the inside: someone has to open the panel and look. That is what paid support in the bot [@ScillaSup_bot](https://t.me/ScillaSup_bot) is for. You open temporary access to your panel and an operator deals with the problem. No password, SSH or server keys are needed.
 
 This page is the full set of rules. Before you pay, the bot asks you to press "Accept the rules", and that button means you have read the text below and agree with it.
 
@@ -15,7 +15,7 @@ This page is the full set of rules. Before you pay, the bot asks you to press "A
 
 1. Tell the bot what happened. The AI answers first, from the knowledge base. Often that is enough and you pay nothing.
 
-2. The answer did not help: press "Need an operator", describe the problem in one message and, if you can, send the output of `mikan doctor` or the "Check node" report.
+2. The answer did not help: press "Need an operator", describe the problem in one message and, if you can, send the output of `scilla doctor` or the "Check node" report.
 
 3. Read the rules, press "Accept the rules" and choose a plan. The bot sends a payment button: a card, SBP or Wallet through Tribute, or crypto through @CryptoBot.
 
@@ -29,7 +29,7 @@ This page is the full set of rules. Before you pay, the bot asks you to press "A
 
 ## What is included
 
-Help with mikan itself:
+Help with scilla itself:
 
 - installing and updating the panel and nodes;
 - setting up protocols, cascades, WARP, certificates and the domain;
@@ -44,11 +44,11 @@ This does not mean we will not point you in the right direction. But looking int
 - the hosting provider and its network: an unreachable server, a bad route, ports closed on the provider's side;
 - blocking by ISPs and in particular networks;
 - client apps: Happ, v2RayTun, Clash and others. We check what the panel serves, but we do not set up the apps themselves;
-- other services and programs on the server besides mikan;
-- code changes and new features, for those there are the [project goals](/mikan/en/support/);
+- other services and programs on the server besides scilla;
+- code changes and new features, for those there are the [project goals](/scilla/en/support/);
 - forks and unofficial builds.
 
-If it turns out the cause is outside mikan, the operator will say so plainly. The ticket still counts as used: the time went into the diagnosis.
+If it turns out the cause is outside scilla, the operator will say so plainly. The ticket still counts as used: the time went into the diagnosis.
 
 ## Plans
 
@@ -76,11 +76,11 @@ You can check whether this kind of help fits you for free: the AI in the bot ans
 
 ## Access to the panel
 
-The operator needs access to the panel, and you open and close it yourself: **Settings → Support**. How it works in detail: [Support access](/mikan/en/operations/support-access/).
+The operator needs access to the panel, and you open and close it yourself: **Settings → Support**. How it works in detail: [Support access](/scilla/en/operations/support-access/).
 
 - Choose the duration: 2, 6 or 24 hours. You can revoke access earlier with one button.
 - Choose the level. **View** is read-only: the operator sees nodes, logs and diagnostics but changes nothing. **Change** also lets them edit settings, nodes and official addons, start updates and restarts. If the fix needs no changes, leave it on view.
-- The **extended mode** is a separate switch that takes your password: only with it can the operator issue a node's key, change a node's address or domain, set an own certificate, change payments, payment details and balances, hand the bot to an addon or install an addon from outside mikan's catalog. It is rarely needed, and we will say so when a fix cannot do without it.
+- The **extended mode** is a separate switch that takes your password: only with it can the operator issue a node's key, change a node's address or domain, set an own certificate, change payments, payment details and balances, hand the bot to an addon or install an addon from outside scilla's catalog. It is rarely needed, and we will say so when a fix cannot do without it.
 - The **Show client data** checkbox is off by default. Then the names and Telegram of subscribers are hidden, and subscription links and keys are masked. Turn it on only if the problem cannot be solved without it.
 - The access opens by a one-time code from the ticket: the panel checks the code with the bot and hands the access to it itself. The link is never shown to you, there is nothing to forward, and nobody else can be let in this way.
 - The support bot learns the secret address of your admin panel. When the support is over, you can press "Issue a new link" on the "Panel link" card.
@@ -88,7 +88,7 @@ The operator needs access to the panel, and you open and close it yourself: **Se
 
 Access covers all nodes of your panel, so there is no need to set up each one separately.
 
-Nobody gets into the panel without your button: the project has no standing access to your servers, and the panel reaches the support bot only when you open the access. If you do not need the feature at all, turn off the "Allow support access" switch on the same card or run `mikan support-access off` on the server: then no access can be opened even from the panel, and no support terminal is installed on the server.
+Nobody gets into the panel without your button: the project has no standing access to your servers, and the panel reaches the support bot only when you open the access. If you do not need the feature at all, turn off the "Allow support access" switch on the same card or run `scilla support-access off` on the server: then no access can be opened even from the panel, and no support terminal is installed on the server.
 
 ### What the operator can never do
 
@@ -112,7 +112,7 @@ Even at the "Change" level in the extended mode these stay closed:
 
 ## A server without SSH
 
-Work on the server goes through the panel: logs of the panel and nodes, running `mikan doctor` and restarts. We never ask for the server password or an SSH key.
+Work on the server goes through the panel: logs of the panel and nodes, running `scilla doctor` and restarts. We never ask for the server password or an SSH key.
 
 ### Terminal
 
@@ -133,10 +133,10 @@ The terminal is rarely needed. We will not ask you to turn it on if the task can
 If the panel is down or a node is unreachable, access cannot be opened. Then the bot gives you a ticket code, and you run one command on the server:
 
 ```bash
-mikan support <code>
+scilla support <code>
 ```
 
-It collects the output of `mikan doctor`, `mikan status` and the tail of the logs with secrets cut out, and sends it to your ticket. The code is single-use, tied to the ticket and lives for 24 hours.
+It collects the output of `scilla doctor`, `scilla status` and the tail of the logs with secrets cut out, and sends it to your ticket. The code is single-use, tied to the ticket and lives for 24 hours.
 
 ## What data is kept
 

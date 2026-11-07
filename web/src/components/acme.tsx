@@ -188,7 +188,7 @@ export function AcmeProblem({
   className?: string;
 }) {
   const text = tMaybe(`errors.acme.${code}`) ?? t("errors.acme.acme_failed");
-  // mikan configures nginx and Caddy itself; another program on port 80 it cannot.
+  // scilla configures nginx and Caddy itself; another program on port 80 it cannot.
   const proxy = host && (code === "port80_busy" || code === "port80_foreign") && (!holder || PROXIES.has(holder.toLowerCase()));
   return (
     <div className={className} role="alert">
@@ -197,7 +197,7 @@ export function AcmeProblem({
       {retryAt ? <p className="mt-1 text-xs text-[var(--ink-600)]">{t("certs.retryAt", { at: when(retryAt) })}</p> : null}
       {proxy ? (
         <>
-          <CommandToCopy command={`mikan cert proxy ${host}`} label={t(node ? "certs.proxyOnNode" : "certs.proxyOnServer")} />
+          <CommandToCopy command={`scilla cert proxy ${host}`} label={t(node ? "certs.proxyOnNode" : "certs.proxyOnServer")} />
           <p className="mt-1 text-xs text-[var(--ink-500)]">{t("certs.proxyNote")}</p>
         </>
       ) : null}
@@ -206,7 +206,7 @@ export function AcmeProblem({
   );
 }
 
-/** Web servers on port 80 `mikan cert proxy` adds its rule to (openresty is nginx). */
+/** Web servers on port 80 `scilla cert proxy` adds its rule to (openresty is nginx). */
 const PROXIES = new Set(["nginx", "openresty", "caddy"]);
 
 type Attempt = Schemas["Attempt"];
@@ -273,7 +273,7 @@ function CommandToCopy({ command, label }: { command: string; label: string }) {
 const ICON: Record<string, ReactNode> = {
   ok: <CheckCircle2 size={18} className="shrink-0 text-[var(--leaf-500)]" aria-hidden />,
   info: <Info size={18} className="shrink-0 text-[var(--ink-400)]" aria-hidden />,
-  warn: <AlertTriangle size={18} className="shrink-0 text-[var(--mikan-600)]" aria-hidden />,
+  warn: <AlertTriangle size={18} className="shrink-0 text-[var(--scilla-600)]" aria-hidden />,
   fail: <XCircle size={18} className="shrink-0 text-[var(--berry-600)]" aria-hidden />,
 };
 

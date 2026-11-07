@@ -20,7 +20,7 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/netaddr"
+	"scilla/internal/netaddr"
 )
 
 type Result struct {

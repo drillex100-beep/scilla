@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/store/db"
 )
 
 func saveWarp(t *testing.T, f *speedFixture, source, reserved string) {

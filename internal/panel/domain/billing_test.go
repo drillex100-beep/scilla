@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/store/db"
 )
 
 func at(s string) time.Time {

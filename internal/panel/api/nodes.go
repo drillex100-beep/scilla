@@ -14,15 +14,15 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/nodeupdate"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/subs"
-	"mikan/internal/panel/tgate"
-	"mikan/internal/release"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/nodeupdate"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/subs"
+	"scilla/internal/panel/tgate"
+	"scilla/internal/release"
 )
 
 type NodeInfo struct {
@@ -65,7 +65,7 @@ type NodeInfo struct {
 	Behind bool `json:"behind" doc:"Нода старее панели"`
 	// CanUpdate: the panel can update the node itself (a remote node that answers and has
 	// the update endpoint, version 0.5.0.2 or later). An older node is updated once by hand.
-	CanUpdate bool `json:"can_update" doc:"Панель может обновить ноду сама: удалённая, отвечает, версия 0.5.0.2 или новее; старую обновляют один раз вручную командой mikan update на её сервере"`
+	CanUpdate bool `json:"can_update" doc:"Панель может обновить ноду сама: удалённая, отвечает, версия 0.5.0.2 или новее; старую обновляют один раз вручную командой scilla update на её сервере"`
 	// Update is how the last update of the node goes or went.
 	Update *nodeapi.UpdateStatus `json:"update,omitempty" doc:"Как идёт или прошло обновление ноды"`
 	// Certificate is the node's own one for its protocols on the node's TLS; nil: the

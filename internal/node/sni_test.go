@@ -21,7 +21,7 @@ import (
 
 	"github.com/metacubex/mihomo/common/proxyproto"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 // backend is an inbound behind the router: it reads the PROXY header and the first bytes

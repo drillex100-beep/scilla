@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/diag"
-	"mikan/internal/nodeapi"
+	"scilla/internal/diag"
+	"scilla/internal/nodeapi"
 )
 
 // diagnosing keeps one look at the server at a time, and its answer for a little while: a

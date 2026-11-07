@@ -5,7 +5,7 @@ import (
 	"slices"
 	"testing"
 
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store/db"
 )
 
 // A panel that updates to the node order keeps its nodes where they were (by id), and a

@@ -10,8 +10,8 @@ import (
 
 	legoacme "github.com/go-acme/lego/v4/acme"
 
-	"mikan/internal/acmechallenge"
-	"mikan/internal/nodeapi"
+	"scilla/internal/acmechallenge"
+	"scilla/internal/nodeapi"
 )
 
 func validation(typ, detail string) error {

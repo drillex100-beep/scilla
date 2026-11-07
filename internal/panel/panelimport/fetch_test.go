@@ -175,7 +175,7 @@ func TestFetchUntrustedCertificate(t *testing.T) {
 	}
 }
 
-// What the old panel sends is checked against mikan's limits.
+// What the old panel sends is checked against scilla's limits.
 func TestNormalize(t *testing.T) {
 	ok := User{Name: " ivan ", Used: -5, Lifetime: -1, DeviceLimit: 500, Expires: time.Date(2030, 1, 1, 0, 0, 0, 0, time.UTC)}
 	u, err := Normalize(ok)

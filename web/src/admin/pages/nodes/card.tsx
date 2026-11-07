@@ -16,7 +16,7 @@ import { HelloLine, NodeProblem, SkewLine } from "../node-check";
 import type { Node } from "../nodes";
 
 /** What a server before 0.5.0.2 runs once by hand: from then on the panel updates it. */
-const OLD_NODE_COMMAND = "mikan update";
+const OLD_NODE_COMMAND = "scilla update";
 
 /** The panel can update this node itself and it is behind. */
 export const updatable = (n: Node) => !n.local && n.behind && n.can_update;

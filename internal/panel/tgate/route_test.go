@@ -15,8 +15,8 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/settings"
+	"scilla/internal/tgapi"
 )
 
 func TestParseProxy(t *testing.T) {

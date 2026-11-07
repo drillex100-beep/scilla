@@ -10,12 +10,12 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/acme"
-	"mikan/internal/panel/hysteresis"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
+	"scilla/internal/panel/acme"
+	"scilla/internal/panel/hysteresis"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
 )
 
 func testMonitorStore(t *testing.T) (*store.Store, context.Context) {
@@ -147,7 +147,7 @@ func TestObserveDeduplicatesSampleAfterStateRoundTrip(t *testing.T) {
 func TestFailedPublicPinDoesNotRequeueUnchangedSummary(t *testing.T) {
 	st, ctx := testMonitorStore(t)
 	m := New(st, settings.New(st.Q), nil, nil, nil, nil, nil, slog.Default(), time.Now)
-	const channel = "@mikan_status"
+	const channel = "@scilla_status"
 	text := strings.Join([]string{"🌐 <b>Состояние серверов</b>", "Публичные серверы пока не настроены."}, "\n")
 	state := persistentState{PublicTarget: channel, PublicMessage: 42, PublicText: text, PublicPinAttempted: true, PublicLevels: map[int64]hysteresis.Level{}}
 	cfg := Default()

@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"time"
 
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // UnbindRules is how the subscriber may free places: so many unbinds a period, and how

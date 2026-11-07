@@ -14,7 +14,7 @@ import { KindChips, ShieldBanner } from "./market-parts";
 const KINDS = ["bot", "ui"] as const satisfies readonly AddonKind[];
 
 /**
- * The registry of community addons: third-party authors' addons that mikan lists and does not
+ * The registry of community addons: third-party authors' addons that scilla lists and does not
  * vouch for. The warning stays on top of the list whatever the admin does; installing and
  * updating one each ask them to take the risk again (ApproveDialog).
  */

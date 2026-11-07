@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/settings"
+	"scilla/internal/panel/settings"
 )
 
 // A site of the admin's own answers every path the panel does not own (GitHub issue #67);

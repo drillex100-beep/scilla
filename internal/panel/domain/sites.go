@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"mikan/internal/panel/settings"
+	"scilla/internal/panel/settings"
 )
 
 // The sums of each subscription's bytes by site, while the admin has the detail on

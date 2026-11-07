@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
+	"scilla/internal/panel/domain"
 )
 
 func TestValidatePromoBody(t *testing.T) {

@@ -143,7 +143,7 @@ ON CONFLICT (addon_id) DO NOTHING;
 DELETE FROM addon_id_claims WHERE addon_id = $1 AND source_id = $2;
 
 -- name: LockAddonSources :exec
-SELECT pg_advisory_xact_lock(hashtextextended('mikan-addon-sources', 0));
+SELECT pg_advisory_xact_lock(hashtextextended('scilla-addon-sources', 0));
 -- name: ClaimAddonGrantKey :execrows
 -- The key of a grant, taken before the grant: 0 rows is a key already used (a repeat). A
 -- concurrent claim of the same key waits for the first one's commit.

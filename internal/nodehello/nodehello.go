@@ -24,12 +24,12 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/fsutil"
-	"mikan/internal/nodetls"
+	"scilla/internal/fsutil"
+	"scilla/internal/nodetls"
 )
 
 // Path is the panel's route for hellos, the same on every panel.
-const Path = "/.well-known/mikan-node-hello"
+const Path = "/.well-known/scilla-node-hello"
 
 // Window is how far a hello's time may be from the panel's clock.
 const Window = 5 * time.Minute
@@ -86,11 +86,11 @@ type Response struct {
 }
 
 func requestMessage(t int64, nonce string) []byte {
-	return []byte("mikan-hello/1\n" + strconv.FormatInt(t, 10) + "\n" + nonce)
+	return []byte("scilla-hello/1\n" + strconv.FormatInt(t, 10) + "\n" + nonce)
 }
 
 func replyMessage(nonce, result string) []byte {
-	return []byte("mikan-hello-reply/1\n" + nonce + "\n" + result)
+	return []byte("scilla-hello-reply/1\n" + nonce + "\n" + result)
 }
 
 // NewRequest signs a hello with the node's key.
@@ -232,7 +232,7 @@ func Final(r Result) bool {
 }
 
 // File is hello.json in the node's data directory: the last hello and how it went, for the
-// installer and `mikan doctor` on the node's server.
+// installer and `scilla doctor` on the node's server.
 const File = "hello.json"
 
 // Status is what File holds.

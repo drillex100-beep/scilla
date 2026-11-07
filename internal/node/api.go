@@ -13,9 +13,9 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/acmechallenge"
-	"mikan/internal/nodeapi"
-	"mikan/internal/scan"
+	"scilla/internal/acmechallenge"
+	"scilla/internal/nodeapi"
+	"scilla/internal/scan"
 )
 
 var scanning sync.Mutex

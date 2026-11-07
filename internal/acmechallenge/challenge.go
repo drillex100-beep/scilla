@@ -1,5 +1,5 @@
 // Package acmechallenge answers ACME HTTP-01 challenges: the token's key authorization at
-// /.well-known/acme-challenge/<token>, on port 80 (or MIKAN_ACME_LISTEN). The port is taken
+// /.well-known/acme-challenge/<token>, on port 80 (or SCILLA_ACME_LISTEN). The port is taken
 // only while a challenge is pending and given back after it, so a web server of the admin's
 // may use it the rest of the time. The panel answers its own challenges with it; a node
 // answers the ones the panel orders for the node's address. A node told to redirect plain
@@ -23,7 +23,7 @@ import (
 // Prefix is where a CA asks for the token.
 const Prefix = "/.well-known/acme-challenge/"
 
-// DefaultListen is where challenges are answered unless MIKAN_ACME_LISTEN says otherwise:
+// DefaultListen is where challenges are answered unless SCILLA_ACME_LISTEN says otherwise:
 // port 80 on every address, where the CA comes.
 const DefaultListen = ":80"
 
@@ -56,7 +56,7 @@ func (e *BusyError) Error() string {
 
 func (e *BusyError) Is(target error) bool { return target == ErrPortBusy }
 
-// ParseListen reads MIKAN_ACME_LISTEN: ":80" when empty. When nginx or Caddy holds port 80
+// ParseListen reads SCILLA_ACME_LISTEN: ":80" when empty. When nginx or Caddy holds port 80
 // the installer sets a loopback port, e.g. 127.0.0.1:18080, and the proxy forwards
 // /.well-known/acme-challenge/ there. The host is an IP address, localhost or empty (every
 // address); the port is 1..65535.
@@ -360,7 +360,7 @@ func Fetch(ctx context.Context, client *http.Client, url string) (status int, bo
 	if err != nil {
 		return 0, "", "", err
 	}
-	req.Header.Set("User-Agent", "mikan-acme-check")
+	req.Header.Set("User-Agent", "scilla-acme-check")
 	resp, err := client.Do(req)
 	if err != nil {
 		return 0, "", "", err

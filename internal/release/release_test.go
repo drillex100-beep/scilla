@@ -15,8 +15,8 @@ func manifest(t *testing.T) []byte {
 	t.Helper()
 	data, err := json.Marshal(Manifest{
 		Version: "0.3.9", Published: time.Unix(1_800_000_000, 0).UTC(),
-		Image: "ghcr.io/miroshka000/mikan", Digest: "sha256:" + strings.Repeat("ab", 32),
-		Installer: map[string]Asset{"x86_64": {URL: "https://example.com/mikan-x86_64", SHA256: strings.Repeat("cd", 32)}},
+		Image: "ghcr.io/drillex100-beep/scilla", Digest: "sha256:" + strings.Repeat("ab", 32),
+		Installer: map[string]Asset{"x86_64": {URL: "https://example.com/scilla-x86_64", SHA256: strings.Repeat("cd", 32)}},
 		Notes:     map[string]string{"en": "- faster", "ru": "- быстрее"},
 	})
 	if err != nil {
@@ -34,7 +34,7 @@ func TestParse(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if m.Ref() != "ghcr.io/miroshka000/mikan@sha256:"+strings.Repeat("ab", 32) || m.Notes["ru"] != "- быстрее" {
+	if m.Ref() != "ghcr.io/drillex100-beep/scilla@sha256:"+strings.Repeat("ab", 32) || m.Notes["ru"] != "- быстрее" {
 		t.Fatalf("manifest: %+v", m)
 	}
 
@@ -91,18 +91,18 @@ func TestParseImageAndInstallers(t *testing.T) {
 		t.Fatal(err)
 	}
 	for _, image := range []string{
-		"ghcr.io/miroshka000/mikan-node", "ghcr.io/miroshka000/tools/mikan_x.1",
+		"ghcr.io/drillex100-beep/scilla-node", "ghcr.io/drillex100-beep/tools/scilla_x.1",
 	} {
-		if err := accept([]byte(strings.Replace(good, "ghcr.io/miroshka000/mikan", image, 1))); err != nil {
+		if err := accept([]byte(strings.Replace(good, "ghcr.io/drillex100-beep/scilla", image, 1))); err != nil {
 			t.Errorf("%s: %v", image, err)
 		}
 	}
 	for _, image := range []string{
-		"docker.io/miroshka000/mikan", "ghcr.io/someone-else/mikan", "ghcr.io/Miroshka000/mikan", "ghcr.io/miroshka000/",
-		"ghcr.io/miroshka000/../x", "ghcr.io/miroshka000/Mikan", "ghcr.io/miroshka000/mi kan", "ghcr.io/miroshka000/m$x",
-		`ghcr.io/miroshka000/m\nx`, "ghcr.io/miroshka0001/mikan", "ghcr.io/mikan",
+		"docker.io/miroshka000/scilla", "ghcr.io/someone-else/scilla", "ghcr.io/Miroshka000/mikan", "ghcr.io/drillex100-beep/",
+		"ghcr.io/drillex100-beep/../x", "ghcr.io/drillex100-beep/Scilla", "ghcr.io/drillex100-beep/mi kan", "ghcr.io/drillex100-beep/m$x",
+		`ghcr.io/drillex100-beep/m\nx`, "ghcr.io/drillex100-beep1/scilla", "ghcr.io/scilla",
 	} {
-		if accept([]byte(strings.Replace(good, "ghcr.io/miroshka000/mikan", image, 1))) == nil {
+		if accept([]byte(strings.Replace(good, "ghcr.io/drillex100-beep/scilla", image, 1))) == nil {
 			t.Errorf("image %q accepted", image)
 		}
 	}
@@ -111,7 +111,7 @@ func TestParseImageAndInstallers(t *testing.T) {
 		"uppercase hash": strings.Replace(good, strings.Repeat("cd", 32), strings.Repeat("CD", 32), 1),
 		"not hex":        strings.Replace(good, strings.Repeat("cd", 32), strings.Repeat("zz", 32), 1),
 		"plain http":     strings.Replace(good, "https://example.com", "http://example.com", 1),
-		"no url":         strings.Replace(good, "https://example.com/mikan-x86_64", "", 1),
+		"no url":         strings.Replace(good, "https://example.com/scilla-x86_64", "", 1),
 	} {
 		if accept([]byte(bad)) == nil {
 			t.Errorf("%s accepted", name)
@@ -225,10 +225,10 @@ func TestNotesFor(t *testing.T) {
 	}
 }
 
-// The support desk knows the official build by this fingerprint (mikan-bot keeps a copy):
+// The support desk knows the official build by this fingerprint (scilla-bot keeps a copy):
 // a changed or an added release key changes it, and the desk must be told.
 func TestKeyFingerprint(t *testing.T) {
-	if got := KeyFingerprint(); got != "0570ab89f762390c" {
+	if got := KeyFingerprint(); got != "677b340371c52314" {
 		t.Fatalf("KeyFingerprint() = %s", got)
 	}
 }

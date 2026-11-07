@@ -5,8 +5,8 @@ import (
 	"net"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/nodehello"
+	"scilla/internal/nodeapi"
+	"scilla/internal/nodehello"
 )
 
 // CheckNow asks a node for its health now instead of at the next tick, and returns the
@@ -74,7 +74,7 @@ func (m *Manager) Logs(ctx context.Context, id int64, tail int) (nodeapi.Logs, e
 	return c.Logs(ctx, tail)
 }
 
-// HostDoctor has a remote node's server run `mikan doctor` (nodeapi.Client.HostDoctor).
+// HostDoctor has a remote node's server run `scilla doctor` (nodeapi.Client.HostDoctor).
 func (m *Manager) HostDoctor(ctx context.Context, id int64) (nodeapi.HostReport, error) {
 	c, err := clientOf[interface {
 		HostDoctor(context.Context) (nodeapi.HostReport, error)

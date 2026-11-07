@@ -13,8 +13,8 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/model"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/model"
 )
 
 // The bot's screens as an addon see the panel over the Panel API: POST /panel/v2/bot/<method>
@@ -34,7 +34,7 @@ type RPCError struct {
 
 func (e *RPCError) Error() string { return e.Message }
 
-// Remote is Backend over the Panel API: base is MIKAN_PANEL_URL, token MIKAN_PANEL_TOKEN.
+// Remote is Backend over the Panel API: base is SCILLA_PANEL_URL, token SCILLA_PANEL_TOKEN.
 type Remote struct {
 	base, token string
 	hc          *http.Client

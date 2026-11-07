@@ -1,4 +1,4 @@
-//! `mikan doctor`: checks the server of a panel or a node and says what is wrong and what
+//! `scilla doctor`: checks the server of a panel or a node and says what is wrong and what
 //! to do about it. The checks that wait for the network (DNS, GitHub, GHCR) run beside the
 //! local ones, so that the whole run stays short.
 
@@ -70,7 +70,7 @@ struct Report {
     errors: usize,
     warnings: usize,
     items: Vec<Item>,
-    /// Print each item at once (`mikan doctor`); not for the JSON the panel reads.
+    /// Print each item at once (`scilla doctor`); not for the JSON the panel reads.
     live: bool,
 }
 
@@ -102,7 +102,7 @@ pub struct JsonItem {
     pub fix: String,
 }
 
-/// What `mikan doctor --json` prints and `--requested` writes to doctor/report.json
+/// What `scilla doctor --json` prints and `--requested` writes to doctor/report.json
 /// (nodeapi.HostReport): the same checks as the text, with the secrets cut out.
 #[derive(Serialize, Debug, PartialEq)]
 pub struct JsonReport {
@@ -165,11 +165,11 @@ fn answer<T>(rx: &mpsc::Receiver<T>, deadline: Instant) -> Option<T> {
 
 type Reached = Result<net::Probe, String>;
 
-/// `mikan doctor`: the checks, printed as they finish.
+/// `scilla doctor`: the checks, printed as they finish.
 pub fn run() -> Result<()> {
     let install = Install::load()?;
     let mut report = Report { live: true, ..Report::default() };
-    crate::out(&format!("mikan {}, {}", install.version(), if install.node { "node" } else { "panel" }));
+    crate::out(&format!("scilla {}, {}", install.version(), if install.node { "node" } else { "panel" }));
     gather(&install, &mut report);
     match (report.errors, report.warnings) {
         (0, 0) => crate::out("No problems found."),
@@ -186,7 +186,7 @@ pub fn collect(install: &Install, id: &str) -> JsonReport {
     report.json(install, id)
 }
 
-/// `mikan doctor --json`: the report as JSON on stdout, exit status as for the text.
+/// `scilla doctor --json`: the report as JSON on stdout, exit status as for the text.
 pub fn json() -> Result<()> {
     let r = collect(&Install::load()?, "");
     crate::out(&serde_json::to_string_pretty(&r)?);
@@ -196,7 +196,7 @@ pub fn json() -> Result<()> {
     Ok(())
 }
 
-/// `mikan doctor --requested` (the doctor request unit): runs the checks the panel, or a
+/// `scilla doctor --requested` (the doctor request unit): runs the checks the panel, or a
 /// node, asked for and writes doctor/report.json for it. A request that is not one is
 /// removed and nothing runs.
 pub fn requested() -> Result<()> {
@@ -222,7 +222,7 @@ fn gather(install: &Install, report: &mut Report) {
         report.add(containers(docker::services().map_err(|e| format!("{e:#}"))));
     }
     report.add(ports(install, engine.is_some()));
-    report.add([port80_item(system::port_owner(80, Proto::Tcp).as_deref(), install.config.get("MIKAN_ACME_LISTEN"))]);
+    report.add([port80_item(system::port_owner(80, Proto::Tcp).as_deref(), install.config.get("SCILLA_ACME_LISTEN"))]);
     report.add(firewall(install));
 
     let github = answer(&github, deadline);
@@ -255,20 +255,20 @@ fn docker_item(version: Option<&str>) -> Item {
 
 fn containers(services: Result<Vec<Service>, String>) -> Vec<Item> {
     match services {
-        Err(e) => vec![Item::error("Containers", e, "mikan restart")],
-        Ok(list) if list.is_empty() => vec![Item::error("Containers", "none exist", "mikan restart")],
+        Err(e) => vec![Item::error("Containers", e, "scilla restart")],
+        Ok(list) if list.is_empty() => vec![Item::error("Containers", "none exist", "scilla restart")],
         Ok(list) => list.iter().map(container).collect(),
     }
 }
 
 fn container(s: &Service) -> Item {
     let label = format!("Container {}", s.name);
-    let fix = format!("mikan restart; mikan logs {}", s.name);
+    let fix = format!("scilla restart; scilla logs {}", s.name);
     let status = if s.status.is_empty() { s.state.clone() } else { s.status.clone() };
     if s.state != "running" || s.status.contains("unhealthy") {
         Item::error(label, status, fix)
     } else if s.status.contains("starting") {
-        Item::warn(label, status, "wait a minute and run mikan doctor again; mikan logs ".to_owned() + &s.name)
+        Item::warn(label, status, "wait a minute and run scilla doctor again; scilla logs ".to_owned() + &s.name)
     } else {
         Item::ok(label, status)
     }
@@ -283,13 +283,13 @@ fn ports(install: &Install, engine: bool) -> Vec<Item> {
                 None => Item::error(
                     "API port",
                     format!("nothing listens on {p}/tcp, where the panel connects"),
-                    "mikan logs node; mikan restart",
+                    "scilla logs node; scilla restart",
                 ),
             },
             None => Item::error(
                 "API port",
-                "NODE_API_PORT is not set in /opt/mikan/config.json",
-                "mikan join <new key from the panel's Nodes page>",
+                "NODE_API_PORT is not set in /opt/scilla/config.json",
+                "scilla join <new key from the panel's Nodes page>",
             ),
         }];
     }
@@ -307,25 +307,25 @@ fn ports(install: &Install, engine: bool) -> Vec<Item> {
             (Some(p), Some(who)) => format!("does not answer on {p}/tcp ({who} listens there)"),
             (None, _) => "does not answer".to_owned(),
         };
-        Item::error("Panel", detail, "mikan logs panel; mikan restart")
+        Item::error("Panel", detail, "scilla logs panel; scilla restart")
     }]
 }
 
 /// Port 80, where Let's Encrypt checks the server before it gives a certificate: free for
-/// mikan, or a web server that passes the check on.
+/// scilla, or a web server that passes the check on.
 fn port80_item(owner: Option<&str>, listen: Option<&str>) -> Item {
     const LABEL: &str = "Port 80";
-    const FIX: &str = "mikan cert proxy <the server's domain, as the panel shows it>";
+    const FIX: &str = "scilla cert proxy <the server's domain, as the panel shows it>";
     let behind = listen.map(str::trim).filter(|l| !l.is_empty() && *l != ":80").unwrap_or_default();
     match acme::port80(owner, listen, || 0) {
-        acme::Port80::Own { drop: false } => Item::ok(LABEL, "free: mikan answers Let's Encrypt there when it gets a certificate"),
+        acme::Port80::Own { drop: false } => Item::ok(LABEL, "free: scilla answers Let's Encrypt there when it gets a certificate"),
         acme::Port80::Own { drop: true } => Item::warn(
             LABEL,
-            format!("free, yet mikan waits for Let's Encrypt on {behind} behind a web server that is gone: no public certificate"),
+            format!("free, yet scilla waits for Let's Encrypt on {behind} behind a web server that is gone: no public certificate"),
             FIX,
         ),
         acme::Port80::Front(front, _) if !behind.is_empty() => {
-            Item::ok(LABEL, format!("{} holds it and passes Let's Encrypt to mikan on {behind}", front.name()))
+            Item::ok(LABEL, format!("{} holds it and passes Let's Encrypt to scilla on {behind}", front.name()))
         }
         acme::Port80::Front(front, _) => {
             Item::warn(LABEL, format!("{} holds it, and Let's Encrypt checks the server there: no public certificate", front.name()), FIX)
@@ -333,7 +333,7 @@ fn port80_item(owner: Option<&str>, listen: Option<&str>) -> Item {
         acme::Port80::Other(who) => Item::warn(
             LABEL,
             format!("held by {who}, and Let's Encrypt checks the server there: no public certificate"),
-            "free port 80, or pass /.well-known/acme-challenge/ to mikan (MIKAN_ACME_LISTEN)",
+            "free port 80, or pass /.well-known/acme-challenge/ to scilla (SCILLA_ACME_LISTEN)",
         ),
     }
 }
@@ -637,12 +637,12 @@ fn outbound_item(label: &str, host: &str, consequence: &str, result: Option<Reac
 }
 
 fn disk_item(free: Option<u64>) -> Item {
-    let Some(bytes) = free else { return Item::warn("Disk", "cannot tell the free space", "df -h /opt/mikan") };
+    let Some(bytes) = free else { return Item::warn("Disk", "cannot tell the free space", "df -h /opt/scilla") };
     let detail = format!("{:.1} GB free in {DIR}", bytes as f64 / (1024.0 * MIB as f64));
     if bytes < 500 * MIB {
-        Item::error("Disk", detail, "free space: docker image prune -a removes unused images; old files in /opt/mikan/backups")
+        Item::error("Disk", detail, "free space: docker image prune -a removes unused images; old files in /opt/scilla/backups")
     } else if bytes < 2048 * MIB {
-        Item::warn("Disk", detail, "free space before the next update: docker image prune -a; old files in /opt/mikan/backups")
+        Item::warn("Disk", detail, "free space before the next update: docker image prune -a; old files in /opt/scilla/backups")
     } else {
         Item::ok("Disk", detail)
     }
@@ -661,10 +661,10 @@ fn memory_item(available_mb: Option<u64>) -> Item {
 fn contact(port: Option<u16>, engine: bool) -> Vec<Item> {
     const LABEL: &str = "Panel contact";
     if !hello::path().exists() {
-        return vec![Item::ok(LABEL, "this node version does not report it; mikan update")];
+        return vec![Item::ok(LABEL, "this node version does not report it; scilla update")];
     }
     let fresh = engine
-        .then(|| capture(docker::compose(&["exec", "-T", "node", "/usr/local/bin/mikan-node", "hello"]), Duration::from_secs(30)))
+        .then(|| capture(docker::compose(&["exec", "-T", "node", "/usr/local/bin/scilla-node", "hello"]), Duration::from_secs(30)))
         .flatten()
         .and_then(|text| hello::parse(text.trim()).or_else(|| text.lines().rev().find_map(|l| hello::parse(l.trim()))));
     let (h, earlier) = match fresh {
@@ -674,12 +674,12 @@ fn contact(port: Option<u16>, engine: bool) -> Vec<Item> {
                 let at = h.at.clone();
                 (h, Some(at))
             }
-            None => return vec![Item::warn(LABEL, "the node's report cannot be read", "mikan logs node")],
+            None => return vec![Item::warn(LABEL, "the node's report cannot be read", "scilla logs node")],
         },
     };
     let mut items = Vec::new();
     if let Some(at) = earlier {
-        items.push(Item::warn(LABEL, format!("cannot ask the node now; its last result, from {at}:"), "mikan logs node"));
+        items.push(Item::warn(LABEL, format!("cannot ask the node now; its last result, from {at}:"), "scilla logs node"));
     }
     items.extend(hello::lines(&h, port).into_iter().map(|(level, text)| Item { level, label: LABEL.into(), detail: text, fix: None }));
     items
@@ -721,7 +721,7 @@ mod tests {
         assert!(gone.detail.contains("127.0.0.1:18080"), "{}", gone.detail);
         let bare = port80_item(Some("nginx"), None);
         assert_eq!(bare.level, Level::Warn);
-        assert!(bare.fix.as_deref().is_some_and(|f| f.starts_with("mikan cert proxy")), "{bare:?}");
+        assert!(bare.fix.as_deref().is_some_and(|f| f.starts_with("scilla cert proxy")), "{bare:?}");
         let passed = port80_item(Some("nginx"), Some("127.0.0.1:18080"));
         assert_eq!(passed.level, Level::Ok);
         assert!(passed.detail.contains("nginx holds it and passes"), "{}", passed.detail);
@@ -844,13 +844,13 @@ Anywhere                   ALLOW       10.0.0.0/8
 
     #[test]
     fn custom_addons_need_the_bridge_open() {
-        let rule = "172.18.0.1 21355/tcp on mikan-addons ALLOW       Anywhere";
+        let rule = "172.18.0.1 21355/tcp on scilla-addons ALLOW       Anywhere";
         let open = format!("Status: active\n\n22/tcp ALLOW Anywhere\n{rule}\n");
         assert!(addons_item(&open, "").is_none(), "no custom addon runs");
         assert_eq!(addons_item(&open, "172.18.0.1:21355").unwrap().level, Level::Ok);
         let closed = addons_item("Status: active\n\n22/tcp ALLOW Anywhere\n", "172.18.0.1:21355").unwrap();
         assert_eq!(closed.level, Level::Warn);
-        assert_eq!(closed.fix.as_deref(), Some("ufw allow in on mikan-addons to 172.18.0.1 port 21355 proto tcp comment mikan-addons"));
+        assert_eq!(closed.fix.as_deref(), Some("ufw allow in on scilla-addons to 172.18.0.1 port 21355 proto tcp comment scilla-addons"));
         // the rule of the gateway before it moved does not open the new one
         assert_eq!(addons_item(&open, "172.19.0.1:21355").unwrap().level, Level::Warn);
     }
@@ -910,7 +910,7 @@ Anywhere                   ALLOW       10.0.0.0/8
         assert_eq!(disk_item(Some(500 * MIB)).level, Level::Warn);
         assert_eq!(disk_item(Some(2047 * MIB)).level, Level::Warn);
         assert_eq!(disk_item(Some(2048 * MIB)).level, Level::Ok);
-        assert_eq!(disk_item(Some(10 * 1024 * MIB)).detail, "10.0 GB free in /opt/mikan");
+        assert_eq!(disk_item(Some(10 * 1024 * MIB)).detail, "10.0 GB free in /opt/scilla");
         assert_eq!(disk_item(None).level, Level::Warn);
         assert_eq!(memory_item(Some(99)).level, Level::Warn);
         assert_eq!(memory_item(Some(100)).level, Level::Ok);
@@ -928,7 +928,7 @@ Anywhere                   ALLOW       10.0.0.0/8
         assert_eq!(container(&service("running", "Up 5 seconds (health: starting)")).level, Level::Warn);
         let sick = container(&service("running", "Up 2 minutes (unhealthy)"));
         assert_eq!(sick.level, Level::Error);
-        assert_eq!(sick.fix.as_deref(), Some("mikan restart; mikan logs node"));
+        assert_eq!(sick.fix.as_deref(), Some("scilla restart; scilla logs node"));
         assert_eq!(container(&service("exited", "Exited (1) 2 minutes ago")).level, Level::Error);
         assert_eq!(container(&service("restarting", "Restarting (1) 5 seconds ago")).level, Level::Error);
         assert_eq!(containers(Ok(Vec::new()))[0].level, Level::Error);
@@ -937,7 +937,7 @@ Anywhere                   ALLOW       10.0.0.0/8
     }
 
     fn install(node: bool) -> Install {
-        Install { config: crate::config::Config::from_env_text("/nonexistent", "MIKAN_VERSION=0.5.1.1\n"), node }
+        Install { config: crate::config::Config::from_env_text("/nonexistent", "SCILLA_VERSION=0.5.1.1\n"), node }
     }
 
     fn report(items: Vec<Item>) -> Report {
@@ -970,7 +970,7 @@ Anywhere                   ALLOW       10.0.0.0/8
         assert_eq!(items[0], serde_json::json!({"level": "ok", "label": "Docker", "detail": "engine 28.0.1"}));
         assert_eq!(items[2]["fix"], "free space");
         assert!(items[3].get("fix").is_none(), "a fine line has no fix");
-        assert_eq!(install(true).config.get("MIKAN_VERSION"), Some("0.5.1.1"));
+        assert_eq!(install(true).config.get("SCILLA_VERSION"), Some("0.5.1.1"));
         assert_eq!(r.json(&install(true), "").kind, "node");
     }
 
@@ -983,7 +983,7 @@ Anywhere                   ALLOW       10.0.0.0/8
             Item::warn(
                 "Panel contact",
                 format!("the panel said token={secret} and sent vless://u@h:443?pbk={secret} for ms_{secret}"),
-                format!("mikan join {secret}; password=hunter2hunter2"),
+                format!("scilla join {secret}; password=hunter2hunter2"),
             ),
             Item::ok("Container node", format!("Up 3 hours  /{secret}/api")),
         ]);
@@ -1010,6 +1010,6 @@ Anywhere                   ALLOW       10.0.0.0/8
         let t = Instant::now();
         assert_eq!(capture(slow, Duration::from_millis(300)), None);
         assert!(t.elapsed() < Duration::from_secs(5));
-        assert_eq!(capture(Command::new("/nonexistent/mikan-test"), Duration::from_secs(1)), None);
+        assert_eq!(capture(Command::new("/nonexistent/scilla-test"), Duration::from_secs(1)), None);
     }
 }

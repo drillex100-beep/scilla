@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/dnscheck"
-	"mikan/internal/panel/settings"
+	"scilla/internal/panel/dnscheck"
+	"scilla/internal/panel/settings"
 )
 
 // The panel takes a domain only when public DNS leads it to this server: someone else's

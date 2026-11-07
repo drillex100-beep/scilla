@@ -197,7 +197,7 @@ SELECT * FROM inbound_events WHERE id > $1 ORDER BY id LIMIT 500;
 
 -- name: LockBuyerInvoices :exec
 -- The invoices of one Telegram account are checked and made one transaction at a time.
-SELECT pg_advisory_xact_lock(hashtextextended('mikan-invoice:' || CAST(sqlc.arg(tg_id) AS BIGINT), 0));
+SELECT pg_advisory_xact_lock(hashtextextended('scilla-invoice:' || CAST(sqlc.arg(tg_id) AS BIGINT), 0));
 
 -- name: CountBoundDevicesOf :many
 -- How many devices are bound to each of these users: the places they take.

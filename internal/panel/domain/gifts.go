@@ -6,7 +6,7 @@ import (
 	"errors"
 	"time"
 
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store/db"
 )
 
 // Gifts of a tariff: traffic packages its buyer gets with every payment for it, a purchase

@@ -6,12 +6,12 @@ import (
 	"slices"
 	"time"
 
-	"mikan/internal/pace"
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/addons/panelapi"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/tgate"
+	"scilla/internal/pace"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/addons/panelapi"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/tgate"
 )
 
 // The panel has no screens of its own in the subscribers' bot: they are the official bot
@@ -55,7 +55,7 @@ func (b *botAddon) check(ctx context.Context) {
 	}
 	st, err := p.Addons.State()
 	if err != nil || st.HostVersion == "" {
-		return // a host before protocol 2 runs no bot addon: `mikan update` first
+		return // a host before protocol 2 runs no bot addon: `scilla update` first
 	}
 	if a, ok := st.Adapters[OfficialBot]; ok && a.KindOf() != addons.KindPayment {
 		if a.Status != "running" || !b.granted(ctx) {

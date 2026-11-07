@@ -15,8 +15,8 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/httpjson"
-	"mikan/internal/netaddr"
+	"scilla/internal/httpjson"
+	"scilla/internal/netaddr"
 )
 
 const (
@@ -153,7 +153,7 @@ func (c *Client) ask(ctx context.Context, s service, a netip.Addr) GeoAnswer {
 	}
 	req.Header.Set("Accept", "application/json")
 	// Some bases refuse a request without a name.
-	req.Header.Set("User-Agent", "mikan-panel")
+	req.Header.Set("User-Agent", "scilla-panel")
 	var body any
 	if err := httpjson.Do(c.hc, req, maxBody, &body); err != nil {
 		switch {

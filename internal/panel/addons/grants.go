@@ -7,8 +7,8 @@ import (
 	"errors"
 	"slices"
 
-	"mikan/internal/panel/store/db"
-	"mikan/internal/release"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/release"
 )
 
 // The admin approves the permissions of an addon of protocol 2 as a set: the table

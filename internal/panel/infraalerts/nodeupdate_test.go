@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/nodeupdate"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/nodeupdate"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 type failedUpdates struct{ list []nodeupdate.Failure }
@@ -21,7 +21,7 @@ func (f *failedUpdates) Failures(context.Context) []nodeupdate.Failure { return 
 func TestNodeUpdateFailuresAreToldOnce(t *testing.T) {
 	st, ctx := testMonitorStore(t)
 	m := New(st, settings.New(st.Q), nil, nil, nil, nil, nil, slog.Default(), time.Now)
-	src := &failedUpdates{list: []nodeupdate.Failure{{NodeID: 2, Version: "0.5.0.3", From: "0.5.0.2", At: 100, Error: "mikan 0.5.0.3 did not start: <going back>"}}}
+	src := &failedUpdates{list: []nodeupdate.Failure{{NodeID: 2, Version: "0.5.0.3", From: "0.5.0.2", At: 100, Error: "scilla 0.5.0.3 did not start: <going back>"}}}
 	m.WatchNodeUpdates(src)
 	nodes := map[int64]db.Node{2: {ID: 2, Name: "NL & co"}, 3: {ID: 3, Name: "DE"}}
 	var state persistentState

@@ -16,11 +16,11 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/acme"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/storetest"
-	"mikan/internal/panel/tlscert"
+	"scilla/internal/panel/acme"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/storetest"
+	"scilla/internal/panel/tlscert"
 )
 
 func testCert(t *testing.T, name string, until time.Time) (string, string) {

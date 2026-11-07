@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/storetest"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/storetest"
 )
 
 // The installer bootstraps the panel with its language before the first start, so the

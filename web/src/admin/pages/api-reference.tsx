@@ -1,5 +1,5 @@
 // The API reference: rendered from the OpenAPI spec the server exports at build time
-// (`mikan openapi`), so it always matches the panel it ships with.
+// (`scilla openapi`), so it always matches the panel it ships with.
 import { Copy, Download, Play, Search } from "lucide-react";
 import { useMemo, useState, type ReactNode } from "react";
 import { basePath } from "../../api/client";
@@ -120,7 +120,7 @@ function download(version: string | undefined) {
   const url = URL.createObjectURL(new Blob([JSON.stringify(doc, null, 2)], { type: "application/json" }));
   const a = document.createElement("a");
   a.href = url;
-  a.download = "mikan-openapi.json";
+  a.download = "scilla-openapi.json";
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -147,12 +147,12 @@ function Intro() {
         <li>{t("apiPage.secret")}</li>
       </ul>
       <div className="api-h">{t("apiPage.example")}</div>
-      <CodeBlock code={`curl -s -H "Authorization: Bearer $MIKAN_KEY" \\\n  "${base}/users?state=active&limit=10"`} label={t("apiPage.copyExample")} />
+      <CodeBlock code={`curl -s -H "Authorization: Bearer $SCILLA_KEY" \\\n  "${base}/users?state=active&limit=10"`} label={t("apiPage.copyExample")} />
       <p className="mt-3 text-xs text-[var(--ink-500)]">{t("apiPage.downloadHint")}</p>
       <div className="api-h">{t("apiPage.prometheus")}</div>
       <p className="mb-2 text-xs text-[var(--ink-500)]">{t("apiPage.prometheusHint")}</p>
       <CodeBlock
-        code={`- job_name: mikan
+        code={`- job_name: scilla
   scheme: https
   metrics_path: ${new URL(base).pathname}/metrics
   authorization:
@@ -250,7 +250,7 @@ function OperationBody({ o }: { o: Op }) {
 
 function curl(o: Op): string {
   const url = `${apiBase()}${o.path.replace(/\{(\w+)\}/g, (_, n: string) => `<${n}>`)}`;
-  const lines = [`curl -s${o.method === "get" ? "" : ` -X ${o.method.toUpperCase()}`} "${url}"`, `  -H "Authorization: Bearer $MIKAN_KEY"`];
+  const lines = [`curl -s${o.method === "get" ? "" : ` -X ${o.method.toUpperCase()}`} "${url}"`, `  -H "Authorization: Bearer $SCILLA_KEY"`];
   const body = o.op.requestBody?.content?.["application/json"]?.schema;
   if (body) {
     lines.push(`  -H "Content-Type: application/json"`, `  -d '${JSON.stringify(example(body, 0))}'`);

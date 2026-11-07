@@ -84,7 +84,7 @@ func happAutoRouting(cfg Config) string {
 // a placeholder stands for the user's proxies, which the rules do not depend on.
 func profileRules(cfg Config) []string {
 	p := Profile{Nodes: cfg.Nodes, Direct: cfg.Direct, Rules: cfg.Rules, Routes: cfg.Routes, Lang: cfg.Lang}
-	ps := []proxy{{name: "mikan", yaml: map[string]any{"name": "mikan", "type": "direct"}}}
+	ps := []proxy{{name: "scilla", yaml: map[string]any{"name": "scilla", "type": "direct"}}}
 	var rules []any
 	if cfg.Template != "" {
 		t, err := parseProfileTemplate(cfg.Template)
@@ -189,14 +189,14 @@ func HappRoutingOf(name string, rules []string) string {
 // happLists are the geodata categories of the panel's rule lists (Services, DirectSets,
 // blockedLists): sites, then IPs. Lists of apps have none.
 var happLists = map[string][2][]string{
-	"mikan-blocked":     {{"geosite:ru-blocked"}, {"geoip:ru-blocked"}},
-	"mikan-ru-sites":    {{"geosite:category-ru", "geosite:ru-available-only-inside"}, nil},
-	"mikan-ru-keywords": {{"geosite:category-ru"}, nil},
-	"mikan-ru-core":     {{"geosite:category-ru"}, nil},
-	"mikan-telegram-ip": {nil, {"geoip:telegram"}},
-	"mikan-ai":          {{"geosite:category-ai-!cn"}, nil},
-	"mikan-gemini":      {{"geosite:google-gemini"}, nil},
-	"mikan-games":       {{"geosite:category-games"}, nil},
+	"scilla-blocked":     {{"geosite:ru-blocked"}, {"geoip:ru-blocked"}},
+	"scilla-ru-sites":    {{"geosite:category-ru", "geosite:ru-available-only-inside"}, nil},
+	"scilla-ru-keywords": {{"geosite:category-ru"}, nil},
+	"scilla-ru-core":     {{"geosite:category-ru"}, nil},
+	"scilla-telegram-ip": {nil, {"geoip:telegram"}},
+	"scilla-ai":          {{"geosite:category-ai-!cn"}, nil},
+	"scilla-gemini":      {{"geosite:google-gemini"}, nil},
+	"scilla-games":       {{"geosite:category-games"}, nil},
 }
 
 // IsINCY tells INCY by its User-Agent.

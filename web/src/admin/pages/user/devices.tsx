@@ -262,7 +262,7 @@ function DeviceBans({ u }: { u: User }) {
           <ul className="flex flex-col gap-2" aria-label={t("userDrawer.bansTitle")}>
             {rows.map((b) => (
               <li key={b.id} className="panel-soft grid grid-cols-[36px_minmax(0,1fr)_auto] items-center gap-3 p-2">
-                <span className={`grid h-9 w-9 place-items-center rounded-[10px] bg-[var(--hover)] ${b.until || b.forever ? "text-[var(--mikan-600)]" : "text-[var(--berry-600)]"}`} aria-hidden>
+                <span className={`grid h-9 w-9 place-items-center rounded-[10px] bg-[var(--hover)] ${b.until || b.forever ? "text-[var(--scilla-600)]" : "text-[var(--berry-600)]"}`} aria-hidden>
                   {b.until || b.forever ? <Hourglass size={18} /> : <Ban size={18} />}
                 </span>
                 <div className="min-w-0">

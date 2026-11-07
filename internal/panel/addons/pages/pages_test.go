@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/auth"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/auth"
+	"scilla/internal/panel/store/db"
 )
 
 type fakeStore struct {

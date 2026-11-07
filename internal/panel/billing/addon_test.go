@@ -18,10 +18,10 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/promo"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/promo"
+	"scilla/internal/panel/store/db"
 )
 
 const adapterSecret = "sk_live_ADAPTERsecret0"
@@ -161,7 +161,7 @@ func TestExpiredDiscountedAddonPaymentIsRefunded(t *testing.T) {
 	if len(fa.refunds) != 1 || fa.refunds[0] != p.ExternalID.String {
 		t.Fatalf("refund calls = %v", fa.refunds)
 	}
-	if len(fa.refundCalls) != 1 || fa.refundCalls[0] != "mikan-promo-late-"+strconv.FormatInt(p.ID, 10) {
+	if len(fa.refundCalls) != 1 || fa.refundCalls[0] != "scilla-promo-late-"+strconv.FormatInt(p.ID, 10) {
 		t.Fatalf("refund idempotency keys = %v", fa.refundCalls)
 	}
 	if e.users() != 0 {
@@ -323,8 +323,8 @@ func TestAddonPayment(t *testing.T) {
 	if p.Amount != 19900 || p.Currency != "RUB" || p.PayUrl != "https://pay.example/"+p.ExternalID.String {
 		t.Fatalf("invoice: %+v", p)
 	}
-	if inv := fa.invoices[0]; inv.WebhookURL != "https://panel.example:2053/sub/pay/addon/fake/"+e.token || inv.IdempotencyKey != "mikan-"+strconv.FormatInt(p.ID, 10) ||
-		inv.ReturnURL != "https://t.me/mikan_test_bot" {
+	if inv := fa.invoices[0]; inv.WebhookURL != "https://panel.example:2053/sub/pay/addon/fake/"+e.token || inv.IdempotencyKey != "scilla-"+strconv.FormatInt(p.ID, 10) ||
+		inv.ReturnURL != "https://t.me/scilla_test_bot" {
 		t.Fatalf("invoice request: %+v", inv)
 	}
 	if again := e.invoice(555, 0, "addon:fake"); again.ID != p.ID {

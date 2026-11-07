@@ -1,4 +1,4 @@
-//! mikan: installs the mikan VPN panel, or a node of one, and manages it from the
+//! scilla: installs the scilla VPN panel, or a node of one, and manages it from the
 //! server's shell. Without a command it opens the installer on a fresh server and the
 //! menu on an installed one; every menu action is a command too.
 
@@ -35,19 +35,19 @@ use std::process::ExitCode;
 
 use clap::{Parser, Subcommand};
 
-/// Where mikan lives on the server.
-pub const DIR: &str = "/opt/mikan";
+/// Where scilla lives on the server.
+pub const DIR: &str = "/opt/scilla";
 
 /// This installer's version: the release tag it was built from, "dev" otherwise.
 pub fn version() -> &'static str {
-    option_env!("MIKAN_VERSION").map(|v| v.trim_start_matches('v')).unwrap_or("dev")
+    option_env!("SCILLA_VERSION").map(|v| v.trim_start_matches('v')).unwrap_or("dev")
 }
 
 #[derive(Parser)]
 #[command(
-    name = "mikan",
+    name = "scilla",
     version = version(),
-    about = "mikan VPN panel: the installer and the server's menu",
+    about = "scilla VPN panel: the installer and the server's menu",
     after_help = "Without a command: the installer on a fresh server, the menu on an installed one."
 )]
 struct Cli {
@@ -115,7 +115,7 @@ enum Cmd {
         #[arg(trailing_var_arg = true, allow_hyphen_values = true)]
         args: Vec<String>,
     },
-    /// Back up the database, certificates and settings to /opt/mikan/backups
+    /// Back up the database, certificates and settings to /opt/scilla/backups
     Backup,
     /// Replace the data with a backup's
     Restore {
@@ -134,7 +134,7 @@ enum Cmd {
     #[command(subcommand)]
     Addon(AddonCmd),
     /// Node: take a new join key from the panel's Nodes page (asked for when not given;
-    /// MIKAN_JOIN_KEY works too: the key holds the node's private key, keep it out of ps)
+    /// SCILLA_JOIN_KEY works too: the key holds the node's private key, keep it out of ps)
     Join {
         key: Option<String>,
         /// Open the node's API port in ufw for this address only, the panel's
@@ -171,7 +171,7 @@ enum Cmd {
     /// (a systemd path unit runs this; it listens on no port and ends with the grant)
     #[command(hide = true)]
     TerminalAgent,
-    /// Stop mikan and remove the command; the data stays in /opt/mikan
+    /// Stop scilla and remove the command; the data stays in /opt/scilla
     Uninstall {
         /// Do not ask
         #[arg(long, short = 'y')]
@@ -202,7 +202,7 @@ enum AddonCmd {
 #[derive(Subcommand)]
 enum CertCmd {
     /// Install a certificate: the chain and its key. Fits a renewal hook:
-    /// certbot ... --deploy-hook "mikan cert set --cert $RENEWED_LINEAGE/fullchain.pem --key $RENEWED_LINEAGE/privkey.pem"
+    /// certbot ... --deploy-hook "scilla cert set --cert $RENEWED_LINEAGE/fullchain.pem --key $RENEWED_LINEAGE/privkey.pem"
     Set {
         /// The chain, leaf first (fullchain.pem)
         #[arg(long)]
@@ -210,7 +210,7 @@ enum CertCmd {
         /// The private key (privkey.pem)
         #[arg(long)]
         key: PathBuf,
-        /// A node's own certificate instead of the panel's (mikan node list)
+        /// A node's own certificate instead of the panel's (scilla node list)
         #[arg(long)]
         node: Option<u32>,
     },
@@ -284,7 +284,7 @@ fn main() -> ExitCode {
         Some(Cmd::Restart { requested: false }) => ops::restart(),
         Some(Cmd::TerminalAgent) => terminal::agent(),
         Some(Cmd::Uninstall { yes }) => {
-            if yes || ops::confirm("Stop mikan and remove the mikan command? The data stays in /opt/mikan.") {
+            if yes || ops::confirm("Stop scilla and remove the scilla command? The data stays in /opt/scilla.") {
                 ops::uninstall().map(|panel| {
                     if panel {
                         out(&format!(
@@ -304,7 +304,7 @@ fn main() -> ExitCode {
     match result {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => {
-            let _ = writeln!(std::io::stderr(), "mikan: {e:#}");
+            let _ = writeln!(std::io::stderr(), "scilla: {e:#}");
             ExitCode::FAILURE
         }
     }

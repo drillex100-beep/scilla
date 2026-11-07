@@ -3,11 +3,11 @@
 //! a request file into its data directory (internal/hostchan) and a systemd path unit runs
 //! the command, which takes the request away first:
 //!
-//!   data/<panel|node>/doctor/request    {"id": "<hex>", "at": "<RFC 3339>"}: `mikan doctor
+//!   data/<panel|node>/doctor/request    {"id": "<hex>", "at": "<RFC 3339>"}: `scilla doctor
 //!                                       --requested` runs the checks and writes
-//!                                       doctor/report.json, the report of `mikan doctor
+//!                                       doctor/report.json, the report of `scilla doctor
 //!                                       --json` with the same "id"
-//!   data/<panel|node>/restart/request   the same: `mikan restart --requested` restarts the
+//!   data/<panel|node>/restart/request   the same: `scilla restart --requested` restarts the
 //!                                       containers
 //!
 //! The container is not trusted with more than a name: everything is read and written

@@ -10,15 +10,15 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store/db"
 )
 
 const gib = int64(1) << 30
 
 func ptr(n int64) *int64 { return &n }
 
-// What the Mikan app gets of each group: the traffic of a group of its own apart from the
+// What the Scilla app gets of each group: the traffic of a group of its own apart from the
 // main traffic, the names of its servers in the profile, nothing of a group the client
 // cannot reach or that the plan leaves out.
 func TestAppGroupsOf(t *testing.T) {

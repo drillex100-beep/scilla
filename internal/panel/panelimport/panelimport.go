@@ -1,5 +1,5 @@
 // Package panelimport brings users over from another panel through its API: Marzban,
-// PasarGuard and Remnawave. Each becomes a mikan user on a plan the admin picks, with
+// PasarGuard and Remnawave. Each becomes a scilla user on a plan the admin picks, with
 // the old panel's limit, traffic used, term and device limit kept.
 //
 // What does not come over: the old panel's traffic reset strategy, groups and inbounds
@@ -15,7 +15,7 @@
 //     since a token without a checked signature is anybody's for the asking.
 //     A token signed before the user was made in the old panel is refused (not_before).
 //     A revoke in the old panel (Marzban's sub_revoked_at) is not in either API, so links
-//     revoked there open again here: revoke them anew in mikan (a reissue drops all of a
+//     revoked there open again here: revoke them anew in scilla (a reissue drops all of a
 //     user's old links).
 package panelimport
 
@@ -33,8 +33,8 @@ import (
 	"syscall"
 	"time"
 
-	"mikan/internal/httpjson"
-	"mikan/internal/netaddr"
+	"scilla/internal/httpjson"
+	"scilla/internal/netaddr"
 )
 
 // Kind is the panel users come from.
@@ -56,7 +56,7 @@ type Source struct {
 	Token    string // Remnawave API token, or PasarGuard API key
 }
 
-// Status of a user in the old panel, in mikan's words.
+// Status of a user in the old panel, in scilla's words.
 const (
 	StatusActive   = "active"
 	StatusDisabled = "disabled"
@@ -110,7 +110,7 @@ const (
 	maxPages     = 2_000
 	maxPageBytes = 16 << 20
 	FetchTimeout = 10 * time.Minute
-	// Fields are cut a little past what mikan takes, so a too long one still fails the
+	// Fields are cut a little past what scilla takes, so a too long one still fails the
 	// check (Normalize) instead of coming over shortened.
 	maxNameBytes = 4 * maxName
 	maxNoteBytes = 4 * maxNote

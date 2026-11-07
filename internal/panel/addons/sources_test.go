@@ -128,15 +128,15 @@ func TestSourceAddressesAllowed(t *testing.T) {
 // The check is on the connection, so it holds for whatever name led there.
 func TestSourceNeverDialsAPrivateAddress(t *testing.T) {
 	f := newFileServer(t)
-	f.put("/mikan-addon.json", []byte(`{}`))
-	_, _, err := newSourceNet(false).get(t.Context(), f.srv.URL+"/mikan-addon.json", SourceLimit, "")
+	f.put("/scilla-addon.json", []byte(`{}`))
+	_, _, err := newSourceNet(false).get(t.Context(), f.srv.URL+"/scilla-addon.json", SourceLimit, "")
 	if !errors.Is(err, ErrSourceAddress) {
 		t.Fatalf("a loopback server in production: %v", err)
 	}
 	if got := SourceCode(err); got != "source_address_refused" {
 		t.Fatalf("code: %s", got)
 	}
-	body, status, err := devNet().get(t.Context(), f.srv.URL+"/mikan-addon.json", SourceLimit, "")
+	body, status, err := devNet().get(t.Context(), f.srv.URL+"/scilla-addon.json", SourceLimit, "")
 	if err != nil || status != http.StatusOK || string(body) != "{}" {
 		t.Fatalf("a loopback server in development: %q %d %v", body, status, err)
 	}
@@ -145,16 +145,16 @@ func TestSourceNeverDialsAPrivateAddress(t *testing.T) {
 func TestSourceParseURL(t *testing.T) {
 	n := devNet()
 	good := map[string]string{
-		"https://example.com/mikan-addon.json":                            "https://example.com/mikan-addon.json",
+		"https://example.com/scilla-addon.json":                           "https://example.com/scilla-addon.json",
 		"  https://Example.com/addons/index.json ":                        "https://example.com/addons/index.json",
 		"github.com/owner/repo":                                           "github.com/owner/repo",
 		"GitHub.com/owner/repo":                                           "github.com/owner/repo",
 		"https://github.com/owner/repo":                                   "github.com/owner/repo",
 		"https://github.com/owner/repo.git":                               "github.com/owner/repo",
 		"https://github.com/owner/repo/releases/download/v1/index.json":   "https://github.com/owner/repo/releases/download/v1/index.json",
-		"http://127.0.0.1:8080/mikan-addon.json":                          "http://127.0.0.1:8080/mikan-addon.json",
+		"http://127.0.0.1:8080/scilla-addon.json":                         "http://127.0.0.1:8080/scilla-addon.json",
 		"https://raw.githubusercontent.com/owner/repo/main/index.json":    "https://raw.githubusercontent.com/owner/repo/main/index.json",
-		"https://example.com:8443/a/b/mikan-addon.json":                   "https://example.com:8443/a/b/mikan-addon.json",
+		"https://example.com:8443/a/b/scilla-addon.json":                  "https://example.com:8443/a/b/scilla-addon.json",
 		"https://github.com/owner/repo/releases/download/v1/x/index.json": "https://github.com/owner/repo/releases/download/v1/x/index.json",
 	}
 	for in, want := range good {
@@ -177,7 +177,7 @@ func TestSourceParseURL(t *testing.T) {
 		}
 	}
 	// Plain http to the loopback is for development only.
-	if _, _, err := newSourceNet(false).parseURL("http://127.0.0.1:8080/mikan-addon.json"); !errors.Is(err, ErrSourceURL) {
+	if _, _, err := newSourceNet(false).parseURL("http://127.0.0.1:8080/scilla-addon.json"); !errors.Is(err, ErrSourceURL) {
 		t.Fatalf("http in production: %v", err)
 	}
 }
@@ -219,15 +219,15 @@ func TestSourceRedirects(t *testing.T) {
 // and the refusal is the code the admin sees.
 func TestSourceFollowsRedirectsOnlyWhereExpected(t *testing.T) {
 	f := newFileServer(t)
-	f.put("/mikan-addon.json", []byte(`{"ok":true}`))
+	f.put("/scilla-addon.json", []byte(`{"ok":true}`))
 	other := newFileServer(t)
-	other.put("/mikan-addon.json", []byte(`{"ok":false}`))
+	other.put("/scilla-addon.json", []byte(`{"ok":false}`))
 	mux := http.NewServeMux()
 	mux.HandleFunc("/same", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, "/mikan-addon.json", http.StatusFound)
+		http.Redirect(w, r, "/scilla-addon.json", http.StatusFound)
 	})
 	mux.HandleFunc("/away", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, other.srv.URL+"/mikan-addon.json", http.StatusFound)
+		http.Redirect(w, r, other.srv.URL+"/scilla-addon.json", http.StatusFound)
 	})
 	mux.HandleFunc("/loop", func(w http.ResponseWriter, r *http.Request) { http.Redirect(w, r, "/loop", http.StatusFound) })
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) { f.srv.Config.Handler.ServeHTTP(w, r) })
@@ -274,8 +274,8 @@ func TestSourceFileKinds(t *testing.T) {
 	one := entryDoc("hello", "b")
 	one["title"] = "Hello author"
 	data, sig := signedDoc(t, one, priv)
-	f.put("/mikan-addon.json", data)
-	f.put("/mikan-addon.json.sig", []byte(sig))
+	f.put("/scilla-addon.json", data)
+	f.put("/scilla-addon.json.sig", []byte(sig))
 
 	catalog := map[string]any{"version": 1, "title": "A catalog", "adapters": []any{entryDoc("one", "b"), entryDoc("two", "c")}}
 	f.put("/index.json", mustJSON(t, catalog))
@@ -284,7 +284,7 @@ func TestSourceFileKinds(t *testing.T) {
 	ctx := t.Context()
 
 	// One entry, signed: the key is the file's.
-	doc, err := m.FetchSource(ctx, f.srv.URL+"/mikan-addon.json", SourcePin{})
+	doc, err := m.FetchSource(ctx, f.srv.URL+"/scilla-addon.json", SourcePin{})
 	if err != nil || len(doc.Entries) != 1 || doc.Entries[0].ID != "hello" || doc.Title != "Hello author" || doc.Key != base64.StdEncoding.EncodeToString(priv.Public().(ed25519.PublicKey)) {
 		t.Fatalf("one entry: %+v %v", doc, err)
 	}
@@ -331,10 +331,10 @@ func TestSourceKeyPinning(t *testing.T) {
 	thiefKey := base64.StdEncoding.EncodeToString(thief.Public().(ed25519.PublicKey))
 	publish := func(priv ed25519.PrivateKey, digestChar string) {
 		data, sig := signedDoc(t, entryDoc("hello", digestChar), priv)
-		f.put("/mikan-addon.json", data)
-		f.put("/mikan-addon.json.sig", []byte(sig))
+		f.put("/scilla-addon.json", data)
+		f.put("/scilla-addon.json.sig", []byte(sig))
 	}
-	url := f.srv.URL + "/mikan-addon.json"
+	url := f.srv.URL + "/scilla-addon.json"
 
 	publish(author, "b")
 	doc, err := m.FetchSource(ctx, url, SourcePin{})
@@ -366,8 +366,8 @@ func TestSourceKeyPinning(t *testing.T) {
 
 	// No signature at all where one was pinned: refused, and nothing can accept that.
 	data, _ := json.Marshal(entryDoc("hello", "d"))
-	f.put("/mikan-addon.json", data)
-	f.del("/mikan-addon.json.sig")
+	f.put("/scilla-addon.json", data)
+	f.del("/scilla-addon.json.sig")
 	for _, accept := range []string{"", Fingerprint(authorKey), Fingerprint("")} {
 		_, err = m.FetchSource(ctx, url, SourcePin{Key: authorKey, Accept: accept})
 		if !errors.As(err, &kc) || kc.Key != "" {
@@ -392,22 +392,22 @@ func TestSourceKeyPinning(t *testing.T) {
 		t.Fatalf("accepted: %+v %v", doc, err)
 	}
 	// Still unsigned is no change.
-	f.del("/mikan-addon.json.sig")
+	f.del("/scilla-addon.json.sig")
 	if doc, err := m.FetchSource(ctx, url, unsigned); err != nil || doc.Key != "" {
 		t.Fatalf("still unsigned: %+v %v", doc, err)
 	}
 	publish(author, "e")
 
 	// A signature that does not verify, or a file naming a key it was not signed with.
-	f.put("/mikan-addon.json.sig", []byte(base64.StdEncoding.EncodeToString(make([]byte, ed25519.SignatureSize))))
+	f.put("/scilla-addon.json.sig", []byte(base64.StdEncoding.EncodeToString(make([]byte, ed25519.SignatureSize))))
 	if _, err := m.FetchSource(ctx, url, SourcePin{}); !errors.Is(err, ErrSourceSignature) {
 		t.Fatalf("zero signature: %v", err)
 	}
-	f.put("/mikan-addon.json.sig", []byte("not base64 at all"))
+	f.put("/scilla-addon.json.sig", []byte("not base64 at all"))
 	if _, err := m.FetchSource(ctx, url, SourcePin{}); !errors.Is(err, ErrSourceSignature) {
 		t.Fatalf("garbage signature: %v", err)
 	}
-	f.put("/mikan-addon.json.sig", nil)
+	f.put("/scilla-addon.json.sig", nil)
 	if _, err := m.FetchSource(ctx, url, SourcePin{}); !errors.Is(err, ErrSourceSignature) {
 		t.Fatalf("empty signature: %v", err)
 	}
@@ -415,15 +415,15 @@ func TestSourceKeyPinning(t *testing.T) {
 	doc2 := entryDoc("hello", "f")
 	doc2["key"] = thiefKey
 	forged, _ := json.Marshal(doc2)
-	f.put("/mikan-addon.json", forged)
-	f.put("/mikan-addon.json.sig", []byte(base64.StdEncoding.EncodeToString(ed25519.Sign(author, forged))))
+	f.put("/scilla-addon.json", forged)
+	f.put("/scilla-addon.json.sig", []byte(base64.StdEncoding.EncodeToString(ed25519.Sign(author, forged))))
 	if _, err := m.FetchSource(ctx, url, SourcePin{}); !errors.Is(err, ErrSourceSignature) {
 		t.Fatalf("signed by another key than named: %v", err)
 	}
 	// A signature over other bytes (the file changed after it was signed).
 	data, sig := signedDoc(t, entryDoc("hello", "b"), author)
-	f.put("/mikan-addon.json", append(data[:len(data)-1:len(data)-1], []byte(` }`)...))
-	f.put("/mikan-addon.json.sig", []byte(sig))
+	f.put("/scilla-addon.json", append(data[:len(data)-1:len(data)-1], []byte(` }`)...))
+	f.put("/scilla-addon.json.sig", []byte(sig))
 	if _, err := m.FetchSource(ctx, url, SourcePin{}); !errors.Is(err, ErrSourceSignature) {
 		t.Fatalf("a changed file: %v", err)
 	}
@@ -606,34 +606,34 @@ func TestSourceGitHubShorthand(t *testing.T) {
 	if _, err := m.FetchSource(ctx, src, SourcePin{}); !errors.Is(err, ErrSourceNotFound) {
 		t.Fatalf("no asset: %v", err)
 	}
-	// index.json when there is no mikan-addon.json, unsigned.
+	// index.json when there is no scilla-addon.json, unsigned.
 	g.publish("index.json")
 	g.file("index.json", mustJSON(t, map[string]any{"adapters": []any{entryDoc("one", "b"), entryDoc("two", "c")}}))
 	doc, err := m.FetchSource(ctx, src, SourcePin{})
 	if err != nil || len(doc.Entries) != 2 || doc.Title != "owner/repo" || doc.Key != "" {
 		t.Fatalf("index.json: %+v %v", doc, err)
 	}
-	// mikan-addon.json wins over index.json, and its signature is the asset beside it.
+	// scilla-addon.json wins over index.json, and its signature is the asset beside it.
 	data, sig := signedDoc(t, entryDoc("solo", "d"), priv)
-	g.publish("index.json", "mikan-addon.json", "mikan-addon.json.sig")
-	g.file("mikan-addon.json", data)
-	g.file("mikan-addon.json.sig", []byte(sig))
+	g.publish("index.json", "scilla-addon.json", "scilla-addon.json.sig")
+	g.file("scilla-addon.json", data)
+	g.file("scilla-addon.json.sig", []byte(sig))
 	doc, err = m.FetchSource(ctx, src, SourcePin{})
 	if err != nil || len(doc.Entries) != 1 || doc.Entries[0].ID != "solo" || doc.Key == "" {
-		t.Fatalf("mikan-addon.json: %+v %v", doc, err)
+		t.Fatalf("scilla-addon.json: %+v %v", doc, err)
 	}
 	// The same source later signed with another key.
 	data2, sig2 := signedDoc(t, entryDoc("solo", "e"), newPriv(t))
-	g.file("mikan-addon.json", data2)
-	g.file("mikan-addon.json.sig", []byte(sig2))
+	g.file("scilla-addon.json", data2)
+	g.file("scilla-addon.json.sig", []byte(sig2))
 	if _, err := m.FetchSource(ctx, src, SourcePin{Key: doc.Key}); !errors.Is(err, ErrSourceKeyChanged) {
 		t.Fatalf("another key: %v", err)
 	}
 	// A listed file that is not on the repository's own release page is not fetched.
 	g.mu.Lock()
-	g.release = map[string]any{"assets": []map[string]string{{"name": "mikan-addon.json", "browser_download_url": "https://evil.example/mikan-addon.json"},
+	g.release = map[string]any{"assets": []map[string]string{{"name": "scilla-addon.json", "browser_download_url": "https://evil.example/scilla-addon.json"},
 		{"name": "index.json", "browser_download_url": g.api.URL + "/other/repo/releases/download/v1/index.json"},
-		{"name": "mikan-addon.json.sig", "browser_download_url": g.api.URL + "/owner/repo/releases/download/v1/x?token=1"}}}
+		{"name": "scilla-addon.json.sig", "browser_download_url": g.api.URL + "/owner/repo/releases/download/v1/x?token=1"}}}
 	g.mu.Unlock()
 	if _, err := m.FetchSource(ctx, src, SourcePin{}); !errors.Is(err, ErrSourceNotFound) {
 		t.Fatalf("foreign asset urls: %v", err)
@@ -646,7 +646,7 @@ func TestSourceGitHubShorthand(t *testing.T) {
 		t.Fatalf("broken release: %v", err)
 	}
 	// GitHub names the repository as it was created; the admin may have typed it otherwise.
-	g.publish("mikan-addon.json")
+	g.publish("scilla-addon.json")
 	if doc, err := m.FetchSource(ctx, "github.com/Owner/REPO", SourcePin{}); err != nil || len(doc.Entries) != 1 {
 		t.Fatalf("another spelling of the repository: %+v %v", doc, err)
 	}
@@ -659,9 +659,9 @@ func TestSourceGitHubShorthand(t *testing.T) {
 func TestSourceGitHubHandOverIsLimitedToItsAssetHosts(t *testing.T) {
 	g := newGHFake(t)
 	evil := newFileServer(t)
-	evil.put("/mikan-addon.json", mustJSON(t, entryDoc("evil", "b")))
-	g.publish("mikan-addon.json")
-	g.file("mikan-addon.json", mustJSON(t, entryDoc("hello", "b")))
+	evil.put("/scilla-addon.json", mustJSON(t, entryDoc("evil", "b")))
+	g.publish("scilla-addon.json")
+	g.file("scilla-addon.json", mustJSON(t, entryDoc("hello", "b")))
 	n := g.net()
 	m := srcManager(t, n)
 	if doc, err := m.FetchSource(t.Context(), "github.com/owner/repo", SourcePin{}); err != nil || doc.Entries[0].ID != "hello" {

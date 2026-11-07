@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/billing"
-	"mikan/internal/panel/promo"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/billing"
+	"scilla/internal/panel/promo"
+	"scilla/internal/panel/store/db"
 )
 
 // Format and DetectApp read the same User-Agent, and must agree about an app: Hiddify says

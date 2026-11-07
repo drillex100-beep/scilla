@@ -14,8 +14,8 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"mikan/internal/panel/config"
-	"mikan/internal/panel/store"
+	"scilla/internal/panel/config"
+	"scilla/internal/panel/store"
 )
 
 func databaseCmd(ctx context.Context, args []string) error {
@@ -33,7 +33,7 @@ func databaseCmd(ctx context.Context, args []string) error {
 	switch args[0] {
 	case "migrate":
 		if len(args) != 1 {
-			return errors.New("usage: mikan database migrate")
+			return errors.New("usage: scilla database migrate")
 		}
 		res, err := store.Migrate(ctx, dsn, cfg.DataDir)
 		if err != nil {
@@ -44,7 +44,7 @@ func databaseCmd(ctx context.Context, args []string) error {
 		return nil
 	case "backup":
 		if len(args) != 2 {
-			return errors.New("usage: mikan database backup FILE")
+			return errors.New("usage: scilla database backup FILE")
 		}
 		if err := databaseBackup(ctx, dsn, args[1]); err != nil {
 			return err
@@ -53,7 +53,7 @@ func databaseCmd(ctx context.Context, args []string) error {
 		return nil
 	case "restore":
 		if len(args) != 2 {
-			return errors.New("usage: mikan database restore FILE (panel must be stopped)")
+			return errors.New("usage: scilla database restore FILE (panel must be stopped)")
 		}
 		f, err := os.Open(args[1])
 		if err != nil {
@@ -68,7 +68,7 @@ func databaseCmd(ctx context.Context, args []string) error {
 			return readErr
 		}
 		if string(magic) == "SQLite format 3\x00" {
-			return errors.New("this is a database of mikan 0.4 (SQLite): mikan 0.5.0.4 restores it and moves it to PostgreSQL; restore it there, then update")
+			return errors.New("this is a database of scilla 0.4 (SQLite): scilla 0.5.0.4 restores it and moves it to PostgreSQL; restore it there, then update")
 		} else if string(magic[:5]) == "PGDMP" {
 			if err := checkDump(ctx, args[1]); err != nil {
 				return err
@@ -156,9 +156,9 @@ func postgresEnv(dsn string) ([]string, error) {
 	}
 	u, err := url.Parse(dsn)
 	if err != nil || (u.Scheme != "postgres" && u.Scheme != "postgresql") {
-		return nil, errors.New("database backup/restore requires a postgres:// or postgresql:// MIKAN_DATABASE_URL")
+		return nil, errors.New("database backup/restore requires a postgres:// or postgresql:// SCILLA_DATABASE_URL")
 	}
-	// Only what a PostgreSQL client needs from the panel's environment: MIKAN_* holds the
+	// Only what a PostgreSQL client needs from the panel's environment: SCILLA_* holds the
 	// panel's secrets, and no tool gets them.
 	var env []string
 	for _, value := range os.Environ() {

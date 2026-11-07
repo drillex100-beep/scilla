@@ -11,8 +11,8 @@ import (
 	C "github.com/metacubex/mihomo/constant"
 	"github.com/metacubex/mihomo/hub/executor"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/proto"
+	"scilla/internal/nodeapi"
+	"scilla/internal/proto"
 )
 
 func TestEgressRules(t *testing.T) {

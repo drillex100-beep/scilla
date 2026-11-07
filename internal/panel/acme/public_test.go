@@ -9,16 +9,16 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/storetest"
-	"mikan/internal/panel/tlscert"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/storetest"
+	"scilla/internal/panel/tlscert"
 )
 
 // The local node takes the panel's certificate only while clients trust it unpinned
 // (GitHub issue #67): Let's Encrypt yes, the self-signed fallback no.
 func TestPublic(t *testing.T) {
 	ctx := context.Background()
-	t.Setenv("MIKAN_ACME_DIRECTORY", "http://127.0.0.1:1/directory") // Let's Encrypt is unreachable here
+	t.Setenv("SCILLA_ACME_DIRECTORY", "http://127.0.0.1:1/directory") // Let's Encrypt is unreachable here
 	st, err := storetest.Open(ctx, t.TempDir())
 	if err != nil {
 		t.Fatal(err)
@@ -65,7 +65,7 @@ func TestPublic(t *testing.T) {
 // longer pin (0.5.0.3: Hysteria2, TUIC, AnyTLS and TrustTunnel failed their handshakes).
 func TestPublicChangeIsAnnounced(t *testing.T) {
 	ctx := context.Background()
-	t.Setenv("MIKAN_ACME_DIRECTORY", "http://127.0.0.1:1/directory") // Let's Encrypt is unreachable here
+	t.Setenv("SCILLA_ACME_DIRECTORY", "http://127.0.0.1:1/directory") // Let's Encrypt is unreachable here
 	st, err := storetest.Open(ctx, t.TempDir())
 	if err != nil {
 		t.Fatal(err)

@@ -5,13 +5,13 @@ import (
 	"net/http"
 	"strconv"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/nodehello"
-	"mikan/internal/nodetls"
-	"mikan/internal/panel/hello"
-	"mikan/internal/panel/nodesync"
-	"mikan/internal/panel/server"
-	"mikan/internal/panel/store"
+	"scilla/internal/nodeapi"
+	"scilla/internal/nodehello"
+	"scilla/internal/nodetls"
+	"scilla/internal/panel/hello"
+	"scilla/internal/panel/nodesync"
+	"scilla/internal/panel/server"
+	"scilla/internal/panel/store"
 )
 
 // nodeHello answers the hellos of the panel's remote nodes: it finds the node by its

@@ -8,13 +8,13 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/nodesync"
-	"mikan/internal/panel/presets"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/subs"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/nodesync"
+	"scilla/internal/panel/presets"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/subs"
 )
 
 const inUse = "listen tcp :443: bind: address already in use"
@@ -63,7 +63,7 @@ func (e *env) ports(t *testing.T, node int64) domain.PortMap {
 	return m
 }
 
-// The decision: a port something outside mikan holds moves to the first free port of the
+// The decision: a port something outside scilla holds moves to the first free port of the
 // pool over the same network; anything else stays.
 func TestBusyMove(t *testing.T) {
 	e := setup(t)
@@ -101,9 +101,9 @@ func TestBusyMove(t *testing.T) {
 		{name: "moves off for the inbound", in: with(xhttp, func(i *db.Inbound) { i.AutoPort = 0 }), failed: "443", portOn: true, why: BusyOff},
 		{name: "behind a proxy", in: with(xhttp, func(i *db.Inbound) { i.Listen = "127.0.0.1" }), failed: "443", portOn: true, why: BusyOff},
 		{name: "a hopping range", in: with(hy2, func(i *db.Inbound) { i.Port = "20000-20100" }), failed: "20000-20100", portOn: true, why: BusyOff},
-		// The panel's own HTTPS is mikan's, not another program: the admin's conflict to fix.
-		{name: "the panel's port", in: with(xhttp, func(i *db.Inbound) { i.Port = "21355" }), failed: "21355", portOn: true, why: BusyMikan},
-		{name: "another inbound's port", in: with(xhttp, func(i *db.Inbound) { i.Port = "8443" }), failed: "8443", portOn: true, why: BusyMikan},
+		// The panel's own HTTPS is scilla's, not another program: the admin's conflict to fix.
+		{name: "the panel's port", in: with(xhttp, func(i *db.Inbound) { i.Port = "21355" }), failed: "21355", portOn: true, why: BusyScilla},
+		{name: "another inbound's port", in: with(xhttp, func(i *db.Inbound) { i.Port = "8443" }), failed: "8443", portOn: true, why: BusyScilla},
 	} {
 		port, why := BusyMove(ports, c.in, c.failed, c.portOn, false, c.left)
 		if port != c.port || why != c.why {
@@ -327,9 +327,9 @@ func TestBusyRelayMove(t *testing.T) {
 		{name: "nothing left to pick", host: &nodeapi.HostPorts{TCP: high}, relay: "2053", failed: "2053", portOn: true, left: allPool, why: BusyNoPort},
 		{name: "the row moved since", relay: "2083", failed: "2053", portOn: true, why: BusyStale},
 		{name: "moves off in settings", relay: "2053", failed: "2053", why: BusyOff},
-		// The panel's own HTTPS is mikan's, not another program: the admin's conflict to fix.
-		{name: "the panel's port", relay: "21355", failed: "21355", portOn: true, why: BusyMikan},
-		{name: "an inbound's port", relay: "443", failed: "443", portOn: true, why: BusyMikan},
+		// The panel's own HTTPS is scilla's, not another program: the admin's conflict to fix.
+		{name: "the panel's port", relay: "21355", failed: "21355", portOn: true, why: BusyScilla},
+		{name: "an inbound's port", relay: "443", failed: "443", portOn: true, why: BusyScilla},
 	} {
 		port, why := BusyRelayMove(ports.WithHost(c.host), c.relay, c.failed, c.portOn, c.left)
 		if c.port == "high" {

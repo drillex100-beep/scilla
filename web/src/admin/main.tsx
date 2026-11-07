@@ -36,7 +36,7 @@ const router = createAppRouter(queryClient);
 // Apply the saved theme before the first render so navigation never resets it.
 setTheme(getTheme(), { keep: false });
 
-window.addEventListener("mikan:unauthorized", () => {
+window.addEventListener("scilla:unauthorized", () => {
   if (router.state.location.pathname === "/login" || router.state.location.pathname === "/support") return;
   // A support operator whose access ended (revoked, or by its time) is told so, not sent to a login that is not theirs.
   const operator = !!queryClient.getQueryData(whoamiQuery.queryKey);

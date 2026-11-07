@@ -9,7 +9,7 @@ import (
 	"github.com/metacubex/mihomo/dns"
 	"github.com/metacubex/mihomo/tunnel"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 // The DNS at the exit (nodeapi.ExitDNS). mihomo sets its sniffer and resolver once, with

@@ -23,7 +23,7 @@ import (
 
 	"golang.org/x/crypto/chacha20poly1305"
 
-	"mikan/internal/httpjson"
+	"scilla/internal/httpjson"
 )
 
 // A Happ crypt link (happ://crypt5/…) carries the subscription address so that the app

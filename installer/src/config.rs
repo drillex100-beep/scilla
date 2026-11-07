@@ -1,11 +1,11 @@
-//! The server's settings. The plain ones are in /opt/mikan/config.json; the secret ones
+//! The server's settings. The plain ones are in /opt/scilla/config.json; the secret ones
 //! (the database's password and address, a node's join key) are files of their own in
-//! /opt/mikan/secrets (0700), each readable by the container user that needs it (0400),
+//! /opt/scilla/secrets (0700), each readable by the container user that needs it (0400),
 //! which compose mounts as /run/secrets/<name>. Nothing secret is in an environment variable
 //! of a container: `docker inspect` and /proc/<pid>/environ show the files' paths only.
 //!
-//! Servers set up before kept everything in /opt/mikan/.env. While it is there it is what
-//! the server runs on (an update's rollback to an older mikan puts it back), and `mikan
+//! Servers set up before kept everything in /opt/scilla/.env. While it is there it is what
+//! the server runs on (an update's rollback to an older scilla puts it back), and `scilla
 //! update` moves it here: the new files first, .env removed once the containers came up on
 //! them (the update's archive keeps a copy).
 
@@ -39,16 +39,16 @@ const APP_UID: u32 = 65532;
 const POSTGRES_UID: u32 = 70;
 
 pub const SECRET_KEYS: [Secret; 3] = [
-    Secret { key: "MIKAN_POSTGRES_PASSWORD", file: "postgres_password", owner: POSTGRES_UID, panel: true },
-    Secret { key: "MIKAN_DATABASE_URL", file: "database_url", owner: APP_UID, panel: true },
-    Secret { key: "MIKAN_NODE_JOIN", file: "node_join", owner: APP_UID, panel: false },
+    Secret { key: "SCILLA_POSTGRES_PASSWORD", file: "postgres_password", owner: POSTGRES_UID, panel: true },
+    Secret { key: "SCILLA_DATABASE_URL", file: "database_url", owner: APP_UID, panel: true },
+    Secret { key: "SCILLA_NODE_JOIN", file: "node_join", owner: APP_UID, panel: false },
 ];
 
 fn secret(key: &str) -> Option<&'static Secret> {
     SECRET_KEYS.iter().find(|s| s.key == key)
 }
 
-/// Whether mikan is installed in root: its settings are there, in either form.
+/// Whether scilla is installed in root: its settings are there, in either form.
 pub fn installed(root: &Path) -> bool {
     root.join(FILE).exists() || root.join(LEGACY).exists()
 }
@@ -114,7 +114,7 @@ impl Config {
         Self { root: root.as_ref().to_path_buf(), values, legacy: false }
     }
 
-    /// Read from .env, which `mikan update` moves to config.json and secrets/.
+    /// Read from .env, which `scilla update` moves to config.json and secrets/.
     pub fn legacy(&self) -> bool {
         self.legacy
     }
@@ -158,7 +158,7 @@ impl Config {
             .collect()
     }
 
-    /// The settings as .env lines, sorted: what an older mikan reads (a rollback writes it
+    /// The settings as .env lines, sorted: what an older scilla reads (a rollback writes it
     /// back with the compose.yaml it goes with) and what an update's snapshot keeps.
     pub fn to_env_text(&self) -> String {
         self.values.iter().map(|(k, v)| format!("{k}={v}\n")).collect()
@@ -173,7 +173,7 @@ impl Config {
     /// each secret a file even when unset, as compose wants every file it mounts. .env stays
     /// until retire_legacy.
     pub fn save(&self) -> Result<()> {
-        let node = self.get("MIKAN_MODE") == Some("node");
+        let node = self.get("SCILLA_MODE") == Some("node");
         let plain: BTreeMap<&str, &str> =
             self.values.iter().filter(|(k, _)| secret(k).is_none()).map(|(k, v)| (k.as_str(), v.as_str())).collect();
         let mut json = serde_json::to_string_pretty(&plain)?;
@@ -213,7 +213,7 @@ impl Config {
         Ok(())
     }
 
-    /// The legacy .env this server runs on again (a rollback to a mikan that reads it).
+    /// The legacy .env this server runs on again (a rollback to a scilla that reads it).
     pub fn write_legacy(&self) -> Result<()> {
         write_private(&self.root.join(LEGACY), self.to_env_text().as_bytes())
     }
@@ -225,7 +225,7 @@ fn plain(value: &str) -> bool {
 }
 
 /// The PostgreSQL address of the panel, the one value that is a URL with a query.
-const DSN_KEY: &str = "MIKAN_DATABASE_URL";
+const DSN_KEY: &str = "SCILLA_DATABASE_URL";
 
 fn plain_dsn(value: &str) -> bool {
     value.bytes().all(|b| b.is_ascii_alphanumeric() || b"._:/@+=,-?&%".contains(&b))
@@ -275,7 +275,7 @@ mod tests {
         let d = dir("move");
         fs::write(
             d.join(LEGACY),
-            "MIKAN_IMAGE=ghcr.io/x@sha256:ab\nPANEL_PORT=\"2053\"\nMIKAN_POSTGRES_PASSWORD=pw123456\nMIKAN_DATABASE_URL=postgresql://mikan:pw123456@localhost/mikan?host=/run/postgresql\n# note\n",
+            "SCILLA_IMAGE=ghcr.io/x@sha256:ab\nPANEL_PORT=\"2053\"\nSCILLA_POSTGRES_PASSWORD=pw123456\nSCILLA_DATABASE_URL=postgresql://scilla:pw123456@localhost/scilla?host=/run/postgresql\n# note\n",
         )
         .unwrap();
         let mut c = Config::load(&d).unwrap();
@@ -297,10 +297,10 @@ mod tests {
         assert!(!d.join(LEGACY).exists());
         let back = Config::load(&d).unwrap();
         assert!(!back.legacy());
-        assert_eq!(back.get("MIKAN_POSTGRES_PASSWORD"), Some("pw123456"));
+        assert_eq!(back.get("SCILLA_POSTGRES_PASSWORD"), Some("pw123456"));
         assert_eq!(back.to_env_text(), c.to_env_text());
         assert!(back.secret_values().iter().any(|v| v.starts_with("postgresql://")));
-        assert_eq!(back.compose_value("MIKAN_DATABASE_URL"), None, "a secret never goes into compose.yaml");
+        assert_eq!(back.compose_value("SCILLA_DATABASE_URL"), None, "a secret never goes into compose.yaml");
         fs::remove_dir_all(&d).unwrap();
     }
 
@@ -309,12 +309,12 @@ mod tests {
     fn a_node_has_its_join_key_file() {
         let d = dir("node");
         let mut c = Config::new(&d);
-        c.set("MIKAN_MODE", "node").unwrap();
+        c.set("SCILLA_MODE", "node").unwrap();
         c.save().unwrap();
         assert_eq!(fs::read_to_string(d.join(SECRETS).join("node_join")).unwrap(), "");
-        c.set("MIKAN_NODE_JOIN", "mk1.abcdef").unwrap();
+        c.set("SCILLA_NODE_JOIN", "mk1.abcdef").unwrap();
         c.save().unwrap();
-        assert_eq!(Config::load(&d).unwrap().get("MIKAN_NODE_JOIN"), Some("mk1.abcdef"));
+        assert_eq!(Config::load(&d).unwrap().get("SCILLA_NODE_JOIN"), Some("mk1.abcdef"));
         assert!(!d.join(SECRETS).join("database_url").exists());
         fs::remove_dir_all(&d).unwrap();
     }
@@ -322,13 +322,13 @@ mod tests {
     #[test]
     fn values_go_into_compose_as_written() {
         let mut c = Config::new("x");
-        for ok in ["ghcr.io/miroshka000/mikan@sha256:ab12", "0.4.4-rc.1+b2", "21355", ""] {
+        for ok in ["ghcr.io/drillex100-beep/scilla@sha256:ab12", "0.4.4-rc.1+b2", "21355", ""] {
             c.set("K", ok).unwrap();
         }
         for bad in ["a$HOME", "${X}", "a b", "a #b", "\"q\"", "a\nb", "img?x=1"] {
             assert!(c.set("K", bad).is_err(), "{bad:?} was taken");
         }
-        c.set("MIKAN_DATABASE_URL", "postgres://u:p%40ss@h/db?sslmode=require&connect_timeout=10").unwrap();
+        c.set("SCILLA_DATABASE_URL", "postgres://u:p%40ss@h/db?sslmode=require&connect_timeout=10").unwrap();
         let old = Config::from_env_text("x", "A=1\nB=\"2\"\nA=3\nE=\n");
         assert_eq!(old.to_env_text(), "A=3\nB=2\n");
     }

@@ -1,6 +1,6 @@
 package billing
 
-import "mikan/internal/panel/model"
+import "scilla/internal/panel/model"
 
 // The shop as the bot addon sees it, and as its rules and texts are computed (package model):
 // billing's types convert to the model's field for field.

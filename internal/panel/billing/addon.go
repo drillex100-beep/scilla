@@ -14,11 +14,11 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/promo"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/promo"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // Payments through marketplace adapters (internal/panel/addons): a provider is
@@ -265,7 +265,7 @@ func (s *Service) addonClient(ctx context.Context, id string) (*addons.Client, A
 }
 
 // Discounted payments can arrive after their promo reservation expires. Accept them only
-// from providers that advertise refunds, so Mikan can return money without issuing service
+// from providers that advertise refunds, so Scilla can return money without issuing service
 // for a discount that is no longer reserved.
 func (s *Service) validatePromoProvider(ctx context.Context, provider string) error {
 	if provider == Stars || provider == Balance {
@@ -323,7 +323,7 @@ func (s *Service) openAddonInvoice(ctx context.Context, p db.Payment, descriptio
 	if s.d.SubBase != nil {
 		sub = s.d.SubBase(ctx)
 	}
-	inv, err := cl.CreateInvoice(ctx, addons.InvoiceRequest{Settings: cfg.Values, PaymentID: p.ID, IdempotencyKey: "mikan-" + strconv.FormatInt(p.ID, 10),
+	inv, err := cl.CreateInvoice(ctx, addons.InvoiceRequest{Settings: cfg.Values, PaymentID: p.ID, IdempotencyKey: "scilla-" + strconv.FormatInt(p.ID, 10),
 		Amount: p.Amount, Currency: p.Currency, Description: description, ReturnURL: ret, WebhookURL: s.AddonWebhookURL(ctx, id, sub)})
 	if err != nil {
 		return sql.NullString{}, "", err

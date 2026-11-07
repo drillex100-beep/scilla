@@ -11,15 +11,15 @@ The last 2000 lines of the panel's log and of each node's. Tokens, keys, passwor
 
 ## Check
 
-**Run the check** runs `mikan doctor` on the server itself, not in a container: Docker and the containers, ports, ufw rules, port 80, the clock, DNS, access to GitHub and GHCR, disk and memory. Every line has a hint on what to do. Waiting for the report takes up to a minute.
+**Run the check** runs `scilla doctor` on the server itself, not in a container: Docker and the containers, ports, ufw rules, port 80, the clock, DNS, access to GitHub and GHCR, disk and memory. Every line has a hint on what to do. Waiting for the report takes up to a minute.
 
 **Restart** restarts the containers of the panel's server or of a node. The panel or the node is unreachable for a couple of seconds.
 
-How it works: the panel writes a request file into its data directory and a systemd unit on the server runs the command and returns the result. For a node the request goes over the node API. A server installed before 0.5.2.0 needs one `mikan update` for this; until then the check answers "the server did not answer".
+How it works: the panel writes a request file into its data directory and a systemd unit on the server runs the command and returns the result. For a node the request goes over the node API. A server installed before 0.5.2.0 needs one `scilla update` for this; until then the check answers "the server did not answer".
 
 ## Reachability
 
-Checks whether the server opens for users in Russia. Handy before you buy a server or install mikan on it: type an IP or a domain and up to three TCP ports. Port 22 is open on almost any server with SSH, start with it.
+Checks whether the server opens for users in Russia. Handy before you buy a server or install scilla on it: type an IP or a domain and up to three TCP ports. Port 22 is open on almost any server with SSH, start with it.
 
 The [Globalping](https://globalping.io) service does the check: its points in home and mobile internet in Russia (where the blocks are) and in Russian data centres connect to the ports three times each. To compare, points in Germany, the Netherlands and Finland do the same. The result in one line:
 
@@ -48,12 +48,12 @@ Enter the server's IP or domain (the hint offers your nodes' addresses) and pres
 The server's address goes to public geo bases. How services such as YouTube or Netflix see the IP is not shown: they have bases of their own.
 :::
 
-For nodes the same check is in the "Check node" window, see [Nodes](/mikan/en/nodes/nodes/#country-in-the-geo-bases).
+For nodes the same check is in the "Check node" window, see [Nodes](/scilla/en/nodes/nodes/#country-in-the-geo-bases).
 
 ## Terminal
 
-The tab appears for an operator with "Terminal" level access and only for the servers you ticked for it. Details and limits are in [Support access](/mikan/en/operations/support-access/#terminal).
+The tab appears for an operator with "Terminal" level access and only for the servers you ticked for it. Details and limits are in [Support access](/scilla/en/operations/support-access/#terminal).
 
 ## When the panel does not open
 
-Then the page is out of reach. Run `mikan doctor` on the server: the same report in the terminal. For a support ticket there is `mikan support <code>`, see [The mikan command](/mikan/en/operations/cli/).
+Then the page is out of reach. Run `scilla doctor` on the server: the same report in the terminal. For a support ticket there is `scilla support <code>`, see [The scilla command](/scilla/en/operations/cli/).

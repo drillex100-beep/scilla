@@ -643,7 +643,7 @@ func (q *Queries) LockAddonEvents(ctx context.Context, key int64) error {
 }
 
 const lockAddonSources = `-- name: LockAddonSources :exec
-SELECT pg_advisory_xact_lock(hashtextextended('mikan-addon-sources', 0))
+SELECT pg_advisory_xact_lock(hashtextextended('scilla-addon-sources', 0))
 `
 
 func (q *Queries) LockAddonSources(ctx context.Context) error {

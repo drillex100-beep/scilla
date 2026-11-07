@@ -11,14 +11,14 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/nodetls"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/nodesync"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
+	"scilla/internal/nodeapi"
+	"scilla/internal/nodetls"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/nodesync"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
 )
 
 // fakeNodes stands in for the running nodes: what their health says, and what the panel
@@ -101,7 +101,7 @@ func newRig(t *testing.T, panelVersion string) *rig {
 	if err := domain.Seed(ctx, st, r.now); err != nil {
 		t.Fatal(err)
 	}
-	panel, _ := nodetls.Generate("mikan-panel", x509.ExtKeyUsageClientAuth, r.now)
+	panel, _ := nodetls.Generate("scilla-panel", x509.ExtKeyUsageClientAuth, r.now)
 	for i, host := range []string{"198.51.100.2", "198.51.100.3", "198.51.100.4"} {
 		n, _, err := domain.AddNode(ctx, st, panel, domain.NodeInput{Name: "N" + string(rune('A'+i)), Host: host, APIPort: 40000 + i}, r.now)
 		if err != nil {
@@ -219,7 +219,7 @@ func TestRequestRefusals(t *testing.T) {
 			t.Errorf("a node on %s: %v", v, err)
 		}
 	}
-	// no endpoint before 0.5.0.2: the admin runs `mikan update` on that server once
+	// no endpoint before 0.5.0.2: the admin runs `scilla update` on that server once
 	for _, v := range []string{"0.5.0.1", "0.5.0", "0.4.5", "dev"} {
 		r.nodes.up(4, v)
 		if err := r.svc.Request(r.ctx, r.node(4)); !errors.Is(err, ErrUnsupported) {
@@ -366,10 +366,10 @@ func TestAFailureStopsTheRollout(t *testing.T) {
 	r.tick()
 	r.want("2 0.5.0.3")
 	// the node's updater went back to the old image and says why
-	r.nodes.report(2, nodeapi.UpdateStatus{State: nodeapi.UpdateFailed, Version: "0.5.0.3", From: "0.5.0.2", Error: "mikan 0.5.0.3 did not start: going back"})
+	r.nodes.report(2, nodeapi.UpdateStatus{State: nodeapi.UpdateFailed, Version: "0.5.0.3", From: "0.5.0.2", Error: "scilla 0.5.0.3 did not start: going back"})
 	r.tick()
 	a := r.attempt(2)
-	if a.State != Failed || a.Error != "mikan 0.5.0.3 did not start: going back" {
+	if a.State != Failed || a.Error != "scilla 0.5.0.3 did not start: going back" {
 		t.Fatalf("attempt: %+v", a)
 	}
 	r.want("2 0.5.0.3")

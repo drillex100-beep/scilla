@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/panel/secure"
+	"scilla/internal/panel/secure"
 )
 
 // Verifier checks a subscription token Marzban or PasarGuard signed, with the old panel's

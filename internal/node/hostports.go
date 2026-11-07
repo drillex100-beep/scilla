@@ -8,12 +8,12 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 // What listens on the node's server, read from the kernel's socket tables. With
 // network_mode: host they are the server's, not the container's, so a program outside
-// mikan (an Xray of another panel, nginx) shows in them as well.
+// scilla (an Xray of another panel, nginx) shows in them as well.
 
 // firstEphemeral is where the kernel hands out ports to outgoing connections when
 // /proc/sys/net/ipv4/ip_local_port_range cannot be read.

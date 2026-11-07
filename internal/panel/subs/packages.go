@@ -3,7 +3,7 @@ package subs
 import (
 	"context"
 
-	"mikan/internal/panel/model"
+	"scilla/internal/panel/model"
 )
 
 // shopPackage is a traffic package (GitHub issue #12) the Mini App offers for the

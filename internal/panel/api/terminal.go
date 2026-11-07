@@ -15,13 +15,13 @@ import (
 	"github.com/coder/websocket"
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/hostchan"
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/audit"
-	"mikan/internal/panel/server"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/support"
-	"mikan/internal/textutil"
+	"scilla/internal/hostchan"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/audit"
+	"scilla/internal/panel/server"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/support"
+	"scilla/internal/textutil"
 )
 
 // The support terminal. The operator of a grant of the terminal level opens a WebSocket to

@@ -153,7 +153,7 @@ function TrafficCard() {
           </h2>
           <div className="mt-1.5 flex gap-4 text-[13px] text-[var(--ink-600)]">
             <span className="inline-flex items-center gap-2">
-              <i className="h-2 w-2 rounded-full bg-[var(--mikan-500)]" /> {t("chart.down")}
+              <i className="h-2 w-2 rounded-full bg-[var(--scilla-500)]" /> {t("chart.down")}
             </span>
             <span className="inline-flex items-center gap-2">
               <i className="h-2 w-2 rounded-full bg-[var(--lagoon-500)]" /> {t("chart.up")}
@@ -215,7 +215,7 @@ function ServerCard() {
       {n && !n.ok ? (
         <div className="banner err mb-4" role="alert">
           <span>
-            {t("dashboard.nodeUnreachable")} <span className="mono whitespace-nowrap">mikan logs node</span>
+            {t("dashboard.nodeUnreachable")} <span className="mono whitespace-nowrap">scilla logs node</span>
           </span>
         </div>
       ) : null}
@@ -357,7 +357,7 @@ function NodeTrafficCard() {
                     <span className="num text-right text-[13px] sm:order-3 sm:min-w-[132px]">
                       <b className="font-semibold">{bytes(n.bytes)}</b> <span className="text-[var(--ink-500)]">{percent(pct)}</span>
                     </span>
-                    <Bar pct={pct} label={nodeLabel(n)} className="col-span-2 sm:order-2 sm:col-span-1 [&>i]:!bg-[var(--mikan-400)]" />
+                    <Bar pct={pct} label={nodeLabel(n)} className="col-span-2 sm:order-2 sm:col-span-1 [&>i]:!bg-[var(--scilla-400)]" />
                   </li>
                 );
               })}
@@ -460,7 +460,7 @@ function TopCard() {
             <span className="font-display text-xs text-[var(--ink-400)]">{i + 1}</span>
             <div className="min-w-0">
               <div className="mb-1.5 truncate text-[13px] font-medium">{u.name}</div>
-              <Bar pct={(u.bytes / max) * 100} className="[&>i]:!bg-[var(--mikan-400)]" />
+              <Bar pct={(u.bytes / max) * 100} className="[&>i]:!bg-[var(--scilla-400)]" />
             </div>
             <span className="num min-w-[72px] text-right text-[13px] font-medium">{bytes(u.bytes)}</span>
           </Link>

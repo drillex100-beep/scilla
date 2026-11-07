@@ -10,9 +10,9 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/panelimport"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/panelimport"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // Users from another panel (panelimport). Everything here is the session's: it reads the

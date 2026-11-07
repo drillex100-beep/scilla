@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/settings"
+	"scilla/internal/tgapi"
 )
 
 // noticeBot is the alerts' bot with the admin's chat 777 connected, sending to the test's API.

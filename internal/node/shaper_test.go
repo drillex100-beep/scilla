@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 func near(t *testing.T, what string, got, want float64) {
@@ -82,7 +82,7 @@ func TestPolicyCapGoesToTheCore(t *testing.T) {
 		{Slot: "s2", Allowed: true, QuotaRemaining: -1, SpeedMbps: 50, Group: "7"},
 		{Slot: "s3", Allowed: true, QuotaRemaining: -1, Group: "8"},
 	})
-	capped := fakeLimit{group: "mikan/7", up: 50 * mbit, down: 50 * mbit}
+	capped := fakeLimit{group: "scilla/7", up: 50 * mbit, down: 50 * mbit}
 	for _, k := range []userKey{{"vless", "s1"}, {"tuic", "u1"}, {"vless", "s2"}, {"tuic", "u2"}} {
 		if got := core.held[k]; got != capped {
 			t.Fatalf("%v: %+v, want %+v", k, got, capped)
@@ -106,7 +106,7 @@ func TestCapAndBudgetTogether(t *testing.T) {
 	now := time.Unix(1_800_000_000, 0)
 	r, core := cappedRegistry(t, &now)
 	r.SetPolicies("e1", []nodeapi.Policy{{Slot: "s1", Allowed: true, QuotaRemaining: 1000, SpeedMbps: 10, Group: "7"}})
-	want := fakeLimit{budget: 1000, group: "mikan/7", up: 10 * mbit, down: 10 * mbit}
+	want := fakeLimit{budget: 1000, group: "scilla/7", up: 10 * mbit, down: 10 * mbit}
 	if got := core.held[userKey{"vless", "s1"}]; got != want {
 		t.Fatalf("%+v, want %+v", got, want)
 	}
@@ -134,10 +134,10 @@ func TestFairShareGoesToTheCore(t *testing.T) {
 	s2.countIn("", 10*mbit, 10*mbit)
 	r.shaper.share()
 	r.reconcile()
-	if got := core.held[userKey{"vless", "s1"}]; got.group != "mikan/7" || got.down != 50*mbit {
+	if got := core.held[userKey{"vless", "s1"}]; got.group != "scilla/7" || got.down != 50*mbit {
 		t.Fatalf("s1: %+v", got)
 	}
-	if got := core.held[userKey{"tuic", "u2"}]; got.group != "mikan/8" || got.down != 50*mbit {
+	if got := core.held[userKey{"tuic", "u2"}]; got.group != "scilla/8" || got.down != 50*mbit {
 		t.Fatalf("s2: %+v", got)
 	}
 	passes := core.passes

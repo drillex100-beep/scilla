@@ -7,7 +7,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"mikan/internal/textutil"
+	"scilla/internal/textutil"
 )
 
 // The Markdown of the admin's texts (welcome, menu, pages, notices, broadcasts), turned

@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/panel/autotune"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/autotune"
+	"scilla/internal/panel/store/db"
 )
 
 // certExpiryWarning is how long before the TLS certificate expires it is called a problem.

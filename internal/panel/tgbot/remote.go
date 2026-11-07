@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"mikan/internal/panel/model"
+	"scilla/internal/panel/model"
 )
 
 // The methods of Remote, one call each (rpc.go). A method whose interface has no error to

@@ -4,10 +4,10 @@
 set -eu
 cd "$(dirname "$0")"
 export MSYS_NO_PATHCONV=1
-export MIKAN_TEST_POSTGRES_PASSWORD=$(head -c 32 /dev/urandom | od -An -tx1 | tr -d ' \n')
+export SCILLA_TEST_POSTGRES_PASSWORD=$(head -c 32 /dev/urandom | od -An -tx1 | tr -d ' \n')
 
-docker volume create mikan-gomod >/dev/null
-docker volume create mikan-gocache >/dev/null
+docker volume create scilla-gomod >/dev/null
+docker volume create scilla-gocache >/dev/null
 docker compose down -v --remove-orphans >/dev/null 2>&1 || true
 docker compose build node target
 

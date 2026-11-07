@@ -6,9 +6,9 @@ import (
 	"strings"
 	"sync/atomic"
 
-	"mikan/internal/frontpage"
-	"mikan/internal/panel/secure"
-	"mikan/internal/panel/settings"
+	"scilla/internal/frontpage"
+	"scilla/internal/panel/secure"
+	"scilla/internal/panel/settings"
 )
 
 // Server routes by the first path segment: the secret admin path, the subscription

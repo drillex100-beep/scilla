@@ -14,7 +14,7 @@ import (
 // addresses, names and API port are masked, and so is anything that looks like an
 // address, a domain or a key in the raw errors.
 
-// publicNames are names everybody's report may show: the places every mikan reaches.
+// publicNames are names everybody's report may show: the places every scilla reaches.
 var publicNames = []string{"github.com", "ghcr.io", "api.globalping.io", "api.telegram.org", "cloudflare.com"}
 
 var (
@@ -70,7 +70,7 @@ func isNumber(s string) bool {
 }
 
 func hideToken(t string) bool {
-	if strings.HasPrefix(t, "mikan1.") {
+	if strings.HasPrefix(t, "scilla1.") {
 		return true
 	}
 	if _, err := netip.ParseAddr(strings.Trim(t, "[]")); err == nil {

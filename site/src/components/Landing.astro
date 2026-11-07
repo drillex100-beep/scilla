@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import { Code } from '@astrojs/starlight/components';
-import mandarin from '../assets/mandarin.webp';
+import mascot from '../assets/mascot.webp';
 import Goals from './Goals.astro';
 import goals from '../../../.github/goals.json';
 import { installCommand, links, protocolMatrix, strings, type Lang, type Screen } from '../landing';
@@ -55,7 +55,7 @@ const collecting = goals.items.filter((g) => g.status === 'open').length;
 			</div>
 		</div>
 		<div class="hero-art">
-			<Image src={mandarin} alt={t.hero.art} widths={[210, 420]} sizes="(min-width: 50rem) 300px, 168px" loading="eager" fetchpriority="high" class="fruit" />
+			<Image src={mascot} alt={t.hero.art} widths={[210, 420]} sizes="(min-width: 50rem) 300px, 168px" loading="eager" fetchpriority="high" class="mascot" />
 			<span class="shade" aria-hidden="true"></span>
 		</div>
 	</section>
@@ -97,7 +97,7 @@ const collecting = goals.items.filter((g) => g.status === 'open').length;
 						<div class="frame">
 							<Image
 								src={shot(s)}
-								alt={`mikan · ${t.screens.items[s][0]}`}
+								alt={`scilla · ${t.screens.items[s][0]}`}
 								format="webp"
 								widths={[720, 1080, 1600, 2160]}
 								sizes="(min-width: 72rem) 1056px, calc(100vw - 2rem)"
@@ -240,14 +240,14 @@ const collecting = goals.items.filter((g) => g.status === 'open').length;
 		width: 168px;
 	}
 
-	.fruit {
+	.mascot {
 		display: block;
 		width: 100%;
 		height: auto;
 		position: relative;
 		z-index: 1;
 		animation: float 7s ease-in-out infinite;
-		filter: drop-shadow(0 18px 24px rgba(160, 70, 10, 0.18));
+		filter: drop-shadow(0 18px 24px rgba(47, 125, 246, 0.22));
 	}
 
 	.shade {

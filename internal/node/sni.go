@@ -15,7 +15,7 @@ import (
 
 	"github.com/metacubex/mihomo/component/sniffer"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 // The SNI router: the node's TCP 443 shared by several inbounds (REALITY, VLESS and Trojan

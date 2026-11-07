@@ -210,7 +210,7 @@ func (q *Queries) ListTgLinksOf(ctx context.Context, tgID int64) ([]User, error)
 }
 
 const lockTgLinks = `-- name: LockTgLinks :exec
-SELECT pg_advisory_xact_lock(hashtextextended('mikan-tg-links:' || CAST($1 AS BIGINT), 0))
+SELECT pg_advisory_xact_lock(hashtextextended('scilla-tg-links:' || CAST($1 AS BIGINT), 0))
 `
 
 // The subscriptions of one Telegram account are linked one transaction at a time.

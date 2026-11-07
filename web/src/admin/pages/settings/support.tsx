@@ -25,7 +25,7 @@ import { useSaveSettings } from "./shared";
 import { CardHead } from "../../../components/layout";
 
 /** The support desk's bot: it gives the code, and the panel hands it the link. */
-const SUPPORT_BOT = "https://t.me/MikanSup_bot";
+const SUPPORT_BOT = "https://t.me/ScillaSup_bot";
 
 type Level = SupportGrant["level"];
 type Hours = 2 | 6 | 24;
@@ -80,7 +80,7 @@ export function SupportCard() {
 
 /**
  * Whether support access may be opened at all. Turned off, the live access ends at once; the
- * server's .env (MIKAN_SUPPORT_ACCESS=off) keeps it off whatever the switch says.
+ * server's .env (SCILLA_SUPPORT_ACCESS=off) keeps it off whatever the switch says.
  */
 function AccessSwitch({ off, live }: { off: string; live: boolean }) {
   const qc = useQueryClient();

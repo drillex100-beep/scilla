@@ -13,10 +13,10 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/server"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/subpage"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/server"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/subpage"
 )
 
 // subPageUser makes the harness's panel addressable and gives it a user to open the page of.
@@ -46,11 +46,11 @@ var browser = map[string]string{"Accept": "text/html,application/xhtml+xml", "Us
 // pageData is the page's data block in the HTML.
 func pageData(t *testing.T, body []byte) subpage.Public {
 	t.Helper()
-	start := bytes.Index(body, []byte(`<script type="application/json" id="mikan-page">`))
+	start := bytes.Index(body, []byte(`<script type="application/json" id="scilla-page">`))
 	if start < 0 {
 		t.Fatalf("no page data in %s", body)
 	}
-	start += len(`<script type="application/json" id="mikan-page">`)
+	start += len(`<script type="application/json" id="scilla-page">`)
 	end := start + bytes.Index(body[start:], []byte("</script>"))
 	var p subpage.Public
 	if err := json.Unmarshal(body[start:end], &p); err != nil {
@@ -151,12 +151,12 @@ func TestSubPageEditorEndToEnd(t *testing.T) {
 	c = subpage.Default()
 	c.Look.Palette, c.Look.Mode, c.Look.Accent = "forest", "system", "brand"
 	c.Brand = subpage.PageBrand{Logo: "image", Subtitle: "Быстро и тихо"}
-	c.OG = subpage.PageOG{Title: "Mikan VPN", Description: "Подписка", Image: true}
+	c.OG = subpage.PageOG{Title: "Scilla VPN", Description: "Подписка", Image: true}
 	c.CSS = ".card{color:red}</style><script>alert(1)</script>@import url(https://evil.example/x.css);"
 	c.Blocks = append(c.Blocks, subpage.PageBlock{ID: "text-a", Type: subpage.TypeText, On: true, Text: "**Привет**"})
 	// A block turned off is a draft: it must not reach the page's source.
 	c.Blocks = append(c.Blocks, subpage.PageBlock{ID: "text-b", Type: subpage.TypeText, On: false, Text: "черновик для своих"})
-	resp, out = h.do(http.MethodPut, api+"/sub-page", map[string]any{"config": c, "brand": "Mikan", "brand_accent": "#2a813f"}, csrf)
+	resp, out = h.do(http.MethodPut, api+"/sub-page", map[string]any{"config": c, "brand": "Scilla", "brand_accent": "#2a813f"}, csrf)
 	if resp.StatusCode != http.StatusOK {
 		t.Fatalf("save: %d %s", resp.StatusCode, out)
 	}
@@ -188,13 +188,13 @@ func TestSubPageEditorEndToEnd(t *testing.T) {
 	// The page: the admin's look, the preview tags, the CSS kept in its style, the list.
 	resp, body := h.do(http.MethodGet, sub, nil, browser)
 	p := pageData(t, body)
-	if p.Brand != "Mikan" || p.Accent != "#2A813F" || p.Logo != "brand/logo?v="+asset.Hash || p.Config.Look.Palette != "forest" || len(p.Docs) != 1 || p.Docs[0].ID != shown || p.Config.CSS != "" {
+	if p.Brand != "Scilla" || p.Accent != "#2A813F" || p.Logo != "brand/logo?v="+asset.Hash || p.Config.Look.Palette != "forest" || len(p.Docs) != 1 || p.Docs[0].ID != shown || p.Config.CSS != "" {
 		t.Fatalf("page data: %+v", p)
 	}
 	if bytes.Contains(body, []byte("черновик для своих")) {
 		t.Fatal("a block turned off is in the page")
 	}
-	for _, want := range []string{`<meta property="og:title" content="Mikan VPN">`, `<meta property="og:image" content="https://203.0.113.10:21355/` + subPath + `/brand/logo?v=` + asset.Hash + `">`, `<style id="mikan-css">.card{color:red}/style>script>alert(1)/script> none;</style>`} {
+	for _, want := range []string{`<meta property="og:title" content="Scilla VPN">`, `<meta property="og:image" content="https://203.0.113.10:21355/` + subPath + `/brand/logo?v=` + asset.Hash + `">`, `<style id="scilla-css">.card{color:red}/style>script>alert(1)/script> none;</style>`} {
 		if !bytes.Contains(body, []byte(want)) {
 			t.Errorf("page lacks %s:\n%s", want, body)
 		}

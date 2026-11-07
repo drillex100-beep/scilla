@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"mikan/internal/panel/tgbot"
+	"scilla/internal/panel/tgbot"
 )
 
 // The bot's RPC is the methods of tgbot.Backend and tgbot.Shop, and the rule table is what

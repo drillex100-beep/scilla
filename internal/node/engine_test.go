@@ -6,7 +6,7 @@ import (
 	"runtime/debug"
 	"testing"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 func TestConnLinesStayOutOfLogs(t *testing.T) {
@@ -20,7 +20,7 @@ func TestConnLinesStayOutOfLogs(t *testing.T) {
 	}
 	for _, msg := range []string{
 		"Listener vless-vision listen err: listen tcp :443: bind: address already in use",
-		"mikan-sync 00ff",
+		"scilla-sync 00ff",
 	} {
 		if connLine(msg) {
 			t.Errorf("line must be kept: %q", msg)

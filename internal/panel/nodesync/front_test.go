@@ -5,7 +5,7 @@ import (
 	"slices"
 	"testing"
 
-	"mikan/internal/proto"
+	"scilla/internal/proto"
 )
 
 // A node's front page reaches it: the state names the page, and with the shared 443 the
@@ -22,12 +22,12 @@ func TestFrontPageInTheState(t *testing.T) {
 		if err != nil || !proto.Reality(tm) || !proto.CanSNI443(tm) {
 			continue
 		}
-		mk, _ := tm["mikan"].(map[string]any)
+		mk, _ := tm["scilla"].(map[string]any)
 		if mk == nil {
 			mk = map[string]any{}
 		}
 		mk["sni443"] = true
-		tm["mikan"] = mk
+		tm["scilla"] = mk
 		if _, err := st.DB.ExecContext(ctx, "UPDATE inbounds SET config = $1 WHERE id = $2", proto.Marshal(tm), in.ID); err != nil {
 			t.Fatal(err)
 		}

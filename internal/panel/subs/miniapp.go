@@ -8,12 +8,12 @@ import (
 	"net/http"
 	"strings"
 
-	"mikan/internal/panel/billing"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/promo"
-	"mikan/internal/panel/server"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/billing"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/promo"
+	"scilla/internal/panel/server"
+	"scilla/internal/panel/store/db"
 )
 
 // The Telegram Mini App's JSON endpoints under "/tg/": the subscription page inside Telegram,

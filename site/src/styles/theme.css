@@ -1,7 +1,7 @@
 /*
- * mikan docs theme. Colours come from the panel's own tokens (web/src/styles/app.css):
- * the warm paper background, ink greys and the mandarin scale in light mode, and the
- * "Midnight" panel theme in dark mode. Accent text uses the darker mandarin steps so it
+ * scilla docs theme. Colours come from the panel's own tokens (web/src/styles/app.css):
+ * the warm paper background, ink greys and the accent scale in light mode, and the
+ * "Midnight" panel theme in dark mode. Accent text uses the darker accent steps so it
  * keeps AA contrast on the paper background.
  */
 

@@ -1,4 +1,4 @@
-// Package release is the manifest every mikan release publishes next to its files: the
+// Package release is the manifest every scilla release publishes next to its files: the
 // version, the image digest in GitHub Packages, the installer checksums and what changed.
 // The panel and the installer trust a manifest only with a valid signature from one of the
 // release keys, whose public halves are ReleaseKeys.
@@ -20,13 +20,12 @@ import (
 
 // ReleaseKeys are the public halves of the release keys a build trusts (raw Ed25519, base64):
 // a manifest or the release index signed by any of them is the project's. The first signs the
-// releases now; the second is trusted ahead, so the release workflow can move to it and leave
+// releases now; a second may be trusted ahead, so the release workflow can move to it and leave
 // no panel or installer behind (installer/src/release.rs and install.sh hold the same list).
 // The private halves live only in the RELEASE_SIGNING_KEY secret of the release workflow and
 // with the maintainer.
 var ReleaseKeys = []string{
-	"Z3wSIPBSaJxh5CsGO8eINI0aM0kyrQ46EcJSNeH85W8=",
-	"J4DbLqhnFdx8ncEiF4BQOW1aucukNCCgMhcZ18pCWFw=",
+	"CZjICHekgJUNVH5SxLFzmH5jVQ1weVpcKyMmG3Tpiw8=",
 }
 
 // CatalogKey and CommunityKey are the public halves of the keys of the marketplace's signed
@@ -62,16 +61,16 @@ func MustKey(b64 string) ed25519.PublicKey {
 
 // KeyFingerprint names the release keys a build trusts: the first 16 hex digits of the SHA-256
 // of ReleaseKeys, one per line. The support desk compares it with the official one; a build
-// that trusts another key, or one more, is not mikan's own.
+// that trusts another key, or one more, is not scilla's own.
 func KeyFingerprint() string {
 	sum := sha256.Sum256([]byte(strings.Join(ReleaseKeys, "\n")))
 	return hex.EncodeToString(sum[:8])
 }
 
 // Repo is where releases are published.
-const Repo = "Miroshka000/mikan"
+const Repo = "drillex100-beep/scilla"
 
-// InstallCommand installs mikan from the latest release; run on the server.
+// InstallCommand installs scilla from the latest release; run on the server.
 const InstallCommand = "curl -fsSL https://github.com/" + Repo + "/releases/latest/download/install.sh | sudo bash"
 
 // JoinCommand installs a node of an existing panel with the join key the panel issued.
@@ -84,7 +83,7 @@ type Manifest struct {
 	Version      string            `json:"version"`
 	MinInstaller string            `json:"min_installer,omitempty"`
 	Published    time.Time         `json:"published"`
-	Image        string            `json:"image" doc:"Образ в GitHub Packages, например ghcr.io/miroshka000/mikan"`
+	Image        string            `json:"image" doc:"Образ в GitHub Packages, например ghcr.io/drillex100-beep/scilla"`
 	Digest       string            `json:"digest" doc:"sha256 multi-arch образа"`
 	Installer    map[string]Asset  `json:"installer" doc:"Установщик по архитектуре: x86_64, aarch64"`
 	Notes        map[string]string `json:"notes" doc:"Что изменилось, markdown по языкам: en, ru"`

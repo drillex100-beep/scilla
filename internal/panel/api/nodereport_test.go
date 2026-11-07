@@ -15,7 +15,7 @@ func TestMaskReport(t *testing.T) {
 		"other 198.51.100.7 and [2001:db8::1]:443 here":                 "other *** and [***]:443 here",
 		"seen 2001:db8::5.":                                             "seen ***.",
 		"from vpn.someone.net, to github.com and ghcr.io":               "from ***, to github.com and ghcr.io",
-		"key mikan1.eyJwb3J0IjozMTIzNH0abc":                             "key ***",
+		"key scilla1.eyJwb3J0IjozMTIzNH0abc":                            "key ***",
 		"secret Zm9vYmFyYmF6cXV4MTIzNDU2Nzg5MGFiY2RlZg== end":           "secret ***== end",
 		"panel v0.5.0.6, node v0.5.0.4":                                 "panel v0.5.0.6, node v0.5.0.4",
 		"port 443 busy, 8443 open, 312345 not a port":                   "port 443 busy, 8443 open, 312345 not a port",
@@ -36,7 +36,7 @@ func TestReportText(t *testing.T) {
 		{ID: "link", Status: "fail", Code: "timeout", Params: map[string]string{"port": "31234", "host": "203.0.113.5"}, Detail: "dial tcp 203.0.113.5:31234: i/o timeout"},
 		{ID: "port", Status: "ok", Params: map[string]string{"port": "443", "name": "vless-reality"}},
 	}
-	got := reportText("mikan node check", "panel v0.5.0.6, node v0.5.0.4", time.Date(2026, 10, 10, 9, 0, 0, 0, time.UTC), items, []string{"203.0.113.5", "31234"})
+	got := reportText("scilla node check", "panel v0.5.0.6, node v0.5.0.4", time.Date(2026, 10, 10, 9, 0, 0, 0, time.UTC), items, []string{"203.0.113.5", "31234"})
 	for _, leak := range []string{"203.0.113.5", "31234"} {
 		if strings.Contains(got, leak) {
 			t.Fatalf("%s leaks:\n%s", leak, got)

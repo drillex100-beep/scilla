@@ -1,4 +1,4 @@
-// mikan-node runs the VPN data plane: the Citrus core (a fork of mihomo) embedded as a
+// scilla-node runs the VPN data plane: the Citrus core (a fork of mihomo) embedded as a
 // library, controlled by the panel over a unix socket, or over pinned TLS when the node runs
 // on another server. It links the core and is therefore distributed under GPL-3.0.
 package main
@@ -18,11 +18,11 @@ import (
 	"syscall"
 	"time"
 
-	"mikan/internal/acmechallenge"
-	"mikan/internal/logbuf"
-	"mikan/internal/node"
-	"mikan/internal/nodetls"
-	"mikan/internal/panel/config"
+	"scilla/internal/acmechallenge"
+	"scilla/internal/logbuf"
+	"scilla/internal/node"
+	"scilla/internal/nodetls"
+	"scilla/internal/panel/config"
 )
 
 var version = "dev"
@@ -41,7 +41,7 @@ func main() {
 		return
 	}
 	if err := run(); err != nil {
-		fmt.Fprintln(os.Stderr, "mikan-node:", err)
+		fmt.Fprintln(os.Stderr, "scilla-node:", err)
 		os.Exit(1)
 	}
 }
@@ -52,22 +52,22 @@ func run() error {
 	// The last lines of the log, secrets cut out, for the panel's Diagnostics page.
 	logs := logbuf.New(logbuf.DefaultLines)
 	log := slog.New(logs.Handler(slog.NewTextHandler(os.Stderr, nil)))
-	dataDir := envOr("MIKAN_DATA_DIR", config.DefaultDataDir)
-	sock := envOr("MIKAN_NODE_SOCKET", config.DefaultNodeSocket)
+	dataDir := envOr("SCILLA_DATA_DIR", config.DefaultDataDir)
+	sock := envOr("SCILLA_NODE_SOCKET", config.DefaultNodeSocket)
 
-	release, err := time.ParseDuration(envOr("MIKAN_DEVICE_RELEASE", "60s"))
+	release, err := time.ParseDuration(envOr("SCILLA_DEVICE_RELEASE", "60s"))
 	if err != nil {
-		return fmt.Errorf("MIKAN_DEVICE_RELEASE: %w", err)
+		return fmt.Errorf("SCILLA_DEVICE_RELEASE: %w", err)
 	}
-	allowPrivate, err := strconv.ParseBool(envOr("MIKAN_ALLOW_PRIVATE", "false"))
+	allowPrivate, err := strconv.ParseBool(envOr("SCILLA_ALLOW_PRIVATE", "false"))
 	if err != nil {
-		return fmt.Errorf("MIKAN_ALLOW_PRIVATE: %w", err)
+		return fmt.Errorf("SCILLA_ALLOW_PRIVATE: %w", err)
 	}
 	// The panel's HTTP-01 challenges for this node's certificate: port 80, unless a web
 	// server of the admin's holds it and passes /.well-known/acme-challenge/ on.
-	acmeListen, err := acmechallenge.ParseListen(os.Getenv("MIKAN_ACME_LISTEN"))
+	acmeListen, err := acmechallenge.ParseListen(os.Getenv("SCILLA_ACME_LISTEN"))
 	if err != nil {
-		return fmt.Errorf("MIKAN_ACME_LISTEN: %w", err)
+		return fmt.Errorf("SCILLA_ACME_LISTEN: %w", err)
 	}
 	eng, err := node.Start(node.Options{DataDir: dataDir, Version: version, Log: log, DeviceRelease: release, AllowPrivate: allowPrivate, ACMEListen: acmeListen, Logs: logs})
 	if err != nil {
@@ -98,20 +98,20 @@ func run() error {
 	// The state from before the restart comes back behind the API, which answers already.
 	go eng.Restore()
 	// A remote node also serves the Node API over TCP to its panel (see nodetls).
-	raw, err := config.Secret("MIKAN_NODE_JOIN")
+	raw, err := config.Secret("SCILLA_NODE_JOIN")
 	if err != nil {
 		return err
 	}
 	if raw != "" {
 		key, err := nodetls.DecodeKey(raw)
 		if err != nil {
-			return fmt.Errorf("MIKAN_NODE_JOIN: %w", err)
+			return fmt.Errorf("SCILLA_NODE_JOIN: %w", err)
 		}
 		cfg, err := key.ServerConfig()
 		if err != nil {
-			return fmt.Errorf("MIKAN_NODE_JOIN: %w", err)
+			return fmt.Errorf("SCILLA_NODE_JOIN: %w", err)
 		}
-		tcp, err := net.Listen("tcp", net.JoinHostPort(envOr("MIKAN_NODE_API_LISTEN", ""), strconv.Itoa(key.Port)))
+		tcp, err := net.Listen("tcp", net.JoinHostPort(envOr("SCILLA_NODE_API_LISTEN", ""), strconv.Itoa(key.Port)))
 		if err != nil {
 			return err
 		}
@@ -146,13 +146,13 @@ func envOr(key, def string) string {
 	return def
 }
 
-// printJoinKey prints one field of the join key in MIKAN_NODE_JOIN for the installer:
+// printJoinKey prints one field of the join key in SCILLA_NODE_JOIN for the installer:
 // the port of the node's API for "key-port", its address for "key-host". A key that does
 // not decode stops the installer with the reason.
 func printJoinKey(field string) {
-	key, err := nodetls.DecodeKey(os.Getenv("MIKAN_NODE_JOIN"))
+	key, err := nodetls.DecodeKey(os.Getenv("SCILLA_NODE_JOIN"))
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "mikan-node:", err)
+		fmt.Fprintln(os.Stderr, "scilla-node:", err)
 		os.Exit(1)
 	}
 	if field == "key-port" {

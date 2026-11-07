@@ -3,7 +3,7 @@ package tgbot
 import (
 	"testing"
 
-	"mikan/internal/panel/model"
+	"scilla/internal/panel/model"
 )
 
 // Marketplace adapters get a button each, by their own name, and their code names them

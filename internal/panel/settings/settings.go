@@ -12,8 +12,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"mikan/internal/panel/store/db"
-	"mikan/internal/release"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/release"
 )
 
 const (
@@ -87,7 +87,7 @@ const (
 	KeyBrand      = "brand"
 	KeySupportURL = "support_url"
 	// KeyPanelAppName is the admin panel's name as an installed app (server.AppName): ""
-	// for the brand, "mikan" without one.
+	// for the brand, "scilla" without one.
 	KeyPanelAppName = "panel_app_name"
 	// The announcement apps show over the profile (the announce and announce-url headers),
 	// for maintenance or news; empty: none.

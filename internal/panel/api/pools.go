@@ -10,9 +10,9 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // Server groups (the traffic pools of GitHub issue #6): a set of inbounds that a tariff and

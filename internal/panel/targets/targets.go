@@ -1,5 +1,5 @@
 // Package targets is how the panel looks for REALITY camouflage sites and checks one: the
-// admin API and `mikan admin targets` both go through it, so what the panel may dial on the
+// admin API and `scilla admin targets` both go through it, so what the panel may dial on the
 // admin's word is decided in one place. The node checks and scans from its own network
 // when it can, because the round trips are the ones REALITY will see; the panel does it
 // itself when the node cannot (a node older than 0.3, one out of reach).
@@ -14,11 +14,11 @@ import (
 	"strconv"
 	"time"
 
-	"mikan/internal/netaddr"
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/scan"
+	"scilla/internal/netaddr"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/scan"
 )
 
 const (
@@ -52,7 +52,7 @@ type NoIPError struct {
 func (e *NoIPError) Error() string {
 	switch {
 	case errors.Is(e.Err, ErrNoAddress):
-		return "the server's address is not set: run `mikan admin bootstrap`"
+		return "the server's address is not set: run `scilla admin bootstrap`"
 	case errors.Is(e.Err, scan.ErrNotIPv4):
 		return e.Host + " is not an IPv4 address"
 	case errors.Is(e.Err, scan.ErrNoIPv4):

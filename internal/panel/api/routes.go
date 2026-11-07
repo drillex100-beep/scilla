@@ -8,7 +8,7 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/subs"
+	"scilla/internal/panel/subs"
 )
 
 // The routing of the Clash profiles: what the admin can send where (the catalog), and the

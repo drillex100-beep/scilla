@@ -14,10 +14,10 @@ import (
 
 	"github.com/coder/websocket"
 
-	"mikan/internal/hostchan"
-	"mikan/internal/hostchan/hosttest"
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/support"
+	"scilla/internal/hostchan"
+	"scilla/internal/hostchan/hosttest"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/support"
 )
 
 // termNodes is the remote node as the terminal sees it: a host of its own, with its agent,

@@ -11,10 +11,10 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/auth"
-	"mikan/internal/panel/secure"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/auth"
+	"scilla/internal/panel/secure"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 type AdminView struct {

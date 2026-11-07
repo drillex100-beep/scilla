@@ -3,9 +3,9 @@ package autotune
 import (
 	"testing"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/presets"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/presets"
+	"scilla/internal/panel/store/db"
 )
 
 // Replacing a target takes a scan that lasts for a while. What the admin changed in the

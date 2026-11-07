@@ -7,13 +7,13 @@ import (
 	"log/slog"
 	"time"
 
-	"mikan/internal/panel/secure"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/textutil"
+	"scilla/internal/panel/secure"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/textutil"
 )
 
 const (
-	CookieName = "__Host-mikan"
+	CookieName = "__Host-scilla"
 	IdleTTL    = 12 * time.Hour
 	MaxTTL     = 7 * 24 * time.Hour
 	// last_seen_at is written at most this often to avoid a DB write on every request.

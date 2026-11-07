@@ -9,11 +9,11 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/frontpage"
-	"mikan/internal/hostname"
-	"mikan/internal/panel/dnscheck"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/frontpage"
+	"scilla/internal/hostname"
+	"scilla/internal/panel/dnscheck"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // The rules a node's name, host and domain follow are one for the admin panel and the shell:

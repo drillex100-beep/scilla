@@ -1,12 +1,12 @@
 // Package updates keeps the panel aware of new releases and talks to the host updater
-// (the mikan command on the server) through files in the panel's data directory:
+// (the scilla command on the server) through files in the panel's data directory:
 //
 //	update/policy.json  the panel writes {"auto": true|false, "channel": "stable|beta"}:
 //	                    the daily timer on the host updates only when auto is on, and
 //	                    takes pre-releases only on beta (it accepts nothing but these two
 //	                    exact words: the panel is not trusted with more)
 //	update/request      the panel writes it for the Update button; a systemd path unit
-//	                    runs `mikan update --requested`, which removes it first
+//	                    runs `scilla update --requested`, which removes it first
 //	update/status.json  the host writes how the last update went:
 //	                    {"state": "running|ok|failed", "version", "from", "error", "at"}
 //
@@ -26,10 +26,10 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/fsutil"
-	"mikan/internal/httpjson"
-	"mikan/internal/pace"
-	"mikan/internal/release"
+	"scilla/internal/fsutil"
+	"scilla/internal/httpjson"
+	"scilla/internal/pace"
+	"scilla/internal/release"
 )
 
 // Query is what a check asks for: the release a panel of version Current takes on Channel.

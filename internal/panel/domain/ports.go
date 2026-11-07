@@ -8,9 +8,9 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // Who holds a port on a node's server. One map answers every "is this port free"
@@ -153,9 +153,9 @@ func NodePorts(ctx context.Context, q *db.Queries, node db.Node) (PortMap, error
 	return m, nil
 }
 
-// WithHost adds what the node's server reports as listening, mikan's own listeners among
+// WithHost adds what the node's server reports as listening, scilla's own listeners among
 // it. Only Free looks at it: a port another program holds is not one to pick, but
-// Busy, which refuses the admin's choice, names holders by what mikan knows of them, so
+// Busy, which refuses the admin's choice, names holders by what scilla knows of them, so
 // an inbound keeps its own port while it is listening on it.
 func (m PortMap) WithHost(h *nodeapi.HostPorts) PortMap {
 	m.host = h

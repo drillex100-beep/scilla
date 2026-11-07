@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"errors"
 
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/store/db"
 )
 
 // Server groups (the traffic pools of GitHub issue #6): a group is a set of inbounds, and a

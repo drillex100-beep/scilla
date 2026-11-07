@@ -19,13 +19,13 @@ import (
 	"sync/atomic"
 	"time"
 
-	"mikan/internal/acmechallenge"
-	"mikan/internal/hostname"
-	"mikan/internal/netaddr"
-	"mikan/internal/nodetls"
-	"mikan/internal/panel/dnscheck"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/tlscert"
+	"scilla/internal/acmechallenge"
+	"scilla/internal/hostname"
+	"scilla/internal/netaddr"
+	"scilla/internal/nodetls"
+	"scilla/internal/panel/dnscheck"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/tlscert"
 )
 
 // Status is the panel's certificate as the admin panel shows it.
@@ -64,7 +64,7 @@ type Manager struct {
 	orderMu  sync.Mutex // one order at a time: it takes minutes when port 80 hangs
 	status   atomic.Pointer[Status]
 	wake     chan struct{}
-	// challenge answers HTTP-01 on MIKAN_ACME_LISTEN (":80" by default), for orders and for
+	// challenge answers HTTP-01 on SCILLA_ACME_LISTEN (":80" by default), for orders and for
 	// the port 80 check.
 	challenge *acmechallenge.Server
 	// The attempt under way, which a second caller joins instead of ordering again.
@@ -94,9 +94,9 @@ type attempt struct {
 }
 
 func New(dataDir string, holder *tlscert.Holder, fallback *tls.Certificate, set *settings.Settings, log *slog.Logger, now func() time.Time) *Manager {
-	listen, err := acmechallenge.ParseListen(os.Getenv("MIKAN_ACME_LISTEN"))
+	listen, err := acmechallenge.ParseListen(os.Getenv("SCILLA_ACME_LISTEN"))
 	if err != nil {
-		log.Warn("MIKAN_ACME_LISTEN is not host:port: the HTTP-01 challenge is answered on "+acmechallenge.DefaultListen, "err", err)
+		log.Warn("SCILLA_ACME_LISTEN is not host:port: the HTTP-01 challenge is answered on "+acmechallenge.DefaultListen, "err", err)
 		listen = acmechallenge.DefaultListen
 	}
 	root := filepath.Join(dataDir, "tls", "acme")

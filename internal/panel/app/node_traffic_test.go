@@ -113,8 +113,8 @@ func TestNodeTrafficEndpoints(t *testing.T) {
 	_, body = k.asKey(k.read, http.MethodGet, "/metrics", nil)
 	text := string(body)
 	for _, want := range []string{
-		"# TYPE mikan_node_traffic_bytes_total counter",
-		`mikan_node_traffic_bytes_total{node_id="1",node="`,
+		"# TYPE scilla_node_traffic_bytes_total counter",
+		`scilla_node_traffic_bytes_total{node_id="1",node="`,
 		`direction="up"} 77`,
 		`direction="down"} 88`,
 	} {

@@ -8,13 +8,13 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/config"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/presets"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/storetest"
-	"mikan/internal/panel/targets"
-	"mikan/internal/scan"
+	"scilla/internal/panel/config"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/presets"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/storetest"
+	"scilla/internal/panel/targets"
+	"scilla/internal/scan"
 )
 
 // The installer's SNI step: `targets scan --json` lists sites next to the server and the

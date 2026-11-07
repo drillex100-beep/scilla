@@ -104,7 +104,7 @@ var xmuxKeys = []struct {
 	{"h-max-reusable-secs", "hMaxReusableSecs", func(x *XHTTPTuning) *string { return &x.MaxReusableSecs }},
 }
 
-// The apps' own upload keys in mikan.client.xhttp, which replace the server's in the
+// The apps' own upload keys in scilla.client.xhttp, which replace the server's in the
 // links (xhttpShared names them the same).
 var xhttpClientUplink = []struct {
 	mihomo, xray string
@@ -160,7 +160,7 @@ func scalar(v any) string {
 	return ""
 }
 
-// xhttpClient is mikan.client.xhttp of t (nil when unset).
+// xhttpClient is scilla.client.xhttp of t (nil when unset).
 func xhttpClient(t Template) map[string]any {
 	ext, _ := t[extKey].(map[string]any)
 	cl, _ := ext["client"].(map[string]any)

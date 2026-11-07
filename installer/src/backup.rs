@@ -1,4 +1,4 @@
-//! Backups and restore. A backup is a tar.gz of what mikan keeps in /opt/mikan: config.json
+//! Backups and restore. A backup is a tar.gz of what scilla keeps in /opt/scilla: config.json
 //! and secrets/ (.env on a server set up before them), compose.yaml, a consistent copy of the panel's database, its certificates and the node's
 //! data. It holds every secret of the server, so it is born private: the directory is 0700
 //! and the archive is created 0600 before tar writes a byte into it.
@@ -23,7 +23,7 @@ use crate::ops::Install;
 use crate::panelfs::{self, Dir};
 use crate::{DIR, docker, setup, signals, system};
 
-/// The kinds of archive mikan makes on its own; the admin's are "mikan".
+/// The kinds of archive scilla makes on its own; the admin's are "scilla".
 pub const PRE_UPDATE: &str = "pre-update";
 /// An update that moves SQLite to PostgreSQL: the archives with the original SQLite. A
 /// failed move leaves the settings on PostgreSQL, so its retries are "pre-update" and can never
@@ -40,14 +40,14 @@ fn keep(kind: &str) -> Option<usize> {
     }
 }
 
-/// Where the panel's database lies below /opt/mikan: a backup's PostgreSQL dump or
+/// Where the panel's database lies below /opt/scilla: a backup's PostgreSQL dump or
 /// SQLite copy, a restore's dump, and the SQLite file itself with its journal.
 const DUMP: &str = "data/panel/backup.dump";
 const SQLITE_COPY: &str = "data/panel/backup.db";
 const RESTORE_DUMP: &str = "data/panel/restore.dump";
-const SQLITE: &str = "data/panel/mikan.db";
-const SQLITE_WAL: &str = "data/panel/mikan.db-wal";
-const SQLITE_SHM: &str = "data/panel/mikan.db-shm";
+const SQLITE: &str = "data/panel/scilla.db";
+const SQLITE_WAL: &str = "data/panel/scilla.db-wal";
+const SQLITE_SHM: &str = "data/panel/scilla.db-shm";
 
 /// The name in data/panel of one of the paths above.
 fn panel_name(rel: &str) -> &str {
@@ -84,8 +84,8 @@ fn ensure_room(root: &Path, postgres: bool) -> Result<()> {
     Ok(())
 }
 
-/// What a restore may put back, below /opt/mikan: the settings, and the data of the panel
-/// and the node. Anything else in an archive is not a mikan backup.
+/// What a restore may put back, below /opt/scilla: the settings, and the data of the panel
+/// and the node. Anything else in an archive is not a scilla backup.
 const TOP: [&str; 4] = [config::FILE, config::SECRETS, config::LEGACY, "compose.yaml"];
 
 /// The backups' directory, private.
@@ -206,17 +206,17 @@ fn exists(root: &Path, rel: &str) -> bool {
 
 /// The backup the admin asks for.
 pub fn backup(say: &mut dyn FnMut(&str)) -> Result<PathBuf> {
-    backup_as("mikan", say)
+    backup_as("scilla", say)
 }
 
 /// A backup of the database (a consistent copy while the panel runs), certificates and
-/// settings, in /opt/mikan/backups. kind names the file: an update's own are rotated.
+/// settings, in /opt/scilla/backups. kind names the file: an update's own are rotated.
 pub fn backup_as(kind: &str, say: &mut dyn FnMut(&str)) -> Result<PathBuf> {
     let _lock = lock::acquire(Wait::Block, say)?;
     let install = Install::load()?;
     let root = Path::new(DIR);
     let dir = backups_dir(root)?;
-    let postgres = !install.node && install.config.get("MIKAN_DATABASE_URL").is_some();
+    let postgres = !install.node && install.config.get("SCILLA_DATABASE_URL").is_some();
     ensure_room(root, postgres)?;
     let mut members: Vec<String> = TOP.iter().filter(|m| exists(root, m)).map(|s| (*s).to_owned()).collect();
     let panel = if install.node {
@@ -257,7 +257,7 @@ pub fn backup_as(kind: &str, say: &mut dyn FnMut(&str)) -> Result<PathBuf> {
     Ok(file)
 }
 
-/// The archives in /opt/mikan/backups, the newest first.
+/// The archives in /opt/scilla/backups, the newest first.
 pub fn backups() -> Vec<PathBuf> {
     let mut list: Vec<(std::time::SystemTime, PathBuf)> = fs::read_dir(Path::new(DIR).join("backups"))
         .map(|d| {
@@ -300,7 +300,7 @@ fn check_listing(names: &str, verbose: &str) -> Result<()> {
         bail!("the archive has an entry that is not a plain file or directory: {}", l.trim());
     }
     if let Some(n) = names.iter().find(|n| !allowed_name(n)) {
-        bail!("the archive has a path a mikan backup does not: {n}");
+        bail!("the archive has a path a scilla backup does not: {n}");
     }
     Ok(())
 }
@@ -371,11 +371,11 @@ fn verify_tree(dir: &Path, depth: usize) -> Result<()> {
     Ok(())
 }
 
-/// What an unpacked archive puts back: (where it is, where it goes below /opt/mikan).
+/// What an unpacked archive puts back: (where it is, where it goes below /opt/scilla).
 fn plan(stage: &Path) -> Result<Vec<(PathBuf, &'static str)>> {
     let items = plan_items(stage);
     if !items.iter().any(|(_, r)| *r == config::FILE || *r == config::LEGACY) {
-        bail!("the archive has no settings (config.json or .env): it is not a mikan backup");
+        bail!("the archive has no settings (config.json or .env): it is not a scilla backup");
     }
     Ok(items)
 }
@@ -386,7 +386,7 @@ fn plan(stage: &Path) -> Result<Vec<(PathBuf, &'static str)>> {
 fn plan_database(stage: &Path) -> Result<Vec<(PathBuf, &'static str)>> {
     let items: Vec<_> = plan_items(stage).into_iter().filter(|(_, r)| *r == RESTORE_DUMP).collect();
     if items.is_empty() {
-        bail!("the archive has neither settings nor the panel's PostgreSQL dump: it is not a mikan backup");
+        bail!("the archive has neither settings nor the panel's PostgreSQL dump: it is not a scilla backup");
     }
     Ok(items)
 }
@@ -429,29 +429,29 @@ fn plan_items(stage: &Path) -> Vec<(PathBuf, &'static str)> {
 /// SQLite (an update that could not move it) keeps its compose file and takes only an
 /// SQLite database: a PostgreSQL dump needs the move first.
 fn fit_to_panel(items: &mut Vec<(PathBuf, &'static str)>, archived: &mut Config, current: &Config) -> Result<()> {
-    for key in ["MIKAN_DATABASE_URL", "MIKAN_POSTGRES_PASSWORD", "MIKAN_IMAGE", "MIKAN_VERSION"] {
+    for key in ["SCILLA_DATABASE_URL", "SCILLA_POSTGRES_PASSWORD", "SCILLA_IMAGE", "SCILLA_VERSION"] {
         match current.get(key) {
             Some(v) => archived.set(key, v)?,
             None => archived.remove(key),
         }
     }
-    if current.get("MIKAN_DATABASE_URL").is_none() {
+    if current.get("SCILLA_DATABASE_URL").is_none() {
         items.retain(|(_, r)| *r != "compose.yaml");
         if items.iter().any(|(_, r)| *r == RESTORE_DUMP) {
-            bail!("this server still runs SQLite and the backup holds a PostgreSQL database: run mikan update first, then restore");
+            bail!("this server still runs SQLite and the backup holds a PostgreSQL database: run scilla update first, then restore");
         }
     }
     if !items.iter().any(|(_, r)| [SQLITE, RESTORE_DUMP].contains(r)) {
         bail!("the panel backup has no database");
     }
     // A backup of 0.4 holds SQLite alone: only a panel that still moves it can take it.
-    let version = current.get("MIKAN_VERSION").unwrap_or_default();
-    if current.get("MIKAN_DATABASE_URL").is_some()
+    let version = current.get("SCILLA_VERSION").unwrap_or_default();
+    if current.get("SCILLA_DATABASE_URL").is_some()
         && !items.iter().any(|(_, r)| *r == RESTORE_DUMP)
         && !crate::release::moves_sqlite(version)
     {
         bail!(
-            "this backup is of mikan 0.4 (SQLite), and mikan {version} no longer moves SQLite to PostgreSQL: restore it on a server of mikan {}",
+            "this backup is of scilla 0.4 (SQLite), and scilla {version} no longer moves SQLite to PostgreSQL: restore it on a server of scilla {}",
             crate::release::LAST_SQLITE_MOVE
         );
     }
@@ -459,10 +459,10 @@ fn fit_to_panel(items: &mut Vec<(PathBuf, &'static str)>, archived: &mut Config,
 }
 
 /// Fits what a node's archive puts back to this server: the image stays the one this
-/// server runs. The archive may be somebody else's file, and its MIKAN_IMAGE would run
+/// server runs. The archive may be somebody else's file, and its SCILLA_IMAGE would run
 /// whatever image it names, outside the signed releases.
 fn fit_to_node(archived: &mut Config, current: &Config) -> Result<()> {
-    for key in ["MIKAN_IMAGE", "MIKAN_VERSION"] {
+    for key in ["SCILLA_IMAGE", "SCILLA_VERSION"] {
         match current.get(key) {
             Some(v) => archived.set(key, v)?,
             None => archived.remove(key),
@@ -524,7 +524,7 @@ fn swap(root: &Path, items: &[(PathBuf, &str)]) -> Result<()> {
 /// --no-db-snapshot`).
 pub fn archive_stopped(root: &Path, kind: &str, dump: bool) -> Result<PathBuf> {
     let dir = backups_dir(root)?;
-    let postgres = Config::load(root)?.get("MIKAN_DATABASE_URL").is_some();
+    let postgres = Config::load(root)?.get("SCILLA_DATABASE_URL").is_some();
     let pg = dump && postgres;
     ensure_room(root, pg)?;
     if pg {
@@ -583,7 +583,7 @@ pub fn restore(file: &Path, no_db_snapshot: bool, say: &mut dyn FnMut(&str)) -> 
     let _lock = lock::acquire(Wait::Block, say)?;
     let install = Install::load()?;
     let root = Path::new(DIR);
-    let postgres = !install.node && install.config.get("MIKAN_DATABASE_URL").is_some();
+    let postgres = !install.node && install.config.get("SCILLA_DATABASE_URL").is_some();
     if !file.is_file() {
         bail!("no file {}", file.display());
     }
@@ -598,7 +598,7 @@ pub fn restore(file: &Path, no_db_snapshot: bool, say: &mut dyn FnMut(&str)) -> 
     let items = if config::installed(&stage.0) {
         let mut items = plan(&stage.0)?;
         let mut archived = Config::load(&stage.0)?;
-        if (archived.get("MIKAN_MODE") == Some("node")) != install.node {
+        if (archived.get("SCILLA_MODE") == Some("node")) != install.node {
             bail!(
                 "the backup is a {}'s, this server is a {}",
                 if install.node { "panel" } else { "node" },
@@ -612,7 +612,7 @@ pub fn restore(file: &Path, no_db_snapshot: bool, say: &mut dyn FnMut(&str)) -> 
         }
         // Whatever form the archive keeps them in, they go back in both: the secrets as files
         // for the current compose.yaml, and .env for the moment between the swap and the start
-        // (an SQLite server's older compose.yaml reads only it); .env goes once mikan runs.
+        // (an SQLite server's older compose.yaml reads only it); .env goes once scilla runs.
         archived.save()?;
         archived.write_legacy()?;
         let keep_compose = items.iter().any(|(_, r)| *r == "compose.yaml");
@@ -624,7 +624,7 @@ pub fn restore(file: &Path, no_db_snapshot: bool, say: &mut dyn FnMut(&str)) -> 
     } else {
         if !postgres {
             bail!(
-                "the archive holds only a panel's PostgreSQL database; this server is a node or still runs SQLite (run mikan update first)"
+                "the archive holds only a panel's PostgreSQL database; this server is a node or still runs SQLite (run scilla update first)"
             );
         }
         let items = plan_database(&stage.0)?;
@@ -633,12 +633,12 @@ pub fn restore(file: &Path, no_db_snapshot: bool, say: &mut dyn FnMut(&str)) -> 
     };
 
     let _critical = signals::critical();
-    say("Stopping mikan");
+    say("Stopping scilla");
     crate::addon::down();
     docker::compose_run(&["stop"])?;
     let again = |say: &mut dyn FnMut(&str)| {
         if let Err(e) = docker::compose_run(&["up", "-d"]) {
-            say(&format!("mikan did not start again: {e:#}"));
+            say(&format!("scilla did not start again: {e:#}"));
         }
         if !install.node
             && let Err(e) = crate::addon::resume(say)
@@ -662,7 +662,7 @@ pub fn restore(file: &Path, no_db_snapshot: bool, say: &mut dyn FnMut(&str)) -> 
             again(say);
             let hint = if dump && postgres {
                 format!(
-                    ". If PostgreSQL itself is broken and its current data are not needed, save only the files first: mikan restore --no-db-snapshot {}",
+                    ". If PostgreSQL itself is broken and its current data are not needed, save only the files first: scilla restore --no-db-snapshot {}",
                     file.display()
                 )
             } else {
@@ -678,7 +678,7 @@ pub fn restore(file: &Path, no_db_snapshot: bool, say: &mut dyn FnMut(&str)) -> 
     }
     let started = (|| -> Result<()> {
         if postgres {
-            // The backup may carry the compose file of an older mikan: it gets the current one.
+            // The backup may carry the compose file of an older scilla: it gets the current one.
             docker::ensure_compose(root, &Config::load(root)?)?;
             panelfs::layout(root, true)?;
             docker::postgres_ready()?;
@@ -705,7 +705,7 @@ pub fn restore(file: &Path, no_db_snapshot: bool, say: &mut dyn FnMut(&str)) -> 
     if let Err(e) = started {
         let _ = docker::compose_run(&["stop", "panel"]);
         return Err(e.context(format!(
-            "the backup is in place but mikan does not start; the data before it are in {}: mikan restore {}",
+            "the backup is in place but scilla does not start; the data before it are in {}: scilla restore {}",
             snap.display(),
             snap.display()
         )));
@@ -766,8 +766,8 @@ mod tests {
     #[test]
     fn a_backup_is_private_from_its_first_byte() {
         let root = tmpdir("private");
-        file(&root, ".env", "MIKAN_IMAGE=x\n");
-        file(&root, "compose.yaml", "name: mikan\n");
+        file(&root, ".env", "SCILLA_IMAGE=x\n");
+        file(&root, "compose.yaml", "name: scilla\n");
         file(&root, "data/panel/backup.db", "db");
         file(&root, "data/node/state.json", "{}");
         let dir = backups_dir(&root).unwrap();
@@ -779,12 +779,12 @@ mod tests {
         let a = pack(
             &root,
             &dir,
-            "mikan",
+            "scilla",
             &[".env".into(), "compose.yaml".into(), "data/panel/backup.db".into(), "data/node".into()],
             Squeeze::Normal,
         )
         .unwrap();
-        let b = pack(&root, &dir, "mikan", &[".env".into()], Squeeze::Fast).unwrap();
+        let b = pack(&root, &dir, "scilla", &[".env".into()], Squeeze::Fast).unwrap();
         assert_ne!(a, b, "two backups of one second must not share a name");
         assert_eq!(fs::metadata(&a).unwrap().permissions().mode() & 0o777, 0o600);
         // the archive is what restore accepts, the fast one too
@@ -792,7 +792,7 @@ mod tests {
         check_archive(&b).unwrap();
         // a failed tar leaves no file
         let before = fs::read_dir(&dir).unwrap().count();
-        assert!(pack(&root, &dir, "mikan", &["no-such-file".into()], Squeeze::Normal).is_err());
+        assert!(pack(&root, &dir, "scilla", &["no-such-file".into()], Squeeze::Normal).is_err());
         assert_eq!(fs::read_dir(&dir).unwrap().count(), before, "a broken archive stayed");
         fs::remove_dir_all(&root).unwrap();
     }
@@ -802,12 +802,12 @@ mod tests {
     #[test]
     fn a_backup_leaves_out_what_the_nodes_updater_and_panel_say() {
         let root = tmpdir("node-update");
-        file(&root, ".env", "MIKAN_MODE=node\n");
+        file(&root, ".env", "SCILLA_MODE=node\n");
         file(&root, "data/node/state.json", "{}");
         file(&root, "data/node/update/status.json", r#"{"state":"running"}"#);
         file(&root, "data/node/update/request", r#"{"version":"0.5.0.2"}"#);
         let dir = backups_dir(&root).unwrap();
-        let a = pack(&root, &dir, "mikan", &[".env".into(), "data/node".into()], Squeeze::Normal).unwrap();
+        let a = pack(&root, &dir, "scilla", &[".env".into(), "data/node".into()], Squeeze::Normal).unwrap();
         let listing = Command::new("tar").arg("-tzf").arg(&a).output().unwrap();
         let names = String::from_utf8_lossy(&listing.stdout);
         assert!(names.contains("data/node/state.json"), "{names}");
@@ -821,18 +821,18 @@ mod tests {
         for n in 1..=8 {
             fs::write(dir.join(format!("pre-update-2026100{n}-000000.tar.gz")), "x").unwrap();
         }
-        fs::write(dir.join("mikan-20260101-000000.tar.gz"), "mine").unwrap();
+        fs::write(dir.join("scilla-20260101-000000.tar.gz"), "mine").unwrap();
         fs::write(dir.join("pre-restore-20260101-000000.tar.gz"), "snap").unwrap();
         // the original SQLite of the move to PostgreSQL, older than every retry after it
         fs::write(dir.join("pre-postgres-20260101-000000.tar.gz"), "sqlite").unwrap();
         prune(&dir, PRE_UPDATE);
-        prune(&dir, "mikan");
+        prune(&dir, "scilla");
         let mut left: Vec<String> = fs::read_dir(&dir).unwrap().map(|e| e.unwrap().file_name().into_string().unwrap()).collect();
         left.sort();
         assert_eq!(left.iter().filter(|n| n.starts_with("pre-update-")).count(), 5);
         assert!(left.contains(&"pre-update-20261008-000000.tar.gz".to_string()), "the newest stays");
         assert!(!left.contains(&"pre-update-20261001-000000.tar.gz".to_string()), "the oldest goes");
-        for kept in ["mikan-20260101-000000.tar.gz", "pre-restore-20260101-000000.tar.gz", "pre-postgres-20260101-000000.tar.gz"] {
+        for kept in ["scilla-20260101-000000.tar.gz", "pre-restore-20260101-000000.tar.gz", "pre-postgres-20260101-000000.tar.gz"] {
             assert!(left.contains(&kept.to_string()), "{kept}");
         }
         for n in 2..=5 {
@@ -851,12 +851,12 @@ mod tests {
     // signed releases.
     #[test]
     fn a_node_archive_keeps_the_image() {
-        let mut archived = Config::from_env_text("x", "MIKAN_MODE=node\nMIKAN_IMAGE=evil.example/x\nMIKAN_VERSION=9.9.9\nNODE_PORT=1\n");
+        let mut archived = Config::from_env_text("x", "SCILLA_MODE=node\nSCILLA_IMAGE=evil.example/x\nSCILLA_VERSION=9.9.9\nNODE_PORT=1\n");
         let current =
-            Config::from_env_text("x", "MIKAN_MODE=node\nMIKAN_IMAGE=ghcr.io/miroshka000/mikan@sha256:aa\nMIKAN_VERSION=0.5.0.5\n");
+            Config::from_env_text("x", "SCILLA_MODE=node\nSCILLA_IMAGE=ghcr.io/drillex100-beep/scilla@sha256:aa\nSCILLA_VERSION=0.5.0.5\n");
         fit_to_node(&mut archived, &current).unwrap();
-        assert_eq!(archived.get("MIKAN_IMAGE"), current.get("MIKAN_IMAGE"));
-        assert_eq!(archived.get("MIKAN_VERSION"), current.get("MIKAN_VERSION"));
+        assert_eq!(archived.get("SCILLA_IMAGE"), current.get("SCILLA_IMAGE"));
+        assert_eq!(archived.get("SCILLA_VERSION"), current.get("SCILLA_VERSION"));
         assert_eq!(archived.get("NODE_PORT"), Some("1"), "the settings are the archive's");
     }
 
@@ -868,35 +868,35 @@ mod tests {
         file(
             &d,
             ".env",
-            "MIKAN_DATABASE_URL=postgresql://mikan:old@localhost/mikan?host=/run/postgresql\nMIKAN_POSTGRES_PASSWORD=old\nMIKAN_IMAGE=archived\nPANEL_PORT=1\n",
+            "SCILLA_DATABASE_URL=postgresql://scilla:old@localhost/scilla?host=/run/postgresql\nSCILLA_POSTGRES_PASSWORD=old\nSCILLA_IMAGE=archived\nPANEL_PORT=1\n",
         );
         file(&d, "compose.yaml", "archived compose");
         file(&d, "data/panel/backup.dump", "pgdump");
         let current = Config::from_env_text(
             "x",
-            "MIKAN_IMAGE=live\nMIKAN_VERSION=0.5.0.1\nMIKAN_POSTGRES_PASSWORD=live\nMIKAN_DATABASE_URL=postgresql://mikan:live@localhost/mikan?host=/run/postgresql\n",
+            "SCILLA_IMAGE=live\nSCILLA_VERSION=0.5.0.1\nSCILLA_POSTGRES_PASSWORD=live\nSCILLA_DATABASE_URL=postgresql://scilla:live@localhost/scilla?host=/run/postgresql\n",
         );
         let mut items = plan(&d).unwrap();
         let mut archived = Config::load(&d).unwrap();
         fit_to_panel(&mut items, &mut archived, &current).unwrap();
-        for key in ["MIKAN_IMAGE", "MIKAN_VERSION", "MIKAN_POSTGRES_PASSWORD", "MIKAN_DATABASE_URL"] {
+        for key in ["SCILLA_IMAGE", "SCILLA_VERSION", "SCILLA_POSTGRES_PASSWORD", "SCILLA_DATABASE_URL"] {
             assert_eq!(archived.get(key), current.get(key), "{key}");
         }
         assert_eq!(archived.get("PANEL_PORT"), Some("1"), "the settings are the archive's");
         assert!(items.iter().any(|(_, r)| *r == "compose.yaml") && items.iter().any(|(_, r)| *r == RESTORE_DUMP));
 
         // back on SQLite, with the password of a volume an update initialized
-        let sqlite = Config::from_env_text("x", "MIKAN_IMAGE=old\nMIKAN_VERSION=0.4.4\nMIKAN_POSTGRES_PASSWORD=kept\n");
+        let sqlite = Config::from_env_text("x", "SCILLA_IMAGE=old\nSCILLA_VERSION=0.4.4\nSCILLA_POSTGRES_PASSWORD=kept\n");
         let mut archived = Config::load(&d).unwrap();
         let err = fit_to_panel(&mut plan(&d).unwrap(), &mut archived, &sqlite).unwrap_err();
-        assert!(format!("{err}").contains("mikan update first"), "{err}");
+        assert!(format!("{err}").contains("scilla update first"), "{err}");
         fs::remove_file(d.join("data/panel/backup.dump")).unwrap();
         file(&d, "data/panel/backup.db", "sqlite copy");
         let mut items = plan(&d).unwrap();
         let mut archived = Config::load(&d).unwrap();
         fit_to_panel(&mut items, &mut archived, &sqlite).unwrap();
-        assert_eq!((archived.get("MIKAN_DATABASE_URL"), archived.get("MIKAN_POSTGRES_PASSWORD")), (None, Some("kept")));
-        assert_eq!(archived.get("MIKAN_IMAGE"), Some("old"));
+        assert_eq!((archived.get("SCILLA_DATABASE_URL"), archived.get("SCILLA_POSTGRES_PASSWORD")), (None, Some("kept")));
+        assert_eq!(archived.get("SCILLA_IMAGE"), Some("old"));
         assert!(!items.iter().any(|(_, r)| *r == "compose.yaml"), "its own compose file stays");
         assert!(items.iter().any(|(_, r)| *r == SQLITE));
         // the same SQLite backup on a panel of 0.5.0.x moves; on 0.5.1.0 it is refused
@@ -904,7 +904,7 @@ mod tests {
         fit_to_panel(&mut plan(&d).unwrap(), &mut archived, &current).unwrap();
         let newer = Config::from_env_text(
             "x",
-            "MIKAN_IMAGE=live\nMIKAN_VERSION=0.5.1.0\nMIKAN_POSTGRES_PASSWORD=live\nMIKAN_DATABASE_URL=postgresql://mikan:live@localhost/mikan?host=/run/postgresql\n",
+            "SCILLA_IMAGE=live\nSCILLA_VERSION=0.5.1.0\nSCILLA_POSTGRES_PASSWORD=live\nSCILLA_DATABASE_URL=postgresql://scilla:live@localhost/scilla?host=/run/postgresql\n",
         );
         let mut archived = Config::load(&d).unwrap();
         let err = fit_to_panel(&mut plan(&d).unwrap(), &mut archived, &newer).unwrap_err();
@@ -921,18 +921,18 @@ mod tests {
     fn a_files_only_snapshot_holds_no_stale_database() {
         let root = tmpdir("no-db");
         server(&root);
-        file(&root, ".env", "MIKAN_DATABASE_URL=postgresql://mikan:p@localhost/mikan?host=/run/postgresql\n");
+        file(&root, ".env", "SCILLA_DATABASE_URL=postgresql://scilla:p@localhost/scilla?host=/run/postgresql\n");
         file(&root, DUMP, "interrupted dump");
         let snap = archive_stopped(&root, PRE_RESTORE, false).unwrap();
         let out = Command::new("tar").arg("-tzf").arg(&snap).output().unwrap();
         let names = String::from_utf8_lossy(&out.stdout);
         assert!(names.lines().any(|n| n == ".env") && names.lines().any(|n| n == "data/panel/tls/stale.key"), "{names}");
-        assert!(!names.lines().any(|n| n.starts_with("data/panel/mikan.db") || n == DUMP), "{names}");
+        assert!(!names.lines().any(|n| n.starts_with("data/panel/scilla.db") || n == DUMP), "{names}");
         fs::remove_dir_all(&root).unwrap();
     }
 
     #[test]
-    fn only_mikan_backups_pass_the_listing() {
+    fn only_scilla_backups_pass_the_listing() {
         let names = ".env\ncompose.yaml\ndata/\ndata/panel/\ndata/panel/backup.db\ndata/panel/tls/\ndata/panel/tls/panel.key\ndata/node/\ndata/node/state.json\n";
         let verbose: String = names
             .lines()
@@ -968,7 +968,7 @@ mod tests {
     fn a_hostile_archive_is_refused_before_it_is_unpacked() {
         let d = tmpdir("hostile");
         let src = d.join("src");
-        file(&src, ".env", "MIKAN_MODE=panel\n");
+        file(&src, ".env", "SCILLA_MODE=panel\n");
         fs::create_dir_all(src.join("data/panel")).unwrap();
         symlink("/etc", src.join("data/panel/tls")).unwrap();
         let tgz = d.join("evil.tar.gz");
@@ -999,7 +999,7 @@ mod tests {
     fn what_a_backup_puts_back() {
         let d = tmpdir("plan");
         assert!(plan(&d).is_err(), "no .env, not a backup");
-        file(&d, ".env", "MIKAN_MODE=node\n");
+        file(&d, ".env", "SCILLA_MODE=node\n");
         file(&d, "data/node/state.json", "{}");
         let items = plan(&d).unwrap();
         assert_eq!(items.iter().map(|(_, r)| *r).collect::<Vec<_>>(), [".env", "data/node"]);
@@ -1007,21 +1007,21 @@ mod tests {
         file(&d, "data/panel/tls/panel.key", "k");
         let items = plan(&d).unwrap();
         let to: Vec<&str> = items.iter().map(|(_, r)| *r).collect();
-        assert!(to.contains(&"data/panel/mikan.db") && to.contains(&"data/panel/tls"), "{to:?}");
+        assert!(to.contains(&"data/panel/scilla.db") && to.contains(&"data/panel/tls"), "{to:?}");
         fs::remove_dir_all(&d).unwrap();
     }
 
     #[test]
     fn postgres_archive_wins_over_preserved_sqlite_and_keeps_addons() {
         let d = tmpdir("postgres-plan");
-        file(&d, ".env", "MIKAN_DATABASE_URL=postgresql://x\n");
+        file(&d, ".env", "SCILLA_DATABASE_URL=postgresql://x\n");
         file(&d, "data/panel/backup.dump", "pgdump");
-        file(&d, "data/panel/mikan.db", "old sqlite");
+        file(&d, "data/panel/scilla.db", "old sqlite");
         file(&d, "addons/state.json", "{}");
         let items = plan(&d).unwrap();
         let to: Vec<&str> = items.iter().map(|(_, r)| *r).collect();
         assert!(to.contains(&"data/panel/restore.dump"));
-        assert!(!to.contains(&"data/panel/mikan.db"));
+        assert!(!to.contains(&"data/panel/scilla.db"));
         assert!(to.contains(&"addons/state.json"));
         fs::remove_dir_all(d).unwrap();
     }
@@ -1032,21 +1032,21 @@ mod tests {
         server(&root);
         let stage = root.join("stage");
         file(&stage, ".env", "RESTORED=1\n");
-        file(&stage, "data/panel/mikan.db", "checkpointed pages");
-        file(&stage, "data/panel/mikan.db-wal", "committed payment after checkpoint");
+        file(&stage, "data/panel/scilla.db", "checkpointed pages");
+        file(&stage, "data/panel/scilla.db-wal", "committed payment after checkpoint");
         let items = plan(&stage).unwrap();
-        assert!(items.iter().any(|(_, to)| *to == "data/panel/mikan.db-wal"));
+        assert!(items.iter().any(|(_, to)| *to == "data/panel/scilla.db-wal"));
         swap(&root, &items).unwrap();
-        assert_eq!(fs::read_to_string(root.join("data/panel/mikan.db-wal")).unwrap(), "committed payment after checkpoint");
-        assert_eq!(fs::read_to_string(root.join("data/panel/mikan.db")).unwrap(), "checkpointed pages");
+        assert_eq!(fs::read_to_string(root.join("data/panel/scilla.db-wal")).unwrap(), "committed payment after checkpoint");
+        assert_eq!(fs::read_to_string(root.join("data/panel/scilla.db")).unwrap(), "checkpointed pages");
         fs::remove_dir_all(root).unwrap();
     }
 
     fn server(root: &Path) {
         file(root, ".env", "OLD=1\n");
         file(root, "compose.yaml", "old compose");
-        file(root, "data/panel/mikan.db", "old db");
-        file(root, "data/panel/mikan.db-wal", "old wal");
+        file(root, "data/panel/scilla.db", "old db");
+        file(root, "data/panel/scilla.db-wal", "old wal");
         file(root, "data/panel/tls/stale.key", "stale");
         file(root, "data/panel/update/status.json", "{}");
         file(root, "data/node/old", "old node");
@@ -1065,8 +1065,8 @@ mod tests {
         swap(&root, &items).unwrap();
         assert_eq!(fs::read_to_string(root.join(".env")).unwrap(), "NEW=1\n");
         assert_eq!(fs::read_to_string(root.join("compose.yaml")).unwrap(), "old compose", "not in the backup: stays");
-        assert_eq!(fs::read_to_string(root.join("data/panel/mikan.db")).unwrap(), "new db");
-        assert!(!root.join("data/panel/mikan.db-wal").exists(), "the old database's journal is gone");
+        assert_eq!(fs::read_to_string(root.join("data/panel/scilla.db")).unwrap(), "new db");
+        assert!(!root.join("data/panel/scilla.db-wal").exists(), "the old database's journal is gone");
         assert!(root.join("data/panel/tls/fresh.key").exists() && !root.join("data/panel/tls/stale.key").exists(), "no stale certificate");
         assert!(root.join("data/node/new").exists() && !root.join("data/node/old").exists());
         assert!(root.join("data/panel/update/status.json").exists(), "what the backup does not hold stays");
@@ -1092,7 +1092,7 @@ mod tests {
         assert_eq!(fs::read_to_string(root.join("data/node/old")).unwrap(), "old node");
         assert!(!root.join("data/node/new").exists());
         assert_eq!(fs::read_to_string(root.join("data/panel/tls/stale.key")).unwrap(), "stale");
-        assert_eq!(fs::read_to_string(root.join("data/panel/mikan.db")).unwrap(), "old db");
+        assert_eq!(fs::read_to_string(root.join("data/panel/scilla.db")).unwrap(), "old db");
         fs::remove_dir_all(&root).unwrap();
     }
 
@@ -1104,7 +1104,8 @@ mod tests {
         assert!(snap.starts_with(root.join("backups")));
         let out = Command::new("tar").arg("-tzf").arg(&snap).output().unwrap();
         let names = String::from_utf8_lossy(&out.stdout);
-        for want in [".env", "compose.yaml", "data/panel/mikan.db", "data/panel/mikan.db-wal", "data/panel/tls/stale.key", "data/node/old"]
+        for want in
+            [".env", "compose.yaml", "data/panel/scilla.db", "data/panel/scilla.db-wal", "data/panel/tls/stale.key", "data/node/old"]
         {
             assert!(names.lines().any(|n| n == want), "{want} is not in {names}");
         }
@@ -1112,7 +1113,7 @@ mod tests {
         check_archive(&snap).unwrap();
         let stage = tmpdir("snapshot-stage");
         extract(&snap, &stage).unwrap();
-        assert!(plan(&stage).unwrap().iter().any(|(_, r)| *r == "data/panel/mikan.db"));
+        assert!(plan(&stage).unwrap().iter().any(|(_, r)| *r == "data/panel/scilla.db"));
         fs::remove_dir_all(&stage).unwrap();
         fs::remove_dir_all(&root).unwrap();
     }

@@ -475,7 +475,7 @@ func (q *Queries) ListNoticeSubscriptions(ctx context.Context, now int64) ([]Lis
 }
 
 const lockBuyerInvoices = `-- name: LockBuyerInvoices :exec
-SELECT pg_advisory_xact_lock(hashtextextended('mikan-invoice:' || CAST($1 AS BIGINT), 0))
+SELECT pg_advisory_xact_lock(hashtextextended('scilla-invoice:' || CAST($1 AS BIGINT), 0))
 `
 
 // The invoices of one Telegram account are checked and made one transaction at a time.

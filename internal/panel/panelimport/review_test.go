@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store"
 )
 
 // A panel that caps limit below ours gives short pages: they are not the end, the offset
@@ -107,7 +107,7 @@ func TestRefillForTheImport(t *testing.T) {
 	}
 }
 
-// An import of users mikan refuses or has already takes no slots: the pool is filled for
+// An import of users scilla refuses or has already takes no slots: the pool is filled for
 // the users that will be made, not for the whole list.
 func TestApplyRefillsOnlyForNewUsers(t *testing.T) {
 	st, tariff := seeded(t)

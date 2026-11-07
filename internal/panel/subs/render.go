@@ -12,10 +12,10 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/proto"
-	"mikan/internal/textutil"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/proto"
+	"scilla/internal/textutil"
 )
 
 // Endpoint describes how clients reach one node.

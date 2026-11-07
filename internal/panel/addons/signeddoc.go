@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/fsutil"
+	"scilla/internal/fsutil"
 )
 
 // The signed documents the panel reads from the network (the official catalog, the

@@ -15,13 +15,13 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/storetest"
-	"mikan/internal/panel/tlscert"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/storetest"
+	"scilla/internal/panel/tlscert"
 )
 
-// `mikan cert set` pipes the chain and the key in one stream: the panel's certificate has
+// `scilla cert set` pipes the chain and the key in one stream: the panel's certificate has
 // to cover its address, a node's goes to that node, and show tells what is there.
 func TestCertCommand(t *testing.T) {
 	ctx := context.Background()

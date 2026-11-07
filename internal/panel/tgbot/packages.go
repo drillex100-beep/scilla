@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/panel/model"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/model"
+	"scilla/internal/tgapi"
 )
 
 // Traffic packages (GitHub issue #12) in the subscription screen. Callback data: x the

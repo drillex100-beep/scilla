@@ -19,24 +19,24 @@ import (
 	"syscall"
 	"time"
 
-	"mikan/internal/logbuf"
-	"mikan/internal/nodeapi"
-	"mikan/internal/nodetls"
-	"mikan/internal/panel/acme"
-	"mikan/internal/panel/autotune"
-	"mikan/internal/panel/config"
-	"mikan/internal/panel/dnscheck"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/ipgeo"
-	"mikan/internal/panel/nodesync"
-	"mikan/internal/panel/reach"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/support"
-	"mikan/internal/panel/tlscert"
-	"mikan/internal/panel/updates"
-	"mikan/internal/release"
+	"scilla/internal/logbuf"
+	"scilla/internal/nodeapi"
+	"scilla/internal/nodetls"
+	"scilla/internal/panel/acme"
+	"scilla/internal/panel/autotune"
+	"scilla/internal/panel/config"
+	"scilla/internal/panel/dnscheck"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/ipgeo"
+	"scilla/internal/panel/nodesync"
+	"scilla/internal/panel/reach"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/support"
+	"scilla/internal/panel/tlscert"
+	"scilla/internal/panel/updates"
+	"scilla/internal/release"
 )
 
 // workerStopTimeout is how long Serve waits for the workers before it closes the database.
@@ -93,7 +93,7 @@ func Serve(ctx context.Context, cfg config.Config, version string, web fs.FS) er
 	}
 	bot, err := support.NewHTTPBot(botURL)
 	if err != nil {
-		return fmt.Errorf("MIKAN_SUPPORT_BOT_URL: %w", err)
+		return fmt.Errorf("SCILLA_SUPPORT_BOT_URL: %w", err)
 	}
 	opts.SupportBot = bot
 	nodesDir := filepath.Join(tlsDir, "nodes")
@@ -193,7 +193,7 @@ func Serve(ctx context.Context, cfg config.Config, version string, web fs.FS) er
 		return err
 	}
 	if paths.Admin == "" {
-		logger.Warn("panel is not initialized yet: run `mikan admin bootstrap`")
+		logger.Warn("panel is not initialized yet: run `scilla admin bootstrap`")
 	}
 	subPort.SetHandler(p.SubOnly())
 	if port, _, err := settings.Get[int](ctx, settings.New(st.Q), settings.KeySubPort); err == nil {

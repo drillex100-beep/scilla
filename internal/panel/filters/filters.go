@@ -10,8 +10,8 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/settings"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/settings"
 )
 
 const KeyConfig = "traffic_filters"

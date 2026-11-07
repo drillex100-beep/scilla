@@ -1,4 +1,4 @@
-// Package diag looks at what a mikan server needs from its host: names that resolve, a way
+// Package diag looks at what a scilla server needs from its host: names that resolve, a way
 // to the internet, GitHub and GHCR for updates, a clock that is right, room on the disk
 // and free memory. A node runs it for its panel (POST /v1/diagnose), the panel on its own
 // server. The targets are fixed here: nothing a caller sends says where to connect.
@@ -17,8 +17,8 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/textutil"
+	"scilla/internal/nodeapi"
+	"scilla/internal/textutil"
 )
 
 // Targets are the places a check reaches.
@@ -156,7 +156,7 @@ func fetch(ctx context.Context, o Options, id, url string) (nodeapi.DiagItem, *t
 	if err != nil {
 		return fail(id, nodeapi.LinkUnknown, err), nil
 	}
-	req.Header.Set("User-Agent", "mikan-diag")
+	req.Header.Set("User-Agent", "scilla-diag")
 	sent := o.Now()
 	resp, err := o.HTTP.Do(req)
 	if err != nil {

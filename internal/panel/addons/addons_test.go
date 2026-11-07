@@ -17,7 +17,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/release"
+	"scilla/internal/release"
 )
 
 const digest = "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"

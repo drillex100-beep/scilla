@@ -6,14 +6,14 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/billing"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/tgate"
-	"mikan/internal/panel/tgbot"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/billing"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/tgate"
+	"scilla/internal/panel/tgbot"
+	"scilla/internal/tgapi"
 )
 
 // withChannel saves the default bot with ch as its channel.
@@ -57,16 +57,16 @@ func (e *env) tap(from int64, data string) call {
 func TestBotChannelGate(t *testing.T) {
 	e := setup(t)
 	const visitor, anna = 790, 555
-	e.withChannel(tgapi.Channel{Required: true, Chat: "@mikan_news"})
+	e.withChannel(tgapi.Channel{Required: true, Chat: "@scilla_news"})
 	gate := e.start(visitor)
-	if !strings.Contains(text(gate), "подпишитесь на наш канал") || buttons(gate)["📢 Подписаться на канал"] != "https://t.me/mikan_news" || buttons(gate)["✅ Проверить"] != "gc" {
+	if !strings.Contains(text(gate), "подпишитесь на наш канал") || buttons(gate)["📢 Подписаться на канал"] != "https://t.me/scilla_news" || buttons(gate)["✅ Проверить"] != "gc" {
 		t.Fatalf("the channel's screen: %q %v", text(gate), buttons(gate))
 	}
 	if again := e.tap(visitor, "gc"); !strings.Contains(text(again), "Пока не видим вас") {
 		t.Fatalf("a check before joining: %q", text(again))
 	}
 	e.tg.join(visitor, "member")
-	if in := e.tap(visitor, "gc"); strings.Contains(text(in), "подпишитесь") || !strings.Contains(text(in), "Mikan VPN") {
+	if in := e.tap(visitor, "gc"); strings.Contains(text(in), "подпишитесь") || !strings.Contains(text(in), "Scilla VPN") {
 		t.Fatalf("a check after joining: %q", text(in))
 	}
 	// A customer who is not in the channel: no menu, but renewing is not stood in front of.
@@ -104,14 +104,14 @@ func TestBotChannelNotAdmin(t *testing.T) {
 	e.tg.mu.Lock()
 	e.tg.notAdmin = true
 	e.tg.mu.Unlock()
-	if menu := e.start(792); strings.Contains(text(menu), "подпишитесь") || !strings.Contains(text(menu), "Mikan VPN") {
+	if menu := e.start(792); strings.Contains(text(menu), "подпишитесь") || !strings.Contains(text(menu), "Scilla VPN") {
 		t.Fatalf("a channel the bot cannot ask about locked a visitor out: %q", text(menu))
 	}
 	if code := e.gate.ChannelError(e.ctx); code != "channel_not_admin" {
 		t.Fatalf("the admin is not told: %q", code)
 	}
 	// The switch off: nothing stands in front of the menu, whatever the channel.
-	e.withChannel(tgapi.Channel{Chat: "@mikan_news"})
+	e.withChannel(tgapi.Channel{Chat: "@scilla_news"})
 	e.tg.mu.Lock()
 	e.tg.notAdmin = false
 	e.tg.mu.Unlock()
@@ -142,12 +142,12 @@ func TestBotFreePlan(t *testing.T) {
 	if _, ok := buttons(e.start(visitor))["🎁 Бесплатный тариф"]; ok {
 		t.Fatal("a free plan for a channel nobody set up")
 	}
-	e.withChannel(tgapi.Channel{Chat: "@mikan_news"}, func(t *tgbot.Texts) { t.FreeButton = "🎁 Даром" })
+	e.withChannel(tgapi.Channel{Chat: "@scilla_news"}, func(t *tgbot.Texts) { t.FreeButton = "🎁 Даром" })
 	if buttons(e.start(visitor))["🎁 Даром"] != "fp" {
 		t.Fatal("the welcome does not offer the free plan")
 	}
 	ask := e.tap(visitor, "fp")
-	if !strings.Contains(text(ask), "для подписчиков нашего канала") || buttons(ask)["📢 Подписаться на канал"] != "https://t.me/mikan_news" || buttons(ask)["✅ Проверить"] != "fp" {
+	if !strings.Contains(text(ask), "для подписчиков нашего канала") || buttons(ask)["📢 Подписаться на канал"] != "https://t.me/scilla_news" || buttons(ask)["✅ Проверить"] != "fp" {
 		t.Fatalf("the free plan outside the channel: %q %v", text(ask), buttons(ask))
 	}
 	if links, _ := e.st.Q.ListTgLinksOf(e.ctx, visitor); len(links) != 0 {
@@ -190,9 +190,9 @@ func TestMemberIsAskedAboutTheBotsChannelOnly(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			e := setup(t)
 			b := backend(e)
-			e.withChannel(tgapi.Channel{Required: true, Chat: "@mikan_news"})
+			e.withChannel(tgapi.Channel{Required: true, Chat: "@scilla_news"})
 			e.tg.join(790, "member")
-			if in, err := b.Member(e.ctx, "@mikan_news", 790, true); err != nil || !in {
+			if in, err := b.Member(e.ctx, "@scilla_news", 790, true); err != nil || !in {
 				t.Fatalf("the bot's own channel: %v %v", in, err)
 			}
 			n := e.tg.count()
@@ -206,7 +206,7 @@ func TestMemberIsAskedAboutTheBotsChannelOnly(t *testing.T) {
 			}
 			// No channel set up: nothing may be asked.
 			e.withChannel(tgapi.Channel{})
-			if _, err := b.Member(e.ctx, "@mikan_news", 790, true); err == nil {
+			if _, err := b.Member(e.ctx, "@scilla_news", 790, true); err == nil {
 				t.Fatal("asked about a channel the bot does not have")
 			}
 		})

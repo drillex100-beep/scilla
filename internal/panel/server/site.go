@@ -7,10 +7,10 @@ import (
 	"path"
 	"strings"
 
-	"mikan/internal/frontpage"
+	"scilla/internal/frontpage"
 )
 
-// OwnSite serves dir, a site of the admin's own (/opt/mikan/data/panel/www on the host), on
+// OwnSite serves dir, a site of the admin's own (/opt/scilla/data/panel/www on the host), on
 // every path the panel does not own. In front of a REALITY self-steal the panel is what a
 // stranger sees, and the same bare 404 on "/", robots.txt and favicon.ico is a site with no
 // page at all (GitHub issue #67). A missing file gets dir/404.html with status 404 when

@@ -291,7 +291,7 @@ function Apps({ block: b, config, subURL, brand, happ, tgMode, platform }: { blo
             <div className="min-w-0">
               <div className="text-sm font-semibold">{a.name}</div>
               <div className="text-xs text-[var(--ink-500)]">
-                {i === 0 ? <span className="font-medium text-[var(--mikan-700)]">{t("sub.recommended")} · </span> : null}
+                {i === 0 ? <span className="font-medium text-[var(--scilla-700)]">{t("sub.recommended")} · </span> : null}
                 {t(`sub.notes.${a.note}`)}
               </div>
             </div>
@@ -421,7 +421,7 @@ function Locations({ block: b, names }: { block: PageBlock; names: string[] }) {
       <ul className="flex flex-wrap gap-2">
         {names.map((n) => (
           <li key={n} className="inline-flex h-8 items-center gap-1.5 rounded-full border border-[var(--hairline)] bg-[var(--surface-soft)] px-3 text-[13px] font-medium text-[var(--ink-700)]">
-            <MapPin size={14} className="text-[var(--mikan-600)]" aria-hidden />
+            <MapPin size={14} className="text-[var(--scilla-600)]" aria-hidden />
             {n}
           </li>
         ))}

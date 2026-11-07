@@ -20,12 +20,12 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/fsutil"
-	"mikan/internal/nodeapi"
+	"scilla/internal/fsutil"
+	"scilla/internal/nodeapi"
 )
 
 // The support terminal: a shell on this server for the holder of a live support grant of the
-// terminal level, through the host's agent (`mikan terminal-agent`, installer/src/terminal.rs).
+// terminal level, through the host's agent (`scilla terminal-agent`, installer/src/terminal.rs).
 // The agent opens a unix socket in support/ for the panel's user and speaks frames on it;
 // this file is the container's side:
 //
@@ -35,7 +35,7 @@ import (
 //	support/terminal/revoked   the ids of grants that ended; the agent ends their sessions
 //	support/recordings/        what the agent recorded, read here and never written
 //
-// The directories are made by mikan on the host (support/ is root's, so the panel cannot
+// The directories are made by scilla on the host (support/ is root's, so the panel cannot
 // replace the recordings or the socket); the container does not make them: a support/ it made
 // itself would be refused by the agent.
 
@@ -62,7 +62,7 @@ var (
 	// ErrTerminalBusy: a session is open on this server (one at a time).
 	ErrTerminalBusy = errors.New("terminal_busy")
 	// ErrTerminalTimeout: the host's agent did not come up: its unit is not installed (a
-	// server updated by an older installer: mikan update brings it) or the host refused.
+	// server updated by an older installer: scilla update brings it) or the host refused.
 	ErrTerminalTimeout = errors.New("terminal_timeout")
 	// ErrNoRecording: there is no such recording.
 	ErrNoRecording = errors.New("no_recording")

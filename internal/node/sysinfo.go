@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 // sysSampler reads host-wide CPU, memory and network counters from /proc. With

@@ -16,11 +16,11 @@ use std::time::Duration;
 
 use anyhow::{Context, Result};
 
-pub const FILE: &str = "/run/mikan.lock";
+pub const FILE: &str = "/run/scilla.lock";
 
-/// Set for the child of a process that holds the lock, which is only ever mikan itself
+/// Set for the child of a process that holds the lock, which is only ever scilla itself
 /// (the new installer after an update): it works under its parent's lock.
-pub const HELD_ENV: &str = "MIKAN_LOCK_HELD";
+pub const HELD_ENV: &str = "SCILLA_LOCK_HELD";
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum Wait {
@@ -71,7 +71,7 @@ pub fn acquire_at(path: &Path, wait: Wait, say: &mut dyn FnMut(&str)) -> Result<
                 Err(TryLockError::WouldBlock) if wait == Wait::Skip => return Ok(None),
                 Err(TryLockError::WouldBlock) => {
                     if !told {
-                        say("Another mikan operation is running: waiting for it to finish.");
+                        say("Another scilla operation is running: waiting for it to finish.");
                         told = true;
                     }
                     thread::sleep(Duration::from_secs(1));

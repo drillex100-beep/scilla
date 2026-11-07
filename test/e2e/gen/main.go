@@ -20,7 +20,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 type slot struct{ name, uuid, secret string }
@@ -63,7 +63,7 @@ func main() {
 	st := nodeapi.DesiredState{
 		Revision: 1,
 		Inbounds: []nodeapi.Inbound{
-			{Name: "vision", Port: "8443", Config: raw(map[string]any{"type": "vless", "reality-config": reality.reality(), "mikan": map[string]any{"flow": "xtls-rprx-vision"}})},
+			{Name: "vision", Port: "8443", Config: raw(map[string]any{"type": "vless", "reality-config": reality.reality(), "scilla": map[string]any{"flow": "xtls-rprx-vision"}})},
 			// "stream-one": "auto" hangs on mihomo v1.19.31 (S-01a).
 			{Name: "xhttp", Port: "8444", Config: raw(map[string]any{"type": "vless", "reality-config": reality.reality(), "xhttp-config": map[string]any{"path": "/x7kq", "mode": "stream-one"}})},
 			{Name: "hy2", Port: "8445", Config: raw(map[string]any{"type": "hysteria2", "alpn": []string{"h3"}, "obfs": "salamander", "obfs-password": obfs})},

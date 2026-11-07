@@ -19,9 +19,9 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/metacubex/age"
 
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/tgbackup"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/tgbackup"
 )
 
 // newDatabase makes a database of its own on the test server, in the public schema like
@@ -29,13 +29,13 @@ import (
 func newDatabase(t *testing.T, label string) string {
 	t.Helper()
 	ctx := context.Background()
-	base := os.Getenv("MIKAN_TEST_DATABASE_URL")
+	base := os.Getenv("SCILLA_TEST_DATABASE_URL")
 	admin, err := pgx.Connect(ctx, base)
 	if err != nil {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { admin.Close(context.Background()) })
-	name := fmt.Sprintf("mikan_%s_%d", label, time.Now().UnixNano())
+	name := fmt.Sprintf("scilla_%s_%d", label, time.Now().UnixNano())
 	if _, err := admin.Exec(ctx, "CREATE DATABASE "+name); err != nil {
 		t.Skip("CREATE DATABASE is not permitted here:", err)
 	}
@@ -49,8 +49,8 @@ func newDatabase(t *testing.T, label string) string {
 }
 
 // The whole way of a Telegram backup: made on one server by the panel (pg_dump through
-// `mikan database backup`), packed and encrypted, then on a freshly installed server
-// decrypted, unpacked and restored by `mikan database restore` (pg_restore and the
+// `scilla database backup`), packed and encrypted, then on a freshly installed server
+// decrypted, unpacked and restored by `scilla database restore` (pg_restore and the
 // migrations), and the new server's panel starts on the old data.
 func TestTelegramBackupRestoresOnANewServer(t *testing.T) {
 	if _, err := exec.LookPath("pg_dump"); err != nil {
@@ -71,15 +71,15 @@ func TestTelegramBackupRestoresOnANewServer(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	t.Setenv("MIKAN_DATABASE_URL", oldDSN)
-	t.Setenv("MIKAN_DATA_DIR", oldDir)
+	t.Setenv("SCILLA_DATABASE_URL", oldDSN)
+	t.Setenv("SCILLA_DATA_DIR", oldDir)
 	work := t.TempDir()
 	path, _, err := tgbackup.Make(ctx, func(ctx context.Context, p string) error { return databaseCmd(ctx, []string{"backup", p}) }, work, pass, time.Now())
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	// age -d -o mikan.tar.gz …, then what mikan restore unpacks.
+	// age -d -o scilla.tar.gz …, then what scilla restore unpacks.
 	file, _ := os.ReadFile(path)
 	id, _ := age.NewScryptIdentity(pass)
 	plain, err := age.Decrypt(bytes.NewReader(file), id)
@@ -118,8 +118,8 @@ func TestTelegramBackupRestoresOnANewServer(t *testing.T) {
 		t.Fatal(err)
 	}
 	fresh.Close()
-	t.Setenv("MIKAN_DATABASE_URL", newDSN)
-	t.Setenv("MIKAN_DATA_DIR", newDir)
+	t.Setenv("SCILLA_DATABASE_URL", newDSN)
+	t.Setenv("SCILLA_DATA_DIR", newDir)
 	if err := databaseCmd(ctx, []string{"restore", dump}); err != nil {
 		t.Fatal(err)
 	}

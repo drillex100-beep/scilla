@@ -79,7 +79,7 @@ const session: Middleware = {
   },
   onResponse({ response, request }) {
     if (response.status === 401 && !request.url.endsWith("/auth/login")) {
-      window.dispatchEvent(new Event("mikan:unauthorized"));
+      window.dispatchEvent(new Event("scilla:unauthorized"));
     }
     return response;
   },

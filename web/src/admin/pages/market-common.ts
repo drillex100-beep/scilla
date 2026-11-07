@@ -49,7 +49,7 @@ export function installMarket({ entry, ack, acceptKey }: InstallArgs) {
   );
 }
 
-/** Code mikan has not looked at: an addon of a source or of the registry of community addons. */
+/** Code scilla has not looked at: an addon of a source or of the registry of community addons. */
 export function unofficial(e: MarketEntry | undefined): boolean {
   return !!e?.origin;
 }

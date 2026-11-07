@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/proto"
+	"scilla/internal/proto"
 )
 
 // A subscription gives every app only what it can use. A link it cannot use is noise in
@@ -16,7 +16,7 @@ import (
 type Family string
 
 const (
-	FamilyMihomo  Family = "mihomo"  // Mikan, Kabosu, Koala Clash, SlothClash, FlClash, Clash Verge, Clash Meta for Android, ClashFest…
+	FamilyMihomo  Family = "mihomo"  // Scilla, Kabosu, Koala Clash, SlothClash, FlClash, Clash Verge, Clash Meta for Android, ClashFest…
 	FamilyXray    Family = "xray"    // Happ, v2RayTun, INCY, v2rayNG, v2rayN…
 	FamilySingBox Family = "singbox" // Hiddify, Karing, NekoBox, sing-box…
 	FamilyStash   Family = "stash"

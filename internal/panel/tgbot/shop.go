@@ -10,9 +10,9 @@ import (
 	"sync"
 	"unicode/utf8"
 
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/model"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/model"
+	"scilla/internal/tgapi"
 )
 
 // Callback data of the shop: b buy a new subscription, tn:<tariff> its tariff, pn:<tariff>:<p>

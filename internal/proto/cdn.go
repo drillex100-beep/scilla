@@ -140,7 +140,7 @@ func cdnListener(t Template, l map[string]any) {
 	l["trusted-proxy-header"], l["trusted-proxies"] = c.Header, trusted
 }
 
-// setExt writes one key of the mikan section; nil removes it, and the section when it is
+// setExt writes one key of the scilla section; nil removes it, and the section when it is
 // left empty.
 func setExt(t Template, key string, v any) {
 	ext, _ := t[extKey].(map[string]any)

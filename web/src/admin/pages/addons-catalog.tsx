@@ -157,13 +157,13 @@ export function CatalogCard({ item: i, index, m, p, queued, act }: { item: Item;
   const Icon = i.kind === "payment" ? Wallet : KIND_ICONS[i.kind];
   const href = safeHref(i.homepage);
   const e = i.market;
-  // An addon mikan revoked installs no more, from the registry or from a source of its repository.
+  // An addon scilla revoked installs no more, from the registry or from a source of its repository.
   const blocked = i.kind === "payment" ? !p?.supported : !marketReady(m) || !!e?.origin?.revoked;
   const busy = install.isPending || update.isPending;
   const repo = safeHref(e?.origin?.repo);
   const act1 = () => {
     if (!e) install.mutate(i.id);
-    // Code mikan has not looked at goes in only through the dialog that asks the admin to
+    // Code scilla has not looked at goes in only through the dialog that asks the admin to
     // take the risk, an update as much as an install.
     else if (!i.installed || e.wider || unofficial(e)) act.approve(e);
     else update.mutate({ entry: e });

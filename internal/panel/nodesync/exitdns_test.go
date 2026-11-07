@@ -5,8 +5,8 @@ import (
 	"slices"
 	"testing"
 
-	"mikan/internal/panel/exitdns"
-	"mikan/internal/panel/settings"
+	"scilla/internal/panel/exitdns"
+	"scilla/internal/panel/settings"
 )
 
 // The DNS at the exit reaches the nodes on from the start: a panel updated to it turns it

@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"mikan/internal/textutil"
+	"scilla/internal/textutil"
 )
 
 // Routes is the admin's routing beyond the mode (Routing): where each service goes, the
@@ -144,11 +144,11 @@ var Services = []Service{
 	{ID: "ads", Icon: "🚫", Name: "Реклама и трекеры", NameEN: "Ads and trackers", Rules: []Match{{Type: "GEOSITE", Value: "category-ads-all"}}},
 	{ID: "youtube", Icon: "📺", Name: "YouTube", NameEN: "YouTube", Rules: []Match{{Type: "GEOSITE", Value: "youtube"}}},
 	{ID: "telegram", Icon: "✈️", Name: "Telegram", NameEN: "Telegram",
-		Rules:     []Match{{Type: "GEOSITE", Value: "telegram"}, {Type: "GEOIP", Value: "telegram", NoResolve: true}, {Type: "RULE-SET", Value: "mikan-telegram-ip", NoResolve: true}},
-		Providers: []Provider{{Name: "mikan-telegram-ip", Behavior: "classical", Format: "yaml", URL: privWL + "tgprx.yaml"}}},
+		Rules:     []Match{{Type: "GEOSITE", Value: "telegram"}, {Type: "GEOIP", Value: "telegram", NoResolve: true}, {Type: "RULE-SET", Value: "scilla-telegram-ip", NoResolve: true}},
+		Providers: []Provider{{Name: "scilla-telegram-ip", Behavior: "classical", Format: "yaml", URL: privWL + "tgprx.yaml"}}},
 	{ID: "discord", Icon: "🎧", Name: "Discord", NameEN: "Discord",
-		Rules: []Match{{Type: "GEOSITE", Value: "discord"}, {Type: "PROCESS-NAME-REGEX", Value: "(?i).*discord.*"}, {Type: "RULE-SET", Value: "mikan-discord-voice", NoResolve: true}},
-		Providers: []Provider{{Name: "mikan-discord-voice", Behavior: "ipcidr", Format: "mrs", Since: mrsSince,
+		Rules: []Match{{Type: "GEOSITE", Value: "discord"}, {Type: "PROCESS-NAME-REGEX", Value: "(?i).*discord.*"}, {Type: "RULE-SET", Value: "scilla-discord-voice", NoResolve: true}},
+		Providers: []Provider{{Name: "scilla-discord-voice", Behavior: "ipcidr", Format: "mrs", Since: mrsSince,
 			URL: legiz + "other/discord-voice-ip-list.mrs"}}},
 	{ID: "messengers", Icon: "💬", Name: "WhatsApp и Signal", NameEN: "WhatsApp and Signal", Rules: []Match{{Type: "GEOSITE", Value: "whatsapp"}, {Type: "GEOSITE", Value: "signal"}}},
 	{ID: "meta", Icon: "📷", Name: "Instagram и Facebook", NameEN: "Instagram and Facebook",
@@ -156,19 +156,19 @@ var Services = []Service{
 	{ID: "tiktok", Icon: "🎵", Name: "TikTok", NameEN: "TikTok", Rules: []Match{{Type: "GEOSITE", Value: "tiktok"}}},
 	{ID: "twitter", Icon: "🐦", Name: "X (Twitter)", NameEN: "X (Twitter)", Rules: []Match{{Type: "GEOSITE", Value: "twitter"}, {Type: "GEOIP", Value: "twitter", NoResolve: true}}},
 	{ID: "ai", Icon: "🤖", Name: "ChatGPT, Claude, Gemini", NameEN: "ChatGPT, Claude, Gemini",
-		Rules: []Match{{Type: "GEOSITE", Value: "category-ai-!cn"}, {Type: "RULE-SET", Value: "mikan-ai"}, {Type: "RULE-SET", Value: "mikan-gemini"}},
-		Providers: []Provider{{Name: "mikan-ai", Behavior: "classical", Format: "yaml", URL: privWL + "routing/ai.yaml"},
-			{Name: "mikan-gemini", Behavior: "classical", Format: "yaml", URL: privWL + "routing/gemini.yaml"}}},
+		Rules: []Match{{Type: "GEOSITE", Value: "category-ai-!cn"}, {Type: "RULE-SET", Value: "scilla-ai"}, {Type: "RULE-SET", Value: "scilla-gemini"}},
+		Providers: []Provider{{Name: "scilla-ai", Behavior: "classical", Format: "yaml", URL: privWL + "routing/ai.yaml"},
+			{Name: "scilla-gemini", Behavior: "classical", Format: "yaml", URL: privWL + "routing/gemini.yaml"}}},
 	{ID: "streaming", Icon: "🎬", Name: "Netflix и Spotify", NameEN: "Netflix and Spotify",
 		Rules: []Match{{Type: "GEOSITE", Value: "netflix"}, {Type: "GEOSITE", Value: "spotify"}, {Type: "GEOIP", Value: "netflix", NoResolve: true}}},
 	{ID: "twitch", Icon: "📡", Name: "Twitch", NameEN: "Twitch", Rules: []Match{{Type: "GEOSITE", Value: "twitch"}}},
 	{ID: "games", Icon: "🕹️", Name: "Игры (Steam, Epic, Riot…)", NameEN: "Games (Steam, Epic, Riot…)",
-		Rules:     []Match{{Type: "RULE-SET", Value: "mikan-games"}, {Type: "GEOSITE", Value: "category-games"}},
-		Providers: []Provider{{Name: "mikan-games", Behavior: "classical", Format: "yaml", URL: privWL + "routing/games-core.yaml"}}},
+		Rules:     []Match{{Type: "RULE-SET", Value: "scilla-games"}, {Type: "GEOSITE", Value: "category-games"}},
+		Providers: []Provider{{Name: "scilla-games", Behavior: "classical", Format: "yaml", URL: privWL + "routing/games-core.yaml"}}},
 	{ID: "github", Icon: "🐙", Name: "GitHub", NameEN: "GitHub", Rules: []Match{{Type: "GEOSITE", Value: "github"}}},
 	{ID: "torrents", Icon: "🧲", Name: "Торренты", NameEN: "Torrents",
-		Rules: []Match{{Type: "RULE-SET", Value: "mikan-torrent-apps"}, {Type: "GEOSITE", Value: "category-public-tracker"}},
-		Providers: []Provider{{Name: "mikan-torrent-apps", Behavior: "classical", Format: "yaml",
+		Rules: []Match{{Type: "RULE-SET", Value: "scilla-torrent-apps"}, {Type: "GEOSITE", Value: "category-public-tracker"}},
+		Providers: []Provider{{Name: "scilla-torrent-apps", Behavior: "classical", Format: "yaml",
 			URL: legiz + "other/torrent-clients.yaml"}}},
 }
 
@@ -182,26 +182,26 @@ type DirectSet struct {
 var DirectSets = []DirectSet{
 	{ID: "ru", Name: "Российские приложения и сайты: банки, госуслуги, маркетплейсы", NameEN: "Russian apps and sites: banks, state services, marketplaces",
 		Providers: []Provider{
-			{Name: "mikan-ru-apps", Behavior: "classical", Format: "yaml", URL: privWL + "ru/process-direct-apk.yaml"},
-			{Name: "mikan-ru-apps-wildcard", Behavior: "classical", Format: "yaml", URL: privWL + "ru/process-direct-apk-wildcard.yaml", Since: Version{1, 19, 12}},
-			{Name: "mikan-ru-pc", Behavior: "classical", Format: "yaml", URL: privWL + "ru/process-direct-pc.yaml"},
-			{Name: "mikan-ru-sites", Behavior: "classical", Format: "yaml", URL: privWL + "ru/domain-direct-suffix.yaml"},
-			{Name: "mikan-ru-keywords", Behavior: "classical", Format: "yaml", URL: privWL + "ru/domain-direct-keyword.yaml"},
-			{Name: "mikan-ru-core", Behavior: "classical", Format: "yaml", URL: privWL + "ru/ru-core.yaml"},
+			{Name: "scilla-ru-apps", Behavior: "classical", Format: "yaml", URL: privWL + "ru/process-direct-apk.yaml"},
+			{Name: "scilla-ru-apps-wildcard", Behavior: "classical", Format: "yaml", URL: privWL + "ru/process-direct-apk-wildcard.yaml", Since: Version{1, 19, 12}},
+			{Name: "scilla-ru-pc", Behavior: "classical", Format: "yaml", URL: privWL + "ru/process-direct-pc.yaml"},
+			{Name: "scilla-ru-sites", Behavior: "classical", Format: "yaml", URL: privWL + "ru/domain-direct-suffix.yaml"},
+			{Name: "scilla-ru-keywords", Behavior: "classical", Format: "yaml", URL: privWL + "ru/domain-direct-keyword.yaml"},
+			{Name: "scilla-ru-core", Behavior: "classical", Format: "yaml", URL: privWL + "ru/ru-core.yaml"},
 		}},
 }
 
 // blockedLists are what RoutingBlocked sends through the tunnel: sites and apps blocked
 // or slowed down in Russia (privWL-clash, kept by hand).
 var blockedLists = []Provider{
-	{Name: "mikan-blocked", Behavior: "classical", Format: "yaml", URL: privWL + "clV2_provider.yaml"},
-	{Name: "mikan-blocked-apps", Behavior: "classical", Format: "yaml", URL: privWL + "process-core.yaml"},
+	{Name: "scilla-blocked", Behavior: "classical", Format: "yaml", URL: privWL + "clV2_provider.yaml"},
+	{Name: "scilla-blocked-apps", Behavior: "classical", Format: "yaml", URL: privWL + "process-core.yaml"},
 }
 
 // mrsSince is the first mihomo with binary rule lists (.mrs).
 var mrsSince = Version{1, 18, 7}
 
-// listProvider is the profile's name of an own list: apart from the panel's ("mikan-").
+// listProvider is the profile's name of an own list: apart from the panel's ("scilla-").
 func listProvider(name string) string { return "own-" + name }
 
 var listName = regexp.MustCompile(`^[a-z0-9][a-z0-9-]{0,31}$`)

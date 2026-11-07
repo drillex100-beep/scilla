@@ -12,8 +12,8 @@ import (
 	"net/http"
 	"slices"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // The page's images, one of each.
@@ -213,11 +213,11 @@ func (p Public) Head(root string) []byte {
 	}
 	// json.Marshal writes <, > and & as \u escapes: nothing in it can close the script.
 	data, _ := json.Marshal(p)
-	b.WriteString(`<script type="application/json" id="mikan-page">`)
+	b.WriteString(`<script type="application/json" id="scilla-page">`)
 	b.Write(data)
 	b.WriteString(`</script>`)
 	if css := CleanCSS(p.css); css != "" {
-		b.WriteString(`<style id="mikan-css">`)
+		b.WriteString(`<style id="scilla-css">`)
 		b.WriteString(css)
 		b.WriteString(`</style>`)
 	}

@@ -4,7 +4,7 @@ import (
 	"net/netip"
 	"slices"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 // egressRules refuse users' traffic to the ports, networks and domains of the egress

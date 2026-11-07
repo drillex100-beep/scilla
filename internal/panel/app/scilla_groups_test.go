@@ -12,15 +12,15 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/subs"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/subs"
 )
 
-// The Mikan app's server groups (X-Mikan-Groups): only the app that asks gets them, with the
+// The Scilla app's server groups (X-Scilla-Groups): only the app that asks gets them, with the
 // group's servers named as they are in the very profile it got; every other app gets the
 // same subscription as before, and a group that ran out says so with its servers gone.
-func TestMikanGroupsHeader(t *testing.T) {
+func TestScillaGroupsHeader(t *testing.T) {
 	h := newHarness(t)
 	ctx := context.Background()
 	if err := domain.Seed(ctx, h.st, h.now); err != nil {
@@ -67,7 +67,7 @@ func TestMikanGroupsHeader(t *testing.T) {
 
 	fetchAs := func(query, features string) (http.Header, []byte) {
 		t.Helper()
-		hd := map[string]string{"User-Agent": "mihomo/1.19.32 Mikan/1.2.0"}
+		hd := map[string]string{"User-Agent": "mihomo/1.19.32 Scilla/1.2.0"}
 		if features != "" {
 			hd[subs.FeaturesHeader] = features
 		}
@@ -84,7 +84,7 @@ func TestMikanGroupsHeader(t *testing.T) {
 		b, err := base64.StdEncoding.DecodeString(raw)
 		var g subs.AppGroups
 		if !ok || err != nil || json.Unmarshal(b, &g) != nil {
-			t.Fatalf("X-Mikan-Groups: %q", hd.Get(subs.GroupsHeader))
+			t.Fatalf("X-Scilla-Groups: %q", hd.Get(subs.GroupsHeader))
 		}
 		return g
 	}

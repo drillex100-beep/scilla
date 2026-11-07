@@ -12,11 +12,11 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/nodetls"
-	"mikan/internal/panel/presets"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/nodeapi"
+	"scilla/internal/nodetls"
+	"scilla/internal/panel/presets"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // The node cannot open ports in the host's firewall: the installer opens the pool ahead.
@@ -128,7 +128,7 @@ func TestNodePorts(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	panel, _ := nodetls.Generate("mikan-panel", x509.ExtKeyUsageClientAuth, now)
+	panel, _ := nodetls.Generate("scilla-panel", x509.ExtKeyUsageClientAuth, now)
 	remote, _, err := AddNode(ctx, st, panel, NodeInput{Name: "B", Host: "198.51.100.20", APIPort: 40000}, now)
 	if err != nil {
 		t.Fatal(err)
@@ -215,7 +215,7 @@ func TestPortsWithoutTheNode(t *testing.T) {
 
 // What the node's server holds is not for an automatic pick: a foreign Xray on 2083/tcp
 // keeps the relay and a moved inbound off it, over that network only. Busy, which refuses
-// the admin's choice, still names only what mikan knows, so an inbound keeps its own port
+// the admin's choice, still names only what scilla knows, so an inbound keeps its own port
 // although the node reports it listening too.
 func TestPortMapFreeSkipsWhatTheServerHolds(t *testing.T) {
 	host := &nodeapi.HostPorts{TCP: []int{443, 2053, 2083, 8443}, UDP: []int{2096, 8443}}
@@ -232,7 +232,7 @@ func TestPortMapFreeSkipsWhatTheServerHolds(t *testing.T) {
 		{8443, "tcp", false},
 		{2087, "tcp", false}, // a disabled inbound's, as before
 		{4443, "tcp", true},
-		{443, "tcp", false}, // mikan's own, listening: not free either
+		{443, "tcp", false}, // scilla's own, listening: not free either
 		{2053, "tcp", false},
 	} {
 		if got := m.Free(c.port, c.network); got != c.want {
@@ -244,7 +244,7 @@ func TestPortMapFreeSkipsWhatTheServerHolds(t *testing.T) {
 		t.Error("an inbound's own port, which the node reports listening, is busy for it")
 	}
 	if _, busy := m.Busy("2083", "tcp", PortHolder{}); busy {
-		t.Error("a foreign program's port is named a holder of mikan's")
+		t.Error("a foreign program's port is named a holder of scilla's")
 	}
 	if h, _ := m.Busy("2053", "tcp", PortHolder{}); h.Kind != PortRelay {
 		t.Errorf("the relay's port, reported listening: %+v", h)

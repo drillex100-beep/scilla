@@ -17,11 +17,11 @@ import (
 
 	"github.com/pquerna/otp/totp"
 
-	"mikan/internal/panel/auth"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
+	"scilla/internal/panel/auth"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
 )
 
 const (
@@ -63,9 +63,9 @@ func newHarness(t *testing.T, with ...func(*Options)) *harness {
 	}
 	h := &harness{t: t, st: st, now: time.Now()}
 	web := fstest.MapFS{
-		"index.html":           {Data: []byte("<!doctype html><html><head><!-- mikan:base --></head><body></body></html>")},
+		"index.html":           {Data: []byte("<!doctype html><html><head><!-- scilla:base --></head><body></body></html>")},
 		"assets/app-1.js":      {Data: []byte("console.log(1)")},
-		"sub.html":             {Data: []byte("<!doctype html><html><head><!-- mikan:base --></head><body>sub</body></html>")},
+		"sub.html":             {Data: []byte("<!doctype html><html><head><!-- scilla:base --></head><body>sub</body></html>")},
 		"favicon.png":          {Data: []byte("\x89PNG icon")},
 		"apple-touch-icon.png": {Data: []byte("\x89PNG touch")},
 		"secret.txt":           {Data: []byte("not for the subscription path")},
@@ -213,8 +213,8 @@ func TestDefaultLangReachesPages(t *testing.T) {
 		t.Helper()
 		for _, path := range pages {
 			resp, body := h.do(http.MethodGet, path, nil, nil)
-			if resp.StatusCode != http.StatusOK || strings.Contains(string(body), "mikan-lang") != (want != "") ||
-				want != "" && !strings.Contains(string(body), `<meta name="mikan-lang" content="`+want+`">`) {
+			if resp.StatusCode != http.StatusOK || strings.Contains(string(body), "scilla-lang") != (want != "") ||
+				want != "" && !strings.Contains(string(body), `<meta name="scilla-lang" content="`+want+`">`) {
 				t.Fatalf("%s with %q: %d %s", path, want, resp.StatusCode, body)
 			}
 		}

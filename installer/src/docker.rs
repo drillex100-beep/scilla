@@ -41,17 +41,17 @@ pub const POSTGRES_IMAGE: &str = postgres_image!();
 /// panel waits up to about 30 s for its workers, so it gets 45 s; it reaches the socket
 /// through a read-only mount (connecting needs no write access to the mount).
 ///
-/// The panel answers Let's Encrypt on port 80, or where MIKAN_ACME_LISTEN says when a web
+/// The panel answers Let's Encrypt on port 80, or where SCILLA_ACME_LISTEN says when a web
 /// server holds that port and passes the challenge on (see acme.rs).
 ///
 /// The ${...} are filled from config.json when the file is written (compose_text), so
 /// compose reads no .env; the secrets are files in ./secrets mounted as /run/secrets/*, and
 /// the containers get their paths only.
 pub const PANEL_COMPOSE: &str = concat!(
-    r#"name: mikan
+    r#"name: scilla
 
 x-hardening: &hardening
-  image: ${MIKAN_IMAGE}
+  image: ${SCILLA_IMAGE}
   network_mode: host
   restart: unless-stopped
   user: "65532:65532"
@@ -67,11 +67,11 @@ x-hardening: &hardening
 services:
   node:
     <<: *hardening
-    entrypoint: ["/usr/local/bin/mikan-node"]
+    entrypoint: ["/usr/local/bin/scilla-node"]
     environment:
-      MIKAN_DATA_DIR: /data/node
-      MIKAN_NODE_SOCKET: /run/mikan/node.sock
-    volumes: ["./data/node:/data/node", "run:/run/mikan"]
+      SCILLA_DATA_DIR: /data/node
+      SCILLA_NODE_SOCKET: /run/scilla/node.sock
+    volumes: ["./data/node:/data/node", "run:/run/scilla"]
     pids_limit: 1024
 
   panel:
@@ -81,19 +81,19 @@ services:
       node: {condition: service_started}
       postgres: {condition: service_healthy}
     environment:
-      MIKAN_DATA_DIR: /data/panel
-      MIKAN_NODE_SOCKET: /run/mikan/node.sock
-      MIKAN_PANEL_LISTEN: 0.0.0.0:${PANEL_PORT}
-      MIKAN_ACME_LISTEN: "${MIKAN_ACME_LISTEN:-:80}"
-      MIKAN_SUPPORT_ACCESS: "${MIKAN_SUPPORT_ACCESS:-on}"
-      MIKAN_DATABASE_URL_FILE: /run/secrets/database_url
+      SCILLA_DATA_DIR: /data/panel
+      SCILLA_NODE_SOCKET: /run/scilla/node.sock
+      SCILLA_PANEL_LISTEN: 0.0.0.0:${PANEL_PORT}
+      SCILLA_ACME_LISTEN: "${SCILLA_ACME_LISTEN:-:80}"
+      SCILLA_SUPPORT_ACCESS: "${SCILLA_SUPPORT_ACCESS:-on}"
+      SCILLA_DATABASE_URL_FILE: /run/secrets/database_url
     secrets: [database_url]
-    volumes: ["./data/panel:/data/panel", "run:/run/mikan", "pg-run:/run/postgresql:ro"]
+    volumes: ["./data/panel:/data/panel", "run:/run/scilla", "pg-run:/run/postgresql:ro"]
     mem_limit: 1g
     pids_limit: 512
     stop_grace_period: 45s
     healthcheck:
-      test: ["CMD", "/usr/local/bin/mikan", "health"]
+      test: ["CMD", "/usr/local/bin/scilla", "health"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -108,8 +108,8 @@ services:
     cap_add: [CHOWN, DAC_OVERRIDE, FOWNER, SETGID, SETUID]
     security_opt: ["no-new-privileges:true"]
     environment:
-      POSTGRES_USER: mikan
-      POSTGRES_DB: mikan
+      POSTGRES_USER: scilla
+      POSTGRES_DB: scilla
       POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
       POSTGRES_INITDB_ARGS: --auth-local=scram-sha-256 --auth-host=scram-sha-256
     command: ["postgres", "-c", "listen_addresses=", "-c", "unix_socket_directories=/run/postgresql", "-c", "unix_socket_permissions=0777", "-c", "max_connections=50"]
@@ -120,7 +120,7 @@ services:
     pids_limit: 256
     stop_grace_period: 120s
     healthcheck:
-      test: ["CMD", "pg_isready", "-h", "/run/postgresql", "-U", "mikan", "-d", "mikan"]
+      test: ["CMD", "pg_isready", "-h", "/run/postgresql", "-U", "scilla", "-d", "scilla"]
       interval: 10s
       timeout: 5s
       start_period: 60s
@@ -141,14 +141,14 @@ secrets:
 );
 
 /// The compose project's volume that holds the database (compose prefixes the project).
-pub const PG_VOLUME: &str = "mikan_pg-data";
+pub const PG_VOLUME: &str = "scilla_pg-data";
 
 /// A node of another panel, which drives it over its API port.
-pub const NODE_COMPOSE: &str = r#"name: mikan
+pub const NODE_COMPOSE: &str = r#"name: scilla
 
 services:
   node:
-    image: ${MIKAN_IMAGE}
+    image: ${SCILLA_IMAGE}
     network_mode: host
     restart: unless-stopped
     user: "65532:65532"
@@ -160,14 +160,14 @@ services:
     logging:
       driver: json-file
       options: {max-size: "10m", max-file: "3"}
-    entrypoint: ["/usr/local/bin/mikan-node"]
+    entrypoint: ["/usr/local/bin/scilla-node"]
     environment:
-      MIKAN_DATA_DIR: /data/node
-      MIKAN_NODE_SOCKET: /run/mikan/node.sock
-      MIKAN_NODE_JOIN_FILE: /run/secrets/node_join
-      MIKAN_ACME_LISTEN: "${MIKAN_ACME_LISTEN:-:80}"
+      SCILLA_DATA_DIR: /data/node
+      SCILLA_NODE_SOCKET: /run/scilla/node.sock
+      SCILLA_NODE_JOIN_FILE: /run/secrets/node_join
+      SCILLA_ACME_LISTEN: "${SCILLA_ACME_LISTEN:-:80}"
     secrets: [node_join]
-    volumes: ["./data/node:/data/node", "run:/run/mikan"]
+    volumes: ["./data/node:/data/node", "run:/run/scilla"]
     pids_limit: 1024
 
 volumes:
@@ -180,7 +180,7 @@ secrets:
 /// The compose file of this installer for a panel or a node, with the server's settings
 /// in it: ${KEY} and ${KEY:-default} take config's values (never a secret's).
 pub fn compose_text(config: &Config) -> Result<String> {
-    let node = config.get("MIKAN_MODE") == Some("node");
+    let node = config.get("SCILLA_MODE") == Some("node");
     fill(if node { NODE_COMPOSE } else { PANEL_COMPOSE }, config)
 }
 
@@ -206,7 +206,7 @@ fn fill(template: &str, config: &Config) -> Result<String> {
 }
 
 /// Makes compose.yaml the one this installer writes: it has been written once, at install,
-/// so a server installed by an older mikan keeps that one (the whole ./data mounted in both
+/// so a server installed by an older scilla keeps that one (the whole ./data mounted in both
 /// containers, no limits, secrets from .env) until this runs. The settings go into
 /// config.json and secrets/ first, as the new file reads them. Returns the text it
 /// replaced, for the caller to put back if the new one does not start; the old file also
@@ -235,7 +235,7 @@ pub fn put_compose(root: &Path, text: &str) -> Result<()> {
 }
 
 /// How long a question to the engine may take (a version, the containers, a health check):
-/// a wedged dockerd must not hang `mikan doctor`, the menu's status or a wait for the panel.
+/// a wedged dockerd must not hang `scilla doctor`, the menu's status or a wait for the panel.
 const ASK_LIMIT: Duration = Duration::from_secs(20);
 
 /// Runs a short docker command for up to limit; None when it failed to start, failed, or
@@ -352,7 +352,7 @@ fn forward(r: impl Read + Send + 'static, tx: mpsc::Sender<String>) -> thread::J
 const DISTRO_PACKAGES: [&str; 7] =
     ["docker.io", "docker-compose", "docker-compose-v2", "docker-doc", "podman-docker", "containerd", "runc"];
 
-/// Replaces a Docker that cannot run mikan (no compose v2) with Docker CE from
+/// Replaces a Docker that cannot run scilla (no compose v2) with Docker CE from
 /// get.docker.com. The packages are removed, not purged: images, volumes and containers
 /// stay in /var/lib/docker and come back with the new engine.
 pub fn replace(mut line: impl FnMut(&str)) -> Result<()> {
@@ -452,7 +452,7 @@ pub fn load(archive: &str) -> Result<String> {
         .context("the archive has no image")
 }
 
-/// `docker compose` for /opt/mikan.
+/// `docker compose` for /opt/scilla.
 pub fn compose(args: &[&str]) -> Command {
     let mut cmd = Command::new("docker");
     cmd.args(["compose", "--project-directory", DIR]).args(args).current_dir(DIR);
@@ -469,14 +469,14 @@ pub fn compose_run(args: &[&str]) -> Result<Output> {
     Ok(out)
 }
 
-/// `mikan admin …` in the running panel. stdin is fed to the command when given.
+/// `scilla admin …` in the running panel. stdin is fed to the command when given.
 pub fn admin(args: &[&str], stdin: Option<&str>) -> Result<Output> {
-    let mut full = vec!["exec", "-T", "panel", "mikan", "admin"];
+    let mut full = vec!["exec", "-T", "panel", "scilla", "admin"];
     full.extend_from_slice(args);
     with_stdin(compose(&full), stdin)
 }
 
-/// `mikan admin …` in a one-off panel container, before the panel runs (bootstrap).
+/// `scilla admin …` in a one-off panel container, before the panel runs (bootstrap).
 pub fn admin_once(args: &[&str], stdin: Option<&str>) -> Result<Output> {
     let mut full = vec!["run", "--rm", "--no-deps", "-T", "panel", "admin"];
     full.extend_from_slice(args);
@@ -495,7 +495,7 @@ pub fn database(args: &[&str]) -> Result<Output> {
 /// A database command that outlives limit is stopped with its container (killing `compose
 /// run` alone leaves the container running); PostgreSQL rolls its transaction back.
 fn database_within(args: &[&str], limit: Duration) -> Result<Output> {
-    let name = format!("mikan-database-{}-{}", std::process::id(), crate::clock::Utc::now().stamp());
+    let name = format!("scilla-database-{}-{}", std::process::id(), crate::clock::Utc::now().stamp());
     let mut full = vec!["run", "--rm", "--no-deps", "-T", "--name", name.as_str(), "panel", "database"];
     full.extend_from_slice(args);
     let what = format!("docker compose run panel database {}", args.join(" "));
@@ -576,7 +576,7 @@ pub fn check(out: Output) -> Result<Output> {
         return Ok(out);
     }
     let err = String::from_utf8_lossy(&out.stderr);
-    let msg = err.lines().rev().find(|l| !l.trim().is_empty()).unwrap_or("failed").trim().trim_start_matches("mikan: ");
+    let msg = err.lines().rev().find(|l| !l.trim().is_empty()).unwrap_or("failed").trim().trim_start_matches("scilla: ");
     bail!("{msg}")
 }
 
@@ -587,7 +587,7 @@ pub fn panel_healthy() -> bool {
 
 /// panel_healthy, given up after limit.
 pub fn panel_healthy_within(limit: Duration) -> bool {
-    ask(compose(&["exec", "-T", "panel", "mikan", "health"]), limit).is_some_and(|o| o.status.success())
+    ask(compose(&["exec", "-T", "panel", "scilla", "health"]), limit).is_some_and(|o| o.status.success())
 }
 
 #[derive(Deserialize, Debug, Clone, Default)]
@@ -682,7 +682,7 @@ mod tests {
     #[test]
     fn pull_progress() {
         let mut p = PullProgress::default();
-        assert_eq!(p.feed("0.3.9: Pulling from miroshka000/mikan"), None);
+        assert_eq!(p.feed("0.3.9: Pulling from miroshka000/scilla"), None);
         assert_eq!(p.feed("4f4fb700ef54: Pulling fs layer"), Some(0.0));
         assert_eq!(p.feed("a1b2c3d4e5f6: Already exists"), Some(0.5));
         assert_eq!(p.feed("4f4fb700ef54: Download complete"), Some(0.5));
@@ -700,17 +700,17 @@ mod tests {
         }
         let node = PANEL_COMPOSE.split("\n  node:").nth(1).unwrap().split("\n  panel:").next().unwrap();
         let panel = PANEL_COMPOSE.split("\n  panel:").nth(1).unwrap().split("\nvolumes:").next().unwrap();
-        assert!(node.contains("./data/node:/data/node") && node.contains("MIKAN_DATA_DIR: /data/node"));
+        assert!(node.contains("./data/node:/data/node") && node.contains("SCILLA_DATA_DIR: /data/node"));
         assert!(!node.contains("data/panel"), "the node reaches the panel's data");
-        assert!(panel.contains("./data/panel:/data/panel") && panel.contains("MIKAN_DATA_DIR: /data/panel"));
+        assert!(panel.contains("./data/panel:/data/panel") && panel.contains("SCILLA_DATA_DIR: /data/panel"));
         assert!(!panel.contains("data/node"), "the panel reaches the node's data");
         // The panel's memory is bounded; a node's grows with its connections, and one killed
         // for it would drop every client, so it has none.
         assert!(panel.contains("mem_limit") && !node.contains("mem_limit") && !NODE_COMPOSE.contains("mem_limit"));
         assert!(NODE_COMPOSE.contains("./data/node:/data/node") && !NODE_COMPOSE.contains("data/panel"));
         // The node answers the CA for its own certificate, past a web server when told to.
-        assert!(NODE_COMPOSE.contains("MIKAN_ACME_LISTEN: \"${MIKAN_ACME_LISTEN:-:80}\""));
-        assert!(NODE_COMPOSE.contains("MIKAN_NODE_JOIN_FILE: /run/secrets/node_join") && !NODE_COMPOSE.contains("MIKAN_NODE_JOIN:"));
+        assert!(NODE_COMPOSE.contains("SCILLA_ACME_LISTEN: \"${SCILLA_ACME_LISTEN:-:80}\""));
+        assert!(NODE_COMPOSE.contains("SCILLA_NODE_JOIN_FILE: /run/secrets/node_join") && !NODE_COMPOSE.contains("SCILLA_NODE_JOIN:"));
     }
 
     fn tmpdir(name: &str) -> std::path::PathBuf {
@@ -723,13 +723,13 @@ mod tests {
     fn panel_config(d: &Path) -> Config {
         let mut c = Config::from_env_text(
             d,
-            "MIKAN_IMAGE=ghcr.io/x@sha256:ab
+            "SCILLA_IMAGE=ghcr.io/x@sha256:ab
 PANEL_PORT=2053
-MIKAN_POSTGRES_PASSWORD=pw123456
-MIKAN_DATABASE_URL=postgresql://mikan:pw123456@localhost/mikan?host=/run/postgresql
+SCILLA_POSTGRES_PASSWORD=pw123456
+SCILLA_DATABASE_URL=postgresql://scilla:pw123456@localhost/scilla?host=/run/postgresql
 ",
         );
-        c.set("MIKAN_VERSION", "0.5.1.1").unwrap();
+        c.set("SCILLA_VERSION", "0.5.1.1").unwrap();
         c
     }
 
@@ -740,7 +740,7 @@ MIKAN_DATABASE_URL=postgresql://mikan:pw123456@localhost/mikan?host=/run/postgre
     fn an_old_compose_is_replaced_once() {
         use std::os::unix::fs::PermissionsExt;
         let d = tmpdir("compose");
-        let old = "name: mikan
+        let old = "name: scilla
 services:
   panel:
     volumes: [\"./data:/data\"]
@@ -759,7 +759,7 @@ services:
         assert_eq!(fs::read_to_string(d.join("compose.yaml")).unwrap(), old);
         // a node's compose is not a panel's
         let mut node = Config::new(&d);
-        for (k, v) in [("MIKAN_MODE", "node"), ("MIKAN_IMAGE", "ghcr.io/x@sha256:ab"), ("MIKAN_NODE_JOIN", "mk1.join")] {
+        for (k, v) in [("SCILLA_MODE", "node"), ("SCILLA_IMAGE", "ghcr.io/x@sha256:ab"), ("SCILLA_NODE_JOIN", "mk1.join")] {
             node.set(k, v).unwrap();
         }
         assert!(ensure_compose(&d, &node).unwrap().is_some());
@@ -775,16 +775,16 @@ services:
         let config = panel_config(&d);
         let text = compose_text(&config).unwrap();
         assert!(!text.contains("${"), "{text}");
-        assert!(text.contains("image: ghcr.io/x@sha256:ab") && text.contains("MIKAN_PANEL_LISTEN: 0.0.0.0:2053"));
-        assert!(text.contains("MIKAN_ACME_LISTEN: \":80\"") && text.contains("MIKAN_SUPPORT_ACCESS: \"on\""), "defaults: {text}");
+        assert!(text.contains("image: ghcr.io/x@sha256:ab") && text.contains("SCILLA_PANEL_LISTEN: 0.0.0.0:2053"));
+        assert!(text.contains("SCILLA_ACME_LISTEN: \":80\"") && text.contains("SCILLA_SUPPORT_ACCESS: \"on\""), "defaults: {text}");
         assert!(!text.contains("pw123456"), "a secret in compose.yaml");
         assert!(
-            text.contains("MIKAN_DATABASE_URL_FILE: /run/secrets/database_url")
+            text.contains("SCILLA_DATABASE_URL_FILE: /run/secrets/database_url")
                 && text.contains("POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password")
         );
         assert!(text.contains("database_url: {file: ./secrets/database_url}"));
         let mut bare = Config::new(&d);
-        bare.set("MIKAN_IMAGE", "x").unwrap();
+        bare.set("SCILLA_IMAGE", "x").unwrap();
         assert!(compose_text(&bare).unwrap_err().to_string().contains("PANEL_PORT"));
         fs::remove_dir_all(&d).unwrap();
     }

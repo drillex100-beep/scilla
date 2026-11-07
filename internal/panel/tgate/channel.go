@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/tgapi"
+	"scilla/internal/tgapi"
 )
 
 // memberTTL: how long an account seen in the channel is not asked about again. Leaving the

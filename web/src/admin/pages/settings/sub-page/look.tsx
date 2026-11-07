@@ -39,7 +39,7 @@ export function LookSection({ draft, setDraft, set, errors, accentMissing, backg
   const [themesOpen, setThemesOpen] = useState(false);
   const [themeRows, perRow] = useTilesPerRow();
   // The four that follow the page's light/dark mode, then every other panel theme as it is.
-  const moded = MODE_PALETTES.map((id) => ({ id, label: names[id], theme: id === "mikan" && look.mode === "dark" ? ("midnight" as const) : id }));
+  const moded = MODE_PALETTES.map((id) => ({ id, label: names[id], theme: id === "scilla" && look.mode === "dark" ? ("midnight" as const) : id }));
   const fixed = THEMES.filter((id) => !followsMode(id) && id !== "midnight").map((id) => ({ id, label: names[id], theme: id }));
   const fonts: { id: Look["font"]; family: string }[] = [
     { id: "default", family: '"Unbounded Variable", "Onest Variable", system-ui, sans-serif' },
@@ -149,14 +149,14 @@ export function LookSection({ draft, setDraft, set, errors, accentMissing, backg
         ) : null}
         {bg.kind === "gradient" ? (
           <Field label={t("settings.page.bgAngle", { n: bg.angle })} htmlFor="sp-bg-angle">
-            <input id="sp-bg-angle" type="range" min={0} max={359} step={1} value={bg.angle} onChange={(e) => setBg({ angle: Number(e.target.value) })} className="w-full accent-[var(--mikan-500)]" />
+            <input id="sp-bg-angle" type="range" min={0} max={359} step={1} value={bg.angle} onChange={(e) => setBg({ angle: Number(e.target.value) })} className="w-full accent-[var(--scilla-500)]" />
           </Field>
         ) : null}
         {bg.kind === "image" ? (
           <>
             <ImageField name="background" asset={background} label={t("settings.page.bgImage")} hint={t("settings.page.bgImageHint")} />
             <Field label={t("settings.page.bgDim", { n: bg.dim })} htmlFor="sp-bg-dim" hint={t("settings.page.bgDimHint")}>
-              <input id="sp-bg-dim" type="range" min={0} max={80} step={5} value={bg.dim} onChange={(e) => setBg({ dim: Number(e.target.value) })} className="w-full accent-[var(--mikan-500)]" />
+              <input id="sp-bg-dim" type="range" min={0} max={80} step={5} value={bg.dim} onChange={(e) => setBg({ dim: Number(e.target.value) })} className="w-full accent-[var(--scilla-500)]" />
             </Field>
           </>
         ) : null}

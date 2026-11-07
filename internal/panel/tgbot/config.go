@@ -7,8 +7,8 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"mikan/internal/textutil"
-	"mikan/internal/tgapi"
+	"scilla/internal/textutil"
+	"scilla/internal/tgapi"
 )
 
 // Config is what the admin sets up in the panel: the menu, the texts and which

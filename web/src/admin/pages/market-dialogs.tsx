@@ -15,7 +15,7 @@ import { ADDON_ID_RE, PERMISSIONS, actsAsAdmin, installMarket, installPayment, s
 // The dialogs of the protocol 2 addons, shared by both tabs of the addons page: approving
 // what an addon may do, its details, and an addon of the admin's own. Each one gets exactly
 // the permissions the admin approved; an addon of a source, of the registry of community addons
-// or of the admin's own (a process on the server) is code mikan has not seen, and says so
+// or of the admin's own (a process on the server) is code scilla has not seen, and says so
 // everywhere: an install or an update of one waits for the admin to tick that they take the risk.
 
 /**

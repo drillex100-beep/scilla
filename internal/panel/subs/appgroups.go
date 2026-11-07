@@ -7,30 +7,30 @@ import (
 	"net/http"
 	"strings"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/store/db"
 )
 
-// The server groups as the Mikan app (getmikan/MikanApp) shows them: the app asks with
-// "groups" in X-Mikan-Features, and the answer carries X-Mikan-Groups beside the profile.
+// The server groups as the Scilla app (getmikan/ScillaApp) shows them: the app asks with
+// "groups" in X-Scilla-Features, and the answer carries X-Scilla-Groups beside the profile.
 // An app that does not ask gets the same subscription as before, header for header: the
 // groups never become fake servers or proxy groups that other apps would show.
 
 const (
-	// FeaturesHeader lists, comma-separated, the extensions the Mikan app shows.
-	FeaturesHeader = "X-Mikan-Features"
+	// FeaturesHeader lists, comma-separated, the extensions the Scilla app shows.
+	FeaturesHeader = "X-Scilla-Features"
 	// GroupsHeader is "base64:" and the JSON of AppGroups.
-	GroupsHeader = "X-Mikan-Groups"
+	GroupsHeader = "X-Scilla-Groups"
 
 	featureGroups = "groups"
-	// appGroupsMax is the most X-Mikan-Groups takes. A reverse proxy in front of the panel
+	// appGroupsMax is the most X-Scilla-Groups takes. A reverse proxy in front of the panel
 	// fails an answer whose headers outgrow its buffer (nginx: 4 or 8 KB for all of them by
 	// default), so past this the server names go and the groups' traffic stays.
 	appGroupsMax = 1536
 )
 
-// AppGroups is the JSON of X-Mikan-Groups. V changes only when an app that reads version 1
+// AppGroups is the JSON of X-Scilla-Groups. V changes only when an app that reads version 1
 // would read the new one wrong; fields are only ever added.
 type AppGroups struct {
 	V int `json:"v"`
@@ -61,7 +61,7 @@ type AppGroup struct {
 	Proxies []string `json:"proxies"`
 }
 
-// wantsFeature says whether the app lists f in X-Mikan-Features.
+// wantsFeature says whether the app lists f in X-Scilla-Features.
 func wantsFeature(h http.Header, f string) bool {
 	for _, v := range h.Values(FeaturesHeader) {
 		for _, x := range strings.Split(v, ",") {
@@ -73,16 +73,16 @@ func wantsFeature(h http.Header, f string) bool {
 	return false
 }
 
-// mikanGroups puts X-Mikan-Groups on the answer to a Mikan app that asked for it: the groups
+// scillaGroups puts X-Scilla-Groups on the answer to a Scilla app that asked for it: the groups
 // of u's subscription prof, whose servers in the profile are ps.
-func (h *Handler) mikanGroups(w http.ResponseWriter, r *http.Request, u db.User, prof Profile, ps []proxy) {
+func (h *Handler) scillaGroups(w http.ResponseWriter, r *http.Request, u db.User, prof Profile, ps []proxy) {
 	if !wantsFeature(r.Header, featureGroups) {
 		return
 	}
 	g, err := h.appGroups(r.Context(), u, prof, ps)
 	if err != nil {
 		// The profile still goes out: the app shows the groups of its last fetch.
-		h.warn("mikan_groups", "subscription: the server groups for the Mikan app are not read", "err", err)
+		h.warn("scilla_groups", "subscription: the server groups for the Scilla app are not read", "err", err)
 		return
 	}
 	if v := g.header(); v != "" {
@@ -157,7 +157,7 @@ func appGroupsOf(pools []db.TrafficPool, rows []db.UserPool, left domain.GrantsL
 	return out
 }
 
-// header is the X-Mikan-Groups value of g; "" without groups. Past appGroupsMax the server
+// header is the X-Scilla-Groups value of g; "" without groups. Past appGroupsMax the server
 // names go, and the groups that are names alone (on the main traffic) with them; then the
 // last groups, should a great many still not fit.
 func (g AppGroups) header() string {

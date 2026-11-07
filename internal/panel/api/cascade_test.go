@@ -3,8 +3,8 @@ package api
 import (
 	"testing"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/nodesync"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/nodesync"
 )
 
 // The cascade page reads the relay's listener against the port the node runs it on: a

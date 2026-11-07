@@ -1,12 +1,12 @@
-//! `mikan support <code>`: the way to show support a server whose panel is down or whose node
+//! `scilla support <code>`: the way to show support a server whose panel is down or whose node
 //! the panel cannot reach, when the usual way, the panel's "Access for support", does not
 //! work. The admin gets a code from the ticket, runs this one command, and the server sends
-//! the support desk what `mikan doctor`, `mikan status` and the last lines of the
+//! the support desk what `scilla doctor`, `scilla status` and the last lines of the
 //! containers' logs say, in one JSON document:
 //!
 //!   {"code", "kind": "panel" | "node", "version", "doctor": {...}, "status": "...", "logs": "..."}
 //!
-//! `doctor` is the report of `mikan doctor --json`; `status` and `logs` are text. The code
+//! `doctor` is the report of `scilla doctor --json`; `status` and `logs` are text. The code
 //! is the ticket's, one-time and short-lived on the other side. Everything that leaves is
 //! cut of secrets (redact.rs, and the values of the secret keys of .env wherever they
 //! stand); .env itself, keys and certificates are not read for it and are never sent.
@@ -25,7 +25,7 @@ use crate::{docker, redact};
 const SUPPORT_URL: &str = "https://vpn.aurausa.me:8790/support/report";
 
 /// Overrides SUPPORT_URL (a self-hosted desk, a test).
-const URL_ENV: &str = "MIKAN_SUPPORT_URL";
+const URL_ENV: &str = "SCILLA_SUPPORT_URL";
 
 /// How many lines of the containers' log are asked for, and the most of them that is sent.
 const LOG_LINES: usize = 300;
@@ -76,7 +76,7 @@ pub fn run(code: &str, dry_run: bool) -> Result<()> {
         200..=299 => crate::out("Sent. Tell support in the ticket that the report is in; nothing else is needed from you."),
         404 | 410 => bail!("support does not know this code, or it has expired (a code lives 24 hours): ask for a new one in the ticket"),
         429 => bail!("support took too many reports from this server: wait a few minutes and run the command once more"),
-        status => bail!("support answered HTTP {status}: send the output of mikan doctor and mikan status in the ticket by hand"),
+        status => bail!("support answered HTTP {status}: send the output of scilla doctor and scilla status in the ticket by hand"),
     }
     Ok(())
 }
@@ -156,13 +156,13 @@ fn send(url: &str, payload: &Payload) -> Result<u16> {
     let agent: ureq::Agent = ureq::Agent::config_builder()
         .timeout_global(Some(Duration::from_secs(60)))
         .http_status_as_error(false)
-        .user_agent(format!("mikan-installer/{}", crate::version()))
+        .user_agent(format!("scilla-installer/{}", crate::version()))
         .build()
         .into();
     let resp = agent
         .post(url)
         .send_json(payload)
-        .with_context(|| format!("cannot reach {url}: send the output of mikan doctor and mikan status in the ticket by hand"))?;
+        .with_context(|| format!("cannot reach {url}: send the output of scilla doctor and scilla status in the ticket by hand"))?;
     Ok(resp.status().as_u16())
 }
 
@@ -184,7 +184,7 @@ mod tests {
             kind: "panel",
             errors: 1,
             warnings: 0,
-            items: vec![JsonItem { level: "error", label: "Panel".into(), detail: detail.into(), fix: "mikan restart".into() }],
+            items: vec![JsonItem { level: "error", label: "Panel".into(), detail: detail.into(), fix: "scilla restart".into() }],
         }
     }
 
@@ -214,14 +214,14 @@ mod tests {
     #[test]
     fn the_report_has_the_shape_the_desk_reads() {
         let p =
-            assemble("ABCD-1234", true, "0.5.1.1", doctor("down"), &["mikan 0.5.1.1, node".into()], Some("node  | started\n".into()), &[]);
+            assemble("ABCD-1234", true, "0.5.1.1", doctor("down"), &["scilla 0.5.1.1, node".into()], Some("node  | started\n".into()), &[]);
         let v = serde_json::to_value(&p).unwrap();
         let mut keys: Vec<&str> = v.as_object().unwrap().keys().map(String::as_str).collect();
         keys.sort_unstable();
         assert_eq!(keys, ["code", "doctor", "kind", "logs", "status", "version"]);
         assert_eq!((v["code"].as_str(), v["kind"].as_str(), v["version"].as_str()), (Some("ABCD-1234"), Some("node"), Some("0.5.1.1")));
         assert_eq!(v["doctor"]["items"][0]["label"], "Panel");
-        assert_eq!(v["status"], "mikan 0.5.1.1, node");
+        assert_eq!(v["status"], "scilla 0.5.1.1, node");
         assert_eq!(v["logs"], "node  | started");
         assert_eq!(assemble("c", false, "x", doctor(""), &[], None, &[]).kind, "panel");
     }
@@ -238,7 +238,7 @@ mod tests {
              node   | joined with {env_secret} as the key\n\
              node   | Authorization: Bearer {SECRET}\n"
         );
-        let status = vec!["mikan 0.5.1.1, node".to_owned(), format!("note: {env_secret}")];
+        let status = vec!["scilla 0.5.1.1, node".to_owned(), format!("note: {env_secret}")];
         let p = assemble(
             "ABCD-1234",
             true,
@@ -253,7 +253,7 @@ mod tests {
         for (i, s) in [SECRET, "hunter2hunter2", "u@h", env_secret].into_iter().enumerate() {
             assert!(!all.contains(s), "secret {i} leaves");
         }
-        assert!(all.contains("level=WARN") && all.contains("/api/v1/users") && all.contains("mikan restart"), "too much is gone: {all}");
+        assert!(all.contains("level=WARN") && all.contains("/api/v1/users") && all.contains("scilla restart"), "too much is gone: {all}");
     }
 
     // The log keeps its end, from a whole line; the status keeps its start; both are bounded.
@@ -302,7 +302,7 @@ mod tests {
             sock.write_all(b"HTTP/1.1 410 Gone\r\nContent-Length: 0\r\nConnection: close\r\n\r\n").unwrap();
             raw
         });
-        let p = assemble("ABCD-1234", false, "0.5.1.1", doctor("down"), &["mikan 0.5.1.1, panel".into()], Some("panel | hi".into()), &[]);
+        let p = assemble("ABCD-1234", false, "0.5.1.1", doctor("down"), &["scilla 0.5.1.1, panel".into()], Some("panel | hi".into()), &[]);
         let status = send(&format!("http://{addr}/support/report"), &p).unwrap();
         assert_eq!(status, 410, "the answer's status is returned, not turned into an error");
         let raw = String::from_utf8(server.join().unwrap()).unwrap();

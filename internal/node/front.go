@@ -11,8 +11,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"mikan/internal/frontpage"
-	"mikan/internal/nodeapi"
+	"scilla/internal/frontpage"
+	"scilla/internal/nodeapi"
 )
 
 // The front page: what a stranger who opens the node's own domain, or its address with no

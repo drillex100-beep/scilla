@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/panel/server"
-	"mikan/internal/panel/subpage"
+	"scilla/internal/panel/server"
+	"scilla/internal/panel/subpage"
 )
 
 // headPage is a page that takes extra markup for its <head> (server.SPA).

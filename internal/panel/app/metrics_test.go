@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
+	"scilla/internal/panel/domain"
 )
 
 // Prometheus scrapes with a read key; the text is the exposition format, line by line.
@@ -29,12 +29,12 @@ func TestMetricsForPrometheus(t *testing.T) {
 	}
 	text := string(body)
 	for _, want := range []string{
-		`mikan_info{version="`,
-		`mikan_users{state="active"} 1`,
-		`mikan_users{state="disabled"} 0`,
-		`mikan_traffic_bytes_total{direction="up"} 0`,
-		"# TYPE mikan_traffic_bytes_total counter",
-		"# TYPE mikan_node_up gauge",
+		`scilla_info{version="`,
+		`scilla_users{state="active"} 1`,
+		`scilla_users{state="disabled"} 0`,
+		`scilla_traffic_bytes_total{direction="up"} 0`,
+		"# TYPE scilla_traffic_bytes_total counter",
+		"# TYPE scilla_node_up gauge",
 		"go_goroutines ",
 	} {
 		if !strings.Contains(text, want) {
@@ -69,7 +69,7 @@ func TestMetricsAreKeptAFewSeconds(t *testing.T) {
 		_, body := k.do(http.MethodGet, k.api+"/metrics", nil, map[string]string{"Authorization": "Bearer " + k.read})
 		return string(body)
 	}
-	if !strings.Contains(scrape(), `mikan_users{state="active"} 0`) {
+	if !strings.Contains(scrape(), `scilla_users{state="active"} 0`) {
 		t.Fatal("no users yet")
 	}
 	clock := func() time.Time { return k.now }
@@ -77,11 +77,11 @@ func TestMetricsAreKeptAFewSeconds(t *testing.T) {
 	if _, err := domain.NewUsers(k.st, domain.NewPool(k.st, clock), noChanges{}, clock).Create(ctx, domain.CreateInput{Name: "a", TariffID: tariffs[1].ID}); err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(scrape(), `mikan_users{state="active"} 0`) {
+	if !strings.Contains(scrape(), `scilla_users{state="active"} 0`) {
 		t.Fatal("a scrape right after another is made again")
 	}
 	k.now = k.now.Add(6 * time.Second)
-	if !strings.Contains(scrape(), `mikan_users{state="active"} 1`) {
+	if !strings.Contains(scrape(), `scilla_users{state="active"} 1`) {
 		t.Fatal("an old text is served past its time")
 	}
 }

@@ -8,9 +8,9 @@ import (
 
 	"go.yaml.in/yaml/v3"
 
-	"mikan/internal/panel/presets"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/proto"
+	"scilla/internal/panel/presets"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/proto"
 )
 
 func TestFormat(t *testing.T) {

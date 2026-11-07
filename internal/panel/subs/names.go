@@ -5,7 +5,7 @@ import (
 	"errors"
 	"strings"
 
-	"mikan/internal/panel/settings"
+	"scilla/internal/panel/settings"
 )
 
 // LoadGroups is the subscription's group names as saved, the defaults filled in for the

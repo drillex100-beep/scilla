@@ -11,16 +11,16 @@ const pages = {
 	ru: {
 		file: new URL('changelog.md', docs),
 		title: 'Список изменений',
-		description: 'Что менялось в mikan от версии к версии.',
+		description: 'Что менялось в Scilla от версии к версии.',
 		intro:
-			'Тот же список, что панель показывает в «Настройки → Основное → Обновления». Образы и установщик каждой версии лежат в [релизах на GitHub](https://github.com/Miroshka000/mikan/releases).',
+			'Тот же список, что панель показывает в «Настройки → Основное → Обновления». Образы и установщик каждой версии лежат в [релизах на GitHub](https://github.com/drillex100-beep/scilla/releases).',
 	},
 	en: {
 		file: new URL('en/changelog.md', docs),
 		title: 'Changelog',
-		description: 'What changed in mikan from release to release.',
+		description: 'What changed in Scilla from release to release.',
 		intro:
-			'The same list the panel shows in Settings → General → Updates. Images and the installer of every version are in the [GitHub releases](https://github.com/Miroshka000/mikan/releases).',
+			'The same list the panel shows in Settings → General → Updates. Images and the installer of every version are in the [GitHub releases](https://github.com/drillex100-beep/scilla/releases).',
 	},
 };
 
@@ -78,7 +78,7 @@ function render() {
 /** @returns {import('astro').AstroIntegration} */
 export default function changelog() {
 	return {
-		name: 'mikan-changelog',
+		name: 'scilla-changelog',
 		hooks: {
 			'astro:config:setup': ({ addWatchFile }) => {
 				render();

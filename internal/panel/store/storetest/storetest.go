@@ -1,5 +1,5 @@
 // Package storetest opens stores for tests, each in a PostgreSQL schema of its own in the
-// disposable database MIKAN_TEST_DATABASE_URL names. It stays out of the panel binary.
+// disposable database SCILLA_TEST_DATABASE_URL names. It stays out of the panel binary.
 package storetest
 
 import (
@@ -14,15 +14,15 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	"mikan/internal/panel/store"
+	"scilla/internal/panel/store"
 )
 
 // Open gives each fixture its own PostgreSQL schema, dropped when the store closes.
 // Reopening the same directory uses the same schema, like the old file-backed fixtures did.
 func Open(ctx context.Context, dataDir string) (*store.Store, error) {
-	dsn := os.Getenv("MIKAN_TEST_DATABASE_URL")
+	dsn := os.Getenv("SCILLA_TEST_DATABASE_URL")
 	if dsn == "" {
-		return nil, errors.New("tests require MIKAN_TEST_DATABASE_URL pointing to a disposable PostgreSQL database")
+		return nil, errors.New("tests require SCILLA_TEST_DATABASE_URL pointing to a disposable PostgreSQL database")
 	}
 	if err := os.MkdirAll(dataDir, 0o700); err != nil {
 		return nil, err
@@ -44,7 +44,7 @@ func Open(ctx context.Context, dataDir string) (*store.Store, error) {
 func newSchemaName() string {
 	var token [12]byte
 	rand.Read(token[:])
-	return "mikan_test_" + hex.EncodeToString(token[:])
+	return "scilla_test_" + hex.EncodeToString(token[:])
 }
 
 // openSchema opens schema in dsn's database, creating it first; it is dropped when the

@@ -6,11 +6,11 @@ import (
 	"strconv"
 	"testing"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
-	"mikan/internal/scan"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
+	"scilla/internal/scan"
 )
 
 func newDeps(t *testing.T, values map[string]any) Deps {

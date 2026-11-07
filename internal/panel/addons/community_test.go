@@ -15,7 +15,7 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/release"
+	"scilla/internal/release"
 )
 
 func communityDoc(addons []map[string]any, revoked []map[string]any) []byte {

@@ -7,7 +7,7 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/store/db"
 )
 
 // titleVars are the variables the profile title and the announcement may hold, the same way
@@ -28,14 +28,14 @@ func TestTitleValuesHoldTitleVars(t *testing.T) {
 
 func TestProfileTitle(t *testing.T) {
 	now := time.Date(2026, 10, 4, 12, 0, 0, 0, time.UTC)
-	cfg := Config{Brand: "Mikan"}
+	cfg := Config{Brand: "Scilla"}
 	for _, tc := range []struct{ title, name, want string }{
-		{"", "Вася", "Mikan"},
+		{"", "Вася", "Scilla"},
 		{"{name}", "Вася", "Вася"},
-		{"{name}", "", "Mikan"},
-		{"{name}", "   ", "Mikan"},
-		{" {name} ", "", "Mikan"},
-		{"{brand} {name}", "", "Mikan"},
+		{"{name}", "", "Scilla"},
+		{"{name}", "   ", "Scilla"},
+		{" {name} ", "", "Scilla"},
+		{"{brand} {name}", "", "Scilla"},
 		{"{nope}", "Вася", "{nope}"},
 	} {
 		cfg.Title = tc.title
@@ -50,9 +50,9 @@ func TestFillTitle(t *testing.T) {
 	u := db.User{Name: "Вася {brand}", UsedUp: 1 << 30, UsedDown: 4 << 30,
 		ExpiresAt:    sql.NullInt64{Int64: now.Add(36 * time.Hour).Unix(), Valid: true},
 		TrafficLimit: sql.NullInt64{Int64: 50 << 30, Valid: true}}
-	vars := titleValues(u, 10<<30, -1, Config{Brand: "Mikan"}, now)
+	vars := titleValues(u, 10<<30, -1, Config{Brand: "Scilla"}, now)
 	got := fillTitle("{brand} · {name} · до {date} ({days} дн.) · {used}/{total}, осталось {left} {nope}", vars)
-	want := "Mikan · Вася {brand} · до 06.10.2026 (2 дн.) · 5 ГБ/60 ГБ, осталось 55 ГБ {nope}"
+	want := "Scilla · Вася {brand} · до 06.10.2026 (2 дн.) · 5 ГБ/60 ГБ, осталось 55 ГБ {nope}"
 	if got != want {
 		t.Fatalf("got  %q\nwant %q", got, want)
 	}
@@ -72,11 +72,11 @@ func TestFillTitle(t *testing.T) {
 
 func TestFileName(t *testing.T) {
 	for in, want := range map[string]string{
-		"Mikan · Вася":   "Mikan · Вася",
+		"Scilla · Вася":  "Scilla · Вася",
 		"VPN/RU: 30 дн.": "VPN RU  30 дн.",
 		`a\b*c?"d"<e>|`:  "a b c  d  e",
-		" \t\n":          "mikan",
-		"":               "mikan",
+		" \t\n":          "scilla",
+		"":               "scilla",
 	} {
 		if got := fileName(in); got != want {
 			t.Errorf("fileName(%q) = %q, want %q", in, got, want)

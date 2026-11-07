@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // refusal is the type of every error this package answers a buyer's code with. A caller that has

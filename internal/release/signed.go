@@ -33,9 +33,9 @@ func VerifyAny(data []byte, sig string, keys ...ed25519.PublicKey) error {
 // for a release, whoever holds which key. It is published next to the file as SigSuffix.
 const (
 	// CatalogContext is the official catalog's (CatalogKey).
-	CatalogContext = "mikan catalog v1\n"
+	CatalogContext = "scilla catalog v1\n"
 	// CommunityContext is the community registry's index (CommunityKey).
-	CommunityContext = "mikan community v1\n"
+	CommunityContext = "scilla community v1\n"
 	// SigSuffix names the signature in a context next to its file; a release's own (".sig") is
 	// over the bytes alone.
 	SigSuffix = ".sig2"

@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"testing"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/store/db"
 )
 
 func checkInbound(name, port, listen, cfg string, on bool) db.Inbound {
@@ -26,8 +26,8 @@ func TestNodeTCPPorts(t *testing.T) {
 	ins := []db.Inbound{
 		checkInbound("open", "8443", "", `{"type":"vless","reality-config":{"server-names":["a.example"]}}`, true),
 		checkInbound("nginx", "444", "127.0.0.1", `{"type":"vless","xhttp-config":{"path":"/x"}}`, true),
-		checkInbound("reality", "9443", "", `{"type":"vless","reality-config":{"server-names":["b.example"]},"mikan":{"sni443":true}}`, true),
-		checkInbound("tls", "9444", "", `{"type":"trojan","mikan":{"tls":"node","sni443":true}}`, true),
+		checkInbound("reality", "9443", "", `{"type":"vless","reality-config":{"server-names":["b.example"]},"scilla":{"sni443":true}}`, true),
+		checkInbound("tls", "9444", "", `{"type":"trojan","scilla":{"tls":"node","sni443":true}}`, true),
 		checkInbound("hy2", "20000-20100", "", `{"type":"hysteria2"}`, true),
 		checkInbound("off", "7443", "", `{"type":"vless"}`, false),
 	}

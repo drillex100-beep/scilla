@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/store/db"
-	"mikan/internal/proto"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/proto"
 )
 
 // The golden tests pin what a subscription looks like byte for byte: the same users, nodes
@@ -80,7 +80,7 @@ func goldenInbounds(node, firstID int64, more bool) []db.Inbound {
 		goldenInbound(firstID, node, "vless_reality_xhttp", "VLESS XHTTP", "443", proto.Template{"type": "vless", "xhttp-config": map[string]any{"path": "/golden-path", "mode": "stream-one"}, "reality-config": reality("www.example.com")}),
 		goldenInbound(firstID+1, node, "hysteria2", "Hysteria2", "443", proto.Template{"type": "hysteria2", "alpn": []any{"h3"}, "obfs": proto.ObfsSalamander, "obfs-password": "golden-obfs-password"}),
 		goldenInbound(firstID+2, node, "tuic_v5", "TUIC", "8443", proto.Template{"type": "tuic", "alpn": []any{"h3"}, "congestion-controller": "bbr", "max-idle-time": 15000, "authentication-timeout": 1000}),
-		goldenInbound(firstID+3, node, "vless_reality_vision", "VLESS Vision", "8443", proto.Template{"type": "vless", "mikan": map[string]any{"flow": "xtls-rprx-vision"}, "reality-config": reality("www.example.com")}),
+		goldenInbound(firstID+3, node, "vless_reality_vision", "VLESS Vision", "8443", proto.Template{"type": "vless", "scilla": map[string]any{"flow": "xtls-rprx-vision"}, "reality-config": reality("www.example.com")}),
 	}
 	if more {
 		out = append(out,

@@ -12,11 +12,11 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
 )
 
 // priceTrial turns on the trial on the seeded trial tariff (3 days) at ⭐ 1 or 1 ₽, with
@@ -609,7 +609,7 @@ func TestPaidTrialThroughAdapterIsRefunded(t *testing.T) {
 	if len(fa.refunds) != 1 || fa.refunds[0] != p.ExternalID.String {
 		t.Fatalf("refunds %v", fa.refunds)
 	}
-	if len(fa.refundCalls) != 1 || fa.refundCalls[0] != "mikan-trial-"+strconv.FormatInt(p.ID, 10) {
+	if len(fa.refundCalls) != 1 || fa.refundCalls[0] != "scilla-trial-"+strconv.FormatInt(p.ID, 10) {
 		t.Fatalf("refund keys %v", fa.refundCalls)
 	}
 	if e.users() != 0 {

@@ -8,9 +8,9 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/targets"
-	"mikan/internal/scan"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/targets"
+	"scilla/internal/scan"
 )
 
 type checkTargetInput struct {

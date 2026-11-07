@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"mikan/internal/fsutil"
+	"scilla/internal/fsutil"
 )
 
 // The node's API for its panel alone (DesiredState.APIAllow): the node says which networks
@@ -20,7 +20,7 @@ import (
 //	apilock/seen         {"at": <unix seconds>, "from": ["203.0.113.5"]}: the node's, when
 //	                     the panel last reached the API and from where
 //	apilock/status.json  the host's: whether the rule is in and why not
-//	apilock/lifted       the host's: `mikan api-lockdown off` was run on the server, the
+//	apilock/lifted       the host's: `scilla api-lockdown off` was run on the server, the
 //	                     node opens its listener too
 const (
 	apiLockDir    = "apilock"
@@ -40,7 +40,7 @@ type APILockSeen struct {
 
 // APILockStatus is what the host says of the rule: On while it is in the firewall, Error
 // why it could not be put in or taken out, Lifted when it went because the panel stayed
-// away (or `mikan api-lockdown off`). At is when the host looked, in unix seconds.
+// away (or `scilla api-lockdown off`). At is when the host looked, in unix seconds.
 type APILockStatus struct {
 	On     bool   `json:"on"`
 	OK     bool   `json:"ok"`

@@ -140,7 +140,7 @@
             ]
           }
         ],
-        "tag": "list-mikan-telegram-ip",
+        "tag": "list-scilla-telegram-ip",
         "type": "inline"
       },
       {
@@ -158,7 +158,7 @@
             ]
           }
         ],
-        "tag": "list-mikan-ai",
+        "tag": "list-scilla-ai",
         "type": "inline"
       },
       {
@@ -169,7 +169,7 @@
             ]
           }
         ],
-        "tag": "list-mikan-gemini",
+        "tag": "list-scilla-gemini",
         "type": "inline"
       },
       {
@@ -180,7 +180,7 @@
             ]
           }
         ],
-        "tag": "list-mikan-torrent-apps",
+        "tag": "list-scilla-torrent-apps",
         "type": "inline"
       },
       {
@@ -221,7 +221,7 @@
             ]
           }
         ],
-        "tag": "list-mikan-ru-apps",
+        "tag": "list-scilla-ru-apps",
         "type": "inline"
       },
       {
@@ -232,7 +232,7 @@
             ]
           }
         ],
-        "tag": "list-mikan-ru-pc",
+        "tag": "list-scilla-ru-pc",
         "type": "inline"
       },
       {
@@ -244,7 +244,7 @@
             ]
           }
         ],
-        "tag": "list-mikan-ru-sites",
+        "tag": "list-scilla-ru-sites",
         "type": "inline"
       },
       {
@@ -255,7 +255,7 @@
             ]
           }
         ],
-        "tag": "list-mikan-ru-keywords",
+        "tag": "list-scilla-ru-keywords",
         "type": "inline"
       },
       {
@@ -266,7 +266,7 @@
             ]
           }
         ],
-        "tag": "list-mikan-ru-core",
+        "tag": "list-scilla-ru-core",
         "type": "inline"
       },
       {
@@ -282,7 +282,7 @@
             ]
           }
         ],
-        "tag": "list-mikan-blocked",
+        "tag": "list-scilla-blocked",
         "type": "inline"
       },
       {
@@ -293,7 +293,7 @@
             ]
           }
         ],
-        "tag": "list-mikan-blocked-apps",
+        "tag": "list-scilla-blocked-apps",
         "type": "inline"
       }
     ],
@@ -395,13 +395,13 @@
       {
         "outbound": "Прокси",
         "rule_set": [
-          "list-mikan-telegram-ip"
+          "list-scilla-telegram-ip"
         ]
       },
       {
         "action": "reject",
         "rule_set": [
-          "list-mikan-telegram-ip"
+          "list-scilla-telegram-ip"
         ]
       },
       {
@@ -419,31 +419,31 @@
       {
         "outbound": "Прокси",
         "rule_set": [
-          "list-mikan-ai"
+          "list-scilla-ai"
         ]
       },
       {
         "action": "reject",
         "rule_set": [
-          "list-mikan-ai"
+          "list-scilla-ai"
         ]
       },
       {
         "outbound": "Прокси",
         "rule_set": [
-          "list-mikan-gemini"
+          "list-scilla-gemini"
         ]
       },
       {
         "action": "reject",
         "rule_set": [
-          "list-mikan-gemini"
+          "list-scilla-gemini"
         ]
       },
       {
         "outbound": "direct",
         "rule_set": [
-          "list-mikan-torrent-apps"
+          "list-scilla-torrent-apps"
         ]
       },
       {
@@ -473,55 +473,55 @@
       {
         "outbound": "direct",
         "rule_set": [
-          "list-mikan-ru-apps"
+          "list-scilla-ru-apps"
         ]
       },
       {
         "outbound": "direct",
         "rule_set": [
-          "list-mikan-ru-pc"
+          "list-scilla-ru-pc"
         ]
       },
       {
         "outbound": "direct",
         "rule_set": [
-          "list-mikan-ru-sites"
+          "list-scilla-ru-sites"
         ]
       },
       {
         "outbound": "direct",
         "rule_set": [
-          "list-mikan-ru-keywords"
+          "list-scilla-ru-keywords"
         ]
       },
       {
         "outbound": "direct",
         "rule_set": [
-          "list-mikan-ru-core"
+          "list-scilla-ru-core"
         ]
       },
       {
         "outbound": "Прокси",
         "rule_set": [
-          "list-mikan-blocked"
+          "list-scilla-blocked"
         ]
       },
       {
         "action": "reject",
         "rule_set": [
-          "list-mikan-blocked"
+          "list-scilla-blocked"
         ]
       },
       {
         "outbound": "Прокси",
         "rule_set": [
-          "list-mikan-blocked-apps"
+          "list-scilla-blocked-apps"
         ]
       },
       {
         "action": "reject",
         "rule_set": [
-          "list-mikan-blocked-apps"
+          "list-scilla-blocked-apps"
         ]
       }
     ]

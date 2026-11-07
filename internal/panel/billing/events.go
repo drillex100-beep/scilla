@@ -5,9 +5,9 @@ import (
 	"strconv"
 	"time"
 
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/events/feed"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/events/feed"
+	"scilla/internal/panel/store/db"
 )
 
 // emitPayment writes a payment's event in the caller's transaction, once per payment and type.

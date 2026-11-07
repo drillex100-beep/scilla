@@ -6,12 +6,12 @@ import (
 	"errors"
 	"strconv"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/promo"
-	"mikan/internal/panel/secure"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/promo"
+	"scilla/internal/panel/secure"
+	"scilla/internal/panel/store/db"
 )
 
 // KindTrial is a payment for the trial when the admin puts a price on it.
@@ -303,7 +303,7 @@ func (s *Service) refundTrial(ctx context.Context, p db.Payment) error {
 	case !cur.ExternalID.Valid || cur.ExternalID.String == "":
 		refundErr = errors.New("the payment carries no provider id to refund")
 	default:
-		refundErr = s.refundCharge(ctx, cur, cur.ExternalID.String, "mikan-trial-"+strconv.FormatInt(cur.ID, 10))
+		refundErr = s.refundCharge(ctx, cur, cur.ExternalID.String, "scilla-trial-"+strconv.FormatInt(cur.ID, 10))
 	}
 	if refundErr != nil {
 		s.d.Log.Error("billing: refund of a trial that cannot be given", "payment", cur.ID, "provider", cur.Provider, "err", refundErr)

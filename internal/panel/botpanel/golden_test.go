@@ -10,11 +10,11 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/billing"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/tgbot"
+	"scilla/internal/panel/billing"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/tgbot"
 )
 
 // goldenDir holds what crossed the bot's RPC before the bot's side and the panel's were
@@ -118,7 +118,7 @@ func TestWireGoldens(t *testing.T) {
 		"PackageOffer": billing.PackageOffer{Package: pack, Pool: "WL", Stars: 30, Rub: 9900}.Model(),
 		"DeviceOffer":  billing.DeviceOffer{Limit: 3, Extra: 1, Max: 2, Stars: 40, Rub: 4900, Keep: true, Expiry: nullInt(1802592000)}.Model(),
 		"TrialOffer":   billing.TrialOffer{Tariff: tariff, Stars: 10, Rub: 9900}.Model(),
-		"FreeOffer":    billing.FreeOffer{Tariff: tariff, Channel: "@mikan"}.Model(),
+		"FreeOffer":    billing.FreeOffer{Tariff: tariff, Channel: "@scilla"}.Model(),
 		// The rules of the subscriber's own unbinding and new link.
 		"UnbindState": domain.UnbindState{Rules: domain.UnbindRules{Off: true, Limit: 2, Days: 30, ReturnHours: domain.ReturnNever}, Used: 1,
 			Next: at}.Model(),

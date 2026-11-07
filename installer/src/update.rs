@@ -1,4 +1,4 @@
-//! `mikan update`: to the latest release, or to an image the admin names, with a backup
+//! `scilla update`: to the latest release, or to an image the admin names, with a backup
 //! first. A panel already on PostgreSQL goes back to its previous image when the new one
 //! cannot migrate the database, or does not start on an unchanged schema; otherwise it
 //! stays stopped with its data preserved. Nodes always go back. The daily timer, the
@@ -23,7 +23,7 @@
 //! release index of its channel, never to an image or an address from the request. It
 //! never goes back, and never past the version asked for (hop by hop, when that release
 //! cannot be reached at once). The daily timer on a node does nothing unless its root-owned
-//! .env says MIKAN_AUTO_UPDATE=1: nodes follow their panel.
+//! .env says SCILLA_AUTO_UPDATE=1: nodes follow their panel.
 
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -40,7 +40,7 @@ use crate::panelfs::{self, Dir};
 use crate::release::Channel;
 use crate::{DIR, addon, backup, clock, docker, host, net, release, setup, signals, terminal};
 
-/// What `mikan update` was asked for.
+/// What `scilla update` was asked for.
 #[derive(clap::Args, Clone, Debug, Default)]
 pub struct UpdateArgs {
     /// An image (ghcr.io/…@sha256:…) or an image archive (.tar.gz) instead of the latest release
@@ -56,7 +56,7 @@ pub struct UpdateArgs {
     pub check: bool,
 }
 
-/// The directory the panel's container, or a node's, owns for this (below /opt/mikan).
+/// The directory the panel's container, or a node's, owns for this (below /opt/scilla).
 fn update_rel(node: bool) -> &'static str {
     if node { "data/node/update" } else { "data/panel/update" }
 }
@@ -83,16 +83,16 @@ fn report(install: &Install, phase: Phase, version: &str, from: &str, error: &st
         d.with_context(|| format!("{} is not there", update_rel(install.node)))?.write("status.json", body.to_string().as_bytes(), 0o644)
     });
     if let Err(e) = sent {
-        eprintln!("mikan: cannot tell the panel how the update went: {e:#}");
+        eprintln!("scilla: cannot tell the panel how the update went: {e:#}");
     }
 }
 
 /// Whether the daily check may update: a node asks its .env, and only an explicit
-/// MIKAN_AUTO_UPDATE=1 there lets it move ahead of its panel (it follows the panel
+/// SCILLA_AUTO_UPDATE=1 there lets it move ahead of its panel (it follows the panel
 /// otherwise); a panel asks its policy file.
 fn auto_on(install: &Install) -> bool {
     if install.node {
-        return install.config.get("MIKAN_AUTO_UPDATE") == Some("1");
+        return install.config.get("SCILLA_AUTO_UPDATE") == Some("1");
     }
     policy_on()
 }
@@ -107,12 +107,12 @@ fn policy_says_on(data: &[u8]) -> bool {
 }
 
 /// The channel of releases this server takes. A node has no panel on its host: its .env
-/// says (MIKAN_UPDATE_CHANNEL), stable unless it says beta. A panel's comes from the
+/// says (SCILLA_UPDATE_CHANNEL), stable unless it says beta. A panel's comes from the
 /// panel's policy file, which the panel writes and so is not trusted with more than the
 /// two exact words: anything else there, or no file, is stable.
 pub fn channel(install: &Install) -> Channel {
     if install.node {
-        return install.config.get("MIKAN_UPDATE_CHANNEL").and_then(Channel::parse).unwrap_or(Channel::Stable);
+        return install.config.get("SCILLA_UPDATE_CHANNEL").and_then(Channel::parse).unwrap_or(Channel::Stable);
     }
     update_dir(false, false)
         .ok()
@@ -128,22 +128,22 @@ fn policy_channel(data: &[u8]) -> Channel {
         .unwrap_or(Channel::Stable)
 }
 
-/// This server's channel; stable on a server mikan is not installed on yet.
+/// This server's channel; stable on a server scilla is not installed on yet.
 pub fn channel_here() -> Channel {
     Install::load().map_or(Channel::Stable, |i| channel(&i))
 }
 
-/// How many releases one `mikan update` goes through at most, one after another.
+/// How many releases one `scilla update` goes through at most, one after another.
 const MAX_HOPS: u32 = 5;
 
 /// Which hop of an update this command is (0 for the first): set by the update that
 /// started it.
-const HOP_ENV: &str = "MIKAN_UPDATE_HOP";
+const HOP_ENV: &str = "SCILLA_UPDATE_HOP";
 
 /// The release a hop chain asked for by the panel ends at: set by the update that started
 /// it, so that no hop goes past it. A name, nothing else: the release is looked up in the
 /// signed index again by each hop.
-const UPTO_ENV: &str = "MIKAN_UPDATE_UPTO";
+const UPTO_ENV: &str = "SCILLA_UPDATE_UPTO";
 
 /// What this command was asked to stop at: the release the node's panel asked for, or the
 /// one the hop that started this command was going to. Only a valid version counts.
@@ -183,7 +183,7 @@ fn next_hop(newest: Option<&str>, daily: bool, at: &mut Attempt, say: &mut dyn F
     let hop = match after_hop(newest, hop_number()) {
         After::Done => return Ok(()),
         After::Stop => {
-            let more = format!("mikan {} is out still: run mikan update again to go on.", newest.unwrap_or_default());
+            let more = format!("scilla {} is out still: run scilla update again to go on.", newest.unwrap_or_default());
             say(&more);
             // The panel waits for the release it asked for: this is not the end it expects.
             if at.upto.is_some() {
@@ -193,7 +193,7 @@ fn next_hop(newest: Option<&str>, daily: bool, at: &mut Attempt, say: &mut dyn F
         }
         After::Next(n) => n,
     };
-    say(&format!("mikan {} runs; going on towards mikan {}.", at.version, newest.unwrap_or_default()));
+    say(&format!("scilla {} runs; going on towards scilla {}.", at.version, newest.unwrap_or_default()));
     let mut child = Command::new(host::BIN);
     child.arg("update").env(lock::HELD_ENV, "1").env(HOP_ENV, hop.to_string());
     if let Some(upto) = &at.upto {
@@ -204,7 +204,7 @@ fn next_hop(newest: Option<&str>, daily: bool, at: &mut Attempt, say: &mut dyn F
     }
     at.handed_off = true;
     if !child.status()?.success() {
-        bail!("mikan {} runs, the update to the next release did not finish; retry mikan update", at.version);
+        bail!("scilla {} runs, the update to the next release did not finish; retry scilla update", at.version);
     }
     Ok(())
 }
@@ -316,7 +316,7 @@ pub fn update(a: &UpdateArgs, say: &mut dyn FnMut(&str), progress: &mut dyn FnMu
         match lock::acquire(wait, say)? {
             Some(g) => Some(g),
             None => {
-                say("Another mikan operation is running: this automatic check skips its turn.");
+                say("Another scilla operation is running: this automatic check skips its turn.");
                 return Ok(());
             }
         }
@@ -537,9 +537,9 @@ fn update_to(a: &UpdateArgs, say: &mut dyn FnMut(&str), progress: &mut dyn FnMut
     let Some(target) = resolve_target(a, &install, &current, say, progress, at)? else { return Ok(()) };
     // The release index sends a server still on SQLite through the last release that moves
     // it; an image named by hand is checked here, before anything changes.
-    if !install.node && install.config.get("MIKAN_DATABASE_URL").is_none() && !release::moves_sqlite(&target.version) {
+    if !install.node && install.config.get("SCILLA_DATABASE_URL").is_none() && !release::moves_sqlite(&target.version) {
         bail!(
-            "mikan {} no longer moves the database from SQLite: update to mikan {} first, it moves it to PostgreSQL (`mikan update` with no image goes there by itself); nothing was changed",
+            "scilla {} no longer moves the database from SQLite: update to scilla {} first, it moves it to PostgreSQL (`scilla update` with no image goes there by itself); nothing was changed",
             target.version,
             release::LAST_SQLITE_MOVE
         );
@@ -584,7 +584,7 @@ fn resolve_target(
         match upto_step(current, upto) {
             Step::Refuse(why) => bail!(why),
             Step::Already => {
-                say(&format!("mikan {current} is the release asked for."));
+                say(&format!("scilla {current} is the release asked for."));
                 return Ok(None);
             }
             Step::Go => {}
@@ -620,14 +620,14 @@ fn resolve_target(
                 let newest = found.newest.unwrap_or_default();
                 if a.check {
                     say(&format!(
-                        "mikan {newest} is out, but mikan {current} cannot update to it directly and no release in between is listed."
+                        "scilla {newest} is out, but scilla {current} cannot update to it directly and no release in between is listed."
                     ));
                     return Ok(None);
                 }
-                bail!("mikan {newest} is out, but mikan {current} cannot update to it directly and no release in between is listed");
+                bail!("scilla {newest} is out, but scilla {current} cannot update to it directly and no release in between is listed");
             }
             if already_current(&m.version, current, a.check || install.node || docker::panel_healthy()) {
-                say(&format!("mikan {current} is the latest release."));
+                say(&format!("scilla {current} is the latest release."));
                 if !a.check && self_update(&m, say) {
                     follow_new_command(say);
                 }
@@ -636,9 +636,9 @@ fn resolve_target(
             if a.check {
                 match &found.newest {
                     Some(newest) => {
-                        say(&format!("mikan {newest} is out, this server runs {current}: it updates through mikan {} first.", m.version))
+                        say(&format!("scilla {newest} is out, this server runs {current}: it updates through scilla {} first.", m.version))
                     }
-                    None => say(&format!("mikan {} is out, this server runs {current}.", m.version)),
+                    None => say(&format!("scilla {} is out, this server runs {current}.", m.version)),
                 }
                 if let Some(notes) = m.notes.get("en") {
                     say(notes);
@@ -646,7 +646,7 @@ fn resolve_target(
                 return Ok(None);
             }
             let ahead = found.newest;
-            say(&format!("Updating mikan {current} → {}", m.version));
+            say(&format!("Updating scilla {current} → {}", m.version));
             at.version.clone_from(&m.version);
             at.started = true;
             report(install, Phase::Running, &m.version, current, "");
@@ -656,14 +656,14 @@ fn resolve_target(
             // that was signed for.
             let v = setup::image_version(&reference)?;
             if v.trim_start_matches('v') != m.version {
-                bail!("the image is mikan {v}, the signed release says {}", m.version);
+                bail!("the image is scilla {v}, the signed release says {}", m.version);
             }
             let version = m.version.clone();
             Target { image: reference, version, manifest: Some(m), ahead }
         }
     };
     if a.check {
-        say(&format!("{} is mikan {}; this server runs {current}.", target.image, target.version));
+        say(&format!("{} is scilla {}; this server runs {current}.", target.image, target.version));
         return Ok(None);
     }
     Ok(Some(target))
@@ -687,7 +687,7 @@ fn hand_off(target: &Target, daily: bool, at: &mut Attempt, say: &mut dyn FnMut(
         at.handed_off = true;
         let status = child.status()?;
         if !status.success() {
-            bail!("the upgraded installer could not finish the update; retry mikan update");
+            bail!("the upgraded installer could not finish the update; retry scilla update");
         }
         return Ok(true);
     }
@@ -711,7 +711,7 @@ fn preflight(
     progress: &mut dyn FnMut(f64),
 ) -> Result<Option<Plan>> {
     let root = Path::new(DIR);
-    let was_postgres = install.config.get("MIKAN_DATABASE_URL").is_some();
+    let was_postgres = install.config.get("SCILLA_DATABASE_URL").is_some();
     // The move from SQLite cannot be undone once it imported: it starts only with room for
     // it. The daily check leaves it for a later night, the admin is told why.
     let moving = !install.node && !was_postgres;
@@ -766,8 +766,8 @@ fn apply(install: &mut Install, target: &Target, plan: Plan, say: &mut dyn FnMut
         if !install.node {
             setup::postgres_env(&mut install.config)?;
         }
-        install.config.set("MIKAN_IMAGE", &target.image)?;
-        install.config.set("MIKAN_VERSION", &target.version)?;
+        install.config.set("SCILLA_IMAGE", &target.image)?;
+        install.config.set("SCILLA_VERSION", &target.version)?;
         docker::ensure_compose(root, &install.config)?;
         if !install.node {
             docker::postgres_ready()?;
@@ -827,9 +827,9 @@ fn recover(
         }
         Recovery::RestorePrevious => {
             match restore_previous(root, &install.config, &snapshot.env, &snapshot.compose, footing.was_postgres) {
-                Ok(()) => e.context(format!("the update could not prepare the database; mikan {current} runs again")),
+                Ok(()) => e.context(format!("the update could not prepare the database; scilla {current} runs again")),
                 Err(back) => e.context(format!(
-                    "the update could not prepare the database, and mikan {current} did not start again ({back:#}); backup: {saved}"
+                    "the update could not prepare the database, and scilla {current} did not start again ({back:#}); backup: {saved}"
                 )),
             }
         }
@@ -838,16 +838,16 @@ fn recover(
         // start only when the schema did not move.
         Recovery::RollBack => {
             let what = if step == Failed::Migrate { "could not migrate the database" } else { "did not start" };
-            say(&format!("mikan {version} {what}: going back to {current}"));
+            say(&format!("scilla {version} {what}: going back to {current}"));
             let before = Before { env: &snapshot.env, compose: &snapshot.compose, saved: &snapshot.saved, current };
-            roll_back(install, &before, &format!("mikan {version} {what}: {e:#}"))
+            roll_back(install, &before, &format!("scilla {version} {what}: {e:#}"))
         }
         // A failed import may have committed before losing its response. Never fall
         // back to stale SQLite or restore a snapshot implicitly after this.
         Recovery::LeaveStopped => {
             leave_new(install, say);
             e.context(format!(
-                "database migration did not finish; panel stays stopped, original SQLite and PostgreSQL preserved. Run mikan update again; backup: {saved}"
+                "database migration did not finish; panel stays stopped, original SQLite and PostgreSQL preserved. Run scilla update again; backup: {saved}"
             ))
         }
         // Going back from SQLite would lose every write since the import, and an older
@@ -855,7 +855,7 @@ fn recover(
         Recovery::StopPanel => {
             let _ = docker::compose_run(&["stop", "panel"]);
             leave_new(install, say);
-            e.context(format!("PostgreSQL is preserved and the panel is stopped. No automatic database rollback is safe; retry mikan update after fixing startup. Backup: {saved}"))
+            e.context(format!("PostgreSQL is preserved and the panel is stopped. No automatic database rollback is safe; retry scilla update after fixing startup. Backup: {saved}"))
         }
         // Decided before anything changed (preflight), or nothing to undo.
         Recovery::Keep | Recovery::Skip | Recovery::Refuse => e,
@@ -866,7 +866,7 @@ fn recover(
 /// next hop of the chain starts.
 fn finish(install: &Install, target: Target, daily: bool, at: &mut Attempt, say: &mut dyn FnMut(&str)) -> Result<()> {
     seal_when_current(Path::new(DIR), &install.config, say);
-    say(&format!("mikan {} is running.", target.version));
+    say(&format!("scilla {} is running.", target.version));
     if let Some(m) = &target.manifest
         && self_update(m, say)
     {
@@ -889,7 +889,7 @@ enum Step {
 
 fn upto_step(current: &str, upto: &str) -> Step {
     if release::newer(current, upto) {
-        Step::Refuse(format!("mikan {upto} is older than the mikan {current} this server runs: a server does not go back"))
+        Step::Refuse(format!("scilla {upto} is older than the scilla {current} this server runs: a server does not go back"))
     } else if release::newer(upto, current) {
         Step::Go
     } else {
@@ -920,14 +920,14 @@ fn retry_refused<T>(
         match find() {
             Err(e) if release::refused(&e) && left > 0 => {
                 say(&format!(
-                    "The release index here does not list mikan {upto} yet: GitHub may still serve an old copy. Reading it again in {} s.",
+                    "The release index here does not list scilla {upto} yet: GitHub may still serve an old copy. Reading it again in {} s.",
                     INDEX_WAIT.as_secs()
                 ));
                 wait();
             }
             Err(e) if release::refused(&e) => {
                 return Err(e.context(format!(
-                    "GitHub still serves this server an old release index without mikan {upto}: press Update again in a few minutes"
+                    "GitHub still serves this server an old release index without scilla {upto}: press Update again in a few minutes"
                 )));
             }
             r => return r,
@@ -952,7 +952,7 @@ fn start(install: &Install, root: &Path) -> Result<()> {
     setup::wait_ready(install.node_port(), Duration::from_secs(90))
 }
 
-/// The schema versions `mikan database migrate` reports: before and after it ran.
+/// The schema versions `scilla database migrate` reports: before and after it ran.
 fn schema_change(out: &str) -> Option<(u64, u64)> {
     let line = out.lines().find_map(|l| l.trim().strip_prefix("PostgreSQL schema version: "))?;
     let (from, to) = line.split_once(" -> ")?;
@@ -964,14 +964,14 @@ fn schema_change(out: &str) -> Option<(u64, u64)> {
 /// next attempt would lock the panel out of its own database.
 fn previous_env(root: &Path, now: &Config, old_env: &str) -> Result<Config> {
     let mut env = Config::from_env_text(root, old_env);
-    if let Some(password) = now.get("MIKAN_POSTGRES_PASSWORD") {
-        env.set("MIKAN_POSTGRES_PASSWORD", password)?;
+    if let Some(password) = now.get("SCILLA_POSTGRES_PASSWORD") {
+        env.set("SCILLA_POSTGRES_PASSWORD", password)?;
     }
     Ok(env)
 }
 
 /// Writes the settings from before back in the form the compose.yaml from before reads:
-/// .env for one of a mikan before config.json (its ${...} come from it), the files always.
+/// .env for one of a scilla before config.json (its ${...} come from it), the files always.
 fn put_previous(config: &Config, old_compose: &str) -> Result<()> {
     config.save()?;
     if old_compose.contains("${") { config.write_legacy() } else { Ok(()) }
@@ -1002,16 +1002,16 @@ fn roll_back(install: &mut Install, before: &Before, why: &str) -> anyhow::Error
         start(install, root)
     })();
     match back {
-        Ok(()) => anyhow::anyhow!("{why}; mikan {current} runs again (backup: {saved})"),
+        Ok(()) => anyhow::anyhow!("{why}; scilla {current} runs again (backup: {saved})"),
         Err(e) => {
             let stopped = if install.node {
                 ""
             } else {
                 let _ = docker::compose_run(&["stop", "panel"]);
-                ", so the panel is stopped (an older mikan refuses a schema a newer one moved forward)"
+                ", so the panel is stopped (an older scilla refuses a schema a newer one moved forward)"
             };
             anyhow::anyhow!(
-                "{why}; and mikan {current} does not start either ({e:#}){stopped}. The data from before the update are in {saved}: mikan restore {saved}"
+                "{why}; and scilla {current} does not start either ({e:#}){stopped}. The data from before the update are in {saved}: scilla restore {saved}"
             )
         }
     }
@@ -1029,7 +1029,7 @@ struct Before<'a> {
 
 /// What the move from SQLite to PostgreSQL needs before anything stops: disk for the
 /// archives, the dump and the new database (three times the panel's data, at least
-/// 1 GiB) where mikan and Docker keep them, and memory for PostgreSQL beside the panel.
+/// 1 GiB) where scilla and Docker keep them, and memory for PostgreSQL beside the panel.
 fn room_to_move(root: &Path) -> std::result::Result<(), String> {
     let data = crate::system::tree_bytes(&root.join("data/panel"));
     let docker_dir = Path::new("/var/lib/docker");
@@ -1079,10 +1079,10 @@ pub fn converge(say: &mut dyn FnMut(&str)) -> Result<()> {
     {
         say(&format!("ufw did not take port 80 and the ports of the pool ({e:#}): open them yourself"));
     }
-    if !install.node && install.config.get("MIKAN_DATABASE_URL").is_none() {
+    if !install.node && install.config.get("SCILLA_DATABASE_URL").is_none() {
         // post-update must never activate the PostgreSQL compose over a live SQLite
         // installation. `update` is the only operation that performs the cutover.
-        say("This SQLite installation needs mikan update before its compose file can change.");
+        say("This SQLite installation needs scilla update before its compose file can change.");
         return Ok(());
     }
     // Where systemd is: a server without it has no units to bring up to date.
@@ -1131,7 +1131,7 @@ pub fn converge(say: &mut dyn FnMut(&str)) -> Result<()> {
 fn follow_new_command(say: &mut dyn FnMut(&str)) {
     let done = Command::new(host::BIN).arg("post-update").env(lock::HELD_ENV, "1").status();
     if !done.is_ok_and(|s| s.success()) {
-        say("The new mikan command could not finish setting up: run `mikan update` once more.");
+        say("The new scilla command could not finish setting up: run `scilla update` once more.");
     }
 }
 
@@ -1154,11 +1154,11 @@ fn self_update(m: &release::Manifest, say: &mut dyn FnMut(&str)) -> bool {
     });
     match result {
         Ok(()) => {
-            say(&format!("The mikan command is {} now too.", m.version));
+            say(&format!("The scilla command is {} now too.", m.version));
             true
         }
         Err(e) => {
-            say(&format!("The mikan command stays as it is: {e:#}"));
+            say(&format!("The scilla command stays as it is: {e:#}"));
             false
         }
     }
@@ -1266,29 +1266,29 @@ mod tests {
     // have been initialized with, and without the address of a database it never used.
     #[test]
     fn the_previous_env_keeps_a_new_database_password() {
-        let old = "MIKAN_IMAGE=old-image\nMIKAN_VERSION=0.4.4\nPANEL_PORT=21355\n";
+        let old = "PANEL_PORT=21355\nSCILLA_IMAGE=old-image\nSCILLA_VERSION=0.4.4\n";
         let now = Config::from_env_text(
             "x",
-            "MIKAN_IMAGE=new-image\nMIKAN_VERSION=0.5.0.1\nPANEL_PORT=21355\nMIKAN_POSTGRES_PASSWORD=made\nMIKAN_DATABASE_URL=postgresql://mikan:made@localhost/mikan?host=/run/postgresql\n",
+            "SCILLA_IMAGE=new-image\nSCILLA_VERSION=0.5.0.1\nPANEL_PORT=21355\nSCILLA_POSTGRES_PASSWORD=made\nSCILLA_DATABASE_URL=postgresql://scilla:made@localhost/scilla?host=/run/postgresql\n",
         );
-        let env = previous_env(Path::new("/opt/mikan"), &now, old).unwrap();
-        assert_eq!(env.to_env_text(), "MIKAN_IMAGE=old-image\nMIKAN_POSTGRES_PASSWORD=made\nMIKAN_VERSION=0.4.4\nPANEL_PORT=21355\n");
-        let unchanged = previous_env(Path::new("/opt/mikan"), &Config::from_env_text("x", ""), old).unwrap();
+        let env = previous_env(Path::new("/opt/scilla"), &now, old).unwrap();
+        assert_eq!(env.to_env_text(), "PANEL_PORT=21355\nSCILLA_IMAGE=old-image\nSCILLA_POSTGRES_PASSWORD=made\nSCILLA_VERSION=0.4.4\n");
+        let unchanged = previous_env(Path::new("/opt/scilla"), &Config::from_env_text("x", ""), old).unwrap();
         assert_eq!(unchanged.to_env_text(), old);
-        assert_eq!(unchanged.get("MIKAN_DATABASE_URL"), None);
+        assert_eq!(unchanged.get("SCILLA_DATABASE_URL"), None);
     }
 
-    // A rollback to a mikan of before config.json writes .env back for its compose.yaml; one
-    // to a mikan that reads the files leaves no .env with secrets on disk.
+    // A rollback to a scilla of before config.json writes .env back for its compose.yaml; one
+    // to a scilla that reads the files leaves no .env with secrets on disk.
     #[test]
     fn a_rollback_writes_env_only_for_a_compose_that_reads_it() {
         let d = std::env::temp_dir().join(format!("put-previous-{}", std::process::id()));
         let _ = fs::remove_dir_all(&d);
         fs::create_dir_all(&d).unwrap();
-        let config = Config::from_env_text(&d, "MIKAN_IMAGE=old\nPANEL_PORT=21355\nMIKAN_POSTGRES_PASSWORD=pw123456\n");
+        let config = Config::from_env_text(&d, "SCILLA_IMAGE=old\nPANEL_PORT=21355\nSCILLA_POSTGRES_PASSWORD=pw123456\n");
         put_previous(&config, "services:\n  panel:\n    image: x\n").unwrap();
         assert!(!d.join(crate::config::LEGACY).exists() && d.join(crate::config::FILE).exists());
-        put_previous(&config, "services:\n  panel:\n    image: ${MIKAN_IMAGE}\n").unwrap();
+        put_previous(&config, "services:\n  panel:\n    image: ${SCILLA_IMAGE}\n").unwrap();
         assert_eq!(fs::read_to_string(d.join(crate::config::LEGACY)).unwrap(), config.to_env_text());
         fs::remove_dir_all(&d).unwrap();
     }
@@ -1349,7 +1349,7 @@ mod tests {
     // and the last refusal says to press Update again; anything else is not retried.
     #[test]
     fn an_old_index_is_read_again() {
-        let refused = || -> Result<u32> { Err(release::refused_for_test("mikan 9.9.9 is not a release")) };
+        let refused = || -> Result<u32> { Err(release::refused_for_test("scilla 9.9.9 is not a release")) };
         let (mut waits, mut said) = (0, Vec::new());
         let mut calls = 0;
         let r = retry_refused(3, &mut || waits += 1, &mut |s| said.push(s.to_owned()), "9.9.9", || {
@@ -1523,13 +1523,13 @@ mod tests {
         assert_eq!(upto_channel(Channel::Stable, "0.5.0.3"), Channel::Stable);
         assert_eq!(upto_channel(Channel::Beta, "0.5.0.3"), Channel::Beta);
 
-        let node = |env: &str| Install { config: Config::from_env_text("x", &format!("MIKAN_MODE=node\n{env}")), node: true };
+        let node = |env: &str| Install { config: Config::from_env_text("x", &format!("SCILLA_MODE=node\n{env}")), node: true };
         assert!(!auto_on(&node("")), "a node follows its panel unless its .env says otherwise");
-        assert!(!auto_on(&node("MIKAN_AUTO_UPDATE=0\n")));
+        assert!(!auto_on(&node("SCILLA_AUTO_UPDATE=0\n")));
         for not_one in ["true", "yes", "on", "2", " 1", "1 "] {
-            assert!(!auto_on(&node(&format!("MIKAN_AUTO_UPDATE={not_one}\n"))), "{not_one:?}");
+            assert!(!auto_on(&node(&format!("SCILLA_AUTO_UPDATE={not_one}\n"))), "{not_one:?}");
         }
-        assert!(auto_on(&node("MIKAN_AUTO_UPDATE=1\n")));
+        assert!(auto_on(&node("SCILLA_AUTO_UPDATE=1\n")));
     }
 
     // The chain a request makes: each hop chooses again from the version the last one left,
@@ -1615,7 +1615,7 @@ mod tests {
         assert!(got.fallback.is_some() && got.newest.is_none());
         for upto in ["0.5.0.3", "0.5.0.1.1", "0.6.0.0"] {
             let err = release::find_upto_with("0.5.0.1", Channel::Stable, upto, &[key], &fetch).unwrap_err();
-            assert!(format!("{err:#}").contains("not the mikan"), "{upto}: {err:#}");
+            assert!(format!("{err:#}").contains("not the scilla"), "{upto}: {err:#}");
         }
         // an index that is there but says nothing of the release is a refusal, not a reason to look elsewhere
         let files = signed_files(&signer, &["0.5.0.2"], r#"{"schema":1,"releases":[]}"#);
@@ -1664,10 +1664,10 @@ mod tests {
     // A node has no panel: its .env says, stable unless it says beta exactly.
     #[test]
     fn a_node_takes_its_channel_from_its_env() {
-        let node = |env: &str| Install { config: Config::from_env_text("x", &format!("MIKAN_MODE=node\n{env}")), node: true };
+        let node = |env: &str| Install { config: Config::from_env_text("x", &format!("SCILLA_MODE=node\n{env}")), node: true };
         assert_eq!(channel(&node("")), Channel::Stable);
-        assert_eq!(channel(&node("MIKAN_UPDATE_CHANNEL=beta\n")), Channel::Beta);
-        assert_eq!(channel(&node("MIKAN_UPDATE_CHANNEL=Beta\n")), Channel::Stable);
+        assert_eq!(channel(&node("SCILLA_UPDATE_CHANNEL=beta\n")), Channel::Beta);
+        assert_eq!(channel(&node("SCILLA_UPDATE_CHANNEL=Beta\n")), Channel::Stable);
     }
 
     #[test]
@@ -1691,7 +1691,7 @@ mod tests {
         };
         for v in releases {
             let body = format!(
-                r#"{{"version":"{v}","published":"2026-10-04T10:00:00Z","image":"ghcr.io/miroshka000/mikan","digest":"sha256:{}","installer":{{}}}}"#,
+                r#"{{"version":"{v}","published":"2026-10-04T10:00:00Z","image":"ghcr.io/drillex100-beep/scilla","digest":"sha256:{}","installer":{{}}}}"#,
                 "a".repeat(64)
             );
             put(format!("https://github.com/{}/releases/download/v{v}/manifest.json", release::REPO), body.into_bytes());

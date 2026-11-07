@@ -21,17 +21,17 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/billing"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
-	"mikan/internal/panel/tgate"
-	"mikan/internal/panel/tgbot"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/billing"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
+	"scilla/internal/panel/tgate"
+	"scilla/internal/panel/tgbot"
+	"scilla/internal/tgapi"
 )
 
 // fakeTelegram is the Bot API for tests: it hands out queued updates and records calls.
@@ -85,7 +85,7 @@ func (f *fakeTelegram) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	ok := func(result any) { _ = json.NewEncoder(w).Encode(map[string]any{"ok": true, "result": result}) }
 	switch method {
 	case "getMe":
-		ok(tgapi.User{ID: 1, IsBot: true, FirstName: "Mikan", Username: "mikan_test_bot"})
+		ok(tgapi.User{ID: 1, IsBot: true, FirstName: "Scilla", Username: "scilla_test_bot"})
 		return
 	case "getUpdates":
 		f.mu.Lock()
@@ -329,7 +329,7 @@ func setup(t *testing.T, with ...func(e *env, d *wiring)) *env {
 		t.Fatal(err)
 	}
 	e.set = settings.New(e.st.Q)
-	for k, v := range map[string]any{tgate.KeyEnabled: true, tgate.KeyToken: "123:test", "brand": "Mikan VPN", "support_url": "https://t.me/mikan_support"} {
+	for k, v := range map[string]any{tgate.KeyEnabled: true, tgate.KeyToken: "123:test", "brand": "Scilla VPN", "support_url": "https://t.me/scilla_support"} {
 		if err := settings.Set(ctx, e.set, k, v); err != nil {
 			t.Fatal(err)
 		}
@@ -443,7 +443,7 @@ func (e *env) reads(t *testing.T) {
 func (e *env) code(user int64) string {
 	e.t.Helper()
 	link := e.gate.LinkURL(e.ctx, user)
-	code, ok := strings.CutPrefix(link, "https://t.me/mikan_test_bot?start=")
+	code, ok := strings.CutPrefix(link, "https://t.me/scilla_test_bot?start=")
 	if !ok {
 		e.t.Fatalf("the link to the bot: %q", link)
 	}
@@ -485,7 +485,7 @@ func TestBot(t *testing.T) {
 	e.say(anna, "привет")
 	calls := e.tg.wait(t, n, "sendMessage")
 	send, _ := find(calls, "sendMessage")
-	if !strings.Contains(text(send), "Mikan VPN") || buttons(send)["💬 Поддержка"] != "https://t.me/mikan_support" {
+	if !strings.Contains(text(send), "Scilla VPN") || buttons(send)["💬 Поддержка"] != "https://t.me/scilla_support" {
 		t.Fatalf("welcome: %q %v", text(send), buttons(send))
 	}
 
@@ -675,7 +675,7 @@ func TestBot(t *testing.T) {
 		t.Fatalf("broadcast: %d %v", k, err)
 	}
 	send, _ = find(e.tg.wait(t, n, "sendMessage"), "sendMessage")
-	if text(send) != "Плановые работы в Mikan VPN ночью" {
+	if text(send) != "Плановые работы в Scilla VPN ночью" {
 		t.Fatalf("broadcast text: %q", text(send))
 	}
 	if p := e.panel.Progress(); p.Total != 1 || p.Sent != 1 || p.Active() {

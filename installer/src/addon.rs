@@ -2,7 +2,7 @@
 //! as their own compose project so panel updates never touch them. Payment adapters speak
 //! protocol 1; bots, pages and the rest protocol 2, which also gives them a token to call the
 //! panel's API for addons. The panel has no Docker socket: it asks through files in its data
-//! directory (internal/panel/addons), and `mikan update --requested` hands the requests here.
+//! directory (internal/panel/addons), and `scilla update --requested` hands the requests here.
 //!
 //!   addons/requests/<seq>-<id>.json  the panel: {"action": "install" | "remove", "id", "at"},
 //!                        for an addon of the admin's own also "source" (custom | external)
@@ -13,7 +13,7 @@
 //!
 //! An addon comes from the signed catalog (official: ghcr.io/getmikan/, the host's network,
 //! loopback), is an image the admin named by its digest (custom: on the bridge network
-//! mikan-addons, its port published on loopback, the panel's API at the bridge's gateway), or
+//! scilla-addons, its port published on loopback, the panel's API at the bridge's gateway), or
 //! is a process of the admin's own on a loopback port (external: no container, only tokens).
 
 use std::collections::BTreeMap;
@@ -72,14 +72,14 @@ const REQUESTS: &str = "requests";
 const REQUEST_LIMIT: u64 = 4096;
 /// Requests taken in one run; the rest wait for the panel's next wake-up.
 const REQUESTS_PER_RUN: usize = 64;
-const COMPOSE_DIR: &str = "/opt/mikan/addons";
+const COMPOSE_DIR: &str = "/opt/scilla/addons";
 /// The state root trusts: the panel cannot see or change it.
-const ROOT_STATE: &str = "/opt/mikan/addons/state.json";
-/// What `mikan addon load` took: digest → the image ID to run it by. root's own.
-const LOADED: &str = "/opt/mikan/addons/loaded.json";
-const PROJECT: &str = "mikan-addons";
+const ROOT_STATE: &str = "/opt/scilla/addons/state.json";
+/// What `scilla addon load` took: digest → the image ID to run it by. root's own.
+const LOADED: &str = "/opt/scilla/addons/loaded.json";
+const PROJECT: &str = "scilla-addons";
 /// The bridge network of custom addons, also the name of its interface (≤ 15 characters).
-const NETWORK: &str = "mikan-addons";
+const NETWORK: &str = "scilla-addons";
 
 /// The panel's side of the exchange, opened without following a link; None while the
 /// panel has not made it.
@@ -231,7 +231,7 @@ pub struct State {
     /// one runs, for the panel to listen there too.
     #[serde(default, skip_serializing_if = "String::is_empty")]
     pub panel_api_bridge: String,
-    /// The version of mikan that wrote this state: the panel holds back what needs a newer host.
+    /// The version of scilla that wrote this state: the panel holds back what needs a newer host.
     #[serde(default, skip_serializing_if = "String::is_empty")]
     pub host_version: String,
 }
@@ -364,7 +364,7 @@ pub fn catalog(panel: &str) -> Result<Vec<Entry>> {
 }
 
 /// The newest catalog this server has accepted ("updated" of the signed index).
-const CATALOG_SEEN: &str = "/opt/mikan/addons/catalog-updated";
+const CATALOG_SEEN: &str = "/opt/scilla/addons/catalog-updated";
 
 /// The adapters as root keeps them: only entries that pass sound() survive.
 pub fn load_state() -> Result<State> {
@@ -379,11 +379,11 @@ fn load_from(root_state: &Path) -> Result<State> {
     };
     let mut s: State = serde_json::from_slice(&raw).context("the adapters' state is malformed")?;
     if !s.panel_api.is_empty() && !loopback(&s.panel_api) {
-        eprintln!("mikan: the panel's API address {:?} in the state is not sound: ignored", s.panel_api);
+        eprintln!("scilla: the panel's API address {:?} in the state is not sound: ignored", s.panel_api);
         s.panel_api.clear();
     }
     if !s.panel_api_bridge.is_empty() && !bridge_api(&s.panel_api_bridge) {
-        eprintln!("mikan: the panel's API address on the bridge {:?} in the state is not sound: ignored", s.panel_api_bridge);
+        eprintln!("scilla: the panel's API address on the bridge {:?} in the state is not sound: ignored", s.panel_api_bridge);
         s.panel_api_bridge.clear();
     }
     for a in s.adapters.values_mut().filter(|a| a.protocol == 0) {
@@ -398,7 +398,7 @@ fn load_from(root_state: &Path) -> Result<State> {
     s.adapters.retain(|id, a| {
         let ok = sound(id, a);
         if !ok {
-            eprintln!("mikan: the adapter {id:?} in the state is not sound: ignored");
+            eprintln!("scilla: the adapter {id:?} in the state is not sound: ignored");
         }
         ok
     });
@@ -482,7 +482,7 @@ pub fn compose_yaml(
     panel_api: &str,
     panel_api_bridge: &str,
 ) -> String {
-    let mut y = String::from("# Written by `mikan addon`: changes here are lost.\nname: mikan-addons\n\nservices:\n");
+    let mut y = String::from("# Written by `scilla addon`: changes here are lost.\nname: scilla-addons\n\nservices:\n");
     let mut bridged = false;
     for (id, a) in adapters {
         let custom = a.source == CUSTOM;
@@ -516,8 +516,8 @@ pub fn compose_yaml(
       driver: json-file
       options: {{max-size: "5m", max-file: "2"}}
     environment:
-      MIKAN_ADAPTER_LISTEN: "{listen}"
-      MIKAN_ADAPTER_TOKEN: "{token}"
+      SCILLA_ADAPTER_LISTEN: "{listen}"
+      SCILLA_ADAPTER_TOKEN: "{token}"
 "#,
             token = a.token
         ));
@@ -525,7 +525,7 @@ pub fn compose_yaml(
             // The same token opens the Bot API proxy; the number before it means nothing
             // (frameworks want one), the bot's id comes from getMe.
             y.push_str(&format!(
-                "      MIKAN_PANEL_URL: \"http://{api}/panel/v2\"\n      MIKAN_PANEL_TOKEN: \"{t}\"\n      MIKAN_BOT_API_URL: \"http://{api}\"\n      MIKAN_BOT_TOKEN: \"0:{t}\"\n",
+                "      SCILLA_PANEL_URL: \"http://{api}/panel/v2\"\n      SCILLA_PANEL_TOKEN: \"{t}\"\n      SCILLA_BOT_API_URL: \"http://{api}\"\n      SCILLA_BOT_TOKEN: \"0:{t}\"\n",
                 t = a.panel_token
             ));
         }
@@ -605,7 +605,7 @@ fn up(state: &mut State, say: &mut dyn FnMut(&str)) -> Result<()> {
 }
 
 /// Makes sure the engine has the addon's image, since compose never pulls: there already,
-/// loaded by `mikan addon load`, or pulled now. Gives the ID to run a loaded image by where
+/// loaded by `scilla addon load`, or pulled now. Gives the ID to run a loaded image by where
 /// the engine keeps no digest for it (the classic image store); None runs image@digest.
 fn fetch(a: &Installed, say: &mut dyn FnMut(&str)) -> Result<Option<String>> {
     let reference = format!("{}@{}", a.image, a.digest);
@@ -643,12 +643,12 @@ fn bridge() -> Result<Ipv4Addr> {
     parse_network(&String::from_utf8_lossy(&out.stdout))
 }
 
-/// What `docker network inspect` says of mikan-addons: a bridge with no traffic between its
+/// What `docker network inspect` says of scilla-addons: a bridge with no traffic between its
 /// containers, and its IPv4 gateway. A network of that name made otherwise is not used.
 fn parse_network(s: &str) -> Result<Ipv4Addr> {
     let mut words = s.split_whitespace();
     if words.next() != Some("bridge") || words.next() != Some("false") {
-        bail!("the network {NETWORK} is not mikan's (a bridge without traffic between its containers): docker network rm {NETWORK}");
+        bail!("the network {NETWORK} is not scilla's (a bridge without traffic between its containers): docker network rm {NETWORK}");
     }
     words
         .filter_map(|w| w.parse::<Ipv4Addr>().ok())
@@ -670,7 +670,7 @@ pub fn door(panel_api_bridge: &str) -> Option<Door> {
 }
 
 /// The comment on our rule, for whoever reads `ufw show added`.
-const RULE_COMMENT: &str = "mikan-addons";
+const RULE_COMMENT: &str = "scilla-addons";
 
 /// The arguments of ufw for a rule that lets the bridge's containers reach the panel and
 /// nothing else of the host. Without it the default `deny incoming` drops their traffic to the
@@ -693,13 +693,13 @@ fn delete_args(door: Door) -> Vec<String> {
     args
 }
 
-/// What an admin types to open the door by hand (mikan doctor).
+/// What an admin types to open the door by hand (scilla doctor).
 pub fn allow_command(door: Door) -> String {
     format!("ufw {}", allow_args(door).join(" "))
 }
 
 /// The doors `ufw status` lists for the bridge: an allow rule from anywhere, into one IPv4
-/// address and a TCP port, on mikan-addons. Nothing else is read, so what the admin wrote for
+/// address and a TCP port, on scilla-addons. Nothing else is read, so what the admin wrote for
 /// other interfaces is never touched, and a value that is no sound door is not taken.
 pub fn parse_doors(status: &str) -> Vec<Door> {
     let on_bridge = |w: &[&str]| w.windows(2).any(|p| p[0] == "on" && p[1] == NETWORK);
@@ -744,7 +744,7 @@ fn firewall_plan(have: &[Door], want: Option<Door>) -> Vec<Vec<String>> {
 
 /// Opens the panel's API on the bridge in ufw while a custom addon runs (panel_api_bridge is
 /// set), closes it when none does, and replaces it when the gateway or the port moved. Does
-/// nothing without an active ufw, or when the install keeps mikan out of it (MIKAN_UFW=0).
+/// nothing without an active ufw, or when the install keeps scilla out of it (SCILLA_UFW=0).
 /// A rule that cannot be made is told, not fatal: the addons run and only cannot call the
 /// panel, which doctor says.
 fn sync_firewall(panel_api_bridge: &str, say: &mut dyn FnMut(&str)) {
@@ -1235,8 +1235,8 @@ fn remember_loaded(digest: &str, id: &str) -> Result<()> {
     panelfs::write_root(Path::new(LOADED), serde_json::to_string_pretty(&m)?.as_bytes())
 }
 
-/// `mikan addon load <tar>`: an addon's image from an archive (`docker save image@digest`;
-/// the mikan release carries the official bot's) for a server that cannot reach the registry.
+/// `scilla addon load <tar>`: an addon's image from an archive (`docker save image@digest`;
+/// the scilla release carries the official bot's) for a server that cannot reach the registry.
 /// Taken only when the archive's index.json names the digest the signed catalog pins.
 pub fn load(tar: &Path, id: Option<&str>, panel: &str, say: &mut dyn FnMut(&str)) -> Result<()> {
     if let Some(id) = id
@@ -1264,7 +1264,7 @@ pub fn load(tar: &Path, id: Option<&str>, panel: &str, say: &mut dyn FnMut(&str)
     Ok(())
 }
 
-/// `mikan addon list`: what runs here and what the marketplace offers.
+/// `scilla addon list`: what runs here and what the marketplace offers.
 pub fn list(panel: &str) -> Result<()> {
     let state = load_state()?;
     if state.adapters.is_empty() {
@@ -1292,7 +1292,7 @@ pub fn list(panel: &str) -> Result<()> {
     Ok(())
 }
 
-/// Stops every adapter (mikan uninstall, a restore); the state stays with the data.
+/// Stops every adapter (scilla uninstall, a restore); the state stays with the data.
 pub fn down() {
     if Path::new(COMPOSE_DIR).join("compose.yml").exists() {
         let _ = compose(&["down", "--remove-orphans"]);
@@ -1301,7 +1301,7 @@ pub fn down() {
     sync_firewall("", &mut crate::out);
 }
 
-/// The bridge goes with mikan (mikan uninstall), after the addons are down.
+/// The bridge goes with scilla (scilla uninstall), after the addons are down.
 pub fn drop_network() {
     let _ = crate::system::succeeds("docker", &["network", "rm", NETWORK]);
 }
@@ -1350,7 +1350,7 @@ mod tests {
         }
         for bad in [
             json!({"io.containerd.image.name": "postgres:18-alpine"}),
-            json!({"io.containerd.image.name": "ghcr.io/miroshka000/mikan:latest"}),
+            json!({"io.containerd.image.name": "ghcr.io/drillex100-beep/scilla:latest"}),
             json!({"org.opencontainers.image.ref.name": "postgres:18"}),
             json!({"org.opencontainers.image.ref.name": "docker.io/library/postgres"}),
         ] {
@@ -1419,16 +1419,16 @@ mod tests {
 To                         Action      From
 --                         ------      ----
 22/tcp                     ALLOW       Anywhere
-172.18.0.1 21355/tcp on mikan-addons ALLOW       Anywhere
-172.18.0.1 21355/tcp on mikan-addons ALLOW       Anywhere # mikan-addons
-fe80::1 21355/tcp on mikan-addons ALLOW       Anywhere (v6)
-172.18.0.1 80/udp on mikan-addons ALLOW       Anywhere
-172.18.0.1 22/tcp on mikan-addons ALLOW       Anywhere
-172.18.0.1 9000/tcp on mikan-addons DENY       Anywhere
-172.18.0.1 9001/tcp on mikan-addons ALLOW OUT   Anywhere
+172.18.0.1 21355/tcp on scilla-addons ALLOW       Anywhere
+172.18.0.1 21355/tcp on scilla-addons ALLOW       Anywhere # scilla-addons
+fe80::1 21355/tcp on scilla-addons ALLOW       Anywhere (v6)
+172.18.0.1 80/udp on scilla-addons ALLOW       Anywhere
+172.18.0.1 22/tcp on scilla-addons ALLOW       Anywhere
+172.18.0.1 9000/tcp on scilla-addons DENY       Anywhere
+172.18.0.1 9001/tcp on scilla-addons ALLOW OUT   Anywhere
 172.18.0.1 9002/tcp on docker0 ALLOW       Anywhere
-172.18.0.1 9003/tcp on mikan-addons ALLOW       203.0.113.5
-10.0.0.1 9004/tcp ALLOW IN    Anywhere on mikan-addons
+172.18.0.1 9003/tcp on scilla-addons ALLOW       203.0.113.5
+10.0.0.1 9004/tcp ALLOW IN    Anywhere on scilla-addons
 ";
 
     #[test]
@@ -1453,13 +1453,13 @@ fe80::1 21355/tcp on mikan-addons ALLOW       Anywhere (v6)
         let d = door("172.18.0.1:21355").unwrap();
         assert_eq!(
             allow_args(d),
-            ["allow", "in", "on", "mikan-addons", "to", "172.18.0.1", "port", "21355", "proto", "tcp", "comment", "mikan-addons"]
+            ["allow", "in", "on", "scilla-addons", "to", "172.18.0.1", "port", "21355", "proto", "tcp", "comment", "scilla-addons"]
         );
         assert_eq!(
             delete_args(d),
-            ["--force", "delete", "allow", "in", "on", "mikan-addons", "to", "172.18.0.1", "port", "21355", "proto", "tcp"]
+            ["--force", "delete", "allow", "in", "on", "scilla-addons", "to", "172.18.0.1", "port", "21355", "proto", "tcp"]
         );
-        assert_eq!(allow_command(d), "ufw allow in on mikan-addons to 172.18.0.1 port 21355 proto tcp comment mikan-addons");
+        assert_eq!(allow_command(d), "ufw allow in on scilla-addons to 172.18.0.1 port 21355 proto tcp comment scilla-addons");
     }
 
     #[test]
@@ -1714,15 +1714,15 @@ fe80::1 21355/tcp on mikan-addons ALLOW       Anywhere (v6)
         );
         let y = yaml(&m, "", "");
         for want in [
-            "name: mikan-addons",
+            "name: scilla-addons",
             "  yookassa:\n",
             &format!("image: \"ghcr.io/getmikan/adapter-yookassa@sha256:{}\"", "c".repeat(64)),
             "user: \"65532:65532\"",
             "cap_drop: [ALL]",
             "read_only: true",
             "no-new-privileges:true",
-            "MIKAN_ADAPTER_LISTEN: \"127.0.0.1:41873\"",
-            "MIKAN_ADAPTER_TOKEN: \"tok\"",
+            "SCILLA_ADAPTER_LISTEN: \"127.0.0.1:41873\"",
+            "SCILLA_ADAPTER_TOKEN: \"tok\"",
             "pull_policy: never",
             "network_mode: host",
         ] {
@@ -1817,10 +1817,10 @@ fe80::1 21355/tcp on mikan-addons ALLOW       Anywhere (v6)
         for want in [
             "  telegram:\n",
             "mem_limit: 192m",
-            "MIKAN_PANEL_URL: \"http://127.0.0.1:41990/panel/v2\"",
-            &format!("MIKAN_PANEL_TOKEN: \"{}\"", "b".repeat(48)),
-            "MIKAN_BOT_API_URL: \"http://127.0.0.1:41990\"",
-            &format!("MIKAN_BOT_TOKEN: \"0:{}\"", "b".repeat(48)),
+            "SCILLA_PANEL_URL: \"http://127.0.0.1:41990/panel/v2\"",
+            &format!("SCILLA_PANEL_TOKEN: \"{}\"", "b".repeat(48)),
+            "SCILLA_BOT_API_URL: \"http://127.0.0.1:41990\"",
+            &format!("SCILLA_BOT_TOKEN: \"0:{}\"", "b".repeat(48)),
             "network_mode: host",
             "read_only: true",
         ] {
@@ -1963,10 +1963,10 @@ fe80::1 21355/tcp on mikan-addons ALLOW       Anywhere (v6)
         for want in [
             &format!("image: \"ghcr.io/someone/my-bot@sha256:{}\"", "d".repeat(64)),
             "pull_policy: never",
-            "networks: [mikan-addons]",
+            "networks: [scilla-addons]",
             "ports: [\"127.0.0.1:45617:45617\"]",
-            "MIKAN_ADAPTER_LISTEN: \"0.0.0.0:45617\"",
-            "MIKAN_PANEL_URL: \"http://172.18.0.1:41990/panel/v2\"",
+            "SCILLA_ADAPTER_LISTEN: \"0.0.0.0:45617\"",
+            "SCILLA_PANEL_URL: \"http://172.18.0.1:41990/panel/v2\"",
             "cap_drop: [ALL]",
             "read_only: true",
         ] {
@@ -1974,12 +1974,12 @@ fe80::1 21355/tcp on mikan-addons ALLOW       Anywhere (v6)
         }
         assert!(!mine.contains("network_mode"), "a custom addon is not on the host's network:\n{mine}");
         let client = service(&y, "my-client");
-        assert!(client.contains("networks: [mikan-addons]") && !client.contains("ports:"), "a client serves nothing:\n{client}");
+        assert!(client.contains("networks: [scilla-addons]") && !client.contains("ports:"), "a client serves nothing:\n{client}");
         let official = service(&y, "telegram");
         assert!(official.contains("network_mode: host") && official.contains("http://127.0.0.1:41990/panel/v2"), "{official}");
         assert!(!y.contains("  mine:"), "an external addon has no container:\n{y}");
         assert_eq!(y.matches("pull_policy: never").count(), 3, "every service:\n{y}");
-        assert!(y.ends_with("\nnetworks:\n  mikan-addons:\n    external: true\n"), "{y}");
+        assert!(y.ends_with("\nnetworks:\n  scilla-addons:\n    external: true\n"), "{y}");
         // no sound address on the bridge: the custom ones wait, the rest runs
         for bridge in ["", "127.0.0.1:41990", "0.0.0.0:41990", "172.18.0.1:80", "172.18.0.1:41990\"\n    privileged: true"] {
             let y = yaml(&m, "127.0.0.1:41990", bridge);
@@ -2017,7 +2017,7 @@ fe80::1 21355/tcp on mikan-addons ALLOW       Anywhere (v6)
         assert!(!loopback("127.0.0.1:+8080") && !loopback("127.0.0.1:08080") && loopback("127.0.0.1:8080"));
     }
 
-    // A network called mikan-addons is used only when it is the bridge mikan makes.
+    // A network called scilla-addons is used only when it is the bridge scilla makes.
     #[test]
     fn the_bridge_network() {
         assert_eq!(parse_network("bridge false 172.18.0.1 \n").unwrap(), Ipv4Addr::new(172, 18, 0, 1));
@@ -2131,7 +2131,7 @@ fe80::1 21355/tcp on mikan-addons ALLOW       Anywhere (v6)
         (tar, top, config)
     }
 
-    // `mikan addon load` takes an archive only for the digest the signed catalog pins, and
+    // `scilla addon load` takes an archive only for the digest the signed catalog pins, and
     // only when every link from that digest to the config hashes right.
     #[test]
     fn an_archive_is_checked_against_the_catalog() {

@@ -24,20 +24,20 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/pace"
-	"mikan/internal/panel/nodesync"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/release"
+	"scilla/internal/nodeapi"
+	"scilla/internal/pace"
+	"scilla/internal/panel/nodesync"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/release"
 )
 
 // KeyState is the setting that keeps the attempts and the rollout.
 const KeyState = "node_updates"
 
 // MinNodeVersion is the first node release with the update endpoint. Older nodes are
-// updated once by hand (`mikan update` on their server).
+// updated once by hand (`scilla update` on their server).
 const MinNodeVersion = "0.5.0.2"
 
 // Timeout is how long a node may take to come back on the new version, hops and a rollback

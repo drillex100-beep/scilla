@@ -18,9 +18,9 @@ import (
 	"github.com/pressly/goose/v3"
 	"github.com/pressly/goose/v3/lock"
 
-	"mikan/internal/pace"
-	"mikan/internal/panel/config"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/pace"
+	"scilla/internal/panel/config"
+	"scilla/internal/panel/store/db"
 )
 
 //go:embed postgres/*.sql
@@ -47,10 +47,10 @@ type Store struct {
 // since the store opened.
 func (s *Store) Conflicts() uint64 { return s.conflicts.Load() }
 
-// DatabaseURL is MIKAN_DATABASE_URL, the panel's PostgreSQL: the variable, or the file
-// MIKAN_DATABASE_URL_FILE names (the installer's secret, config.Secret).
+// DatabaseURL is SCILLA_DATABASE_URL, the panel's PostgreSQL: the variable, or the file
+// SCILLA_DATABASE_URL_FILE names (the installer's secret, config.Secret).
 func DatabaseURL() (string, error) {
-	dsn, err := config.Secret("MIKAN_DATABASE_URL")
+	dsn, err := config.Secret("SCILLA_DATABASE_URL")
 	if err != nil {
 		return "", err
 	}
@@ -60,16 +60,16 @@ func DatabaseURL() (string, error) {
 	return dsn, nil
 }
 
-var errNoDatabaseURL = errors.New("MIKAN_DATABASE_URL is required; run the current mikan installer to set up PostgreSQL")
+var errNoDatabaseURL = errors.New("SCILLA_DATABASE_URL is required; run the current scilla installer to set up PostgreSQL")
 
-// ParseDatabaseURL parses a MIKAN_DATABASE_URL without echoing it: it holds the password.
+// ParseDatabaseURL parses a SCILLA_DATABASE_URL without echoing it: it holds the password.
 func ParseDatabaseURL(dsn string) (*pgx.ConnConfig, error) {
 	if dsn == "" {
 		return nil, errNoDatabaseURL
 	}
 	cfg, err := pgx.ParseConfig(dsn)
 	if err != nil {
-		return nil, errors.New("invalid MIKAN_DATABASE_URL")
+		return nil, errors.New("invalid SCILLA_DATABASE_URL")
 	}
 	return cfg, nil
 }
@@ -164,7 +164,7 @@ func connectPostgres(ctx context.Context, dsn string, kind session) (*sql.DB, er
 	cfg.ConnectTimeout = 10 * time.Second
 	// What the URL sets wins: an operator may tune these for a big installation.
 	for name, value := range map[string]string{
-		"application_name":                    "mikan",
+		"application_name":                    "scilla",
 		"statement_timeout":                   "30s",
 		"lock_timeout":                        "10s",
 		"idle_in_transaction_session_timeout": "60s",
@@ -241,7 +241,7 @@ func withConn(ctx context.Context, dsn string, fn func(*pgx.Conn) error) error {
 	if err != nil {
 		return err
 	}
-	cfg.RuntimeParams["application_name"] = "mikan"
+	cfg.RuntimeParams["application_name"] = "scilla"
 	c, err := pgx.ConnectConfig(ctx, cfg)
 	if err != nil {
 		return err
@@ -262,7 +262,7 @@ func schemaLock(ctx context.Context, q queryRower, purpose string) (schema strin
 		return "", 0, err
 	}
 	h := fnv.New64a()
-	fmt.Fprintf(h, "mikan-%s:%s:%s", purpose, database, schema)
+	fmt.Fprintf(h, "scilla-%s:%s:%s", purpose, database, schema)
 	return schema, int64(h.Sum64()), nil
 }
 

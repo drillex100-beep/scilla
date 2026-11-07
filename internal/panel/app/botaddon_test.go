@@ -14,12 +14,12 @@ import (
 	"strings"
 	"testing"
 
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/addons/panelapi"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/tgate"
-	"mikan/internal/release"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/addons/panelapi"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/tgate"
+	"scilla/internal/release"
 )
 
 // A panel whose bot is on installs the official bot addon from the catalog by itself, with

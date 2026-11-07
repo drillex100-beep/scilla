@@ -46,7 +46,7 @@ proxy-groups:
   - name: "\U0001F1F3\U0001F1F1 Нидерланды"
     type: url-test
     interval: 300
-    mikan:
+    scilla:
       nodes:
         - "\U0001F1F3\U0001F1F1 Нидерланды"
     tolerance: 50
@@ -54,7 +54,7 @@ proxy-groups:
   - name: "\U0001F1FA\U0001F1F8 США"
     type: url-test
     interval: 300
-    mikan:
+    scilla:
       nodes:
         - "\U0001F1FA\U0001F1F8 США"
     tolerance: 50

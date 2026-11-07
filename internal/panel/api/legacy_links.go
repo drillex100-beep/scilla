@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"strings"
 
-	"mikan/internal/panel/panelimport"
+	"scilla/internal/panel/panelimport"
 )
 
 // LegacyLinks is what a user kept from the panel they were imported from: their old

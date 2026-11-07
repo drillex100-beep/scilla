@@ -9,10 +9,10 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/acme"
-	"mikan/internal/panel/certcheck"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/tlscert"
+	"scilla/internal/panel/acme"
+	"scilla/internal/panel/certcheck"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/tlscert"
 )
 
 // The admin's own certificates (GitHub issue #9): the panel's instead of Let's Encrypt,

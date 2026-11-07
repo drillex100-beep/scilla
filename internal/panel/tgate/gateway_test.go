@@ -7,17 +7,17 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/settings"
-	"mikan/internal/tgapi"
+	"scilla/internal/panel/settings"
+	"scilla/internal/tgapi"
 )
 
 func TestInfrastructureAdminLinkIsOneTime(t *testing.T) {
 	e := setup(t)
 	link, err := e.gate.BeginInfrastructureAdminConnect(e.ctx)
-	if err != nil || !strings.Contains(link, "https://t.me/mikan_test_bot?start=infra_") {
+	if err != nil || !strings.Contains(link, "https://t.me/scilla_test_bot?start=infra_") {
 		t.Fatalf("admin connect link: %q %v", link, err)
 	}
-	code := strings.TrimPrefix(link, "https://t.me/mikan_test_bot?start=infra_")
+	code := strings.TrimPrefix(link, "https://t.me/scilla_test_bot?start=infra_")
 	e.say(555, "/start infra_"+code)
 	e.tg.until(t, 0, func(cs []call) bool {
 		for _, c := range cs {
@@ -88,7 +88,7 @@ func TestGatewayWithoutScreens(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	e.say(555, "/start infra_"+strings.TrimPrefix(link, "https://t.me/mikan_test_bot?start=infra_"))
+	e.say(555, "/start infra_"+strings.TrimPrefix(link, "https://t.me/scilla_test_bot?start=infra_"))
 	e.tg.until(t, 0, func(cs []call) bool {
 		for _, c := range cs {
 			if c.method == "sendMessage" && c.body["chat_id"] == float64(555) && strings.Contains(text(c), "подключён") {

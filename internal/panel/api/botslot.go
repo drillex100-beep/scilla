@@ -6,9 +6,9 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/addons/panelapi"
-	"mikan/internal/panel/settings"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/addons/panelapi"
+	"scilla/internal/panel/settings"
 )
 
 // Who answers in the subscribers' bot: an addon holding the bot (permission bot) through the

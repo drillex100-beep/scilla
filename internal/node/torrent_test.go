@@ -11,7 +11,7 @@ import (
 
 	C "github.com/metacubex/mihomo/constant"
 
-	"mikan/internal/nodeapi"
+	"scilla/internal/nodeapi"
 )
 
 func btHandshake() []byte {

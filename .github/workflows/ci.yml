@@ -23,15 +23,15 @@ jobs:
         # Google's Docker Hub mirror: Docker Hub limits anonymous pulls and has outages.
         image: mirror.gcr.io/library/postgres:18-alpine
         env:
-          POSTGRES_USER: mikan_test
-          POSTGRES_PASSWORD: mikan_test
-          POSTGRES_DB: mikan_test
+          POSTGRES_USER: scilla_test
+          POSTGRES_PASSWORD: scilla_test
+          POSTGRES_DB: scilla_test
         ports: ["5432:5432"]
         options: >-
-          --health-cmd "pg_isready -U mikan_test -d mikan_test"
+          --health-cmd "pg_isready -U scilla_test -d scilla_test"
           --health-interval 2s --health-timeout 5s --health-retries 30
     env:
-      MIKAN_TEST_DATABASE_URL: postgres://mikan_test:mikan_test@localhost:5432/mikan_test?sslmode=disable
+      SCILLA_TEST_DATABASE_URL: postgres://scilla_test:scilla_test@localhost:5432/scilla_test?sslmode=disable
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -105,9 +105,9 @@ jobs:
       - run: cargo test
       - run: cargo build --locked
       # The updater takes its lock in /run, as on a server: the stand runs as root.
-      - run: sudo env MIKAN_INSTALLER_TEST=1 sh test-upgrade.sh
+      - run: sudo env SCILLA_INSTALLER_TEST=1 sh test-upgrade.sh
       # The one-line install against a stand-in GitHub: the release index and its fallback.
-      - run: sudo env MIKAN_INSTALLER_TEST=1 sh test-install.sh
+      - run: sudo env SCILLA_INSTALLER_TEST=1 sh test-install.sh
 
   # The installer's dependencies against the RustSec advisory database. A new advisory
   # fails the check on the next pull request; cargo audit only reads Cargo.lock.

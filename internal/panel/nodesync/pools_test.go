@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"testing"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/store/db"
 )
 
 // A traffic pool end to end on the panel's side: the user gets the tariff's pool limit,

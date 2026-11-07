@@ -1,4 +1,4 @@
-//! The support terminal's host side: `mikan terminal-agent`, which a systemd path unit starts
+//! The support terminal's host side: `scilla terminal-agent`, which a systemd path unit starts
 //! when the panel, or a node, writes data/<panel|node>/support/terminal/request. This is the
 //! admin's "terminal" level of the support access: a shell on this server, for whoever holds
 //! a live grant that names it. It is not an ssh daemon and listens on no network port.
@@ -29,7 +29,7 @@
 //!
 //! support/ itself is root's (the panel cannot swap the recordings or the socket for its own);
 //! only terminal/, where the panel writes its request, is the panel's. `prepare` makes the
-//! three and `mikan update` runs it (panelfs::own_dirs).
+//! three and `scilla update` runs it (panelfs::own_dirs).
 
 use std::fs::File;
 use std::io::{ErrorKind, Read, Write};
@@ -145,7 +145,7 @@ fn make_dir(parent: &OwnedFd, name: &str, mode: u32, owner: Owner) -> Result<Own
 
 /// What one run needs; production() is the real one, tests make their own.
 pub struct Params {
-    /// /opt/mikan.
+    /// /opt/scilla.
     pub root: PathBuf,
     pub node: bool,
     /// The shell and its arguments.
@@ -235,7 +235,7 @@ impl Outcome {
     }
 }
 
-/// `mikan terminal-agent`.
+/// `scilla terminal-agent`.
 pub fn agent() -> Result<()> {
     let install = Install::load()?;
     if let Some(o) = run(&Params::production(install.node))? {
@@ -563,7 +563,7 @@ impl Recording {
                     let mut rec = Self { file, started: Instant::now(), size: 0, max, carry_in: Vec::new(), carry_out: Vec::new() };
                     let header = serde_json::json!({
                         "version": 2, "width": size.0, "height": size.1, "timestamp": now,
-                        "title": format!("mikan support, grant {grant}, {target}"),
+                        "title": format!("scilla support, grant {grant}, {target}"),
                         "env": {"TERM": TERM, "SHELL": shell},
                     });
                     rec.line(&format!("{header}\n"))?;
@@ -658,7 +658,7 @@ fn prune(rec_fd: &OwnedFd, now: u64) {
 }
 
 /// The daily sweep of old recordings, for a server that has had no terminal session since:
-/// `mikan update` (its timer runs every day, whether or not an update is due) calls it for
+/// `scilla update` (its timer runs every day, whether or not an update is due) calls it for
 /// the panel's and the node's data. Nothing is made here: no support/recordings, no sweep.
 pub fn sweep(root: &Path) {
     for kind in ["panel", "node"] {
@@ -736,7 +736,7 @@ impl Shell {
             .env("SHELL", prog)
             .env("LANG", "C.UTF-8")
             .env("PATH", "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin")
-            .env("MIKAN_SUPPORT_GRANT", grant.to_string())
+            .env("SCILLA_SUPPORT_GRANT", grant.to_string())
             .current_dir(if Path::new("/root").read_dir().is_ok() { "/root" } else { "/" })
             .stdin(Stdio::from(slave.try_clone()?))
             .stdout(Stdio::from(slave.try_clone()?))
@@ -869,7 +869,7 @@ fn session(p: &Params, req: &Request, term: &Dir, rec_fd: &OwnedFd, conn: UnixSt
     let mut to_shell: Vec<u8> = Vec::new();
     let hello = hello_payload(&rec_name, req.expires_at);
     to_conn.extend(frame(HELLO, hello.as_bytes()));
-    let banner = b"\r\n*** mikan support: this session is recorded and the server's owner can watch it ***\r\n";
+    let banner = b"\r\n*** scilla support: this session is recorded and the server's owner can watch it ***\r\n";
     to_conn.extend(frame(DATA, banner));
     let _ = rec.data(false, banner);
 

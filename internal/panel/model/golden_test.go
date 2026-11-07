@@ -85,7 +85,7 @@ func TestWireGoldens(t *testing.T) {
 		"PackageOffer":        PackageOffer{Package: pack, Pool: "WL", Stars: 30, Rub: 9900},
 		"DeviceOffer":         DeviceOffer{Limit: 3, Extra: 1, Max: 2, Stars: 40, Rub: 4900, Keep: true, Expiry: nullInt(1802592000)},
 		"TrialOffer":          TrialOffer{Tariff: tariff, Stars: 10, Rub: 9900},
-		"FreeOffer":           FreeOffer{Tariff: tariff, Channel: "@mikan"},
+		"FreeOffer":           FreeOffer{Tariff: tariff, Channel: "@scilla"},
 		"InvoiceRequest":      InvoiceRequest{TgID: 555, UserID: 101, TariffID: 2, TermDays: &days, Provider: "stars", PromoCode: "SPRING"},
 		"InvoiceRequest.zero": InvoiceRequest{},
 		"PackageRequest":      PackageRequest{TgID: 555, UserID: 101, PackageID: 9, Provider: "addon:yookassa", PromoCode: "SPRING"},

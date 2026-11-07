@@ -9,8 +9,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/pace"
+	"scilla/internal/nodeapi"
+	"scilla/internal/pace"
 )
 
 // Registry holds the panel's view of each slot on this node: its policy, its devices, its

@@ -1,8 +1,8 @@
 package billing
 
 import (
-	"mikan/internal/panel/model"
-	"mikan/internal/panel/promo"
+	"scilla/internal/panel/model"
+	"scilla/internal/panel/promo"
 )
 
 // Refusal is the code the buyer is told for err: a refusal of the purchase (model.Refusal),

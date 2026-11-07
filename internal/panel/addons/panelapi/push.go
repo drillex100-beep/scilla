@@ -6,10 +6,10 @@ import (
 	"sync"
 	"time"
 
-	"mikan/internal/pace"
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/pace"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/store/db"
 )
 
 // Push delivery of the feed of events (docs/pipeline/addons.md, 15.3): an addon that serves

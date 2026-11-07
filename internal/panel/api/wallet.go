@@ -10,9 +10,9 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"mikan/internal/panel/billing"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/billing"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
 )
 
 // The accounts' balances and their top-ups by hand: the admin sees each request with its

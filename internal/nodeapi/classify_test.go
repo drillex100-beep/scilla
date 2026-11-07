@@ -14,8 +14,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/nodetls"
+	"scilla/internal/nodeapi"
+	"scilla/internal/nodetls"
 )
 
 type timeoutErr struct{}
@@ -61,15 +61,15 @@ func TestClassifyErrors(t *testing.T) {
 // with another key, and a node that refuses the panel.
 func TestClassifyRealConnections(t *testing.T) {
 	now := time.Now()
-	panel, err := nodetls.Generate("mikan-panel", x509.ExtKeyUsageClientAuth, now)
+	panel, err := nodetls.Generate("scilla-panel", x509.ExtKeyUsageClientAuth, now)
 	if err != nil {
 		t.Fatal(err)
 	}
-	node, err := nodetls.Generate("node-1.mikan", x509.ExtKeyUsageServerAuth, now)
+	node, err := nodetls.Generate("node-1.scilla", x509.ExtKeyUsageServerAuth, now)
 	if err != nil {
 		t.Fatal(err)
 	}
-	other, err := nodetls.Generate("node-2.mikan", x509.ExtKeyUsageServerAuth, now)
+	other, err := nodetls.Generate("node-2.scilla", x509.ExtKeyUsageServerAuth, now)
 	if err != nil {
 		t.Fatal(err)
 	}

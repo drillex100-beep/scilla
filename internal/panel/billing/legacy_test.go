@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"testing"
 
-	"mikan/internal/panel/addons"
-	"mikan/internal/panel/store/db"
+	"scilla/internal/panel/addons"
+	"scilla/internal/panel/store/db"
 )
 
 // YooKassa notifies the URL its dashboard has had since 0.4.0; the adapter that took over

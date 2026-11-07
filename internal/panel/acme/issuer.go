@@ -25,9 +25,9 @@ import (
 	"github.com/go-acme/lego/v4/lego"
 	"github.com/go-acme/lego/v4/registration"
 
-	"mikan/internal/acmechallenge"
-	"mikan/internal/fsutil"
-	"mikan/internal/panel/settings"
+	"scilla/internal/acmechallenge"
+	"scilla/internal/fsutil"
+	"scilla/internal/panel/settings"
 )
 
 // issuer orders certificates from the chosen CA for the panel and its nodes: one ACME
@@ -35,14 +35,14 @@ import (
 // order brings (the panel's own port 80, or a node's).
 type issuer struct {
 	root     string // <data>/tls/acme
-	override string // MIKAN_ACME_DIRECTORY: one directory for every CA (tests, staging)
+	override string // SCILLA_ACME_DIRECTORY: one directory for every CA (tests, staging)
 	set      *settings.Settings
 	http     *http.Client // for ZeroSSL's EAB API
 	keyMu    sync.Mutex   // one account key per CA, made once
 }
 
 func newIssuer(root string, set *settings.Settings) *issuer {
-	return &issuer{root: root, override: os.Getenv("MIKAN_ACME_DIRECTORY"), set: set, http: &http.Client{Timeout: 20 * time.Second}}
+	return &issuer{root: root, override: os.Getenv("SCILLA_ACME_DIRECTORY"), set: set, http: &http.Client{Timeout: 20 * time.Second}}
 }
 
 func (i *issuer) directory(ca string) string {
@@ -214,7 +214,7 @@ func loadPair(dir string) (*tls.Certificate, string, error) {
 	return &c, ca, nil
 }
 
-// serverProvider answers the panel's own challenges on its port 80 (or MIKAN_ACME_LISTEN).
+// serverProvider answers the panel's own challenges on its port 80 (or SCILLA_ACME_LISTEN).
 type serverProvider struct{ s *acmechallenge.Server }
 
 func (p serverProvider) Present(_, token, keyAuth string) error { return p.s.Present(token, keyAuth) }

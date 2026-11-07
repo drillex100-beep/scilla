@@ -47,7 +47,7 @@ func TestStarterRoundTrip(t *testing.T) {
 		t.Fatal(err)
 	}
 	s := string(starter)
-	if strings.Contains(s, "uuid") || !strings.Contains(s, "include-all-proxies: true") || !strings.Contains(s, "mikan:") || strings.Contains(s, "203.0.113.7/32") {
+	if strings.Contains(s, "uuid") || !strings.Contains(s, "include-all-proxies: true") || !strings.Contains(s, "scilla:") || strings.Contains(s, "203.0.113.7/32") {
 		t.Fatalf("starter:\n%s", s)
 	}
 	got, err := Template(prof, s)
@@ -106,7 +106,7 @@ proxy-groups:
     filter: "🇯🇵"
   - name: 🔒 VLESS
     type: select
-    mikan: {nodes: ["🇳🇱 Нидерланды"], types: [vless]}
+    scilla: {nodes: ["🇳🇱 Нидерланды"], types: [vless]}
   - name: 🚫 Без VPN
     type: select
     proxies: [DIRECT]
@@ -151,16 +151,16 @@ func TestTemplateGroups(t *testing.T) {
 	}
 	for _, n := range byName["🔒 VLESS"] {
 		if !strings.HasPrefix(n, "🇳🇱") || types[n] != "vless" {
-			t.Errorf("mikan nodes and types: %v", byName["🔒 VLESS"])
+			t.Errorf("scilla nodes and types: %v", byName["🔒 VLESS"])
 		}
 	}
 	if len(byName["🔒 VLESS"]) == 0 {
-		t.Error("mikan picked nothing")
+		t.Error("scilla picked nothing")
 	}
 	if v.Rules[0] != "IP-CIDR,203.0.113.7/32,DIRECT,no-resolve" || v.Rules[len(v.Rules)-1] != "MATCH,REJECT" {
 		t.Fatalf("the panel's rules around the admin's:\n%s", strings.Join(v.Rules, "\n"))
 	}
-	if strings.Contains(string(raw), "include-all-proxies") || strings.Contains(string(raw), "mikan:") {
+	if strings.Contains(string(raw), "include-all-proxies") || strings.Contains(string(raw), "scilla:") {
 		t.Fatalf("the asks stay out of the profile:\n%s", raw)
 	}
 	if err := CheckTemplate(prof, ownTemplate); err != nil {
@@ -214,14 +214,14 @@ func TestTemplateIsCheckedForEachUser(t *testing.T) {
 	}
 }
 
-// A filter only mihomo reads cannot go with mikan's choice of nodes: the panel could not
+// A filter only mihomo reads cannot go with scilla's choice of nodes: the panel could not
 // apply the choice and the group would take every server.
 func TestTemplateFilterGoCannotRead(t *testing.T) {
 	prof := twoNodes(t)
-	with := "proxy-groups:\n  - {name: G, type: select, mikan: {nodes: [2]}, filter: \"^(?=.*US)\"}\nrules:\n  - MATCH,G\n"
+	with := "proxy-groups:\n  - {name: G, type: select, scilla: {nodes: [2]}, filter: \"^(?=.*US)\"}\nrules:\n  - MATCH,G\n"
 	var te *TemplateError
 	if err := CheckTemplate(prof, with); !errors.As(err, &te) || te.Code != "template_filter" {
-		t.Fatalf("mikan with a lookahead filter: %v", err)
+		t.Fatalf("scilla with a lookahead filter: %v", err)
 	}
 	without := "proxy-groups:\n  - {name: G, type: select, include-all-proxies: true, filter: \"^(?=.*US)\"}\nrules:\n  - MATCH,G\n"
 	if err := CheckTemplate(prof, without); err != nil {

@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/logbuf"
-	"mikan/internal/nodeapi"
+	"scilla/internal/logbuf"
+	"scilla/internal/nodeapi"
 )
 
 // The whole panel with the log buffer and the host's directory wired in: the logs and the

@@ -14,13 +14,13 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/panel/domain"
-	"mikan/internal/panel/events"
-	"mikan/internal/panel/promo"
-	"mikan/internal/panel/settings"
-	"mikan/internal/panel/store"
-	"mikan/internal/panel/store/db"
-	"mikan/internal/panel/store/storetest"
+	"scilla/internal/panel/domain"
+	"scilla/internal/panel/events"
+	"scilla/internal/panel/promo"
+	"scilla/internal/panel/settings"
+	"scilla/internal/panel/store"
+	"scilla/internal/panel/store/db"
+	"scilla/internal/panel/store/storetest"
 )
 
 type noChanges struct{}
@@ -59,7 +59,7 @@ func (f *fakeTG) RefundStars(_ context.Context, _ int64, charge string) error {
 	f.refunds = append(f.refunds, charge)
 	return nil
 }
-func (f *fakeTG) BotURL(context.Context) string { return "https://t.me/mikan_test_bot" }
+func (f *fakeTG) BotURL(context.Context) string { return "https://t.me/scilla_test_bot" }
 func (f *fakeTG) Channel(context.Context) (string, bool) {
 	f.mu.Lock()
 	defer f.mu.Unlock()

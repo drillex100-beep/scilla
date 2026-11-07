@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"mikan/internal/textutil"
+	"scilla/internal/textutil"
 )
 
 // The bot's own words in both languages. The admin's texts replace the ones marked

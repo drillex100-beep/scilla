@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"mikan/internal/nodeapi"
-	"mikan/internal/panel/hysteresis"
-	"mikan/internal/tgapi"
+	"scilla/internal/nodeapi"
+	"scilla/internal/panel/hysteresis"
+	"scilla/internal/tgapi"
 )
 
 // fakeSender records what the queue sends and answers from fields, so the delivery runs
