@@ -33,7 +33,7 @@ var ReleaseKeys = []string{
 // (getmikan/marketplace-community). They sign in a context of their own (SignIn), and neither
 // signs a release.
 const (
-	CatalogKey   = "Z4QfL07dI/IRReSe6Gr76UcxxPoy4i2GiClBv8RcNuo="
+	CatalogKey   = "bTylRn1kzD3tpQpXos7wRRryVaJ/wLQoFAdUywwtR/k="
 	CommunityKey = "BKCw8Uf/qo3xSrYL+jwWyEThn/PXxHh0FiJvLDowmdc="
 )
 
