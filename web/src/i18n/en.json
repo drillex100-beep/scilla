@@ -819,8 +819,14 @@
       "noSettings": "This widget has no settings",
       "export": "Export",
       "import": "Import",
-      "importInvalid": "Could not read the layout file"
-    }
+      "importInvalid": "Could not read the layout file",
+      "widgetNodes": "Servers",
+      "widgetInbounds": "Inbounds"
+    },
+    "nodesEmpty": "No servers yet",
+    "inboundsEmpty": "No inbounds yet",
+    "statusUnknown": "Unknown",
+    "connsShort": "conns"
   },
   "users": {
     "loadFailed": "Could not load the list",

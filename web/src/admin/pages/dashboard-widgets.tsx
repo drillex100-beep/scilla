@@ -14,7 +14,7 @@ import { nodeLabel } from "../../lib/node-label";
 import { CardHead } from "../../components/layout";
 
 /** The widget kinds the builder offers; the API accepts the same list (plus a few reserved). */
-export type WidgetType = "stat" | "traffic" | "shares" | "server" | "attention" | "top" | "payments" | "audit";
+export type WidgetType = "stat" | "traffic" | "shares" | "server" | "attention" | "top" | "payments" | "audit" | "nodes" | "inbounds";
 
 export type WidgetConfig = {
   /** stat: which counter of the overview to show. */
@@ -537,6 +537,87 @@ export function AuditWidget() {
   );
 }
 
+
+export function NodesWidget() {
+  const q = useNodes();
+  const list = q.data ?? [];
+  const okCount = list.filter((n) => n.status === "ok").length;
+  return (
+    <section className="card glass flex h-full flex-col overflow-hidden" aria-labelledby="nodes-title">
+      <CardHead title={t("dashboard.builder.widgetNodes")} sub={q.isPending ? "…" : `${okCount}/${list.length}`} id="nodes-title" />
+      {q.data === undefined && q.isError ? (
+        <CardError error={q.error} onRetry={() => void q.refetch()} />
+      ) : q.isPending ? (
+        <div className="space-y-3">
+          {[0, 1, 2].map((i) => (
+            <Skeleton key={i} style={{ height: 28 }} />
+          ))}
+        </div>
+      ) : list.length === 0 ? (
+        <p className="flex flex-1 items-center justify-center py-6 text-center text-[13px] text-[var(--ink-500)]">{t("dashboard.nodesEmpty")}</p>
+      ) : (
+        <div className="row-list min-h-0 flex-1 overflow-y-auto">
+          {list.map((n) => (
+            <div key={n.id} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 py-2.5">
+              <div className="min-w-0">
+                <div className="truncate text-[13px] font-medium">{nodeLabel(n)}</div>
+                <div className="truncate text-xs text-[var(--ink-500)]">
+                  {num(n.conns)} {t("dashboard.connsShort")} · {n.listeners_ok}/{n.listeners} · {bytes(n.traffic_24h)}
+                </div>
+              </div>
+              <Pill tone={n.status === "ok" ? "ok" : n.status === "error" ? "bad" : "warn"}>
+                {n.status === "ok" ? t("nodes.online") : n.status === "error" ? t("nodes.offline") : t("dashboard.statusUnknown")}
+              </Pill>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
+export function InboundsWidget() {
+  const inbounds = useInbounds();
+  const nodes = useNodes();
+  const byId = useMemo(() => new Map((nodes.data ?? []).map((n) => [n.id, n])), [nodes.data]);
+  const list = inbounds.data ?? [];
+  const enabledCount = list.filter((i) => i.enabled).length;
+  return (
+    <section className="card glass flex h-full flex-col overflow-hidden" aria-labelledby="inbounds-title">
+      <CardHead title={t("dashboard.builder.widgetInbounds")} sub={inbounds.isPending ? "…" : `${enabledCount}/${list.length}`} id="inbounds-title" />
+      {inbounds.data === undefined && inbounds.isError ? (
+        <CardError error={inbounds.error} onRetry={() => void inbounds.refetch()} />
+      ) : inbounds.isPending ? (
+        <div className="space-y-3">
+          {[0, 1, 2].map((i) => (
+            <Skeleton key={i} style={{ height: 28 }} />
+          ))}
+        </div>
+      ) : list.length === 0 ? (
+        <p className="flex flex-1 items-center justify-center py-6 text-center text-[13px] text-[var(--ink-500)]">{t("dashboard.inboundsEmpty")}</p>
+      ) : (
+        <div className="row-list min-h-0 flex-1 overflow-y-auto">
+          {list.map((i) => {
+            const node = i.node_id === undefined ? undefined : byId.get(i.node_id);
+            return (
+              <div key={i.id} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 py-2.5">
+                <div className="min-w-0">
+                  <div className="truncate text-[13px] font-medium">{i.preset === "custom" ? t("inbounds.customOf", { type: i.type }) : i.title}</div>
+                  <div className="truncate text-xs text-[var(--ink-500)]">
+                    {i.name}
+                    {node ? ` · ${nodeLabel(node)}` : ""}
+                  </div>
+                </div>
+                <Pill tone={i.enabled ? "ok" : "off"}>{i.enabled ? t("inbounds.enabled") : t("inbounds.disabled")}</Pill>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </section>
+  );
+}
+
 export const WIDGETS: Record<WidgetType, { w: number; h: number; minW: number; minH: number; title: () => string; component: (config?: WidgetConfig) => React.ReactNode }> = {
   stat: { w: 3, h: 2, minW: 3, minH: 2, title: () => t("dashboard.builder.widgetStat"), component: (config) => <StatWidget config={config} /> },
   traffic: { w: 8, h: 5, minW: 6, minH: 4, title: () => t("dashboard.traffic"), component: (config) => <TrafficWidget config={config} /> },
@@ -546,6 +627,8 @@ export const WIDGETS: Record<WidgetType, { w: number; h: number; minW: number; m
   top: { w: 4, h: 4, minW: 3, minH: 3, title: () => t("dashboard.top"), component: () => <TopWidget /> },
   payments: { w: 4, h: 5, minW: 4, minH: 4, title: () => t("dashboard.builder.widgetPayments"), component: () => <PaymentsWidget /> },
   audit: { w: 4, h: 5, minW: 4, minH: 4, title: () => t("dashboard.builder.widgetAudit"), component: () => <AuditWidget /> },
+  nodes: { w: 6, h: 5, minW: 4, minH: 4, title: () => t("dashboard.builder.widgetNodes"), component: () => <NodesWidget /> },
+  inbounds: { w: 6, h: 5, minW: 4, minH: 4, title: () => t("dashboard.builder.widgetInbounds"), component: () => <InboundsWidget /> },
 };
 
 export const WIDGET_TYPES = Object.keys(WIDGETS) as WidgetType[];

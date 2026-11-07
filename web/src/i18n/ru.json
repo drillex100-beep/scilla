@@ -819,8 +819,14 @@
       "noSettings": "У этого виджета нет настроек",
       "export": "Экспорт",
       "import": "Импорт",
-      "importInvalid": "Не удалось прочитать файл макета"
-    }
+      "importInvalid": "Не удалось прочитать файл макета",
+      "widgetNodes": "Серверы",
+      "widgetInbounds": "Подключения"
+    },
+    "nodesEmpty": "Серверов пока нет",
+    "inboundsEmpty": "Подключений пока нет",
+    "statusUnknown": "Неизвестно",
+    "connsShort": "конн."
   },
   "users": {
     "loadFailed": "Не удалось загрузить список",
