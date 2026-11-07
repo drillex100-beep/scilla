@@ -44,6 +44,10 @@ import (
 // CatalogURL is where the signed catalog is published, next to its signature (release.SigSuffix).
 const CatalogURL = "https://github.com/drillex100-beep/marketplace/releases/latest/download/index.json"
 
+// CatalogMirror is the jsDelivr copy of the same signed catalog, committed in the marketplace
+// repository: panels whose servers cannot reach GitHub's release CDN fall back to it.
+const CatalogMirror = "https://cdn.jsdelivr.net/gh/drillex100-beep/marketplace@main/catalog/index.json"
+
 // Protocol is the payment adapters' protocol; Protocol2 that of every other kind.
 const (
 	Protocol  = 1
@@ -364,8 +368,8 @@ func (r Request) Valid() bool {
 
 // Manager reads the catalog and the host's state, and talks to the adapters.
 type Manager struct {
-	dir, updateDir string // "" without a data directory
-	catalogURL     string
+	dir, updateDir string   // "" without a data directory
+	catalogURLs    []string // the marketplace's catalog, then its mirrors
 	// catalogKey and communityKey check the signed documents (release.CatalogKey,
 	// release.CommunityKey).
 	catalogKey, communityKey ed25519.PublicKey
@@ -394,10 +398,11 @@ type Manager struct {
 // New: dataDir is the panel's data directory ("" turns the host side off); catalogURL ""
 // is the marketplace's own.
 func New(dataDir, catalogURL, panelVersion string, log *slog.Logger, now func() time.Time) *Manager {
-	if catalogURL == "" {
-		catalogURL = CatalogURL
+	catalogURLs := []string{CatalogURL, CatalogMirror}
+	if catalogURL != "" {
+		catalogURLs = []string{catalogURL}
 	}
-	m := &Manager{catalogURL: catalogURL, communityURL: CommunityURL, version: panelVersion, log: log, now: now,
+	m := &Manager{catalogURLs: catalogURLs, communityURL: CommunityURL, version: panelVersion, log: log, now: now,
 		catalogKey: release.MustKey(release.CatalogKey), communityKey: release.MustKey(release.CommunityKey),
 		hc:    &http.Client{Timeout: 15 * time.Second},
 		infos: map[string]described[Info]{}, infos2: map[string]described[InfoV2]{}, noInfo: map[string]noInfo{},
@@ -433,12 +438,25 @@ func (m *Manager) SetKeys(catalog, community ed25519.PublicKey) {
 // copy at hand while GitHub fails, none older than one seen.
 func (m *Manager) Catalog(ctx context.Context) (Catalog, error) {
 	return m.catalog.get(ctx, m.now(), m.seenFile(), func(ctx context.Context) (Catalog, error) {
-		var c Catalog
-		err := release.FetchSigned(ctx, m.get, m.catalogURL, release.SigSuffix, 1<<20, func(data []byte, sig string) (err error) {
-			c, err = ParseCatalog(data, sig, m.catalogKey, m.version)
-			return err
-		})
-		return c, err
+		fetch := func(url string) (Catalog, error) {
+			var c Catalog
+			err := release.FetchSigned(ctx, m.get, url, release.SigSuffix, 1<<20, func(data []byte, sig string) (err error) {
+				c, err = ParseCatalog(data, sig, m.catalogKey, m.version)
+				return err
+			})
+			return c, err
+		}
+		// The mirrors serve the same signed document: the first that answers wins, and a panel
+		// behind a block of GitHub's release CDN still gets the catalog.
+		var lastErr error
+		for _, url := range m.catalogURLs {
+			c, err := fetch(url)
+			if err == nil {
+				return c, nil
+			}
+			lastErr = err
+		}
+		return Catalog{}, lastErr
 	})
 }
 
