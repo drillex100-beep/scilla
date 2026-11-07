@@ -35,6 +35,10 @@ const (
 	NodeDown = "node.down"
 	NodeUp   = "node.up"
 
+	NodeHealStarted = "node.heal.started"
+	NodeHealed      = "node.heal.healed"
+	NodeHealFailed  = "node.heal.failed"
+
 	BalanceTopup = "balance.topup"
 )
 
@@ -168,6 +172,16 @@ const (
 	UnboundLimit        = "limit"   // the limit fell: a place bought for a term ended, or was refunded
 )
 
+// Heal is the data of NodeHealStarted, NodeHealed and NodeHealFailed: which node the
+// auto-heal engine treated and how the incident came to. Not tied to a subscriber.
+type Heal struct {
+	NodeID      int64  `json:"node_id"`
+	Name        string `json:"name"`
+	Attempts    int    `json:"attempts,omitempty"`     // restarts asked for the incident
+	DurationSec int64  `json:"duration_sec,omitempty"` // NodeHealed: downtime before the recovery
+	CircuitOpen bool   `json:"circuit_open,omitempty"` // NodeHealFailed: the node is left alone until reset
+}
+
 // Node is the data of NodeDown and NodeUp. Not tied to a subscriber: no user_id and no tg_id.
 // A node is down after three failed health checks in a row (about 15 s), and up again at the
 // first one that passes; each change is told once, though the checks go on every 5 s.
@@ -226,5 +240,8 @@ var Docs = []Doc{
 	{DeviceUnbound, "A device lost its place on a subscription.", Device{DeviceID: 41, Label: "iPhone 15", By: UnboundBySubscriber}},
 	{NodeDown, "A node stopped answering the panel's health checks.", Node{NodeID: 2, Name: "de-1", Code: "timeout", Since: 1_800_000_000}},
 	{NodeUp, "A node that was down answers again.", Node{NodeID: 2, Name: "de-1", DownAt: 1_800_000_000}},
+	{NodeHealStarted, "Auto-heal asked a down node's host to restart its containers.", Heal{NodeID: 2, Name: "de-1", Attempts: 1}},
+	{NodeHealed, "Auto-heal brought a node back.", Heal{NodeID: 2, Name: "de-1", Attempts: 1, DurationSec: 95}},
+	{NodeHealFailed, "Auto-heal could not bring a node back; the circuit may be open.", Heal{NodeID: 2, Name: "de-1", Attempts: 2, CircuitOpen: true}},
 	{BalanceTopup, "The admin approved or rejected a top-up of an account's balance.", Topup{TopupID: 5, Status: "approved", Amount: 50000, Currency: "RUB", Balance: 65000}},
 }

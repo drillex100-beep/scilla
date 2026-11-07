@@ -35,6 +35,7 @@ import (
 	"scilla/internal/panel/infraalerts"
 	"scilla/internal/panel/ipgeo"
 	"scilla/internal/panel/model"
+	"scilla/internal/panel/nodeheal"
 	"scilla/internal/panel/nodesync"
 	"scilla/internal/panel/nodeupdate"
 	"scilla/internal/panel/panelimport"
@@ -63,7 +64,9 @@ type Panel struct {
 	// reload is what Run reads the paths and the language with every five seconds.
 	reload *settings.Settings
 	Nodes  *nodesync.Manager
-	Tuner  *autotune.Tuner // nil without nodes
+	// Heal is the node auto-heal engine; nil without nodes.
+	Heal  *nodeheal.Engine
+	Tuner *autotune.Tuner // nil without nodes
 	// NodeUpdates updates the remote nodes to the panel's version; nil without nodes.
 	NodeUpdates *nodeupdate.Service
 	// Gateway is the panel's side of Telegram: the token, polling, Stars, the alerts' way
@@ -200,6 +203,8 @@ func NewPanel(st *store.Store, o Options) (*Panel, error) {
 	if o.Connect != nil {
 		p.Nodes = nodesync.NewManager(st, set, pool, o.Connect, o.Log, o.Now)
 		p.Nodes.SetEvents(hub)
+		p.Heal = nodeheal.New(st, set, p.Nodes, o.Log, o.Now)
+		deps.Heal = p.Heal
 		changes = p.Nodes
 		deps.Online = p.Nodes.Online
 		deps.NodeOnline = p.Nodes.OnlineByNode
@@ -517,6 +522,9 @@ func (p *Panel) Run(ctx context.Context) {
 	var workers []func(context.Context)
 	if p.Nodes != nil {
 		workers = append(workers, p.Nodes.Run)
+		if p.Heal != nil {
+			workers = append(workers, p.Heal.Run)
+		}
 	}
 	if p.Tuner != nil {
 		workers = append(workers, p.Tuner.Run)

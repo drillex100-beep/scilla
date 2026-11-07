@@ -39,12 +39,12 @@ func TestEveryTypeIsDocumented(t *testing.T) {
 	for _, typ := range []string{events.PaymentPaid, events.PaymentRefunded, events.UserCreated, events.UserExpiring, events.UserExpired,
 		events.UserStarted, events.UserSwitched, events.UserRemoved,
 		events.UserGranted, events.Traffic90, events.Traffic100, events.TrialStarted, events.TrialNotGiven, events.DeviceBound, events.DeviceUnbound,
-		events.NodeDown, events.NodeUp, events.BalanceTopup} {
+		events.NodeDown, events.NodeUp, events.NodeHealStarted, events.NodeHealed, events.NodeHealFailed, events.BalanceTopup} {
 		if !seen[typ] {
 			t.Errorf("%s is not documented", typ)
 		}
 	}
-	if len(events.Docs) != 18 {
+	if len(events.Docs) != 21 {
 		t.Errorf("%d types documented", len(events.Docs))
 	}
 }
