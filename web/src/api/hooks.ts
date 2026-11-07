@@ -17,9 +17,11 @@ export const qk = {
   inbounds: ["inbounds"] as const,
   presets: ["presets"] as const,
   overview: ["overview"] as const,
+  dashboardLayout: ["dashboard-layout"] as const,
   traffic: (range: string) => ["traffic", range] as const,
   node: ["node"] as const,
   nodes: ["nodes"] as const,
+  nodeHeal: ["node-heal"] as const,
   settings: ["settings"] as const,
   sessions: ["sessions"] as const,
   passkeys: ["passkeys"] as const,
@@ -565,4 +567,42 @@ export function useReadySubTemplates() {
 /** The latest requests of a user's subscription, newest first. */
 export function useUserSubLog(id: number) {
   return useQuery({ queryKey: qk.userSubLog(id), queryFn: ({ signal }) => unwrap(api.GET("/api/v1/users/{id}/sub-log", { params: { path: { id }, query: { limit: 50 } }, signal })) });
+}
+
+/** The admin's dashboard layout; an empty widgets list means the built-in one. */
+export function useDashboardLayout() {
+  return useQuery({ queryKey: qk.dashboardLayout, queryFn: ({ signal }) => unwrap(api.GET("/api/v1/dashboard/layout", { signal })) });
+}
+
+/** Saves the whole layout at once; the server validates it. global stores it as the panel-wide default. */
+export function useSaveDashboardLayout() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (body: { widgets: Schemas["DashboardWidget"][]; global?: boolean }) =>
+      unwrap(api.PUT("/api/v1/dashboard/layout", { body: { version: 1, widgets: body.widgets, global: body.global } })),
+    onSuccess: () => qc.invalidateQueries({ queryKey: qk.dashboardLayout }),
+  });
+}
+
+/** The node auto-heal policy and every remote node's healing state, refreshed twice a minute. */
+export function useNodeHeal() {
+  return useQuery({ queryKey: qk.nodeHeal, queryFn: ({ signal }) => unwrap(api.GET("/api/v1/node-heal", { signal })), refetchInterval: 30_000 });
+}
+
+/** Saves the whole auto-heal policy; the server normalizes it. */
+export function useSaveNodeHeal() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (body: Schemas["HealPolicy"]) => unwrap(api.PUT("/api/v1/node-heal", { body })),
+    onSuccess: () => qc.invalidateQueries({ queryKey: qk.nodeHeal }),
+  });
+}
+
+/** Closes the open circuit of a node after the admin looked at it. */
+export function useResetNodeHeal() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => unwrap(api.POST("/api/v1/nodes/{id}/heal/reset", { params: { path: { id } } })),
+    onSuccess: () => qc.invalidateQueries({ queryKey: qk.nodeHeal }),
+  });
 }

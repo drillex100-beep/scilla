@@ -29,6 +29,7 @@ import (
 	"scilla/internal/panel/dnscheck"
 	"scilla/internal/panel/domain"
 	"scilla/internal/panel/ipgeo"
+	"scilla/internal/panel/nodeheal"
 	"scilla/internal/panel/nodesync"
 	"scilla/internal/panel/nodeupdate"
 	"scilla/internal/panel/panelimport"
@@ -76,8 +77,10 @@ type Deps struct {
 	// ResetSlots has a node (0: every node) close the slots' connections and keep their
 	// access (nodesync.Manager.ResetSlots); nil when the panel runs without nodes.
 	ResetSlots func(ctx context.Context, node int64, slots []string) []nodesync.ConnReset
-	Cert       func() acme.Status
-	RenewCert  func()
+	// Heal is the node auto-heal engine; nil when the panel runs without nodes.
+	Heal      *nodeheal.Engine
+	Cert      func() acme.Status
+	RenewCert func()
 	// RenewCertNow tries the panel's certificate now and waits up to wait for the outcome;
 	// done is false when the order still runs then. nil in development.
 	RenewCertNow func(ctx context.Context, wait time.Duration) (st acme.Status, done bool)
@@ -325,6 +328,7 @@ func New(d Deps) (http.Handler, huma.API, error) {
 	h.registerInbounds()
 	h.registerTargets()
 	h.registerStats()
+	h.registerDashboard()
 	h.registerNodeTraffic()
 	h.registerNodeClients()
 	h.registerMetrics()
@@ -368,6 +372,7 @@ func New(d Deps) (http.Handler, huma.API, error) {
 	h.registerAudit()
 	h.registerSupport()
 	h.registerHostOps()
+	h.registerNodeHeal()
 	h.registerTerminal(mux)
 	if d.Support != nil {
 		d.Support.SetEndedHook(h.grantEnded)

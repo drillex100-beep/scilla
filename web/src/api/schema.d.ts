@@ -571,6 +571,24 @@ export interface paths {
         patch: operations["update-campaign"];
         trace?: never;
     };
+    "/api/v1/dashboard/layout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Макет дашборда */
+        get: operations["dashboard-layout-get"];
+        /** Сохранить макет дашборда */
+        put: operations["dashboard-layout-put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/exit-dns": {
         parameters: {
             query?: never;
@@ -1065,6 +1083,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/node-heal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Авто-лечение нод: политика и состояние */
+        get: operations["get-node-heal"];
+        /** Авто-лечение нод: сохранить политику */
+        put: operations["put-node-heal"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/nodes": {
         parameters: {
             query?: never;
@@ -1293,6 +1329,23 @@ export interface paths {
          * @description Адрес ноды уходит в публичные геобазы (MaxMind, ipinfo.io, IP2Location и другие); каждая отвечает, в какой стране он для неё.
          */
         post: operations["check-node-geo"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/nodes/{id}/heal/reset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Авто-лечение нод: сбросить разомкнутую цепь */
+        post: operations["reset-node-heal"];
         delete?: never;
         options?: never;
         head?: never;
@@ -4362,6 +4415,30 @@ export interface components {
             match: string;
             servers: string[];
         };
+        DashboardLayout: {
+            /** Format: int64 */
+            version: number;
+            widgets: components["schemas"]["DashboardWidget"][];
+        };
+        DashboardLayoutWrite: {
+            global?: boolean;
+            /** Format: int64 */
+            version: number;
+            widgets: components["schemas"]["DashboardWidget"][];
+        };
+        DashboardWidget: {
+            config?: unknown;
+            /** Format: int64 */
+            h: number;
+            id: string;
+            type: string;
+            /** Format: int64 */
+            w: number;
+            /** Format: int64 */
+            x: number;
+            /** Format: int64 */
+            y: number;
+        };
         DecideTopupInputBody: {
             approve: boolean;
             /** @description Почему отклонено: увидит клиент */
@@ -4666,6 +4743,55 @@ export interface components {
         Header: {
             name: string;
             value: string;
+        };
+        HealIncident: {
+            /** Format: int64 */
+            attempts: number;
+            /** Format: int64 */
+            down_at: number;
+            /** Format: int64 */
+            end_at: number;
+            result: string;
+            /** Format: int64 */
+            started_at: number;
+        };
+        HealNodeView: {
+            /** Format: int64 */
+            id: number;
+            name: string;
+            state: components["schemas"]["HealState"];
+        };
+        HealPolicy: {
+            /** Format: int64 */
+            breaker_max: number;
+            /** Format: int64 */
+            breaker_window_sec: number;
+            /** Format: int64 */
+            cooldown_sec: number;
+            /** Format: int64 */
+            down_for_sec: number;
+            enabled: boolean;
+            /** Format: int64 */
+            max_attempts: number;
+            /** Format: int64 */
+            verify_sec: number;
+        };
+        HealState: {
+            /** Format: int64 */
+            attempts: number;
+            failures: number[];
+            history: components["schemas"]["HealIncident"][];
+            /** Format: int64 */
+            incident: number;
+            /** Format: int64 */
+            last_action: number;
+            phase: string;
+            /** Format: int64 */
+            retry_after: number;
+            /** Format: int64 */
+            updated_at: number;
+            /** Format: int64 */
+            verify_until: number;
         };
         HostInput: {
             /** @description Адрес для клиентов; пусто — адрес ноды */
@@ -5325,6 +5451,13 @@ export interface components {
              * @description Сколько всего пользователей под запрос
              */
             total: number;
+        };
+        NodeHealResetOutputBody: {
+            reset: boolean;
+        };
+        NodeHealViewBody: {
+            nodes: components["schemas"]["HealNodeView"][];
+            policy: components["schemas"]["HealPolicy"];
         };
         NodeHello: {
             /** Format: date-time */
@@ -9718,6 +9851,68 @@ export interface operations {
             };
         };
     };
+    "dashboard-layout-get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DashboardLayout"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "dashboard-layout-put": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DashboardLayoutWrite"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DashboardLayout"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "get-exit-dns": {
         parameters: {
             query?: never;
@@ -10928,6 +11123,68 @@ export interface operations {
             };
         };
     };
+    "get-node-heal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NodeHealViewBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "put-node-heal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HealPolicy"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NodeHealViewBody"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
     "list-nodes": {
         parameters: {
             query?: {
@@ -11460,6 +11717,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["GeoCheck"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "reset-node-heal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NodeHealResetOutputBody"];
                 };
             };
             /** @description Error */
