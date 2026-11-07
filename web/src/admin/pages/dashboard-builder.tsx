@@ -1,5 +1,5 @@
 import { Copy, Download, Globe, GripVertical, Plus, RotateCcw, SlidersHorizontal, Trash2, Upload } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSaveDashboardLayout } from "../../api/hooks";
 import { useDashboardLayout } from "../../api/hooks";
 import { Button, Skeleton } from "../../components/ui";
@@ -368,7 +368,6 @@ function LazyMount({ title, children }: { title: string; children: React.ReactNo
 function BuilderCanvas({ widgets, editing, onChange, onDuplicate, onRemove, onConfigure }: { widgets: WidgetInstance[]; editing: boolean; onChange: (w: WidgetInstance[]) => void; onDuplicate: (w: WidgetInstance) => void; onRemove: (id: string) => void; onConfigure: (id: string, config: WidgetConfig | undefined) => void }) {
   const wrap = useRef<HTMLDivElement>(null);
   const [settingsFor, setSettingsFor] = useState<string | null>(null);
-  const height = useMemo(() => bottomOf(widgets) * (ROW_H + ROW_GAP), [widgets]);
   const lazy = !editing && widgets.length > LAZY_AFTER;
 
   const patch = (id: string, next: Partial<WidgetInstance>) => onChange(widgets.map((w) => (w.id === id ? { ...w, ...next } : w)));
@@ -381,7 +380,8 @@ function BuilderCanvas({ widgets, editing, onChange, onDuplicate, onRemove, onCo
     if (!el || !rect) return;
     const g: Gesture = { mode, pointerId: e.pointerId, startX: e.clientX, startY: e.clientY, x: w.x, y: w.y, w: w.w, h: w.h };
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-    const cellW = rect.width / GRID_COLS;
+    // One column's pitch: the track plus the gap after it.
+    const cellW = (rect.width - (GRID_COLS - 1) * ROW_GAP) / GRID_COLS + ROW_GAP;
     const cellH = ROW_H + ROW_GAP;
     const onMove = (ev: PointerEvent) => {
       if (ev.pointerId !== g.pointerId) return;
@@ -409,20 +409,19 @@ function BuilderCanvas({ widgets, editing, onChange, onDuplicate, onRemove, onCo
   };
 
   return (
-    <div ref={wrap} className="relative" style={{ height }}>
+    <div
+      ref={wrap}
+      className="grid"
+      style={{ gridTemplateColumns: `repeat(${GRID_COLS}, minmax(0, 1fr))`, gridAutoRows: ROW_H, gap: ROW_GAP }}
+    >
       {widgets.map((w) => {
         const def = WIDGETS[w.type];
         return (
           <div
             key={w.id}
             data-cell
-            className={`absolute ${editing ? "outline-1 outline-dashed outline-[var(--scilla-400)]" : ""}`}
-            style={{
-              left: `calc(${(w.x / GRID_COLS) * 100}% + ${w.x * ROW_GAP}px)`,
-              top: w.y * (ROW_H + ROW_GAP),
-              width: `calc(${(w.w / GRID_COLS) * 100}% - ${(ROW_GAP * (GRID_COLS - 1)) / GRID_COLS}px)`,
-              height: w.h * ROW_H + (w.h - 1) * ROW_GAP,
-            }}
+            className={`relative min-w-0 ${editing ? "outline-1 outline-dashed outline-[var(--scilla-400)]" : ""}`}
+            style={{ gridColumn: `${w.x + 1} / span ${w.w}`, gridRow: `${w.y + 1} / span ${w.h}` }}
           >
             <div className="h-full">
               {lazy ? (
