@@ -17,6 +17,7 @@ export const qk = {
   inbounds: ["inbounds"] as const,
   presets: ["presets"] as const,
   overview: ["overview"] as const,
+  dashboardLayout: ["dashboard-layout"] as const,
   traffic: (range: string) => ["traffic", range] as const,
   node: ["node"] as const,
   nodes: ["nodes"] as const,
@@ -565,4 +566,18 @@ export function useReadySubTemplates() {
 /** The latest requests of a user's subscription, newest first. */
 export function useUserSubLog(id: number) {
   return useQuery({ queryKey: qk.userSubLog(id), queryFn: ({ signal }) => unwrap(api.GET("/api/v1/users/{id}/sub-log", { params: { path: { id }, query: { limit: 50 } }, signal })) });
+}
+
+/** The admin's dashboard layout; an empty widgets list means the built-in one. */
+export function useDashboardLayout() {
+  return useQuery({ queryKey: qk.dashboardLayout, queryFn: ({ signal }) => unwrap(api.GET("/api/v1/dashboard/layout", { signal })) });
+}
+
+/** Saves the whole layout at once; the server validates it. */
+export function useSaveDashboardLayout() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (widgets: Schemas["DashboardWidget"][]) => unwrap(api.PUT("/api/v1/dashboard/layout", { body: { version: 1, widgets } })),
+    onSuccess: () => qc.invalidateQueries({ queryKey: qk.dashboardLayout }),
+  });
 }

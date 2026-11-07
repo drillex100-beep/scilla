@@ -794,7 +794,21 @@
     "plusMonth": "+1 month",
     "top": "Most traffic",
     "topSub": "since the start of the month",
-    "topEmpty": "Statistics will appear once clients start connecting."
+    "topEmpty": "Statistics will appear once clients start connecting.",
+    "builder": {
+      "customize": "Customize",
+      "done": "Done",
+      "reset": "Reset to default",
+      "saving": "Saving…",
+      "saved": "Saved",
+      "saveFailed": "Could not save the layout",
+      "palette": "Widgets",
+      "drag": "Drag",
+      "resize": "Resize",
+      "duplicate": "Duplicate",
+      "remove": "Remove",
+      "widgetStat": "Counter"
+    }
   },
   "users": {
     "loadFailed": "Could not load the list",

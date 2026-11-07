@@ -2747,6 +2747,73 @@
         ],
         "type": "object"
       },
+      "DashboardLayout": {
+        "additionalProperties": false,
+        "properties": {
+          "version": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "widgets": {
+            "items": {
+              "$ref": "#/components/schemas/DashboardWidget"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "version",
+          "widgets"
+        ],
+        "type": "object"
+      },
+      "DashboardWidget": {
+        "additionalProperties": false,
+        "properties": {
+          "config": {},
+          "h": {
+            "format": "int64",
+            "maximum": 16,
+            "minimum": 2,
+            "type": "integer"
+          },
+          "id": {
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "w": {
+            "format": "int64",
+            "maximum": 12,
+            "minimum": 3,
+            "type": "integer"
+          },
+          "x": {
+            "format": "int64",
+            "maximum": 11,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "y": {
+            "format": "int64",
+            "maximum": 200,
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "x",
+          "y",
+          "w",
+          "h"
+        ],
+        "type": "object"
+      },
       "DecideTopupInputBody": {
         "additionalProperties": false,
         "properties": {
@@ -15311,6 +15378,76 @@
         "summary": "Переименовать кампанию или убрать в архив",
         "tags": [
           "campaigns"
+        ]
+      }
+    },
+    "/api/v1/dashboard/layout": {
+      "get": {
+        "operationId": "dashboard-layout-get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardLayout"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Макет дашборда",
+        "tags": [
+          "stats"
+        ]
+      },
+      "put": {
+        "operationId": "dashboard-layout-put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DashboardLayout"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardLayout"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Сохранить макет дашборда",
+        "tags": [
+          "stats"
         ]
       }
     },

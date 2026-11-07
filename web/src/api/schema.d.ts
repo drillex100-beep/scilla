@@ -571,6 +571,24 @@ export interface paths {
         patch: operations["update-campaign"];
         trace?: never;
     };
+    "/api/v1/dashboard/layout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Макет дашборда */
+        get: operations["dashboard-layout-get"];
+        /** Сохранить макет дашборда */
+        put: operations["dashboard-layout-put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/exit-dns": {
         parameters: {
             query?: never;
@@ -4361,6 +4379,24 @@ export interface components {
         DNSPolicy: {
             match: string;
             servers: string[];
+        };
+        DashboardLayout: {
+            /** Format: int64 */
+            version: number;
+            widgets: components["schemas"]["DashboardWidget"][];
+        };
+        DashboardWidget: {
+            config?: unknown;
+            /** Format: int64 */
+            h: number;
+            id: string;
+            type: string;
+            /** Format: int64 */
+            w: number;
+            /** Format: int64 */
+            x: number;
+            /** Format: int64 */
+            y: number;
         };
         DecideTopupInputBody: {
             approve: boolean;
@@ -9705,6 +9741,68 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CampaignView"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "dashboard-layout-get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DashboardLayout"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    "dashboard-layout-put": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DashboardLayout"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DashboardLayout"];
                 };
             };
             /** @description Error */
