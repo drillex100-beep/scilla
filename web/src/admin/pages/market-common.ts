@@ -119,6 +119,7 @@ export const PERMISSIONS: { id: string; label: Key; text: Key }[] = [
   { id: "events", label: "market.perm.events", text: "market.perm.eventsText" },
   { id: "kv", label: "market.perm.kv", text: "market.perm.kvText" },
   { id: "ui", label: "market.perm.ui", text: "market.perm.uiText" },
+  { id: "ui:public", label: "market.perm.uiPublic", text: "market.perm.uiPublicText" },
 ];
 
 /** In the order of PERMISSIONS; one the panel does not know stays last, by its name. */
