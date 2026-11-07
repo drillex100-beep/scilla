@@ -41,7 +41,7 @@ const PROTOCOL: u32 = 1;
 const PROTOCOL_2: u32 = 2;
 const KINDS_2: [&str; 3] = ["bot", "ui", "generic"];
 const MODES: [&str; 2] = ["http", "client"];
-const PERMISSIONS: [&str; 12] = [
+const PERMISSIONS: [&str; 13] = [
     "bot",
     "users:read",
     "users:write",
@@ -54,6 +54,7 @@ const PERMISSIONS: [&str; 12] = [
     "events",
     "kv",
     "ui",
+    "ui:public",
 ];
 /// What an addon may ask for, in MiB; 0 is DEFAULT_MEM_MB.
 const MEM_MB: std::ops::RangeInclusive<u32> = 64..=256;

@@ -4154,6 +4154,8 @@
       "kvText": "keeps its own data in the panel (256 MB by default)",
       "ui": "Pages",
       "uiText": "adds its own pages to the admin panel",
+      "uiPublic": "Public pages",
+      "uiPublicText": "opens its pages to every visitor of the subscription page without signing in, e.g. a servers status page",
       "nodesRead": "Nodes: read",
       "nodesReadText": "sees the nodes: name, whether on and working, version and connections; no addresses or keys",
       "inboundsRead": "Protocols: read",
