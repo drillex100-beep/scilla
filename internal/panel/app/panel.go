@@ -419,6 +419,12 @@ func NewPanel(st *store.Store, o Options) (*Panel, error) {
 	subHandler.SetShop(p.Billing)
 	subHandler.SetPromo(promos)
 	subHandler.SetPages(pages)
+	// The public pages of addons live below the subscription path, next to the
+	// subscription page itself: /<sub>/addons-public/<id>/<file>.
+	publicPages := addonpages.NewPublic(addonpages.Deps{Addons: p.Addons, Store: st.Q, Log: o.Log, Now: o.Now})
+	subMux := http.NewServeMux()
+	subMux.Handle(addonpages.PublicPrefix, publicPages)
+	subMux.Handle("/", subHandler)
 
 	adminMux := http.NewServeMux()
 	adminMux.Handle("/api/", apiHandler)
@@ -437,7 +443,7 @@ func NewPanel(st *store.Store, o Options) (*Panel, error) {
 		return server.ManifestInfo{Name: server.AppName(name, brand), Lang: lang}, err
 	}))
 	adminMux.Handle("/", p.spa)
-	p.server = server.New(adminMux, subHandler)
+	p.server = server.New(adminMux, subMux)
 	p.server.SetLegacy(subHandler.Legacy())
 	if o.DataDir != "" {
 		set := settings.New(st.Q)
