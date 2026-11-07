@@ -3,6 +3,14 @@
 Each release has a section in English and in Russian; the release workflow puts them in
 the signed manifest, and the panel shows the one in its language.
 
+## 0.5.3.2
+### en
+- **Installing an addon from the catalog works again**: the installer's copy of the catalog's public key was still the old one, so the list of addons loaded but every install failed on the signature; it is the real key now, pinned to the panel's by a test.
+- **Dashboard builder on phones**: in Customize every card has settings, duplicate and remove buttons above it, so a widget can be changed or taken off the dashboard from a phone too (drag and resize stay a desktop gesture).
+### ru
+- **Установка аддона из каталога снова работает**: в копии публичного ключа каталога у installer'а остался старый ключ, поэтому список аддонов грузился, а установка любого падала на подписи; теперь там настоящий ключ, и тест сверяет его с ключом панели.
+- **Конструктор дашборда на телефоне**: в «Настроить» над каждой карточкой есть кнопки настроек, дубликата и удаления, так что виджет можно изменить или убрать с дашборда и с телефона (перетаскивание и растягивание остаются жестом десктопа).
+
 ## 0.5.3.1
 ### en
 - **The status page addon is in the catalog again**: the panel's permission whitelist did not know `ui:public`, so the catalog entry of the status page was dropped as unsound and the Addons page showed six addons instead of seven; the permission is whitelisted in the panel and the installer now, with its words on the grant screen.
