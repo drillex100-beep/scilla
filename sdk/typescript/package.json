@@ -1,5 +1,5 @@
 {
-  "name": "@getmikan/sdk",
+  "name": "@drillex100-beep/scilla-sdk",
   "version": "0.0.0",
   "description": "Typed TypeScript client for the scilla panel API",
   "license": "GPL-3.0-only",

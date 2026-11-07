@@ -7,7 +7,7 @@ name: release
 #     update check and the installer trust, and install.sh for the one-line install;
 #   - the release's entry in the signed release index (index.json on the "updates"
 #     pre-release), where updaters look first; "from" comes from .github/upgrade-from;
-#   - the SDKs (sdk/), @getmikan/sdk on npm and scilla-sdk on PyPI (a beta: pre-releases of them), built from the
+#   - the SDKs (sdk/), @drillex100-beep/scilla-sdk on npm and scilla-sdk on PyPI (a beta: pre-releases of them), built from the
 #     spec of the tagged commit and numbered as the release, once the release is published
 #     (sdk/README.md lists what npm's and PyPI's trusted publishers need).
 # A stable manifest must pass the legacy contract (scilla-release legacy-check) before it
@@ -397,12 +397,15 @@ jobs:
             sdk/dist/*.tar.gz
           if-no-files-found: error
 
-  # npm takes @getmikan/sdk by trusted publishing only (this repository and release.yml, set
+  # npm takes @drillex100-beep/scilla-sdk by trusted publishing only (this repository and release.yml, set
   # up in the package's settings on npm with direct publishing allowed): no token is kept
   # anywhere. The trust and the provenance, which signs where the package came from, need
   # the id-token permission.
   sdk-npm:
     needs: sdk
+    # Off until the npm org/publishing for @drillex100-beep/scilla-sdk exists: set the
+    # repository variable PUBLISH_SDK_PACKAGES=true to enable.
+    if: vars.PUBLISH_SDK_PACKAGES == 'true'
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -428,12 +431,15 @@ jobs:
           case "$GITHUB_REF_NAME" in
             *-*) tag=beta ;;
           esac
-          npm publish ./dist/getmikan-sdk-*.tgz --provenance --access public --tag "$tag"
+          npm publish ./dist/drillex100-beep-scilla-sdk-*.tgz --provenance --access public --tag "$tag"
 
   # PyPI trusts this workflow (trusted publishing, set up on PyPI for the project, this
   # repository, release.yml and the environment pypi): no token is kept anywhere.
   sdk-pypi:
     needs: sdk
+    # Off until the PyPI project scilla-sdk with trusted publishing for this repository exists:
+    # set the repository variable PUBLISH_SDK_PACKAGES=true to enable.
+    if: vars.PUBLISH_SDK_PACKAGES == 'true'
     runs-on: ubuntu-24.04
     environment:
       name: pypi

@@ -23,8 +23,8 @@ export type ScillaClient = Client<paths>;
 
 /** A client that sends every request with the API key, as `Authorization: Bearer mk_...`. */
 export function createClient({ baseUrl, apiKey, fetch }: ScillaOptions): ScillaClient {
-  if (!baseUrl) throw new Error("@getmikan/sdk: baseUrl is empty, give the panel's API address");
-  if (!apiKey) throw new Error("@getmikan/sdk: apiKey is empty, give an API key (mk_...)");
+  if (!baseUrl) throw new Error("@drillex100-beep/scilla-sdk: baseUrl is empty, give the panel's API address");
+  if (!apiKey) throw new Error("@drillex100-beep/scilla-sdk: apiKey is empty, give an API key (mk_...)");
   const client = createFetchClient<paths>({ baseUrl, fetch });
   client.use({
     onRequest({ request }) {

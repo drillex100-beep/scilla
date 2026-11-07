@@ -4,7 +4,7 @@ Clients for the panel's API, generated from its OpenAPI spec:
 
 | Language | Package | Generator | Folder |
 |---|---|---|---|
-| TypeScript | [`@getmikan/sdk`](https://www.npmjs.com/package/@getmikan/sdk) on npm | [openapi-typescript](https://openapi-ts.dev/) types, [openapi-fetch](https://openapi-ts.dev/openapi-fetch/) calls | [typescript](typescript/) |
+| TypeScript | [`@drillex100-beep/scilla-sdk`](https://www.npmjs.com/package/@drillex100-beep/scilla-sdk) on npm | [openapi-typescript](https://openapi-ts.dev/) types, [openapi-fetch](https://openapi-ts.dev/openapi-fetch/) calls | [typescript](typescript/) |
 | Python | [`scilla-sdk`](https://pypi.org/project/scilla-sdk/) on PyPI | [openapi-python-client](https://github.com/openapi-generators/openapi-python-client) | [python](python/) |
 
 The Go SDK comes later. How to use them: <https://miroshka000.github.io/scilla/api/sdk/>.
@@ -33,6 +33,6 @@ An SDK has the number of the panel release it is built from. PyPI takes the tag 
 
 Nothing below is done by the repository; without it the publish jobs fail after the release is out.
 
-1. **npm.** The organization `getmikan` on npm (free for public packages), whose scope holds `@getmikan/sdk`. In the package's settings, a trusted publisher: GitHub Actions, owner `Miroshka000`, repository `scilla`, workflow `release.yml`, no environment, with "Allow npm publish" ticked: the job publishes directly, and without it npm takes only `npm stage publish`, a version waiting for a person to approve it. It can be set up before the first version (npm then shows a placeholder `0.0.0-stage`), and the first publish from the workflow validates it; npm asks for that within two days. Then "Publishing access" → "Require two-factor authentication and disallow bypass 2fa tokens": the workflow is no token, and nothing else publishes. No token is made: one with "Bypass two-factor authentication" is the only kind CI could publish with, and npm takes direct publishing from those away in January 2027.
+1. **npm.** The organization `getmikan` on npm (free for public packages), whose scope holds `@drillex100-beep/scilla-sdk`. In the package's settings, a trusted publisher: GitHub Actions, owner `Miroshka000`, repository `scilla`, workflow `release.yml`, no environment, with "Allow npm publish" ticked: the job publishes directly, and without it npm takes only `npm stage publish`, a version waiting for a person to approve it. It can be set up before the first version (npm then shows a placeholder `0.0.0-stage`), and the first publish from the workflow validates it; npm asks for that within two days. Then "Publishing access" → "Require two-factor authentication and disallow bypass 2fa tokens": the workflow is no token, and nothing else publishes. No token is made: one with "Bypass two-factor authentication" is the only kind CI could publish with, and npm takes direct publishing from those away in January 2027.
 2. **PyPI.** A pending trusted publisher for the project `scilla-sdk` (pypi.org/manage/account/publishing): owner `Miroshka000`, repository `scilla`, workflow `release.yml`, environment `pypi`. No token is made.
 3. **GitHub.** The environment `pypi` (Settings → Environments); GitHub makes an empty one on the first run, and rules such as a required reviewer can be added to it.
