@@ -332,6 +332,13 @@ func (e *Engine) Snapshot(ctx context.Context) ([]HealNodeView, error) {
 		if raw, err := e.st.Q.GetNodeState(ctx, healKey(n.ID)); err == nil && raw != "" {
 			_ = json.Unmarshal([]byte(raw), &v.HealState)
 		}
+		// The API contract has arrays, not nulls, for a node that was never healed.
+		if v.HealState.Failures == nil {
+			v.HealState.Failures = []int64{}
+		}
+		if v.HealState.History == nil {
+			v.HealState.History = []HealIncident{}
+		}
 		out = append(out, v)
 	}
 	return out, nil

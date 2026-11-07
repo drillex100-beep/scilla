@@ -29,7 +29,7 @@ export function HealCard({ remote }: { remote: boolean }) {
   const toast = useToast();
   if (!remote) return null;
   const data = heal.data;
-  const rows = (data?.nodes ?? []).filter((n) => n.state.phase !== "" || n.state.incident !== 0 || n.state.history.length > 0);
+  const rows = (data?.nodes ?? []).filter((n) => n.state.phase !== "" || n.state.incident !== 0 || (n.state.history?.length ?? 0) > 0);
   return (
     <section className="card glass">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -93,9 +93,9 @@ export function HealCard({ remote }: { remote: boolean }) {
                         </Button>
                       ) : null}
                     </div>
-                    {st.history.length > 0 ? (
+                    {(st.history?.length ?? 0) > 0 ? (
                       <ul className="mt-1.5 flex flex-col gap-1 text-xs text-[var(--ink-500)]">
-                        {st.history.slice(0, 3).map((inc, i) => (
+                        {(st.history ?? []).slice(0, 3).map((inc, i) => (
                           <li key={i}>
                             {inc.result === "healed" ? t("nodes.healResultHealed") : t("nodes.healResultFailed")} · {fmtTime(inc.end_at)} ·{" "}
                             {t("nodes.healAttempts", { n: inc.attempts })}
