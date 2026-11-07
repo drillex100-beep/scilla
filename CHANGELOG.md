@@ -3,6 +3,12 @@
 Each release has a section in English and in Russian; the release workflow puts them in
 the signed manifest, and the panel shows the one in its language.
 
+## 0.5.3.3
+### en
+- **Installing an addon from the catalog works again**: the installer's image check still expected the old ghcr.io/getmikan organization while every catalog image is ghcr.io/drillex100-beep, so it dropped every catalog entry ("the marketplace has no adapter"); the prefix is the real one now.
+### ru
+- **Установка аддона из каталога снова работает**: проверка образов в installer'е всё ещё ждала старую организацию ghcr.io/getmikan, а все образы каталога — ghcr.io/drillex100-beep, поэтому installer отбрасывал каждую запись каталога («у маркетплейса нет такого адаптера»); теперь префикс настоящий.
+
 ## 0.5.3.2
 ### en
 - **Installing an addon from the catalog works again**: the installer's copy of the catalog's public key was still the old one, so the list of addons loaded but every install failed on the signature; it is the real key now, pinned to the panel's by a test.
