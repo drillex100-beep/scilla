@@ -803,6 +803,7 @@
       "saved": "Saved",
       "saveFailed": "Could not save the layout",
       "palette": "Widgets",
+      "allAdded": "Every widget is already on the dashboard — remove one to add another",
       "drag": "Drag",
       "resize": "Resize",
       "duplicate": "Duplicate",

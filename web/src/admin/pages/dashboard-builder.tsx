@@ -213,7 +213,7 @@ export function DashboardBuilder() {
           </>
         ) : null}
       </div>
-      {editing && mobile ? null : editing ? <Palette onAdd={addWidget} /> : null}
+      {editing ? <Palette onAdd={addWidget} present={new Set(widgets.map((w) => w.type))} /> : null}
       {mobile ? (
         <div className="flex flex-col gap-4">
           {widgets.map((w) =>
@@ -229,7 +229,6 @@ export function DashboardBuilder() {
       ) : (
         <BuilderCanvas widgets={widgets} editing={editing} onChange={commit} onDuplicate={duplicate} onRemove={remove} onConfigure={configure} />
       )}
-      {editing && mobile ? <Palette onAdd={addWidget} /> : null}
     </div>
   );
 }
@@ -309,25 +308,32 @@ function WidgetSettings({ w, onConfigure, onClose }: { w: WidgetInstance; onConf
   );
 }
 
-function Palette({ onAdd }: { onAdd: (type: WidgetType) => void }) {
+function Palette({ onAdd, present }: { onAdd: (type: WidgetType) => void; present: Set<WidgetType> }) {
+  const types = WIDGET_TYPES.filter((type) => !present.has(type));
   return (
     <section className="card glass p-3" aria-label={t("dashboard.builder.palette")}>
       <div className="mb-2 text-xs font-medium uppercase tracking-wide text-[var(--ink-500)]">{t("dashboard.builder.palette")}</div>
-      <div className="flex flex-wrap gap-2">
-        {WIDGET_TYPES.map((type) => (
-          <button key={type} type="button" className="btn btn-glass btn-sm" onClick={() => onAdd(type)}>
-            <Plus size={14} aria-hidden />
-            {WIDGETS[type].title()}
-          </button>
-        ))}
-      </div>
+      {types.length === 0 ? (
+        <p className="text-[13px] text-[var(--ink-500)]">{t("dashboard.builder.allAdded")}</p>
+      ) : (
+        <div className="flex flex-wrap gap-2">
+          {types.map((type) => (
+            <button key={type} type="button" className="btn btn-glass btn-sm" onClick={() => onAdd(type)}>
+              <Plus size={14} aria-hidden />
+              {WIDGETS[type].title()}
+            </button>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
 
 function MobileWidget({ w }: { w: WidgetInstance }) {
   const def = WIDGETS[w.type];
-  return <div className="min-h-[220px]">{def.component(w.config)}</div>;
+  // No forced height: the cards size to their content, so sparse ones (counters, short lists)
+  // do not turn into tall boxes of empty space on a phone.
+  return <div>{def.component(w.config)}</div>;
 }
 
 type Gesture = { mode: "move" | "resize"; pointerId: number; startX: number; startY: number; x: number; y: number; w: number; h: number };
