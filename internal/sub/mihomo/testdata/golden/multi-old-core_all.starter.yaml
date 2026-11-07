@@ -90,6 +90,22 @@ rules:
   - MATCH,VPN
   - MATCH,REJECT
 rule-providers:
+  own-ru-ip:
+    type: http
+    behavior: ipcidr
+    format: text
+    interval: 86400
+    path: ./ruleset/own-ru-ip.text
+    proxy: VPN
+    url: https://example.com/ru.txt
+  own-wl:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/own-wl.yaml
+    proxy: VPN
+    url: https://example.com/wl.yaml
   scilla-ai:
     type: http
     behavior: classical
@@ -162,22 +178,6 @@ rule-providers:
     path: ./ruleset/scilla-torrent-apps.yaml
     proxy: VPN
     url: https://raw.githubusercontent.com/legiz-ru/mihomo-rule-sets/a80b3c1d7a70ce83b1d1a45ff113a2fe5b312154/other/torrent-clients.yaml
-  own-ru-ip:
-    type: http
-    behavior: ipcidr
-    format: text
-    interval: 86400
-    path: ./ruleset/own-ru-ip.text
-    proxy: VPN
-    url: https://example.com/ru.txt
-  own-wl:
-    type: http
-    behavior: classical
-    format: yaml
-    interval: 86400
-    path: ./ruleset/own-wl.yaml
-    proxy: VPN
-    url: https://example.com/wl.yaml
 sniffer:
   enable: true
   parse-pure-ip: true

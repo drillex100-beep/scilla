@@ -29,7 +29,7 @@ export const strings = {
 			requirements: 'Ubuntu 22.04+ или Debian 12+, amd64 или arm64. Установщик сам ставит Docker и в конце выдаёт ссылку на админку.',
 			primary: 'Установить',
 			secondary: 'Как это устроено',
-			art: 'Мандарин, символ scilla',
+			art: 'Маскот Scilla',
 		},
 		screens: {
 			title: 'Одна панель на всё',
@@ -148,7 +148,7 @@ export const strings = {
 			requirements: 'Ubuntu 22.04+ or Debian 12+, amd64 or arm64. The installer sets up Docker by itself and prints your admin link at the end.',
 			primary: 'Install',
 			secondary: 'How it works',
-			art: 'A mandarin, the scilla mascot',
+			art: 'The Scilla mascot',
 		},
 		screens: {
 			title: 'One panel for all of it',

@@ -54,7 +54,7 @@ proxies:
     server: vpn.example.com
     port: 8388
     cipher: 2022-blake3-aes-128-gcm
-    password: AAECAwQFBgcICQoLDA0ODw==:rkvHPGi04pBDvWELP95stw==
+    password: AAECAwQFBgcICQoLDA0ODw==:uoLqvdrruTFohkvtbZLFcQ==
     udp: true
     udp-over-tcp: true
     udp-over-tcp-version: 2
