@@ -138,7 +138,7 @@ func (h *handlers) validateDashboardLayout(ctx context.Context, layout dashboard
 			return huma.NewError(http.StatusBadRequest, fmt.Sprintf("widget %d: duplicate id %q", i, w.ID))
 		}
 		seen[w.ID] = true
-		if w.X+w.W > 12 {
+		if w.X+w.W > 12 || w.W < 3 || w.W > 12 || w.H < 2 || w.H > 16 {
 			return huma.NewError(http.StatusBadRequest, fmt.Sprintf("widget %q does not fit the grid", w.ID))
 		}
 		if len(w.Config) > 0 {
