@@ -20,8 +20,9 @@ import (
 	"scilla/internal/panel/server"
 	"scilla/internal/panel/settings"
 	"scilla/internal/panel/store/db"
-	"scilla/internal/panel/subs"
+	"scilla/internal/panel/subsrc"
 	"scilla/internal/panel/tgate"
+	"scilla/internal/sub/serve"
 )
 
 // Run returns only when every worker has: the database is closed after it, and a worker
@@ -56,9 +57,9 @@ func TestConfigCache(t *testing.T) {
 	var gen atomic.Uint64
 	c := &configCache{now: func() time.Time { return now }, gen: gen.Load}
 	var builds int
-	build := func(context.Context) (subs.Config, error) {
+	build := func(context.Context) (subsrc.Config, error) {
 		builds++
-		return subs.Config{Brand: "b" + string(rune('0'+builds))}, nil
+		return subsrc.Config{Config: serve.Config{Brand: "b" + string(rune('0'+builds))}}, nil
 	}
 	get := func() string {
 		cfg, err := c.get(context.Background(), build)
@@ -85,11 +86,11 @@ func TestConfigCache(t *testing.T) {
 	// Errors are not kept.
 	gen.Add(1)
 	fail := true
-	flaky := func(context.Context) (subs.Config, error) {
+	flaky := func(context.Context) (subsrc.Config, error) {
 		if fail {
-			return subs.Config{}, errors.New("database is locked")
+			return subsrc.Config{}, errors.New("database is locked")
 		}
-		return subs.Config{Brand: "ok"}, nil
+		return subsrc.Config{Config: serve.Config{Brand: "ok"}}, nil
 	}
 	if _, err := c.get(context.Background(), flaky); err == nil {
 		t.Fatal("the error is lost")

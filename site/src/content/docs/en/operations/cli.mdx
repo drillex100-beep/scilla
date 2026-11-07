@@ -56,7 +56,7 @@ To change a plain setting by hand, edit `config.json` and run `scilla restart`. 
 | Command | What it does |
 |---|---|
 | `scilla url` | the panel link and login |
-| `scilla reset-password` | a new administrator password, all sessions and API keys are revoked |
+| `scilla reset-password` | a new administrator password; all sessions, API keys and passkeys are revoked |
 | `scilla reset-path` | a new secret link, the old one stops working |
 | `scilla disable-2fa` | turn off 2FA if the phone is lost |
 
@@ -66,6 +66,7 @@ To change a plain setting by hand, edit `config.json` and run `scilla restart`. 
 |---|---|
 | `scilla backup` | a backup into `/opt/scilla/backups` |
 | `scilla restore FILE [-y] [--no-db-snapshot]` | restore from a backup, see [Backups](/scilla/en/operations/backups/) |
+| `scilla move USER@HOST [-p SSH_PORT] [--force] [--stop-old] [--dry-run] [-y]` | move the panel to a new server over SSH: a backup, an install there with the same panel port, the restore, the ports in ufw. `--dry-run` only prints the steps, `--stop-old` stops the panel here at the end, `--force` replaces the data of a scilla already on the new server. See [Moving scilla to another server](/scilla/en/start/migrate/#moving-scilla-to-another-server) |
 
 ## Nodes and connections
 

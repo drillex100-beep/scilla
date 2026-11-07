@@ -2,17 +2,19 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset=".github/assets/banner-ru-dark.svg">
-  <img alt="scilla — VPN-панель на ядре mihomo" src=".github/assets/banner-ru-light.svg" width="100%">
+  <img alt="scilla — VPN-панель на ядре Citrus" src=".github/assets/banner-ru-light.svg" width="100%">
 </picture>
 
 <br>
 
-**Быстрая и красивая VPN-панель на ядре [mihomo](https://github.com/MetaCubeX/mihomo): ставится одной командой и не требует присмотра.**
+**Быстрая и красивая VPN-панель на ядре [Citrus](https://github.com/getmikan/Citrus): ставится одной командой и не требует присмотра.**
 
-[![Релиз](https://img.shields.io/github/v/release/drillex100-beep/scilla?color=f07a2e&label=релиз&style=flat-square)](https://github.com/drillex100-beep/scilla/releases)
-[![Образ](https://img.shields.io/badge/ghcr.io-drillex100-beep%2Fscilla-2b8c9e?style=flat-square&logo=docker&logoColor=white)](https://github.com/drillex100-beep/scilla/pkgs/container/scilla)
+[![Релиз](https://img.shields.io/github/v/release/Miroshka000/mikan?color=f07a2e&label=релиз&style=flat-square)](https://github.com/drillex100-beep/scilla/releases)
+[![Образ](https://img.shields.io/badge/ghcr.io-miroshka000%2Fmikan-2b8c9e?style=flat-square&logo=docker&logoColor=white)](https://github.com/drillex100-beep/scilla/pkgs/container/scilla)
 [![Лицензия](https://img.shields.io/badge/лицензия-GPL--3.0-2f9e6b?style=flat-square)](LICENSE)
-[![mihomo](https://img.shields.io/badge/ядро-mihomo%201.19.32-9e8eff?style=flat-square)](https://github.com/MetaCubeX/mihomo)
+[![Citrus](https://img.shields.io/badge/ядро-Citrus-9e8eff?style=flat-square)](https://github.com/getmikan/Citrus)
+[![Telegram](https://img.shields.io/badge/Telegram-канал-26a5e4?style=flat-square&logo=telegram&logoColor=white)](https://t.me/mikanvpn)
+[![Telegram](https://img.shields.io/badge/Telegram-форум-26a5e4?style=flat-square&logo=telegram&logoColor=white)](https://t.me/+I2JFR7DbPow1ZmQy)
 
 [English](README.md) · **Русский** · [简体中文](README.zh-CN.md) · [فارسی](README.fa.md) · [Türkçe](README.tr.md) · [Español](README.es.md)
 
@@ -67,7 +69,7 @@ scilla следит, доходят ли реальные клиенты до к
 <td valign="top">
 
 ### 📊 Учёт до байта
-mihomo встроен как библиотека, поэтому трафик считается по каждому соединению каждого пользователя, а не выборочно.
+[Citrus](https://github.com/getmikan/Citrus), наш форк mihomo, встроен как библиотека, поэтому трафик считается по каждому соединению каждого пользователя, а не выборочно.
 - Тарифы по сроку и гигабайтам, день оплаты.
 - Лимит устройств и привязка к устройствам против перепродажи ключа.
 - Блокировка торрентов: каждое соединение известно по пользователю, поэтому бан получает тот, кто качает, сразу на всех нодах, а не общий IP.
@@ -89,7 +91,7 @@ mihomo встроен как библиотека, поэтому трафик �
 <tr>
 <td valign="top">
 
-### 🪶 Пернатая лёгкость
+### 🪶 Лёгкая, как мандарин
 Go и PostgreSQL, три небольших контейнера. На рабочем сервере с клиентами:
 - панель — **~14 МБ ОЗУ**;
 - база — **~50 МБ ОЗУ**;
@@ -133,7 +135,7 @@ REST API с документацией прямо в панели, ключи с
 
 ## Доступ для поддержки
 
-Если нужна помощь, вы сами открываете временный доступ: «Настройки → Поддержка», на 2, 6 или 24 часа, с уровнем «просмотр», «изменение» или «терминал». Без этой кнопки никто, включая разработчиков scilla, в панель не попадает: у проекта нет постоянного доступа к вашим серверам, и панель сама никуда не подключается. Все действия оператора пишутся в журнал, доступ отзывается одной кнопкой, терминал включается только паролем и 2FA и записывается. Выключить функцию совсем можно тумблером в той же карточке или командой `scilla support-access off` на сервере. Правила платной поддержки: [на сайте](https://miroshka000.github.io/mikan/support/paid/).
+Если нужна помощь, вы сами открываете временный доступ: «Настройки → Поддержка», на 2, 6 или 24 часа, с уровнем «просмотр», «изменение» или «терминал». Без этой кнопки никто, включая разработчиков scilla, в панель не попадает: у проекта нет постоянного доступа к вашим серверам, и панель сама никуда не подключается. Все действия оператора пишутся в журнал, доступ отзывается одной кнопкой, терминал включается только паролем и 2FA и записывается. Выключить функцию совсем можно тумблером в той же карточке или командой `scilla support-access off` на сервере. Правила платной поддержки: [на сайте](https://drillex100-beep.github.io/scilla/support/paid/).
 
 ## Скриншоты
 
@@ -185,7 +187,7 @@ REST API с документацией прямо в панели, ключи с
 ```mermaid
 flowchart LR
     A[Браузер] -- HTTPS, секретная ссылка --> P[панель scilla<br>пользователи · тарифы · подписки]
-    P -- unix-сокет / TLS с пиннингом --> N1[нода scilla<br>внутри mihomo]
+    P -- unix-сокет / TLS с пиннингом --> N1[нода scilla<br>внутри Citrus]
     P -- TLS с пиннингом --> N2[удалённая нода]
     C[VPN-приложения] -- REALITY · QUIC · … --> N1
     C --> N2
@@ -241,19 +243,25 @@ cd installer && cargo test                    # установщик (Rust)
 
 Разработка идёт в ветке `dev`. Пулл-реквесты в `main` собираются и проходят тесты, релизы публикуются по тегам.
 
-## Об этом форке
+## ⛔ Форки и чужие сборки
 
-> [!NOTE]
-> **Scilla — форк [mikan](https://github.com/Miroshka000/mikan)** от drillex100-beep, переименованный согласно дополнительным условиям лицензии исходного проекта ([NOTICE.md](NOTICE.md), [TRADEMARK.md](TRADEMARK.md)). Это не официальный mikan и не аффилирован с проектом mikan.
+> [!CAUTION]
+> **Официальный scilla есть только здесь:** репозиторий `Miroshka000/mikan`, образ `ghcr.io/miroshka000/scilla` и релизы, подписанные ключом scilla. Официальные аддоны — только из каталога `getmikan/marketplace`; реестр `getmikan/marketplace-community` — это сторонние аддоны, которые scilla не проверяет и за которые не отвечает. Всё остальное — не scilla, как бы оно ни называлось.
 >
-> mikan — свободное ПО по [GNU GPL v3](LICENSE) с дополнительными условиями: сохраняйте атрибуцию, не выдавайте изменённую версию за оригинал, нет прав на имя и логотип исходного проекта. Scilla сохраняет код на тех же условиях и несёт собственное имя и брендинг.
+> **Проект scilla считает любой форк и любую сборку не из официальных источников потенциально небезопасными.**
 >
-> Исходный проект, его документация и сообщество: [Miroshka000/mikan](https://github.com/Miroshka000/mikan) · [docs](https://miroshka000.github.io/mikan/).
+> **Официальные сборки можно проверить.** Каждый релиз собирается автоматически из открытого кода этого репозитория и подписывается, а панель и установщик принимают обновления только с этой подписью. Из чего собрана чужая сборка, знает только её автор.
+>
+> **Форк не получает наших обновлений.** Подписать релиз ключом scilla форк не может, поэтому исправления ошибок и уязвимостей до него не доходят, пока их не перенесёт автор форка, если перенесёт.
+>
+> **Форки мы не поддерживаем.** Мы не проверяем их и не отвечаем за ошибки, уязвимости и потерю данных в них. Вопросы о чужих сборках в чате и в issues не рассматриваются.
+>
+> **Название не входит в лицензию.** GPL v3 даёт права на код, но не на название scilla и логотип (п. 7 GPL v3, подробнее в [NOTICE.md](NOTICE.md) и [TRADEMARK.md](TRADEMARK.md)). Форк должен называться по-другому и не выдавать себя за scilla.
 
 ## Лицензия
 
-Scilla — свободное ПО по [GNU GPL v3](LICENSE) с дополнительными условиями в [NOTICE.md](NOTICE.md). Она является производной от mikan (Copyright (C) 2026 Miroshka и участники mikan); изменения Scilla — Copyright (C) 2026 drillex100-beep. Встраивает [mihomo](https://github.com/MetaCubeX/mihomo) (GPL-3.0) и адаптирует части [3x-ui](https://github.com/MHSanaei/3x-ui) (GPL-3.0). Шрифты: Unbounded, Onest, JetBrains Mono (SIL OFL 1.1).
+scilla — свободная программа под [GNU GPL v3](LICENSE) с дополнительными условиями из [NOTICE.md](NOTICE.md): сохранять указание авторства, не выдавать изменённую версию за оригинал, права на название и логотип не передаются. Copyright (C) 2026 Miroshka and Scilla. Внутри [Citrus](https://github.com/getmikan/Citrus), форк [mihomo](https://github.com/MetaCubeX/mihomo), (GPL-3.0), часть кода взята из [3x-ui](https://github.com/MHSanaei/3x-ui) (GPL-3.0). Шрифты: Unbounded, Onest, JetBrains Mono (SIL OFL 1.1).
 
 <div align="center">
-<sub>Сделано с 🐙</sub>
+<sub>Сделано с 🍊</sub>
 </div>

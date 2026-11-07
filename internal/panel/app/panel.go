@@ -45,14 +45,15 @@ import (
 	"scilla/internal/panel/store"
 	"scilla/internal/panel/store/db"
 	"scilla/internal/panel/subpage"
-	"scilla/internal/panel/subs"
+	"scilla/internal/panel/subsrc"
 	"scilla/internal/panel/support"
 	"scilla/internal/panel/tgate"
 	"scilla/internal/panel/tgbackup"
 	"scilla/internal/panel/tlscert"
 	"scilla/internal/panel/updates"
 	"scilla/internal/panel/warp"
-	"scilla/internal/release"
+	"scilla/internal/panel/webhooks"
+	submodel "scilla/internal/sub/model"
 )
 
 // Panel is the fully wired HTTP side of the panel, without the listener.
@@ -74,6 +75,8 @@ type Panel struct {
 	Alerts   *infraalerts.Monitor
 	Backups  *tgbackup.Service
 	Importer *panelimport.Importer
+	// Webhooks sends the events to the addresses the admin names.
+	Webhooks *webhooks.Service
 	// Support keeps the support access grants; the operator's terminal hooks into it.
 	Support   *support.Service
 	Addons    *addons.Manager
@@ -84,6 +87,7 @@ type Panel struct {
 	sessions  *auth.Sessions
 	st        *store.Store
 	devices   *domain.Devices
+	users     *domain.Users // the housekeeping moves their lifecycle on (maintain)
 	ipLimit   *auth.Limiter
 	userLimit *auth.Limiter
 	now       func() time.Time
@@ -198,6 +202,8 @@ func NewPanel(st *store.Store, o Options) (*Panel, error) {
 		p.Nodes.SetEvents(hub)
 		changes = p.Nodes
 		deps.Online = p.Nodes.Online
+		deps.NodeOnline = p.Nodes.OnlineByNode
+		deps.ResetSlots = p.Nodes.ResetSlots
 		deps.Nodes = p.Nodes
 		p.NodeUpdates = nodeupdate.New(st, set, p.Nodes, o.Version, o.Log, o.Now)
 		deps.NodeUpdates = p.NodeUpdates
@@ -236,7 +242,7 @@ func NewPanel(st *store.Store, o Options) (*Panel, error) {
 	deps.Inbounds.SetResolver(deps.Resolve)
 	deps.Devices = domain.NewDevices(st, pool, changes, o.Now)
 	deps.Devices.SetEvents(hub)
-	p.st, p.devices = st, deps.Devices
+	p.st, p.devices, p.users = st, deps.Devices, deps.Users
 	deps.Packages = domain.NewPackages(st, o.Now)
 	deps.Campaigns = domain.NewCampaigns(st, o.Now)
 	deps.Balancer = domain.NewBalancer(st, o.Now, o.Log)
@@ -278,6 +284,8 @@ func NewPanel(st *store.Store, o Options) (*Panel, error) {
 	deps.Addons = p.Addons
 	addonPages := addonpages.New(addonpages.Deps{Addons: p.Addons, Store: st.Q, Log: o.Log, Now: o.Now})
 	deps.Pages = addonPages
+	p.Webhooks = webhooks.New(webhooks.Deps{Store: st, Hub: hub, Log: o.Log, Now: o.Now, Version: o.Version})
+	deps.Webhooks = p.Webhooks
 	deps.DNS = o.DNS
 	deps.Reach, deps.Geo = o.Reach, o.Geo
 	deps.DataDir = o.DataDir
@@ -356,11 +364,16 @@ func NewPanel(st *store.Store, o Options) (*Panel, error) {
 	deps.Importer = importer
 	p.Importer = importer
 	// The subscriptions' handler comes later; the preview reaches it once it is there.
-	var subHandler *subs.Handler
-	deps.RoutesPreview = func(ctx context.Context, req subs.PreviewRequest) ([]byte, error) {
+	var subHandler *subsrc.Handler
+	deps.RoutesPreview = func(ctx context.Context, req subsrc.PreviewRequest) (subsrc.Preview, error) {
 		return subHandler.Preview(ctx, req)
 	}
-	deps.CheckTemplate = func(ctx context.Context, src string) error { return subHandler.CheckTemplate(ctx, src) }
+	deps.CheckTemplate = func(ctx context.Context, core submodel.Core, src string) error {
+		return subHandler.CheckTemplate(ctx, core, src)
+	}
+	deps.TemplatePreview = func(ctx context.Context, req subsrc.TemplatePreview) (subsrc.Preview, error) {
+		return subHandler.PreviewTemplate(ctx, req)
+	}
 	deps.HappLink = func(ctx context.Context, u db.User) (string, error) { return subHandler.HappLink(ctx, u) }
 	apiHandler, _, err := api.New(deps)
 	if err != nil {
@@ -375,132 +388,14 @@ func NewPanel(st *store.Store, o Options) (*Panel, error) {
 		p.subPage, subPageHandler = sp, sp
 	}
 	pages := subpage.NewService(st.Q)
-	buildSubCfg := func(ctx context.Context) (subs.Config, error) {
-		ep, err := set.Endpoint(ctx)
-		if err != nil {
-			return subs.Config{}, err
-		}
-		brand, _, err := settings.Get[string](ctx, set, settings.KeyBrand)
-		if err != nil {
-			return subs.Config{}, err
-		}
-		if brand == "" {
-			brand = "VPN"
-		}
-		support, _, err := settings.Get[string](ctx, set, settings.KeySupportURL)
-		if err != nil {
-			return subs.Config{}, err
-		}
-		lang, err := set.Lang(ctx)
-		if err != nil {
-			return subs.Config{}, err
-		}
-		var domainName, subDomain, publicHost, routing, fingerprint, rules string
-		var groups subs.Groups
-		for key, dst := range map[string]*string{settings.KeyDomain: &domainName, settings.KeySubDomain: &subDomain, settings.KeyPublicHost: &publicHost, settings.KeyGroupMain: &groups.Main, settings.KeyGroupAuto: &groups.Auto,
-			settings.KeyRouting: &routing, settings.KeyFingerprint: &fingerprint, settings.KeyRules: &rules} {
-			if *dst, err = set.String(ctx, key); err != nil {
-				return subs.Config{}, err
-			}
-		}
-		cfg := subs.Config{Brand: brand, SupportURL: support, Groups: groups, Routing: subs.ParseRouting(routing), Fingerprint: fingerprint,
-			Direct: []string{publicHost, domainName, subDomain}, Lang: lang, Rules: subs.ServedRules(rules, groups.WithDefaults(lang))}
-		if cfg.Routes, _, err = settings.Get[subs.Routes](ctx, set, settings.KeyRoutes); err != nil {
-			return subs.Config{}, err
-		}
-		if cfg.Template, err = set.String(ctx, settings.KeyTemplate); err != nil {
-			return subs.Config{}, err
-		}
-		if cfg.Binding, err = set.On(ctx, settings.DeviceBinding); err != nil {
-			return subs.Config{}, err
-		}
-		if cfg.RequireHWID, err = set.On(ctx, settings.RequireHWID); err != nil {
-			return subs.Config{}, err
-		}
-		cfg.SubBase = subBase(ctx)
-		var legacyKind string
-		if legacyKind, err = set.String(ctx, settings.KeyLegacySubKind); err != nil {
-			return subs.Config{}, err
-		}
-		cfg.Legacy.Kind = panelimport.Kind(legacyKind)
-		if cfg.Legacy.Secret, err = set.String(ctx, settings.KeyLegacySubSecret); err != nil {
-			return subs.Config{}, err
-		}
-		if cfg.App.Enabled, err = set.On(ctx, settings.AppBranding); err != nil {
-			return subs.Config{}, err
-		}
-		if cfg.Happ.HideSettings, err = set.On(ctx, settings.HappHide); err != nil {
-			return subs.Config{}, err
-		}
-		if cfg.InactiveServer, err = set.On(ctx, settings.InactiveServer); err != nil {
-			return subs.Config{}, err
-		}
-		if cfg.InactiveText, err = set.String(ctx, settings.KeyInactiveText); err != nil {
-			return subs.Config{}, err
-		}
-		tariffs, err := st.Q.ListTariffs(ctx)
-		if err != nil {
-			return subs.Config{}, err
-		}
-		cfg.Tariffs = make(map[int64]string, len(tariffs))
-		for _, t := range tariffs {
-			cfg.Tariffs[t.ID] = t.Name
-		}
-		for key, dst := range map[string]*string{settings.KeySubTitle: &cfg.Title, settings.KeyAnnounce: &cfg.Announce, settings.KeyAnnounceURL: &cfg.AnnounceURL,
-			settings.KeyBrandAccent: &cfg.App.Accent, settings.KeyBrandLogo: &cfg.App.LogoURL,
-			settings.KeyHappRouting: &cfg.Happ.Routing, settings.KeyHappProvider: &cfg.Happ.ProviderID, settings.KeyHappCrypt: &cfg.Happ.Crypt} {
-			if *dst, err = set.String(ctx, key); err != nil {
-				return subs.Config{}, err
-			}
-		}
-		// The apps take the logo uploaded for the page when no link of its own is given.
-		if cfg.App.Enabled && cfg.App.LogoURL == "" && cfg.SubBase != "" {
-			assets, err := pages.Assets(ctx)
-			if err != nil {
-				return subs.Config{}, err
-			}
-			if a, ok := assets[subpage.AssetLogo]; ok {
-				cfg.App.LogoURL = cfg.SubBase + "/" + subpage.AssetPath(subpage.AssetLogo, a.Hash)
-			}
-		}
-		nodes, err := st.Q.ListNodes(ctx)
-		if err != nil {
-			return subs.Config{}, err
-		}
-		for _, n := range nodes {
-			if n.Enabled == 0 {
-				continue
-			}
-			sn := subs.Node{ID: n.ID, Name: n.Name, Endpoint: subs.Endpoint{Host: ep.Host, SNI: domainName}}
-			if n.Address != "" {
-				sn.Endpoint = subs.Endpoint{Host: domain.NodeHost(n), SNI: n.Domain}
-				cfg.Direct = append(cfg.Direct, n.PublicHost, n.Domain)
-			}
-			sn.Endpoint.SNIRouter = n.SniRouter != 0
-			// A node older than the Shadowsocks-2022 key per user runs one key for everyone: its
-			// links carry that one until it is updated. A version that is not a release (a
-			// build of the source) is taken as new.
-			if p.Nodes != nil && n.Address != "" {
-				if hv, ok := p.Nodes.Health(n.ID); ok && release.Valid(hv.Health.Version) && release.Newer(ssUsersSince, hv.Health.Version) {
-					sn.SSOneKey = true
-				}
-			}
-			if o.TLS != nil {
-				if c, err := o.TLS.Pick(n); err == nil {
-					sn.Endpoint.PinSHA256 = c.Pin
-				}
-				// What the node serves, as of the last state it took: a certificate picked now
-				// reaches it with the next state, and the links follow once it has.
-				if p.Nodes != nil {
-					if pin, ok := p.Nodes.ServedPin(n.ID); ok {
-						sn.Endpoint.PinSHA256 = pin
-					}
-				}
-			}
-			cfg.Nodes = append(cfg.Nodes, sn)
-		}
-		return cfg, nil
+	cfgDeps := subsrc.ConfigDeps{Settings: set, Q: st.Q, Pages: pages, Log: o.Log, Now: o.Now, SubBase: subBase}
+	if p.Nodes != nil {
+		cfgDeps.Nodes = subNodes{p.Nodes}
 	}
+	if o.TLS != nil {
+		cfgDeps.TLS = tlsPins{o.TLS}
+	}
+	buildSubCfg := func(ctx context.Context) (subsrc.Config, error) { return subsrc.LoadConfig(ctx, cfgDeps) }
 	// A subscription is fetched by every app of every user every hour or so, and building
 	// its config reads some twenty settings and every node and takes a node's certificate
 	// from disk. It is kept for a few seconds, and dropped at once when this process changes
@@ -515,8 +410,8 @@ func NewPanel(st *store.Store, o Options) (*Panel, error) {
 		}
 		return g
 	}}
-	subCfg := func(ctx context.Context) (subs.Config, error) { return cache.get(ctx, buildSubCfg) }
-	subHandler = subs.NewHandler(st, subCfg, subPageHandler, o.Now, deps.Devices, o.TrustProxy)
+	subCfg := func(ctx context.Context) (subsrc.Config, error) { return cache.get(ctx, buildSubCfg) }
+	subHandler = subsrc.NewHandler(st, subCfg, subPageHandler, o.Now, deps.Devices, o.TrustProxy)
 	subHandler.SetBalancer(deps.Balancer)
 	subHandler.SetLogger(o.Log)
 	subHandler.SetTelegram(p.Gateway)
@@ -611,7 +506,7 @@ func (p *Panel) Run(ctx context.Context) {
 	if p.NodeUpdates != nil {
 		workers = append(workers, p.NodeUpdates.Run)
 	}
-	workers = append(workers, p.Gateway.Run, p.Telegram.Run, p.Billing.Run, p.AddonsAPI.Run, p.AddonsAPI.RunPush, (&botAddon{p: p}).Run, p.Updates.Run, p.Alerts.Run, p.Backups.Run, p.Importer.Run,
+	workers = append(workers, p.Gateway.Run, p.Telegram.Run, p.Billing.Run, p.AddonsAPI.Run, p.AddonsAPI.RunPush, p.Webhooks.Run, (&botAddon{p: p}).Run, p.Updates.Run, p.Alerts.Run, p.Backups.Run, p.Importer.Run,
 		func(ctx context.Context) {
 			pace.Tick(ctx, 5*time.Second, func(ctx context.Context) {
 				if _, err := p.Apply(ctx); err != nil {
@@ -629,6 +524,9 @@ func (p *Panel) Run(ctx context.Context) {
 			})
 		},
 		func(ctx context.Context) {
+			// The housekeeping runs at start too: a term that ends within ten minutes of a
+			// restart must find its next tariff (domain.SwitchAhead), not the first tick.
+			p.maintain(ctx)
 			pace.Tick(ctx, 10*time.Minute, func(ctx context.Context) {
 				if err := p.sessions.Cleanup(ctx); err != nil {
 					p.log.Error("session cleanup", "err", err)
@@ -653,9 +551,6 @@ func runAll(ctx context.Context, workers ...func(context.Context)) {
 
 // configCacheTTL: the longest a changed setting is not seen, when the change was made by
 // another process (the server CLI); this process's own changes drop the cache at once.
-// ssUsersSince is the first release whose nodes run Shadowsocks-2022 with a key per user.
-const ssUsersSince = "0.5.1.1-rc.11"
-
 const configCacheTTL = 10 * time.Second
 
 // configCache keeps the subscription's config between requests. Errors are not kept.
@@ -666,11 +561,11 @@ type configCache struct {
 	mu  sync.Mutex
 	at  time.Time
 	g   uint64
-	cfg subs.Config
+	cfg subsrc.Config
 	ok  bool
 }
 
-func (c *configCache) get(ctx context.Context, build func(context.Context) (subs.Config, error)) (subs.Config, error) {
+func (c *configCache) get(ctx context.Context, build func(context.Context) (subsrc.Config, error)) (subsrc.Config, error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	now, g := c.now(), c.gen()
@@ -679,10 +574,28 @@ func (c *configCache) get(ctx context.Context, build func(context.Context) (subs
 	}
 	cfg, err := build(ctx)
 	if err != nil {
-		return subs.Config{}, err
+		return subsrc.Config{}, err
 	}
 	c.cfg, c.g, c.at, c.ok = cfg, g, now, true
 	return cfg, nil
+}
+
+// subNodes is the node syncers' word on the nodes as the subscriptions read it.
+type subNodes struct{ m *nodesync.Manager }
+
+func (s subNodes) Health(id int64) (subsrc.NodeHealth, bool) {
+	hv, ok := s.m.Health(id)
+	return subsrc.NodeHealth{OK: hv.OK, Since: hv.Since, Version: hv.Health.Version}, ok
+}
+
+func (s subNodes) ServedPin(id int64) (string, bool) { return s.m.ServedPin(id) }
+
+// tlsPins is the pin of the certificate NodeTLS picks for a node.
+type tlsPins struct{ x *NodeTLS }
+
+func (t tlsPins) Pick(n db.Node) (string, error) {
+	c, err := t.x.Pick(n)
+	return c.Pin, err
 }
 
 // forgetNodeFiles removes what the panel keeps on disk for a node id: its own certificate

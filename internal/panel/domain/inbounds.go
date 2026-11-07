@@ -82,11 +82,12 @@ func NewInbounds(st *store.Store, dry DryRun, now func() time.Time) *Inbounds {
 
 // NewInbound is an inbound to add.
 type NewInbound struct {
-	NodeID int64  // 0: the panel's own node
-	Preset string // presets.Custom takes Config
-	Port   string // "": the preset's
-	Dest   string // a REALITY preset's target; "": the default
-	Config string // the template of presets.Custom
+	NodeID int64    // 0: the panel's own node
+	Preset string   // presets.Custom takes Config
+	Port   string   // "": the preset's
+	Dest   string   // a REALITY preset's target; "": the default
+	Config string   // the template of presets.Custom
+	Tags   []string // the admin's labels, as a user's (encodeTags)
 }
 
 // InboundPatch changes an inbound; a nil field stays as it is.
@@ -110,6 +111,10 @@ type InboundPatch struct {
 	Outbound   *string // direct, warp or node
 	ExitNodeID *int64  // for Outbound node
 	PoolID     *int64  // 0: the main traffic
+	// InAuto: the inbound is in the subscriptions' automatic choice (as a node's switch).
+	InAuto *bool
+	// Tags are the admin's labels (encodeTags): the panel's own, clients see none of them.
+	Tags *[]string
 
 	// FromPort, when set, applies the patch only while the inbound is on this port: an
 	// automatic move decided on what a node reported never lands on a row moved since
@@ -124,7 +129,7 @@ func (p InboundPatch) EditsTemplate() bool {
 
 // ForClients: the patch changes what clients get.
 func (p InboundPatch) ForClients() bool {
-	return p.EditsTemplate() || p.Port != nil || p.Enabled != nil || p.DisplayName != nil
+	return p.EditsTemplate() || p.Port != nil || p.Enabled != nil || p.DisplayName != nil || p.InAuto != nil
 }
 
 // ClientEndpoint is where clients connect when a TCP proxy or a CDN stands in front of
@@ -180,9 +185,15 @@ func (s *Inbounds) Create(ctx context.Context, in NewInbound) (db.Inbound, error
 			return err
 		}
 		now := s.now().Unix()
-		row, err = q.CreateInbound(ctx, db.CreateInboundParams{NodeID: node.ID, Name: FreeName(existing, base), Preset: info.ID, Port: port,
+		row, err = createInbound(ctx, q, db.CreateInboundParams{NodeID: node.ID, Name: FreeName(existing, base), Preset: info.ID, Port: port,
 			Config: config, CreatedAt: now, UpdatedAt: now})
-		return err
+		if err != nil || len(in.Tags) == 0 {
+			return err
+		}
+		if row.Tags, err = encodeTags(in.Tags); err != nil {
+			return err
+		}
+		return q.SetInboundTags(ctx, db.SetInboundTagsParams{Tags: row.Tags, ID: row.ID})
 	})
 	return row, err
 }
@@ -363,6 +374,20 @@ func (s *Inbounds) update(ctx context.Context, id int64, p InboundPatch) (prev, 
 				return err
 			}
 		}
+		if p.Tags != nil {
+			tags, err := encodeTags(*p.Tags)
+			if err != nil {
+				return err
+			}
+			if err := q.SetInboundTags(ctx, db.SetInboundTagsParams{Tags: tags, ID: id}); err != nil {
+				return err
+			}
+		}
+		if p.InAuto != nil {
+			if err := q.SetInboundNoAuto(ctx, db.SetInboundNoAutoParams{NoAuto: Flag(!*p.InAuto), ID: id}); err != nil {
+				return err
+			}
+		}
 		if p.Outbound != nil {
 			if err := q.SetInboundExit(ctx, db.SetInboundExitParams{ExitNodeID: next.ExitNodeID, Outbound: next.Outbound, ID: id}); err != nil {
 				return err
@@ -379,8 +404,13 @@ func (s *Inbounds) update(ctx context.Context, id int64, p InboundPatch) (prev, 
 			}
 		}
 		if client {
-			if _, err := q.UpdateInbound(ctx, db.UpdateInboundParams{Port: next.Port, Enabled: next.Enabled, Config: next.Config, DisplayName: next.DisplayName,
-				UpdatedAt: s.now().Unix(), ID: id}); err != nil {
+			row, err := q.UpdateInbound(ctx, db.UpdateInboundParams{Port: next.Port, Enabled: next.Enabled, Config: next.Config, DisplayName: next.DisplayName,
+				UpdatedAt: s.now().Unix(), ID: id})
+			if err != nil {
+				return err
+			}
+			// The default host is the template's: it changes with it (hosts.go).
+			if err := syncDefaultHost(ctx, q, row); err != nil {
 				return err
 			}
 		}

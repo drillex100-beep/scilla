@@ -2,17 +2,19 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset=".github/assets/banner-en-dark.svg">
-  <img alt="scilla: mihomo çekirdeği üzerinde VPN paneli" src=".github/assets/banner-en-light.svg" width="100%">
+  <img alt="scilla: Citrus çekirdeği üzerinde VPN paneli" src=".github/assets/banner-en-light.svg" width="100%">
 </picture>
 
 <br>
 
-**[mihomo](https://github.com/MetaCubeX/mihomo) çekirdeği üzerinde hızlı ve güzel bir VPN paneli: tek komutla kurulur, başında beklemek gerekmez.**
+**[Citrus](https://github.com/getmikan/Citrus) çekirdeği üzerinde hızlı ve güzel bir VPN paneli: tek komutla kurulur, başında beklemek gerekmez.**
 
-[![Sürüm](https://img.shields.io/github/v/release/drillex100-beep/scilla?color=f07a2e&label=sürüm&style=flat-square)](https://github.com/drillex100-beep/scilla/releases)
-[![İmaj](https://img.shields.io/badge/ghcr.io-drillex100-beep%2Fscilla-2b8c9e?style=flat-square&logo=docker&logoColor=white)](https://github.com/drillex100-beep/scilla/pkgs/container/scilla)
+[![Sürüm](https://img.shields.io/github/v/release/Miroshka000/mikan?color=f07a2e&label=sürüm&style=flat-square)](https://github.com/drillex100-beep/scilla/releases)
+[![İmaj](https://img.shields.io/badge/ghcr.io-miroshka000%2Fmikan-2b8c9e?style=flat-square&logo=docker&logoColor=white)](https://github.com/drillex100-beep/scilla/pkgs/container/scilla)
 [![Lisans](https://img.shields.io/badge/lisans-GPL--3.0-2f9e6b?style=flat-square)](LICENSE)
-[![mihomo](https://img.shields.io/badge/çekirdek-mihomo%201.19.32-9e8eff?style=flat-square)](https://github.com/MetaCubeX/mihomo)
+[![Citrus](https://img.shields.io/badge/çekirdek-Citrus-9e8eff?style=flat-square)](https://github.com/getmikan/Citrus)
+[![Telegram](https://img.shields.io/badge/Telegram-kanal-26a5e4?style=flat-square&logo=telegram&logoColor=white)](https://t.me/mikanvpn)
+[![Telegram](https://img.shields.io/badge/Telegram-forum-26a5e4?style=flat-square&logo=telegram&logoColor=white)](https://t.me/+I2JFR7DbPow1ZmQy)
 
 [English](README.md) · [Русский](README.ru.md) · [简体中文](README.zh-CN.md) · [فارسی](README.fa.md) · **Türkçe** · [Español](README.es.md)
 
@@ -59,7 +61,7 @@ Abonelikler uygulamayı tanır (Happ, v2RayTun, Koala Clash, SlothClash, Clash V
 <td valign="top">
 
 ### 📊 Bayt hassasiyetinde sayım
-mihomo bir kütüphane olarak gömülüdür, bu yüzden trafik her bağlantıda kullanıcı bazında sayılır, örneklenmez. Süreye ve gigabayta göre planlar, faturalama günleri, cihaz sınırları ve anahtar paylaşımına karşı cihaz bağlama.
+[Citrus](https://github.com/getmikan/Citrus) (mihomo çatalımız) bir kütüphane olarak gömülüdür, bu yüzden trafik her bağlantıda kullanıcı bazında sayılır, örneklenmez. Süreye ve gigabayta göre planlar, faturalama günleri, cihaz sınırları ve anahtar paylaşımına karşı cihaz bağlama.
 
 </td>
 <td valign="top">
@@ -72,7 +74,7 @@ Aboneler planlarını, cihazlarını ve bağlantı rehberlerini panelde kurduğu
 <tr>
 <td valign="top">
 
-### 🪶 Tüy kadar hafif
+### 🪶 Mandalina kadar hafif
 Go ve PostgreSQL, üç küçük konteyner. İstemcileri olan çalışan bir sunucuda: panel için **~14 MB RAM**, veritabanı için **~50 MB**, VPN çekirdeği için **~40 MB**.
 
 </td>
@@ -110,7 +112,7 @@ Scilla ödemeyi iade edebilir.
 
 ## Destek erişimi
 
-Yardıma ihtiyacın olduğunda geçici erişimi kendin açarsın: Ayarlar → Destek, 2, 6 veya 24 saatliğine, «görüntüleme», «değiştirme» veya «terminal» seviyesinde. Bu düğme olmadan scilla geliştiricileri dahil kimse panele giremez: projenin sunucularına kalıcı erişimi yoktur ve panel kendiliğinden hiçbir yere bağlanmaz. Operatörün her işlemi denetim günlüğüne yazılır, erişim tek düğmeyle geri alınır, terminal parolan ve 2FA ile açılır ve kaydedilir. Özelliği tamamen kapatmak için aynı karttaki anahtarı kullan veya sunucuda `scilla support-access off` çalıştır. Ücretli destek kuralları: [sitede](https://miroshka000.github.io/mikan/support/paid/).
+Yardıma ihtiyacın olduğunda geçici erişimi kendin açarsın: Ayarlar → Destek, 2, 6 veya 24 saatliğine, «görüntüleme», «değiştirme» veya «terminal» seviyesinde. Bu düğme olmadan scilla geliştiricileri dahil kimse panele giremez: projenin sunucularına kalıcı erişimi yoktur ve panel kendiliğinden hiçbir yere bağlanmaz. Operatörün her işlemi denetim günlüğüne yazılır, erişim tek düğmeyle geri alınır, terminal parolan ve 2FA ile açılır ve kaydedilir. Özelliği tamamen kapatmak için aynı karttaki anahtarı kullan veya sunucuda `scilla support-access off` çalıştır. Ücretli destek kuralları: [sitede](https://drillex100-beep.github.io/scilla/support/paid/).
 
 ## Ekran görüntüleri
 
@@ -162,7 +164,7 @@ On yedi protokol, her biri sizin için üretilmiş anahtarlarla hazır bir ön a
 ```mermaid
 flowchart LR
     A[Browser] -- HTTPS, secret link --> P[scilla panel<br>users · plans · subscriptions]
-    P -- unix socket / pinned TLS --> N1[scilla node<br>mihomo inside]
+    P -- unix socket / pinned TLS --> N1[scilla node<br>Citrus inside]
     P -- pinned TLS --> N2[remote node]
     C[VPN apps] -- REALITY · QUIC · … --> N1
     C --> N2
@@ -210,19 +212,25 @@ cd installer && cargo test                    # the installer (Rust)
 
 Geliştirme `dev` dalında yapılır. `main` dalına açılan çekme istekleri derlenir ve test edilir, sürümler etiketlerden yayımlanır.
 
-## About this fork
+## ⛔ Fork'lar ve üçüncü taraf derlemeler
 
-> [!NOTE]
-> **Scilla is a fork of [mikan](https://github.com/Miroshka000/mikan)** by drillex100-beep, renamed as required by the original project's additional license terms ([NOTICE.md](NOTICE.md), [TRADEMARK.md](TRADEMARK.md)). It is not the official mikan and is not affiliated with or supported by the mikan project.
+> [!CAUTION]
+> **Resmî scilla yalnızca burada:** `Miroshka000/mikan` deposu, `ghcr.io/miroshka000/scilla` imajı ve scilla anahtarıyla imzalanmış sürümler. Resmî eklentiler yalnızca `getmikan/marketplace` kataloğundan gelir; topluluk kaydı `getmikan/marketplace-community`, scilla'ın incelemediği ve sorumluluğunu almadığı üçüncü taraf eklentileri listeler. Geri kalan her şey, adı ne olursa olsun, scilla değildir.
 >
-> mikan is free software under the [GNU GPL v3](LICENSE) with additional terms: keep the attribution, do not pass a modified version off as the original, and no rights to the name and the logo of the original project. Scilla keeps the code under the same terms and carries its own name and branding.
+> **scilla projesi, her fork'u ve başka kaynaklardan gelen her derlemeyi potansiyel olarak güvensiz kabul eder.**
 >
-> The upstream project, its documentation and community: [Miroshka000/mikan](https://github.com/Miroshka000/mikan) · [docs](https://miroshka000.github.io/mikan/).
+> **Resmî derlemeler doğrulanabilir.** Her sürüm bu deponun açık kodundan otomatik olarak derlenir ve imzalanır; panel ve kurulum aracı yalnızca bu imzayı taşıyan güncellemeleri kabul eder. Başkasının derlemesinin neyden yapıldığını yalnızca yazarı bilir.
+>
+> **Fork'lar güncellemelerimizi almaz.** Bir fork, sürümlerini scilla anahtarıyla imzalayamaz; bu yüzden hata ve güvenlik açığı düzeltmeleri, yazarı onları taşımadıkça ona ulaşmaz.
+>
+> **Fork'ları desteklemiyoruz.** Onları incelemiyoruz ve içlerindeki hatalardan, güvenlik açıklarından veya veri kaybından sorumlu değiliz. Başkalarının derlemeleriyle ilgili sorular sohbette ve issue'larda ele alınmaz.
+>
+> **Ad lisansın parçası değildir.** GPL v3 kodu kapsar, scilla adını ve logosunu değil (GPL v3 bölüm 7, bkz. [NOTICE.md](NOTICE.md) ve [TRADEMARK.md](TRADEMARK.md)). Bir fork başka bir ad kullanmalı ve kendini scilla olarak tanıtmamalıdır.
 
 ## Lisans
 
-Scilla is free software under the [GNU GPL v3](LICENSE) with the additional terms in [NOTICE.md](NOTICE.md). It is derived from mikan (Copyright (C) 2026 Miroshka and the mikan contributors); Scilla modifications are Copyright (C) 2026 drillex100-beep. It embeds [mihomo](https://github.com/MetaCubeX/mihomo) (GPL-3.0) and adapts parts of [3x-ui](https://github.com/MHSanaei/3x-ui) (GPL-3.0). Fonts: Unbounded, Onest, JetBrains Mono (SIL OFL 1.1).
+scilla, [GNU GPL v3](LICENSE) ve [NOTICE.md](NOTICE.md) dosyasındaki ek koşullar altında özgür yazılımdır: atıf korunur, değiştirilmiş bir sürüm orijinal gibi tanıtılmaz, ad ve logo üzerinde hak verilmez. Copyright (C) 2026 Miroshka and Scilla. İçine [Citrus](https://github.com/getmikan/Citrus) ([mihomo](https://github.com/MetaCubeX/mihomo) çatalı) (GPL-3.0) gömülüdür ve [3x-ui](https://github.com/MHSanaei/3x-ui) (GPL-3.0) kodunun bazı bölümleri uyarlanmıştır. Yazı tipleri: Unbounded, Onest, JetBrains Mono (SIL OFL 1.1).
 
 <div align="center">
-<sub>🐙 ile yapıldı</sub>
+<sub>🍊 ile yapıldı</sub>
 </div>

@@ -8,6 +8,7 @@ import { QueryBoundary } from "../../components/query";
 import { useToast } from "../../components/toast";
 import { Button, EmptyState, PageHeader, Pill, Segmented, Skeleton } from "../../components/ui";
 import { Switch } from "../../components/switch";
+import { hasTag, TagChips, TagFilter } from "../../components/tags";
 import { t, tMaybe } from "../../i18n";
 import { ago, maskedAs } from "../../lib/format";
 import { nodeLabel } from "../../lib/node-label";
@@ -16,6 +17,7 @@ import { AddDrawer } from "./inbound/add";
 import { EditDrawer } from "./inbound/edit";
 import { CopyDrawer } from "./inbound/copy";
 import { ExitBar } from "./inbound/exit-bar";
+import { Select } from "../../components/select";
 
 export function InboundsPage() {
   const all = useInbounds();
@@ -28,7 +30,11 @@ export function InboundsPage() {
   const multi = (nodes.data?.length ?? 0) > 1;
   const node = nodes.data?.find((n) => n.id === nodeId);
   // One node: its inbounds are all there is; several: the chosen node's.
-  const inbounds = useMemo(() => (all.data ?? []).filter((i) => !multi || i.node_id === nodeId), [all.data, multi, nodeId]);
+  const ofNode = useMemo(() => (all.data ?? []).filter((i) => !multi || i.node_id === nodeId), [all.data, multi, nodeId]);
+  // One label to show only the node's protocols with it; one they do not have filters nothing.
+  const [tag, setTag] = useState("");
+  const filter = tag && ofNode.some((i) => hasTag(i.tags, tag)) ? tag : "";
+  const inbounds = useMemo(() => (filter ? ofNode.filter((i) => hasTag(i.tags, filter)) : ofNode), [ofNode, filter]);
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState<Inbound | null>(null);
   const [copying, setCopying] = useState<Inbound | null>(null);
@@ -83,7 +89,7 @@ export function InboundsPage() {
             <label htmlFor="inbounds-node" className="text-[13px] font-medium text-[var(--ink-700)]">
               {t("inbounds.node")}
             </label>
-            <select id="inbounds-node" className="input max-w-[320px]" value={nodeId} onChange={(e) => {
+            <Select id="inbounds-node" className="input max-w-[320px]" value={nodeId} onChange={(e) => {
                 setNodeId(Number(e.target.value));
                 setSelected(new Set());
               }}>
@@ -92,10 +98,18 @@ export function InboundsPage() {
                   {nodeLabel(n)}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
         )
       ) : null}
+      <TagFilter
+        items={ofNode}
+        value={filter}
+        onChange={(v) => {
+          setTag(v);
+          setSelected(new Set());
+        }}
+      />
       <QueryBoundary
         query={all}
         pending={
@@ -138,6 +152,11 @@ export function InboundsPage() {
                         <span>·</span>
                         <span className="mono">{i.name}</span>
                       </div>
+                      {i.tags.length > 0 ? (
+                        <div className="mt-1.5 text-xs">
+                          <TagChips tags={i.tags} />
+                        </div>
+                      ) : null}
                     </div>
                     <Switch
                       checked={i.enabled}

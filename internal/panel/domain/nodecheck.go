@@ -48,8 +48,8 @@ func (e *DomainError) Unwrap() error { return e.Err }
 // NodeRules are what a node is checked against besides its own fields.
 type NodeRules struct {
 	// Name checks the form of a node's name and that it repeats no group of the
-	// subscription (subs.Groups.CheckName); the groups live in subs, which imports domain,
-	// so the caller brings the check. nil asks nothing.
+	// subscription (model.GroupNames.CheckName of internal/sub); the saved names are read by
+	// subsrc, which imports domain, so the caller brings the check. nil asks nothing.
 	Name func(name string) error
 	// DNS checks that a node's domain leads to the node, over the network and so outside
 	// any transaction. nil asks nothing: tests, and a panel without the check.
@@ -148,17 +148,28 @@ type NodePatch struct {
 	// FrontPage is the built-in page (frontpage.Templates) strangers get on the node's own
 	// domain through the shared 443; "" none.
 	FrontPage *string
+	// InAuto: the node's servers are in the subscriptions' automatic choice; off for a
+	// server the apps must not pick on their own (one for whitelist-only networks).
+	InAuto *bool
+	// Billing is the node's server at its provider (NodeBilling), written whole.
+	Billing *NodeBilling
 	// APILockdown: the node's API answers only the panel; APIAllow the networks the admin
 	// adds to the panel's own addresses (NormalizeAPIAllow). Not on the panel's own node,
 	// which the panel reaches over its socket.
 	APILockdown *bool
 	APIAllow    *[]string
-	Rules       NodeRules
+	// OwnPorts: the ports the node's users reach on its server's own addresses, besides the
+	// ones the panel keeps open there (NormalizeOwnPorts).
+	OwnPorts *[]int
+	// Tags are the admin's labels of the node, as a user's (encodeTags).
+	Tags  *[]string
+	Rules NodeRules
 }
 
 // UpdateNode changes the fields p names and returns the node. Errors: ErrUnknownNode,
 // ErrLocalNode (a host or domain for the panel's own node), ErrLocalLockdown, ErrBadHost,
-// ErrBadDomain, *NameError, *DomainError, ErrChannelRequired, *APIAllowError, ErrManyAPIAllow.
+// ErrBadDomain, *NameError, *DomainError, ErrChannelRequired, *APIAllowError, ErrManyAPIAllow,
+// *OwnPortError, ErrManyOwnPorts, *FieldError (a front page or a billing out of bounds).
 //
 // The checks run first, the domain's one over the network included. Only what p names is
 // written, over the row as it is by then and in one transaction: an edit made meanwhile
@@ -194,6 +205,12 @@ func UpdateNode(ctx context.Context, st *store.Store, id int64, p NodePatch, now
 	}
 	if cur.Address == "" && (p.APILockdown != nil && *p.APILockdown || len(allow) > 0) {
 		return db.Node{}, ErrLocalLockdown
+	}
+	var ownPorts []int64
+	if p.OwnPorts != nil {
+		if ownPorts, err = NormalizeOwnPorts(*p.OwnPorts); err != nil {
+			return db.Node{}, err
+		}
 	}
 	if p.Host != nil {
 		if !hostname.Valid(host) {
@@ -265,6 +282,20 @@ func UpdateNode(ctx context.Context, st *store.Store, id int64, p NodePatch, now
 				return err
 			}
 		}
+		if p.InAuto != nil {
+			if err := q.SetNodeNoAuto(ctx, db.SetNodeNoAutoParams{NoAuto: Flag(!*p.InAuto), UpdatedAt: now.Unix(), ID: cur.ID}); err != nil {
+				return err
+			}
+		}
+		if b := p.Billing; b != nil {
+			if err := b.check(); err != nil {
+				return err
+			}
+			if err := q.SetNodeBilling(ctx, db.SetNodeBillingParams{BillingProvider: b.Provider, PayDay: b.PayDay, PayMonths: b.PayMonths, RemindDays: b.RemindDays,
+				TrafficLimit: b.TrafficLimit, ResetDay: b.ResetDay, TrafficAlert: b.TrafficAlert, UpdatedAt: now.Unix(), ID: cur.ID}); err != nil {
+				return err
+			}
+		}
 		if p.APILockdown != nil || p.APIAllow != nil {
 			if p.APILockdown != nil {
 				cur.ApiLockdown = Flag(*p.APILockdown)
@@ -273,6 +304,20 @@ func UpdateNode(ctx context.Context, st *store.Store, id int64, p NodePatch, now
 				cur.ApiAllow = allow
 			}
 			if err := q.SetNodeAPILockdown(ctx, db.SetNodeAPILockdownParams{ApiLockdown: cur.ApiLockdown, ApiAllow: cur.ApiAllow, UpdatedAt: now.Unix(), ID: cur.ID}); err != nil {
+				return err
+			}
+		}
+		if p.OwnPorts != nil {
+			if err := q.SetNodeOwnPorts(ctx, db.SetNodeOwnPortsParams{OwnPorts: ownPorts, UpdatedAt: now.Unix(), ID: cur.ID}); err != nil {
+				return err
+			}
+		}
+		if p.Tags != nil {
+			tags, err := encodeTags(*p.Tags)
+			if err != nil {
+				return err
+			}
+			if err := q.SetNodeTags(ctx, db.SetNodeTagsParams{Tags: tags, ID: cur.ID}); err != nil {
 				return err
 			}
 		}

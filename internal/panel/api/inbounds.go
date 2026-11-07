@@ -15,8 +15,8 @@ import (
 	"scilla/internal/panel/presets"
 	"scilla/internal/panel/store"
 	"scilla/internal/panel/store/db"
-	"scilla/internal/panel/subs"
 	"scilla/internal/proto"
+	"scilla/internal/sub/apps"
 )
 
 type InboundView struct {
@@ -51,6 +51,7 @@ type InboundView struct {
 	Outbound    string         `json:"outbound" enum:"direct,warp,node" doc:"Выход в интернет: напрямую с сервера, через WARP ноды или через другую ноду (каскад)"`
 	ExitNodeID  *int64         `json:"exit_node_id,omitempty" doc:"Нода, через которую выходит трафик, если outbound=node"`
 	PoolID      *int64         `json:"pool_id,omitempty" doc:"Группа серверов подключения: какой трафик оно тратит; нет — основной трафик"`
+	InAuto      bool           `json:"in_auto" doc:"Подключение входит в «Авто» подписки; выключено — только в списке и группе страны (выключенная нода убирает все свои)"`
 	Client      ClientEndpoint `json:"client" doc:"Куда подключаются клиенты, если не к ноде напрямую (scilla.client в шаблоне)"`
 	ClientSNI   bool           `json:"client_sni" doc:"Можно ли задать клиентам свой SNI: у REALITY имя задаёт сайт маскировки"`
 	ClientHost  bool           `json:"client_host" doc:"Можно ли задать клиентам свой HTTP Host: VLESS и Trojan по WebSocket и XHTTP"`
@@ -61,6 +62,9 @@ type InboundView struct {
 
 	// XHTTP is the tuning the form shows; absent for other transports.
 	XHTTP *proto.XHTTPTuning `json:"xhttp,omitempty" doc:"Тонкая настройка XHTTP; у других транспортов поля нет"`
+
+	// Tags are the admin's labels of the inbound, as a user's; clients see none of them.
+	Tags []string `json:"tags" doc:"Метки подключения: свои слова админа, по ним фильтруют список; в подписку не попадают"`
 }
 
 // ClientEndpoint is where clients connect when a TCP proxy or a CDN stands in front of
@@ -105,11 +109,12 @@ type inboundOutput struct{ Body InboundView }
 
 type createInboundInput struct {
 	Body struct {
-		Preset string `json:"preset" enum:"vless_reality_xhttp,hysteria2,hysteria2_gecko,tuic_v5,vless_reality_vision,vless_reality_grpc,trojan_reality,vless_tls_xhttp,vless_tls_vision,vless_tls_ws,vless_cdn_xhttp,vless_cdn_xhttp_get,anytls,vless_reality_xhttp_pq,trusttunnel,shadowquic,mieru,shadowsocks_2022,sudoku,snell,custom"`
-		NodeID int64  `json:"node_id,omitempty" minimum:"1" doc:"Нода; по умолчанию — своя нода панели"`
-		Port   string `json:"port,omitempty" pattern:"^[0-9]{1,5}(-[0-9]{1,5})?$"`
-		Dest   string `json:"dest,omitempty" maxLength:"255" doc:"host:port для REALITY"`
-		Config string `json:"config,omitempty" maxLength:"65536" doc:"Шаблон листенера (YAML) для preset=custom"`
+		Preset string   `json:"preset" enum:"vless_reality_xhttp,hysteria2,hysteria2_gecko,tuic_v5,vless_reality_vision,vless_reality_grpc,trojan_reality,vless_tls_xhttp,vless_tls_vision,vless_tls_ws,vless_cdn_xhttp,vless_cdn_xhttp_get,anytls,vless_reality_xhttp_pq,trusttunnel,shadowquic,mieru,shadowsocks_2022,sudoku,snell,custom"`
+		NodeID int64    `json:"node_id,omitempty" minimum:"1" doc:"Нода; по умолчанию — своя нода панели"`
+		Port   string   `json:"port,omitempty" pattern:"^[0-9]{1,5}(-[0-9]{1,5})?$"`
+		Dest   string   `json:"dest,omitempty" maxLength:"255" doc:"host:port для REALITY"`
+		Config string   `json:"config,omitempty" maxLength:"65536" doc:"Шаблон листенера (YAML) для preset=custom"`
+		Tags   []string `json:"tags,omitempty" maxItems:"20" doc:"Метки подключения, как у пользователя"`
 	}
 }
 
@@ -131,10 +136,16 @@ type patchInboundInput struct {
 		Outbound    *string         `json:"outbound,omitempty" enum:"direct,warp,node" doc:"Выход в интернет: напрямую, через WARP ноды или через другую ноду"`
 		ExitNodeID  *int64          `json:"exit_node_id,omitempty" minimum:"1" doc:"Для outbound=node: через какую ноду"`
 		PoolID      *int64          `json:"pool_id,omitempty" minimum:"0" doc:"Группа серверов; 0 — без группы, основной трафик"`
+		InAuto      *bool           `json:"in_auto,omitempty" doc:"Подключение в «Авто» подписки; false — только в списке и группе страны"`
 
 		XHTTP  *proto.XHTTPTuning `json:"xhttp,omitempty" doc:"Тонкая настройка XHTTP целиком: пустое поле — значение ядра по умолчанию"`
 		SNI443 *bool              `json:"sni443,omitempty" doc:"Поставить за SNI-роутер ноды на 443 (true) или вернуть на свой порт (false)"`
+		Tags   *[]string          `json:"tags,omitempty" maxItems:"20" doc:"Метки подключения целиком; пустой список снимает все"`
 	}
+}
+
+type listInboundsInput struct {
+	Tag string `query:"tag" maxLength:"100" doc:"Только подключения с этой меткой (без учёта регистра)"`
 }
 
 type validateInboundInput struct {
@@ -166,6 +177,142 @@ func (h *handlers) registerInbounds() {
 		Tags: []string{"inbounds"}}, h.setInboundExits)
 	huma.Register(h.api, huma.Operation{OperationID: "update-inbound", Method: http.MethodPatch, Path: "/api/v1/inbounds/{id}", Summary: "Изменить подключение", Tags: []string{"inbounds"}}, h.updateInbound)
 	huma.Register(h.api, huma.Operation{OperationID: "delete-inbound", Method: http.MethodDelete, Path: "/api/v1/inbounds/{id}", Summary: "Удалить подключение", Tags: []string{"inbounds"}, DefaultStatus: http.StatusNoContent}, h.deleteInbound)
+
+	// Hosts are where clients are sent: as the client endpoint of update-inbound, they change
+	// only in the admin's session (requireSession), and are read as the inbound is.
+	huma.Register(h.api, huma.Operation{OperationID: "list-inbound-hosts", Method: http.MethodGet, Path: "/api/v1/inbounds/{id}/hosts", Summary: "Адреса подключения для клиентов", Tags: []string{"inbounds"}}, h.listInboundHosts)
+	huma.Register(h.api, huma.Operation{OperationID: "add-inbound-host", Method: http.MethodPost, Path: "/api/v1/inbounds/{id}/hosts", Summary: "Добавить адрес подключения",
+		Tags: []string{"inbounds"}, Metadata: sessionOnly, Extensions: sessionOnlyExt, DefaultStatus: http.StatusCreated}, h.addInboundHost)
+	huma.Register(h.api, huma.Operation{OperationID: "update-inbound-host", Method: http.MethodPut, Path: "/api/v1/inbounds/{id}/hosts/{host_id}", Summary: "Изменить адрес подключения",
+		Tags: []string{"inbounds"}, Metadata: sessionOnly, Extensions: sessionOnlyExt}, h.updateInboundHost)
+	huma.Register(h.api, huma.Operation{OperationID: "delete-inbound-host", Method: http.MethodDelete, Path: "/api/v1/inbounds/{id}/hosts/{host_id}", Summary: "Удалить адрес подключения",
+		Tags: []string{"inbounds"}, Metadata: sessionOnly, Extensions: sessionOnlyExt, DefaultStatus: http.StatusNoContent}, h.deleteInboundHost)
+}
+
+// HostView is one place clients reach an inbound at. The default host (default: true) is
+// the client endpoint of the inbound (InboundView.client and fingerprint): subscriptions
+// use it, and changing one changes the other. The other hosts are kept in their order for
+// the subscriptions to come and change nothing clients get yet.
+type HostView struct {
+	ID          int64  `json:"id"`
+	Default     bool   `json:"default" doc:"Адрес по умолчанию: тот же, что client и fingerprint подключения; удаляется только с подключением"`
+	Address     string `json:"address" doc:"Адрес для клиентов; пусто — адрес ноды"`
+	Port        int    `json:"port" doc:"Порт для клиентов; 0 — порт подключения"`
+	SNI         string `json:"sni" doc:"SNI для клиентов; пусто — как обычно"`
+	Host        string `json:"host" doc:"HTTP Host у клиентов (WebSocket, XHTTP); пусто — как на сервере"`
+	Fingerprint string `json:"fingerprint" doc:"Отпечаток TLS (uTLS); пусто — общий из настроек"`
+}
+
+// HostInput is a host as it is saved: every field at once.
+type HostInput struct {
+	Address     string `json:"address" maxLength:"253" doc:"Адрес для клиентов; пусто — адрес ноды"`
+	Port        int    `json:"port" minimum:"0" maximum:"65535" doc:"Порт для клиентов; 0 — порт подключения"`
+	SNI         string `json:"sni" maxLength:"253" doc:"SNI для клиентов; пусто — как обычно. Не у REALITY: там имя задаёт сайт маскировки"`
+	Host        string `json:"host" maxLength:"253" doc:"HTTP Host у клиентов: VLESS и Trojan по WebSocket и XHTTP; пусто — как на сервере"`
+	Fingerprint string `json:"fingerprint" maxLength:"32" doc:"Отпечаток TLS у клиентов, как fingerprint подключения; пусто — общий из настроек"`
+}
+
+func (b HostInput) host() domain.Host {
+	return domain.Host{Address: b.Address, Port: b.Port, SNI: b.SNI, Host: b.Host, Fingerprint: b.Fingerprint}
+}
+
+type hostsOutput struct{ Body []HostView }
+type hostOutput struct{ Body HostView }
+
+type addHostInput struct {
+	ID   int64 `path:"id" minimum:"1"`
+	Body HostInput
+}
+
+type updateHostInput struct {
+	ID     int64 `path:"id" minimum:"1"`
+	HostID int64 `path:"host_id" minimum:"1"`
+	Body   HostInput
+}
+
+type hostIDInput struct {
+	ID     int64 `path:"id" minimum:"1"`
+	HostID int64 `path:"host_id" minimum:"1"`
+}
+
+func viewHost(r db.InboundHost) HostView {
+	return HostView{ID: r.ID, Default: r.Position == 0, Address: r.Address, Port: int(r.Port), SNI: r.Sni, Host: r.Host, Fingerprint: r.Fingerprint}
+}
+
+func (h *handlers) listInboundHosts(ctx context.Context, in *userIDInput) (*hostsOutput, error) {
+	rows, err := h.d.Inbounds.Hosts(ctx, in.ID)
+	if err != nil {
+		return nil, hostError(err)
+	}
+	out := &hostsOutput{Body: make([]HostView, 0, len(rows))}
+	for _, r := range rows {
+		out.Body = append(out.Body, viewHost(r))
+	}
+	return out, nil
+}
+
+func (h *handlers) addInboundHost(ctx context.Context, in *addHostInput) (*hostOutput, error) {
+	if err := requireSession(ctx, "address"); err != nil {
+		return nil, err
+	}
+	row, err := h.d.Inbounds.AddHost(ctx, in.ID, in.Body.host())
+	if err != nil {
+		return nil, hostError(err)
+	}
+	h.auditHost(ctx, "inbound.host_add", in.ID, row)
+	return &hostOutput{Body: viewHost(row)}, nil
+}
+
+func (h *handlers) updateInboundHost(ctx context.Context, in *updateHostInput) (*hostOutput, error) {
+	if err := requireSession(ctx, "address"); err != nil {
+		return nil, err
+	}
+	row, err := h.d.Inbounds.UpdateHost(ctx, in.ID, in.HostID, in.Body.host())
+	if err != nil {
+		return nil, hostError(err)
+	}
+	// The default host is the template's: clients get the change with their next update.
+	if row.Position == 0 {
+		h.d.Changes.SlotsChanged()
+	}
+	h.auditHost(ctx, "inbound.host_update", in.ID, row)
+	return &hostOutput{Body: viewHost(row)}, nil
+}
+
+func (h *handlers) deleteInboundHost(ctx context.Context, in *hostIDInput) (*struct{}, error) {
+	if err := requireSession(ctx, "host_id"); err != nil {
+		return nil, err
+	}
+	row, err := h.d.Inbounds.DeleteHost(ctx, in.ID, in.HostID)
+	if err != nil {
+		return nil, hostError(err)
+	}
+	h.auditHost(ctx, "inbound.host_delete", in.ID, row)
+	return nil, nil
+}
+
+func (h *handlers) auditHost(ctx context.Context, action string, inboundID int64, r db.InboundHost) {
+	name := ""
+	if in, err := h.d.Store.Q.GetInbound(ctx, inboundID); err == nil {
+		name = in.Name
+	}
+	h.audit(ctx, sessionOf(ctx).AdminID, action, "inbound", name, map[string]any{"host_id": r.ID, "default": r.Position == 0,
+		"address": r.Address, "port": r.Port, "sni": r.Sni, "host": r.Host, "fingerprint": r.Fingerprint})
+}
+
+// hostError maps the domain's refusals of a host to the API's codes: a field the inbound's
+// template does not take is named as the host's field (body.sni).
+func hostError(err error) error {
+	var edit *domain.EditError
+	switch {
+	case errors.Is(err, domain.ErrUnknownInbound), errors.Is(err, domain.ErrUnknownHost):
+		return huma.Error404NotFound("not_found")
+	case errors.Is(err, domain.ErrDefaultHost):
+		return huma.Error409Conflict("default_host")
+	case errors.As(err, &edit):
+		return fieldErr("body."+edit.Field, edit.Err.Code)
+	}
+	return inboundError(err, false)
 }
 
 func (h *handlers) listPresets(context.Context, *struct{}) (*presetsOutput, error) {
@@ -196,8 +343,8 @@ func (h *handlers) viewInbound(ctx context.Context, in db.Inbound, last map[int6
 		config = proto.Redact(config)
 	}
 	v := InboundView{ID: in.ID, NodeID: in.NodeID, Name: in.Name, Preset: in.Preset, Title: info.Title, Port: in.Port, Enabled: in.Enabled != 0,
-		DisplayName: in.DisplayName, SubName: domain.ProxyName(in), Config: config, Status: "unknown", UpdatedAt: store.Time(in.UpdatedAt),
-		AutoPort: in.AutoPort != 0, AutoSNI: in.AutoSni != 0, Outbound: in.Outbound, Listen: in.Listen}
+		DisplayName: in.DisplayName, SubName: domain.ProxyName(in), Config: config, Status: "unknown", UpdatedAt: store.Time(in.UpdatedAt), Tags: domain.DecodeTags(in.Tags),
+		AutoPort: in.AutoPort != 0, AutoSNI: in.AutoSni != 0, Outbound: in.Outbound, Listen: in.Listen, InAuto: in.NoAuto == 0}
 	if in.PoolID.Valid {
 		id := in.PoolID.Int64
 		v.PoolID = &id
@@ -227,7 +374,7 @@ func (h *handlers) viewInbound(ctx context.Context, in db.Inbound, last map[int6
 		v.Type, v.Network = t.Type(), t.Network()
 		v.Shared = proto.Shared(t)
 		v.NodeCert = t.NodeCert()
-		for _, f := range subs.AppsFor(proto.NeedsOf(t)) {
+		for _, f := range apps.For(proto.NeedsOf(t)) {
 			v.Apps = append(v.Apps, string(f))
 		}
 		v.Dest, v.ServerNames = presets.Dest(t)
@@ -267,7 +414,7 @@ func (h *handlers) viewInbound(ctx context.Context, in db.Inbound, last map[int6
 	return v
 }
 
-func (h *handlers) listInbounds(ctx context.Context, _ *struct{}) (*inboundsOutput, error) {
+func (h *handlers) listInbounds(ctx context.Context, in *listInboundsInput) (*inboundsOutput, error) {
 	rows, err := h.d.Store.Q.ListInbounds(ctx)
 	if err != nil {
 		return nil, err
@@ -277,8 +424,11 @@ func (h *handlers) listInbounds(ctx context.Context, _ *struct{}) (*inboundsOutp
 		return nil, err
 	}
 	out := &inboundsOutput{Body: make([]InboundView, 0, len(rows))}
-	for _, in := range rows {
-		out.Body = append(out.Body, h.viewInbound(ctx, in, last))
+	for _, row := range rows {
+		if in.Tag != "" && !domain.HasTag(row.Tags, in.Tag) {
+			continue
+		}
+		out.Body = append(out.Body, h.viewInbound(ctx, row, last))
 	}
 	return out, nil
 }
@@ -323,7 +473,7 @@ func (h *handlers) validateInbound(ctx context.Context, in *validateInboundInput
 
 func (h *handlers) createInbound(ctx context.Context, in *createInboundInput) (*inboundOutput, error) {
 	b := in.Body
-	row, err := h.d.Inbounds.Create(ctx, domain.NewInbound{NodeID: b.NodeID, Preset: b.Preset, Port: b.Port, Dest: b.Dest, Config: b.Config})
+	row, err := h.d.Inbounds.Create(ctx, domain.NewInbound{NodeID: b.NodeID, Preset: b.Preset, Port: b.Port, Dest: b.Dest, Config: b.Config, Tags: b.Tags})
 	if err != nil {
 		return nil, inboundError(err, false)
 	}
@@ -421,7 +571,7 @@ func (h *handlers) updateInbound(ctx context.Context, in *patchInboundInput) (*i
 	}
 	p := domain.InboundPatch{Port: b.Port, Enabled: b.Enabled, Config: b.Config, Dest: b.Dest, ServerName: b.ServerName, Fingerprint: b.Fingerprint, Obfs: b.Obfs, XHTTP: b.XHTTP,
 		DisplayName: b.DisplayName, Listen: b.Listen, AutoPort: b.AutoPort, AutoSNI: b.AutoSNI, Outbound: b.Outbound, ExitNodeID: b.ExitNodeID, PoolID: b.PoolID,
-		SNI443: b.SNI443}
+		SNI443: b.SNI443, InAuto: b.InAuto, Tags: b.Tags}
 	if c := b.Client; c != nil {
 		// The address clients connect to: like the panel's public host, not for a key.
 		if err := requireSession(ctx, "client"); err != nil {
@@ -441,6 +591,9 @@ func (h *handlers) updateInbound(ctx context.Context, in *patchInboundInput) (*i
 		h.d.Changes.PoliciesChanged()
 		h.audit(ctx, admin, "inbound.pool", "inbound", row.Name, map[string]any{"pool_id": row.PoolID.Int64})
 	}
+	if b.Tags != nil {
+		h.audit(ctx, admin, "inbound.tags", "inbound", row.Name, map[string]any{"tags": domain.DecodeTags(row.Tags)})
+	}
 	if b.Outbound != nil {
 		h.audit(ctx, admin, "inbound.outbound", "inbound", row.Name, map[string]any{"outbound": *b.Outbound, "exit_node_id": row.ExitNodeID.Int64})
 	}
@@ -448,7 +601,7 @@ func (h *handlers) updateInbound(ctx context.Context, in *patchInboundInput) (*i
 	switch {
 	case p.ForClients():
 		h.audit(ctx, admin, "inbound.update", "inbound", row.Name, map[string]any{"config_changed": p.EditsTemplate(),
-			"listen": row.Listen, "auto_port": row.AutoPort != 0, "auto_sni": row.AutoSni != 0})
+			"listen": row.Listen, "auto_port": row.AutoPort != 0, "auto_sni": row.AutoSni != 0, "in_auto": row.NoAuto == 0})
 	case moved || row.AutoPort != prev.AutoPort || row.AutoSni != prev.AutoSni:
 		h.audit(ctx, admin, "inbound.auto", "inbound", row.Name, map[string]any{"listen": row.Listen, "auto_port": row.AutoPort != 0, "auto_sni": row.AutoSni != 0})
 	}

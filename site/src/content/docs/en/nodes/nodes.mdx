@@ -46,8 +46,9 @@ The card shows the state, address, how many protocols are running, connections, 
 
 The **Certificate** row shows which certificate is in use right now: a public one (with the authority and the expiry), the panel's, your own, or a self-signed one. If there is no public certificate yet, it says why in plain words. The "Get now" button requests it at once and waits up to 90 seconds for the result. More in [Node certificate](#node-certificate). Buttons:
 
-- **Configure**: name, address, domain, and the "Serves clients" switch. A node that is turned off does not accept connections and disappears from subscriptions. Since 0.5.2.0 it also holds [load balancing](/scilla/en/nodes/balancing/), the [shared port 443](/scilla/en/nodes/shared-443/), "HTTP → HTTPS" and "Node API from the panel's IP only", see [Hardening a node](/scilla/en/nodes/hardening/).
+- **Configure**: name, address, domain, and the "Serves clients" switch. A node that is turned off does not accept connections and disappears from subscriptions. Since 0.5.2.0 it also holds [load balancing](/scilla/en/nodes/balancing/), the [shared port 443](/scilla/en/nodes/shared-443/), "HTTP → HTTPS" and "Node API from the panel's IP only", and since 0.5.2.1 "Open ports of the server", see [Hardening a node](/scilla/en/nodes/hardening/).
 - **Check node**: a full check with a list and hints, see [If a node does not connect](#if-a-node-does-not-connect).
+- **Clients** (since 0.5.2.1): who went through the node — when they were last seen on it, their traffic on it and who is online there now, with whose keys (a bound device's or the shared ones) and from which addresses. The latest seen come first, with a search by name and "Show more"; a name opens the client's card. Traffic is counted by client and node since 0.5.2.1, the totals since then; "seen" is the last stored batch of the client's traffic on that node (the panel stores them about every 10 seconds). A support operator who may not see the clients gets them as `#id`, without addresses and without the search. In the API: `GET /api/v1/nodes/{id}/clients` with `q`, `limit` and `offset`. A cascade exit node does not list the traffic it relays for other nodes here: those clients are listed on the source node.
 - **WARP**: exit to the internet through Cloudflare, see [WARP](/scilla/en/nodes/warp/).
 - **Cascade**: where the node sends other nodes' traffic, see [Cascades](/scilla/en/nodes/cascades/).
 - **Speed**: a check of the node's connection.
@@ -156,6 +157,27 @@ In **Edit node**, the **Share the channel evenly** switch and the **Channel widt
 Every second the node looks at who is downloading now and splits the channel evenly between them. Light users get what they need, and the rest goes to those who hit their share, so the channel does not sit idle. A user alone gets the whole channel. A plan's speed stays the ceiling.
 
 Once it is on, the node's clients reconnect once; the apps do it themselves. While sharing is on, Vision runs without the kernel's splice: a bit more CPU.
+
+## In auto select
+
+In **Edit node** the **In auto select** switch, on by default. Turn it off for a server the apps must not pick on their own, such as one for whitelists. The node's servers leave the "Auto" group in every subscription format (Clash, sing-box, Xray) and stay in the list and in their country's group, to pick by hand. With it off on every node, "Auto" takes all the servers.
+
+A node that does not answer the panel for over 5 minutes leaves "Auto" by itself and comes back once it answers. The apps learn of it with their next subscription update.
+
+## Server billing
+
+In **Edit node** → **Server billing** you keep where the server is and how it is paid for: the provider, the payment date, how often it repeats (once, every 1, 3, 6 or 12 months), the plan's traffic, the day its counter resets and at what percent to tell you. The panel pays and limits nothing, it only reminds. Dates are UTC.
+
+- The **payment date** can be any payment of the series: the panel counts the next one and shows it on the node's card. When a month has no such day (the 31st in November), the payment falls on the month's last day. As many days before it as **Remind** says (3 by default, 0 for none), "Server payment due" comes in Telegram, once a payment.
+- The **plan traffic** is what the provider gives a period; empty for no limit. A period starts on the **reset day** of each month (the month's last day when it is shorter). The panel counts everything the node carried in the period: its users' traffic and the other nodes' cascades, up and down together, as on the node's traffic chart. The card shows a bar of how much of how much and the reset date. When the set percent is reached (80 by default), "Server traffic running out" comes in Telegram, once a period.
+
+A provider may count traffic its own way (outgoing only, or with its overhead), so keep the threshold with room to spare. The alerts are switched in **Telegram → Alerts to me** → **Server payment and traffic**, together with the other [admin alerts](/scilla/en/operations/alerts/).
+
+## Tags
+
+Since 0.5.2.1. In **Edit node** the **Tags** field: your own words split by commas, such as `germany, whitelist`, as a client's tags. The node's card shows them, and the row of tags above the list of nodes shows only the nodes with the tag you pick (while you order the nodes, all of them show). Clients do not see tags. Protocols have tags of their own, see [Protocol presets](/scilla/en/protocols/presets/#connection-settings).
+
+In the API a node has `tags` (up to 20, on create and change), and `GET /api/v1/nodes?tag=hetzner` lists only the nodes with that tag, in any letter case.
 
 ## Front page for strangers
 

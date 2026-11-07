@@ -2,17 +2,19 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset=".github/assets/banner-en-dark.svg">
-  <img alt="scilla：基于 mihomo 内核的 VPN 面板" src=".github/assets/banner-en-light.svg" width="100%">
+  <img alt="scilla：基于 Citrus 内核的 VPN 面板" src=".github/assets/banner-en-light.svg" width="100%">
 </picture>
 
 <br>
 
-**基于 [mihomo](https://github.com/MetaCubeX/mihomo) 内核的 VPN 面板：快速、好看，一条命令安装，无需照看。**
+**基于 [Citrus](https://github.com/getmikan/Citrus) 内核的 VPN 面板：快速、好看，一条命令安装，无需照看。**
 
-[![发布版本](https://img.shields.io/github/v/release/drillex100-beep/scilla?color=f07a2e&label=发布版本&style=flat-square)](https://github.com/drillex100-beep/scilla/releases)
-[![镜像](https://img.shields.io/badge/ghcr.io-drillex100-beep%2Fscilla-2b8c9e?style=flat-square&logo=docker&logoColor=white)](https://github.com/drillex100-beep/scilla/pkgs/container/scilla)
+[![发布版本](https://img.shields.io/github/v/release/Miroshka000/mikan?color=f07a2e&label=发布版本&style=flat-square)](https://github.com/drillex100-beep/scilla/releases)
+[![镜像](https://img.shields.io/badge/ghcr.io-miroshka000%2Fmikan-2b8c9e?style=flat-square&logo=docker&logoColor=white)](https://github.com/drillex100-beep/scilla/pkgs/container/scilla)
 [![许可证](https://img.shields.io/badge/许可证-GPL--3.0-2f9e6b?style=flat-square)](LICENSE)
-[![mihomo](https://img.shields.io/badge/内核-mihomo%201.19.32-9e8eff?style=flat-square)](https://github.com/MetaCubeX/mihomo)
+[![Citrus](https://img.shields.io/badge/内核-Citrus-9e8eff?style=flat-square)](https://github.com/getmikan/Citrus)
+[![Telegram](https://img.shields.io/badge/Telegram-频道-26a5e4?style=flat-square&logo=telegram&logoColor=white)](https://t.me/mikanvpn)
+[![Telegram](https://img.shields.io/badge/Telegram-论坛-26a5e4?style=flat-square&logo=telegram&logoColor=white)](https://t.me/+I2JFR7DbPow1ZmQy)
 
 [English](README.md) · [Русский](README.ru.md) · **简体中文** · [فارسی](README.fa.md) · [Türkçe](README.tr.md) · [Español](README.es.md)
 
@@ -59,7 +61,7 @@ scilla 会检查真实客户端是否仍能连上各个协议。端口在途中�
 <td valign="top">
 
 ### 📊 精确到字节的计量
-mihomo 以库的形式嵌入，所以每个连接的流量都按用户统计，而不是抽样。支持按时间和 GB 的套餐、计费天数、设备数量限制，以及防止共享密钥的设备绑定。
+[Citrus](https://github.com/getmikan/Citrus)（我们的 mihomo 分支）以库的形式嵌入，所以每个连接的流量都按用户统计，而不是抽样。支持按时间和 GB 的套餐、计费天数、设备数量限制，以及防止共享密钥的设备绑定。
 
 </td>
 <td valign="top">
@@ -72,7 +74,7 @@ mihomo 以库的形式嵌入，所以每个连接的流量都按用户统计，�
 <tr>
 <td valign="top">
 
-### 🪶 轻如羽毛
+### 🪶 像橘子一样轻
 Go 和 PostgreSQL，三个小容器。在带客户端的实际运行服务器上：面板约 **14 MB** 内存，数据库约 **50 MB**，VPN 内核约 **40 MB**。
 
 </td>
@@ -108,7 +110,7 @@ Go 和 PostgreSQL，三个小容器。在带客户端的实际运行服务器上
 
 ## 支持访问
 
-需要帮助时，由你自己开启临时访问：设置 → 支持，时长 2、6 或 24 小时，级别为「查看」「修改」或「终端」。没有这个按钮，任何人（包括 scilla 的开发者）都进不了面板：项目对你的服务器没有常驻访问，面板也不会自行连接任何地方。操作员的每个操作都写入审计日志，一键即可撤销访问，终端需要你的密码和 2FA 才能开启，并且全程录制。要彻底关闭此功能，可使用同一卡片上的开关，或在服务器上运行 `scilla support-access off`。付费支持规则：[见网站](https://miroshka000.github.io/mikan/support/paid/)。
+需要帮助时，由你自己开启临时访问：设置 → 支持，时长 2、6 或 24 小时，级别为「查看」「修改」或「终端」。没有这个按钮，任何人（包括 scilla 的开发者）都进不了面板：项目对你的服务器没有常驻访问，面板也不会自行连接任何地方。操作员的每个操作都写入审计日志，一键即可撤销访问，终端需要你的密码和 2FA 才能开启，并且全程录制。要彻底关闭此功能，可使用同一卡片上的开关，或在服务器上运行 `scilla support-access off`。付费支持规则：[见网站](https://drillex100-beep.github.io/scilla/support/paid/)。
 
 ## 截图
 
@@ -160,7 +162,7 @@ Go 和 PostgreSQL，三个小容器。在带客户端的实际运行服务器上
 ```mermaid
 flowchart LR
     A[Browser] -- HTTPS, secret link --> P[scilla panel<br>users · plans · subscriptions]
-    P -- unix socket / pinned TLS --> N1[scilla node<br>mihomo inside]
+    P -- unix socket / pinned TLS --> N1[scilla node<br>Citrus inside]
     P -- pinned TLS --> N2[remote node]
     C[VPN apps] -- REALITY · QUIC · … --> N1
     C --> N2
@@ -208,19 +210,25 @@ cd installer && cargo test                    # the installer (Rust)
 
 开发在 `dev` 分支进行；合并到 `main` 的拉取请求会被构建和测试，发布版本由标签生成。
 
-## About this fork
+## ⛔ 分叉与第三方构建
 
-> [!NOTE]
-> **Scilla is a fork of [mikan](https://github.com/Miroshka000/mikan)** by drillex100-beep, renamed as required by the original project's additional license terms ([NOTICE.md](NOTICE.md), [TRADEMARK.md](TRADEMARK.md)). It is not the official mikan and is not affiliated with or supported by the mikan project.
+> [!CAUTION]
+> **官方 scilla 只在这里**：仓库 `Miroshka000/mikan`、镜像 `ghcr.io/miroshka000/scilla`，以及用 scilla 密钥签名的发布版本。官方插件只来自 `getmikan/marketplace` 目录；社区注册表 `getmikan/marketplace-community` 收录的是第三方插件，scilla 不审查也不为其负责。其他一切，无论叫什么名字，都不是 scilla。
 >
-> mikan is free software under the [GNU GPL v3](LICENSE) with additional terms: keep the attribution, do not pass a modified version off as the original, and no rights to the name and the logo of the original project. Scilla keeps the code under the same terms and carries its own name and branding.
+> **scilla 项目认为，所有分叉以及所有来自其他来源的构建都存在潜在的安全风险。**
 >
-> The upstream project, its documentation and community: [Miroshka000/mikan](https://github.com/Miroshka000/mikan) · [docs](https://miroshka000.github.io/mikan/).
+> **官方构建可以验证**。每个版本都由本仓库的开源代码自动构建并签名，面板和安装程序只接受带有此签名的更新。别人的构建由什么组成，只有其作者知道。
+>
+> **分叉收不到我们的更新**。分叉无法用 scilla 密钥签名其版本，因此错误和漏洞的修复不会到达它，除非其作者自行移植。
+>
+> **我们不支持分叉**。我们不审查它们，也不对其中的错误、漏洞或数据丢失负责。关于他人构建的问题在聊天和 issues 中不予处理。
+>
+> **名称不属于许可证**。GPL v3 涵盖代码，不涵盖 scilla 的名称和标志（GPL v3 第 7 条，见 [NOTICE.md](NOTICE.md) 和 [TRADEMARK.md](TRADEMARK.md)）。分叉必须使用其他名称，且不得冒充 scilla。
 
 ## 许可证
 
-Scilla is free software under the [GNU GPL v3](LICENSE) with the additional terms in [NOTICE.md](NOTICE.md). It is derived from mikan (Copyright (C) 2026 Miroshka and the mikan contributors); Scilla modifications are Copyright (C) 2026 drillex100-beep. It embeds [mihomo](https://github.com/MetaCubeX/mihomo) (GPL-3.0) and adapts parts of [3x-ui](https://github.com/MHSanaei/3x-ui) (GPL-3.0). Fonts: Unbounded, Onest, JetBrains Mono (SIL OFL 1.1).
+scilla 是基于 [GNU GPL v3](LICENSE) 的自由软件，并附有 [NOTICE.md](NOTICE.md) 中的附加条款：保留署名、不得将修改版冒充原版、不授予名称和标志的权利。Copyright (C) 2026 Miroshka and Scilla。内嵌 [Citrus](https://github.com/getmikan/Citrus)（[mihomo](https://github.com/MetaCubeX/mihomo) 的分支）（GPL-3.0），部分代码改编自 [3x-ui](https://github.com/MHSanaei/3x-ui)（GPL-3.0）。字体：Unbounded、Onest、JetBrains Mono（SIL OFL 1.1）。
 
 <div align="center">
-<sub>用 🐙 制作</sub>
+<sub>用 🍊 制作</sub>
 </div>

@@ -56,7 +56,7 @@ Docker Compose подключает файлы из `secrets/` к контейн
 | Команда | Что делает |
 |---|---|
 | `scilla url` | ссылка на панель и логин |
-| `scilla reset-password` | новый пароль администратора, все сессии и API-ключи отзываются |
+| `scilla reset-password` | новый пароль администратора, все сессии, API-ключи и ключи доступа (passkey) отзываются |
 | `scilla reset-path` | новая секретная ссылка, старая перестаёт работать |
 | `scilla disable-2fa` | выключить 2FA, если потерян телефон |
 
@@ -66,6 +66,7 @@ Docker Compose подключает файлы из `secrets/` к контейн
 |---|---|
 | `scilla backup` | бэкап в `/opt/scilla/backups` |
 | `scilla restore FILE [-y] [--no-db-snapshot]` | восстановить из бэкапа, см. [Бэкапы](/scilla/operations/backups/) |
+| `scilla move USER@HOST [-p SSH_PORT] [--force] [--stop-old] [--dry-run] [-y]` | перенести панель на новый сервер по SSH: бэкап, установка там с тем же портом панели, восстановление, порты в ufw. `--dry-run` только печатает шаги, `--stop-old` в конце останавливает панель здесь, `--force` заменяет данные scilla, если он на новом сервере уже стоит. См. [Перенос scilla на другой сервер](/scilla/start/migrate/#перенос-scilla-на-другой-сервер) |
 
 ## Ноды и подключения
 
