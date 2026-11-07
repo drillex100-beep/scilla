@@ -219,10 +219,10 @@ export function DashboardBuilder() {
           {widgets.map((w) =>
             !editing && widgets.length > LAZY_AFTER ? (
               <LazyMount key={w.id} title={WIDGETS[w.type].title()}>
-                <MobileWidget w={w} />
+                <MobileWidget w={w} editing={editing} onConfigure={configure} onDuplicate={duplicate} onRemove={remove} />
               </LazyMount>
             ) : (
-              <MobileWidget key={w.id} w={w} />
+              <MobileWidget key={w.id} w={w} editing={editing} onConfigure={configure} onDuplicate={duplicate} onRemove={remove} />
             ),
           )}
         </div>
@@ -329,11 +329,30 @@ function Palette({ onAdd, present }: { onAdd: (type: WidgetType) => void; presen
   );
 }
 
-function MobileWidget({ w }: { w: WidgetInstance }) {
+function MobileWidget({ w, editing, onConfigure, onDuplicate, onRemove }: { w: WidgetInstance; editing: boolean; onConfigure: (id: string, config: WidgetConfig | undefined) => void; onDuplicate: (w: WidgetInstance) => void; onRemove: (id: string) => void }) {
   const def = WIDGETS[w.type];
+  const [settings, setSettings] = useState(false);
   // No forced height: the cards size to their content, so sparse ones (counters, short lists)
   // do not turn into tall boxes of empty space on a phone.
-  return <div>{def.component(w.config)}</div>;
+  const card = <div>{def.component(w.config)}</div>;
+  if (!editing) return card;
+  return (
+    <div className="relative">
+      <div className="mb-1 flex justify-end gap-1">
+        <button type="button" className="btn btn-glass btn-sm px-2!" aria-label={t("dashboard.builder.settings")} onClick={() => setSettings((v) => !v)}>
+          <SlidersHorizontal size={14} aria-hidden />
+        </button>
+        <button type="button" className="btn btn-glass btn-sm px-2!" aria-label={t("dashboard.builder.duplicate")} onClick={() => onDuplicate(w)}>
+          <Copy size={14} aria-hidden />
+        </button>
+        <button type="button" className="btn btn-glass btn-sm px-2!" aria-label={t("dashboard.builder.remove")} onClick={() => onRemove(w.id)}>
+          <Trash2 size={14} aria-hidden />
+        </button>
+      </div>
+      {settings ? <WidgetSettings w={w} onConfigure={onConfigure} onClose={() => setSettings(false)} /> : null}
+      {card}
+    </div>
+  );
 }
 
 type Gesture = { mode: "move" | "resize"; pointerId: number; startX: number; startY: number; x: number; y: number; w: number; h: number };
