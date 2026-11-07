@@ -3738,7 +3738,10 @@
       },
       "node": {
         "down": "Node is down",
-        "up": "Node is back"
+        "up": "Node is back",
+        "heal.started": "Node auto-heal started",
+        "heal.healed": "Node healed by auto-heal",
+        "heal.failed": "Node auto-heal failed"
       },
       "balance": {
         "topup": "Balance top-up decided"
