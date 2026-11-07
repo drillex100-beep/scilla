@@ -3716,6 +3716,158 @@
         ],
         "type": "object"
       },
+      "HealIncident": {
+        "additionalProperties": false,
+        "properties": {
+          "attempts": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "down_at": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "end_at": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "result": {
+            "type": "string"
+          },
+          "started_at": {
+            "format": "int64",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "down_at",
+          "started_at",
+          "attempts",
+          "result",
+          "end_at"
+        ],
+        "type": "object"
+      },
+      "HealNodeView": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/HealState"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "state"
+        ],
+        "type": "object"
+      },
+      "HealPolicy": {
+        "additionalProperties": false,
+        "properties": {
+          "breaker_max": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "breaker_window_sec": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "cooldown_sec": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "down_for_sec": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "max_attempts": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "verify_sec": {
+            "format": "int64",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "enabled",
+          "down_for_sec",
+          "cooldown_sec",
+          "max_attempts",
+          "verify_sec",
+          "breaker_max",
+          "breaker_window_sec"
+        ],
+        "type": "object"
+      },
+      "HealState": {
+        "additionalProperties": false,
+        "properties": {
+          "attempts": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "failures": {
+            "items": {
+              "format": "int64",
+              "type": "integer"
+            },
+            "type": "array"
+          },
+          "history": {
+            "items": {
+              "$ref": "#/components/schemas/HealIncident"
+            },
+            "type": "array"
+          },
+          "incident": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "last_action": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "phase": {
+            "type": "string"
+          },
+          "retry_after": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "updated_at": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "verify_until": {
+            "format": "int64",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "phase",
+          "incident",
+          "attempts",
+          "last_action",
+          "verify_until",
+          "retry_after",
+          "failures",
+          "history",
+          "updated_at"
+        ],
+        "type": "object"
+      },
       "HostInput": {
         "additionalProperties": false,
         "properties": {
@@ -5446,6 +5598,37 @@
           "items",
           "total",
           "online"
+        ],
+        "type": "object"
+      },
+      "NodeHealResetOutputBody": {
+        "additionalProperties": false,
+        "properties": {
+          "reset": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "reset"
+        ],
+        "type": "object"
+      },
+      "NodeHealViewBody": {
+        "additionalProperties": false,
+        "properties": {
+          "nodes": {
+            "items": {
+              "$ref": "#/components/schemas/HealNodeView"
+            },
+            "type": "array"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/HealPolicy"
+          }
+        },
+        "required": [
+          "policy",
+          "nodes"
         ],
         "type": "object"
       },
@@ -17058,6 +17241,78 @@
         ]
       }
     },
+    "/api/v1/node-heal": {
+      "get": {
+        "operationId": "get-node-heal",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NodeHealViewBody"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Авто-лечение нод: политика и состояние",
+        "tags": [
+          "node"
+        ],
+        "x-session-only": true
+      },
+      "put": {
+        "operationId": "put-node-heal",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HealPolicy"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NodeHealViewBody"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Авто-лечение нод: сохранить политику",
+        "tags": [
+          "node"
+        ],
+        "x-session-only": true
+      }
+    },
     "/api/v1/nodes": {
       "get": {
         "operationId": "list-nodes",
@@ -17831,6 +18086,50 @@
         "tags": [
           "node"
         ]
+      }
+    },
+    "/api/v1/nodes/{id}/heal/reset": {
+      "post": {
+        "operationId": "reset-node-heal",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int64",
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NodeHealResetOutputBody"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Авто-лечение нод: сбросить разомкнутую цепь",
+        "tags": [
+          "node"
+        ],
+        "x-session-only": true
       }
     },
     "/api/v1/nodes/{id}/key": {

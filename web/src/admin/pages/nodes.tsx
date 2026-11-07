@@ -20,6 +20,7 @@ import { NodeTrafficDrawer } from "./node-traffic";
 import { WarpDrawer } from "./node-warp";
 import { BalanceGroups } from "./nodes-balance";
 import { NodeCard, updatable, updating } from "./nodes/card";
+import { HealCard } from "./nodes/heal";
 import { AddNodeDrawer, EditNodeDrawer, KeyDrawer, type Joined } from "./nodes/drawers";
 
 export type Node = Schemas["NodeInfo"];
@@ -188,6 +189,7 @@ export function NodesPage() {
         }
       />
       {nodes.data ? <BalanceGroups nodes={nodes.data} /> : null}
+      {nodes.data ? <HealCard remote={nodes.data.some((n) => !n.local)} /> : null}
       {nodes.data && !ordering ? <TagFilter items={nodes.data} value={filter} onChange={setTag} /> : null}
       <QueryBoundary
         query={nodes}

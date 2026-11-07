@@ -14,8 +14,8 @@ import (
 // nodeHealView is what GET /api/v1/node-heal answers.
 type nodeHealView struct {
 	Body struct {
-		Policy nodeheal.Policy     `json:"policy"`
-		Nodes  []nodeheal.NodeView `json:"nodes"`
+		HealPolicy nodeheal.HealPolicy     `json:"policy"`
+		Nodes      []nodeheal.HealNodeView `json:"nodes"`
 	}
 }
 
@@ -53,11 +53,11 @@ func (h *handlers) healEngine() *nodeheal.Engine {
 func (h *handlers) getNodeHeal(ctx context.Context, in *struct{}) (*nodeHealView, error) {
 	out := &nodeHealView{}
 	if h.healEngine() == nil {
-		out.Body.Policy = nodeheal.DefaultPolicy()
-		out.Body.Nodes = []nodeheal.NodeView{}
+		out.Body.HealPolicy = nodeheal.DefaultPolicy()
+		out.Body.Nodes = []nodeheal.HealNodeView{}
 		return out, nil
 	}
-	out.Body.Policy = h.d.Heal.Policy(ctx)
+	out.Body.HealPolicy = h.d.Heal.HealPolicy(ctx)
 	nodes, err := h.d.Heal.Snapshot(ctx)
 	if err != nil {
 		return nil, err
@@ -67,7 +67,7 @@ func (h *handlers) getNodeHeal(ctx context.Context, in *struct{}) (*nodeHealView
 }
 
 func (h *handlers) putNodeHeal(ctx context.Context, in *struct {
-	Body nodeheal.Policy
+	Body nodeheal.HealPolicy
 }) (*nodeHealView, error) {
 	if h.healEngine() == nil {
 		return nil, huma.Error409Conflict("nodes_disabled")

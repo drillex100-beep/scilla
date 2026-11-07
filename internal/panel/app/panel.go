@@ -341,6 +341,9 @@ func NewPanel(st *store.Store, o Options) (*Panel, error) {
 		certStatus = o.Certs.Status
 	}
 	p.Alerts = infraalerts.New(st, settings.Cached(st.Q, loopSettingsTTL), p.Nodes, p.Tuner, certStatus, p.Updates, p.Gateway, o.Log, o.Now)
+	if p.Heal != nil {
+		p.Heal.SetAlerter(p.Alerts, p.Gateway.Lang)
+	}
 	if p.NodeUpdates != nil {
 		p.Alerts.WatchNodeUpdates(p.NodeUpdates)
 	}

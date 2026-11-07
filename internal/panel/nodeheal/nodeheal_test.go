@@ -6,28 +6,28 @@ import (
 )
 
 func TestAdvanceLifecycle(t *testing.T) {
-	pol := Policy{Enabled: true, DownForSec: 180, CooldownSec: 1800, MaxAttempts: 2, VerifySec: 300, BreakerMax: 3, BreakerWindowSec: 86400}
+	pol := HealPolicy{Enabled: true, DownForSec: 180, CooldownSec: 1800, MaxAttempts: 2, VerifySec: 300, BreakerMax: 3, BreakerWindowSec: 86400}
 	now := time.Unix(1_800_000_000, 0)
 	down := now.Add(-10 * time.Minute).Unix()
 
 	// New incident starts watching; nothing happens before the sustain time.
-	d := advance(State{}, false, down, pol, now)
-	if d.restart || d.state.Incident != down || d.state.Phase != PhaseWatching {
+	d := advance(HealState{}, false, down, pol, now)
+	if d.restart || d.state.HealIncident != down || d.state.Phase != PhaseWatching {
 		t.Fatalf("new incident: %+v", d)
 	}
-	// Policy disabled: no restart ever.
-	d = advance(State{Incident: down}, false, down, Policy{Enabled: false}, now)
+	// HealPolicy disabled: no restart ever.
+	d = advance(HealState{HealIncident: down}, false, down, HealPolicy{Enabled: false}, now)
 	if d.restart {
 		t.Fatal("disabled policy restarted")
 	}
 	// Sustain not reached.
 	soon := time.Unix(down+100, 0)
-	d = advance(State{Incident: down, Phase: PhaseWatching}, false, down, pol, soon)
+	d = advance(HealState{HealIncident: down, Phase: PhaseWatching}, false, down, pol, soon)
 	if d.restart {
 		t.Fatal("restarted before DownForSec")
 	}
 	// Sustain reached: first restart.
-	d = advance(State{Incident: down, Phase: PhaseWatching}, false, down, pol, now)
+	d = advance(HealState{HealIncident: down, Phase: PhaseWatching}, false, down, pol, now)
 	if !d.restart || d.state.Attempts != 1 || d.state.Phase != PhaseActive {
 		t.Fatalf("first restart: %+v", d)
 	}
@@ -39,18 +39,18 @@ func TestAdvanceLifecycle(t *testing.T) {
 	if d.healed == nil || d.healed.Result != "healed" || d.healed.Attempts != 1 {
 		t.Fatalf("healed: %+v", d.healed)
 	}
-	if d.state.Phase != PhaseWatching || d.state.Incident != 0 {
+	if d.state.Phase != PhaseWatching || d.state.HealIncident != 0 {
 		t.Fatalf("state after heal: %+v", d.state)
 	}
 }
 
 func TestAdvanceRetriesAndBreaker(t *testing.T) {
-	pol := Policy{Enabled: true, DownForSec: 60, CooldownSec: 1800, MaxAttempts: 2, VerifySec: 100, BreakerMax: 2, BreakerWindowSec: 86400}
+	pol := HealPolicy{Enabled: true, DownForSec: 60, CooldownSec: 1800, MaxAttempts: 2, VerifySec: 100, BreakerMax: 2, BreakerWindowSec: 86400}
 	now := time.Unix(1_800_000_000, 0)
 	down := now.Add(-time.Hour).Unix()
 
 	// Two failed attempts, then the incident fails.
-	st := State{Incident: down, Phase: PhaseActive, Attempts: 2, LastAction: now.Unix() - 200, VerifyUntil: now.Unix() - 1}
+	st := HealState{HealIncident: down, Phase: PhaseActive, Attempts: 2, LastAction: now.Unix() - 200, VerifyUntil: now.Unix() - 1}
 	d := advance(st, false, down, pol, now)
 	if d.failed == nil || d.failed.Result != "failed" {
 		t.Fatalf("expected failed incident: %+v", d)
@@ -59,18 +59,18 @@ func TestAdvanceRetriesAndBreaker(t *testing.T) {
 		t.Fatalf("state after fail: %+v", d.state)
 	}
 	// Cooldown blocks the next incident's restart.
-	d = advance(State{Incident: down, Phase: PhaseWatching, LastAction: now.Unix()}, false, down, pol, now.Add(10*time.Second))
+	d = advance(HealState{HealIncident: down, Phase: PhaseWatching, LastAction: now.Unix()}, false, down, pol, now.Add(10*time.Second))
 	if d.restart {
 		t.Fatal("restarted during cooldown")
 	}
 	// After cooldown a new attempt starts; enough failures open the circuit.
-	st2 := State{Incident: down, Phase: PhaseWatching, Failures: []int64{now.Unix() - 100}, LastAction: now.Unix() - 2000}
+	st2 := HealState{HealIncident: down, Phase: PhaseWatching, Failures: []int64{now.Unix() - 100}, LastAction: now.Unix() - 2000}
 	d = advance(st2, false, down, pol, now)
 	if !d.restart {
 		t.Fatal("no restart after cooldown")
 	}
 	// Second failed incident opens the circuit (BreakerMax=2).
-	st3 := State{Incident: down, Phase: PhaseActive, Attempts: 2, LastAction: now.Unix(), VerifyUntil: now.Unix() - 1,
+	st3 := HealState{HealIncident: down, Phase: PhaseActive, Attempts: 2, LastAction: now.Unix(), VerifyUntil: now.Unix() - 1,
 		Failures: []int64{now.Unix() - 100}}
 	d = advance(st3, false, down, pol, now.Add(200*time.Second))
 	if d.failed == nil || !d.circuit || d.state.Phase != PhaseCircuitOpen {
