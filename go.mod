@@ -158,14 +158,14 @@ require (
 // mihomo pins a protobuf fork; replace directives of dependencies are not inherited.
 replace google.golang.org/protobuf => github.com/metacubex/protobuf-go v0.0.0-20260306035419-7ceee0674686
 
-replace github.com/metacubex/mihomo => github.com/getmikan/Citrus v1.19.33-0.20261021235540-ca8204d95c32
+replace github.com/metacubex/mihomo => github.com/drillex100-beep/Citrus v1.19.33-0.20261021235540-ca8204d95c32
 
-replace github.com/metacubex/utls => github.com/getmikan/utls v1.8.9-0.20261020173537-32502cba39f4
+replace github.com/metacubex/utls => github.com/drillex100-beep/utls v1.8.9-0.20261020173537-32502cba39f4
 
-replace github.com/metacubex/http => github.com/getmikan/http v0.1.8-citrus.2
+replace github.com/metacubex/http => github.com/drillex100-beep/http v0.1.8-citrus.2
 
-replace github.com/metacubex/tls => github.com/getmikan/tls v0.1.9-0.20261018054601-0a54a49f00e8
+replace github.com/metacubex/tls => github.com/drillex100-beep/tls v0.1.9-0.20261018054601-0a54a49f00e8
 
-replace github.com/metacubex/smux => github.com/getmikan/smux v0.0.0-20261017193300-1d830d820876
+replace github.com/metacubex/smux => github.com/drillex100-beep/smux v0.0.0-20261017193300-1d830d820876
 
-replace github.com/metacubex/restls-client-go => github.com/getmikan/restls-client-go v0.1.10-0.20261020200739-f74a25fc969b
+replace github.com/metacubex/restls-client-go => github.com/drillex100-beep/restls-client-go v0.1.10-0.20261020200739-f74a25fc969b

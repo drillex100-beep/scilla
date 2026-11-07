@@ -20,7 +20,7 @@ import (
 
 // CommunityURL is where the registry's signed index is published, next to its signature
 // (release.SigSuffix).
-const CommunityURL = "https://github.com/getmikan/marketplace-community/releases/latest/download/index.json"
+const CommunityURL = "https://github.com/drillex100-beep/marketplace-community/releases/latest/download/index.json"
 
 // CommunityPrior is the build of an addon the registry had before the current one.
 type CommunityPrior struct {

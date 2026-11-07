@@ -7,7 +7,7 @@ description: What the registry of community addons is, why scilla is not respons
 Community addons are written and published by third-party authors. scilla **does not review their code, does not build their images, does not support them and is not responsible** for anything they do: a leaked bot token, subscribers' data, lost money, a broken panel. An addon may be a copy of someone else's work, change hands or turn malicious with its next release. Install only what you trust its author with as much as yourself with root on the server.
 :::
 
-The official addons are on **Addons → Catalog**: scilla builds and signs them. **Addons → Community** shows the registry [getmikan/marketplace-community](https://github.com/getmikan/marketplace-community): links to third-party authors' repositories and a snapshot of their latest release (version, image by digest, permissions).
+The official addons are on **Addons → Catalog**: scilla builds and signs them. **Addons → Community** shows the registry [getmikan/marketplace-community](https://github.com/drillex100-beep/marketplace-community): links to third-party authors' repositories and a snapshot of their latest release (version, image by digest, permissions).
 
 Next to an addon are the stars of its repository and how many times its image was pulled. The pulls come from the package's page on GitHub, to two significant digits; panels report nothing anywhere. An image outside GitHub (ghcr.io) shows no pulls.
 
@@ -42,7 +42,7 @@ The `inbounds:write` permission changes the working setup of the servers, so app
 
 ## How an author gets listed
 
-1. Publish the addon on [protocol 2](https://github.com/getmikan/marketplace/blob/main/PROTOCOL-v2.md), with its image on a public registry.
+1. Publish the addon on [protocol 2](https://github.com/drillex100-beep/marketplace/blob/main/PROTOCOL-v2.md), with its image on a public registry.
 2. Attach `scilla-addon.json` to a GitHub release (one entry, or `{"title", "key", "adapters": [...]}`), preferably with its signature `scilla-addon.json.sig` and your key in `key`.
 3. Add the topic **`scilla-addon`** to the repository.
 
@@ -52,4 +52,4 @@ Payment adapters are not accepted: money goes only through the official ones.
 
 ## Report an addon
 
-Open an issue in [getmikan/marketplace-community](https://github.com/getmikan/marketplace-community/issues) with the repository and what is wrong.
+Open an issue in [getmikan/marketplace-community](https://github.com/drillex100-beep/marketplace-community/issues) with the repository and what is wrong.
