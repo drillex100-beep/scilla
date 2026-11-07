@@ -2767,6 +2767,29 @@
         ],
         "type": "object"
       },
+      "DashboardLayoutWrite": {
+        "additionalProperties": false,
+        "properties": {
+          "global": {
+            "type": "boolean"
+          },
+          "version": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "widgets": {
+            "items": {
+              "$ref": "#/components/schemas/DashboardWidget"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "version",
+          "widgets"
+        ],
+        "type": "object"
+      },
       "DashboardWidget": {
         "additionalProperties": false,
         "properties": {
@@ -15417,7 +15440,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DashboardLayout"
+                "$ref": "#/components/schemas/DashboardLayoutWrite"
               }
             }
           },

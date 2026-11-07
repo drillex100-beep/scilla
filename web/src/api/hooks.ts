@@ -573,11 +573,12 @@ export function useDashboardLayout() {
   return useQuery({ queryKey: qk.dashboardLayout, queryFn: ({ signal }) => unwrap(api.GET("/api/v1/dashboard/layout", { signal })) });
 }
 
-/** Saves the whole layout at once; the server validates it. */
+/** Saves the whole layout at once; the server validates it. global stores it as the panel-wide default. */
 export function useSaveDashboardLayout() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (widgets: Schemas["DashboardWidget"][]) => unwrap(api.PUT("/api/v1/dashboard/layout", { body: { version: 1, widgets } })),
+    mutationFn: (body: { widgets: Schemas["DashboardWidget"][]; global?: boolean }) =>
+      unwrap(api.PUT("/api/v1/dashboard/layout", { body: { version: 1, widgets: body.widgets, global: body.global } })),
     onSuccess: () => qc.invalidateQueries({ queryKey: qk.dashboardLayout }),
   });
 }

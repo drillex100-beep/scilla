@@ -821,7 +821,13 @@
       "import": "Импорт",
       "importInvalid": "Не удалось прочитать файл макета",
       "widgetNodes": "Серверы",
-      "widgetInbounds": "Подключения"
+      "widgetInbounds": "Подключения",
+      "setDefault": "Для всех по умолчанию",
+      "defaultSaved": "Стандартный макет сохранён",
+      "threshold": "Порог",
+      "thresholdGt": "больше",
+      "thresholdLt": "меньше",
+      "thresholdValue": "значение"
     },
     "nodesEmpty": "Серверов пока нет",
     "inboundsEmpty": "Подключений пока нет",

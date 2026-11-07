@@ -4385,6 +4385,12 @@ export interface components {
             version: number;
             widgets: components["schemas"]["DashboardWidget"][];
         };
+        DashboardLayoutWrite: {
+            global?: boolean;
+            /** Format: int64 */
+            version: number;
+            widgets: components["schemas"]["DashboardWidget"][];
+        };
         DashboardWidget: {
             config?: unknown;
             /** Format: int64 */
@@ -9792,7 +9798,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["DashboardLayout"];
+                "application/json": components["schemas"]["DashboardLayoutWrite"];
             };
         };
         responses: {

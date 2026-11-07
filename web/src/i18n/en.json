@@ -821,7 +821,13 @@
       "import": "Import",
       "importInvalid": "Could not read the layout file",
       "widgetNodes": "Servers",
-      "widgetInbounds": "Inbounds"
+      "widgetInbounds": "Inbounds",
+      "setDefault": "Default for everyone",
+      "defaultSaved": "Default layout saved",
+      "threshold": "Threshold",
+      "thresholdGt": "above",
+      "thresholdLt": "below",
+      "thresholdValue": "value"
     },
     "nodesEmpty": "No servers yet",
     "inboundsEmpty": "No inbounds yet",

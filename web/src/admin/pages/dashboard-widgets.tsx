@@ -21,6 +21,8 @@ export type WidgetConfig = {
   metric?: "online" | "active" | "traffic" | "expiring";
   /** traffic/shares: the period the chart opens with. */
   range?: "24h" | "7d" | "30d";
+  /** stat: highlight the value once it crosses the threshold. */
+  alert?: { op: "gt" | "lt"; value: number };
 };
 
 export type WidgetInstance = {
@@ -44,14 +46,21 @@ export function defaultMetric(config?: WidgetConfig): StatMetric {
   return config?.metric && (STAT_METRICS as readonly string[]).includes(config.metric) ? config.metric : "online";
 }
 
-function Kpi({ label, value, foot }: { label: string; value: React.ReactNode; foot: React.ReactNode }) {
+function Kpi({ label, value, foot, alert }: { label: string; value: React.ReactNode; foot: React.ReactNode; alert?: boolean }) {
   return (
     <section className="card glass kpi flex h-full flex-col">
       <div className="kpi-label">{label}</div>
-      <div className="kpi-value num">{value}</div>
+      <div className={`kpi-value num${alert ? " text-[var(--berry-600)]" : ""}`}>{value}</div>
       <div className="kpi-foot">{foot}</div>
     </section>
   );
+}
+
+/** True when the stat's current value crosses the configured threshold. */
+function alertActive(config: WidgetConfig | undefined, value: number): boolean {
+  const a = config?.alert;
+  if (!a || !Number.isFinite(a.value)) return false;
+  return a.op === "gt" ? value > a.value : value < a.value;
 }
 
 function CardError({ error, onRetry }: { error: unknown; onRetry: () => void }) {
@@ -82,7 +91,7 @@ export function StatWidget({ config }: { config?: WidgetConfig }) {
   switch (metric) {
     case "active":
       return (
-        <Kpi label={t("dashboard.active")} value={num(d.users_active)} foot={<span>{t("dashboard.activeFoot", { total: num(d.users_total) })}</span>} />
+        <Kpi label={t("dashboard.active")} value={num(d.users_active)} alert={alertActive(config, d.users_active)} foot={<span>{t("dashboard.activeFoot", { total: num(d.users_total) })}</span>} />
       );
     case "traffic":
       return (
@@ -94,6 +103,7 @@ export function StatWidget({ config }: { config?: WidgetConfig }) {
               <small>{unit}</small>
             </>
           }
+          alert={alertActive(config, d.traffic_today)}
           foot={
             delta === null ? (
               <span>{t("dashboard.noTrafficYesterday")}</span>
@@ -108,6 +118,7 @@ export function StatWidget({ config }: { config?: WidgetConfig }) {
         <Kpi
           label={t("dashboard.expiring7d")}
           value={num(d.expiring_7d)}
+          alert={alertActive(config, d.expiring_7d)}
           foot={
             d.expiring_7d > 0 ? (
               <Link to="/users" search={{ state: "expiring", q: "", hidden: "show" }} className="link-btn">
@@ -121,7 +132,7 @@ export function StatWidget({ config }: { config?: WidgetConfig }) {
       );
     default:
       return (
-        <Kpi label={t("dashboard.online")} value={num(d.online)} foot={<span>{t("dashboard.onlineFoot")}</span>} />
+        <Kpi label={t("dashboard.online")} value={num(d.online)} alert={alertActive(config, d.online)} foot={<span>{t("dashboard.onlineFoot")}</span>} />
       );
   }
 }

@@ -1,4 +1,4 @@
-import { Copy, Download, GripVertical, Plus, RotateCcw, SlidersHorizontal, Trash2, Upload } from "lucide-react";
+import { Copy, Download, Globe, GripVertical, Plus, RotateCcw, SlidersHorizontal, Trash2, Upload } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSaveDashboardLayout } from "../../api/hooks";
 import { useDashboardLayout } from "../../api/hooks";
@@ -9,6 +9,8 @@ import { useMediaQuery } from "../../lib/media";
 import { DEFAULT_LAYOUT, GRID_COLS, ROW_GAP, ROW_H, STAT_METRICS, WIDGETS, WIDGET_TYPES, defaultMetric, type StatMetric, type WidgetConfig, type WidgetInstance, type WidgetType } from "./dashboard-widgets";
 
 const MAX_ROWS = 60;
+/** Past this many widgets the view mounts the rest only when they scroll near. */
+const LAZY_AFTER = 15;
 
 function clamp(v: number, lo: number, hi: number): number {
   return Math.min(hi, Math.max(lo, v));
@@ -61,7 +63,7 @@ export function DashboardBuilder() {
   useEffect(() => {
     if (!dirty || widgets === null) return;
     const id = window.setTimeout(() => {
-      save.mutate(widgets, {
+      save.mutate({ widgets }, {
         onSuccess: () => setDirty(false),
         onError: () => toast.error(t("dashboard.builder.saveFailed")),
       });
@@ -102,6 +104,20 @@ export function DashboardBuilder() {
   const configure = (id: string, config: WidgetConfig | undefined) => {
     if (widgets === null) return;
     commit(widgets.map((w) => (w.id === id ? { ...w, config } : w)));
+  };
+
+  const makeDefault = () => {
+    if (widgets === null) return;
+    save.mutate(
+      { widgets, global: true },
+      {
+        onSuccess: () => {
+          setDirty(false);
+          toast.ok(t("dashboard.builder.defaultSaved"));
+        },
+        onError: () => toast.error(t("dashboard.builder.saveFailed")),
+      },
+    );
   };
 
   const exportLayout = () => {
@@ -187,6 +203,10 @@ export function DashboardBuilder() {
                 }}
               />
             </label>
+            <Button size="sm" variant="glass" onClick={makeDefault} disabled={save.isPending}>
+              <Globe size={14} aria-hidden />
+              {t("dashboard.builder.setDefault")}
+            </Button>
             <span className="text-xs text-[var(--ink-500)]" aria-live="polite">
               {saveLabel}
             </span>
@@ -196,9 +216,15 @@ export function DashboardBuilder() {
       {editing && mobile ? null : editing ? <Palette onAdd={addWidget} /> : null}
       {mobile ? (
         <div className="flex flex-col gap-4">
-          {widgets.map((w) => (
-            <MobileWidget key={w.id} w={w} />
-          ))}
+          {widgets.map((w) =>
+            !editing && widgets.length > LAZY_AFTER ? (
+              <LazyMount key={w.id} title={WIDGETS[w.type].title()}>
+                <MobileWidget w={w} />
+              </LazyMount>
+            ) : (
+              <MobileWidget key={w.id} w={w} />
+            ),
+          )}
         </div>
       ) : (
         <BuilderCanvas widgets={widgets} editing={editing} onChange={commit} onDuplicate={duplicate} onRemove={remove} onConfigure={configure} />
@@ -211,6 +237,16 @@ export function DashboardBuilder() {
 function WidgetSettings({ w, onConfigure, onClose }: { w: WidgetInstance; onConfigure: (id: string, config: WidgetConfig | undefined) => void; onClose: () => void }) {
   const cfg = w.config ?? {};
   const set = (patch: WidgetConfig) => onConfigure(w.id, { ...cfg, ...patch });
+  const setAlert = (op: "gt" | "lt", value: string) => {
+    if (value.trim() === "") {
+      const { alert: _alert, ...rest } = cfg;
+      void _alert;
+      onConfigure(w.id, rest);
+      return;
+    }
+    const n = Number(value);
+    if (Number.isFinite(n)) onConfigure(w.id, { ...cfg, alert: { op, value: n } });
+  };
   return (
     <div className="panel-soft absolute left-1 top-8 z-20 w-56 rounded-xl p-3 text-[13px] shadow-lg" role="dialog" aria-label={t("dashboard.builder.settings")}>
       {w.type === "stat" ? (
@@ -226,6 +262,33 @@ function WidgetSettings({ w, onConfigure, onClose }: { w: WidgetInstance; onConf
               {m === "online" ? t("dashboard.online") : m === "active" ? t("dashboard.active") : m === "traffic" ? t("dashboard.trafficToday") : t("dashboard.expiring7d")}
             </button>
           ))}
+          <div className="mt-1 border-t border-[var(--scilla-200)] pt-2" />
+          <div className="text-xs font-medium text-[var(--ink-500)]">{t("dashboard.builder.threshold")}</div>
+          <div className="flex items-center gap-1.5">
+            <div className="flex overflow-hidden rounded-lg border border-[var(--scilla-200)]">
+              {(["gt", "lt"] as const).map((op) => (
+                <button
+                  key={op}
+                  type="button"
+                  className={`px-2 py-1 text-sm ${cfg.alert?.op === op ? "bg-[var(--scilla-100)] font-medium" : "hover:bg-[var(--hover)]"}`}
+                  onClick={() => setAlert(op, cfg.alert ? String(cfg.alert.value) : "")}
+                  aria-label={op === "gt" ? t("dashboard.builder.thresholdGt") : t("dashboard.builder.thresholdLt")}
+                >
+                  {op === "gt" ? ">" : "<"}
+                </button>
+              ))}
+            </div>
+            <input
+              className="input w-24"
+              type="number"
+              min={0}
+              step="any"
+              value={cfg.alert?.value ?? ""}
+              placeholder={t("dashboard.builder.thresholdValue")}
+              aria-label={t("dashboard.builder.threshold")}
+              onChange={(e) => setAlert(cfg.alert?.op ?? "gt", e.target.value)}
+            />
+          </div>
         </div>
       ) : w.type === "traffic" || w.type === "shares" ? (
         <div className="flex flex-col gap-1.5">
@@ -269,10 +332,44 @@ function MobileWidget({ w }: { w: WidgetInstance }) {
 
 type Gesture = { mode: "move" | "resize"; pointerId: number; startX: number; startY: number; x: number; y: number; w: number; h: number };
 
+/** Renders the real widget only when its cell comes near the viewport; until then a titled placeholder stands in. */
+function LazyMount({ title, children }: { title: string; children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [near, setNear] = useState(false);
+  useEffect(() => {
+    if (near) return;
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === "undefined") {
+      setNear(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setNear(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "320px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [near]);
+  if (near) return <div className="h-full">{children}</div>;
+  return (
+    <div ref={ref} className="card glass flex h-full min-h-[120px] flex-col gap-3 p-4" role="status" aria-label={title}>
+      <div className="text-[13px] font-medium">{title}</div>
+      <Skeleton style={{ height: 28 }} />
+      <Skeleton />
+    </div>
+  );
+}
+
 function BuilderCanvas({ widgets, editing, onChange, onDuplicate, onRemove, onConfigure }: { widgets: WidgetInstance[]; editing: boolean; onChange: (w: WidgetInstance[]) => void; onDuplicate: (w: WidgetInstance) => void; onRemove: (id: string) => void; onConfigure: (id: string, config: WidgetConfig | undefined) => void }) {
   const wrap = useRef<HTMLDivElement>(null);
   const [settingsFor, setSettingsFor] = useState<string | null>(null);
   const height = useMemo(() => bottomOf(widgets) * (ROW_H + ROW_GAP), [widgets]);
+  const lazy = !editing && widgets.length > LAZY_AFTER;
 
   const patch = (id: string, next: Partial<WidgetInstance>) => onChange(widgets.map((w) => (w.id === id ? { ...w, ...next } : w)));
 
@@ -327,7 +424,13 @@ function BuilderCanvas({ widgets, editing, onChange, onDuplicate, onRemove, onCo
               height: w.h * ROW_H + (w.h - 1) * ROW_GAP,
             }}
           >
-            <div className="h-full">{def.component(w.config)}</div>
+            <div className="h-full">
+              {lazy ? (
+                <LazyMount title={def.title()}>{def.component(w.config)}</LazyMount>
+              ) : (
+                def.component(w.config)
+              )}
+            </div>
             {editing ? (
               <>
                 <div className="absolute -left-1 -top-1 z-10 flex items-center gap-1 rounded-full bg-[var(--ink-900)] px-1.5 py-0.5 text-white shadow">

@@ -19,9 +19,10 @@ import (
 // panel and a panel from before the builder look the same.
 
 const (
-	dashboardLayoutVersion = 1
-	dashboardMaxWidgets    = 50
-	dashboardMaxBytes      = 32 << 10
+	dashboardLayoutVersion   = 1
+	dashboardMaxWidgets      = 50
+	dashboardMaxBytes        = 32 << 10
+	dashboardGlobalLayoutKey = "dashboard_layout:global"
 )
 
 // dashboardWidgetTypes are the widget kinds the builder knows; the page registers the
@@ -59,8 +60,16 @@ type dashboardLayoutOutput struct {
 	Body dashboardLayout
 }
 
+// dashboardLayoutWrite is what the page sends: the layout plus an optional flag
+// asking to store it as the panel-wide default instead of the admin's own.
+type dashboardLayoutWrite struct {
+	Version int               `json:"version"`
+	Widgets []dashboardWidget `json:"widgets"`
+	Global  bool              `json:"global,omitempty"`
+}
+
 type dashboardLayoutInput struct {
-	Body dashboardLayout
+	Body dashboardLayoutWrite
 }
 
 func (h *handlers) registerDashboard() {
@@ -76,33 +85,49 @@ func (h *handlers) getDashboardLayout(ctx context.Context, _ *struct{}) (*dashbo
 	out := &dashboardLayoutOutput{}
 	out.Body.Version = dashboardLayoutVersion
 	out.Body.Widgets = []dashboardWidget{}
-	key := dashboardLayoutKey(sessionOf(ctx).AdminID)
-	raw, err := h.d.Store.Q.GetSetting(ctx, key)
+	layout, ok, err := h.loadDashboardLayout(ctx, dashboardLayoutKey(sessionOf(ctx).AdminID))
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return out, nil // no layout yet: the page uses its built-in one
-		}
 		return nil, err
 	}
-	var saved dashboardLayout
-	if err := json.Unmarshal([]byte(raw), &saved); err != nil {
-		// A document this panel no longer understands is treated as absent, not as an error:
-		// the page then shows the built-in layout and the next save overwrites it.
-		return out, nil
+	if !ok {
+		// No layout of their own: the panel-wide default, when one is set.
+		layout, ok, err = h.loadDashboardLayout(ctx, dashboardGlobalLayoutKey)
+		if err != nil {
+			return nil, err
+		}
 	}
-	if saved.Version != dashboardLayoutVersion {
-		return out, nil
+	if ok {
+		out.Body = layout
 	}
-	saved.Widgets = h.dashWidgetsValid(saved.Widgets)
-	out.Body = saved
 	return out, nil
 }
 
+// loadDashboardLayout reads one stored layout; ok is false when the key is absent,
+// the document is not JSON or its version is not this panel's.
+func (h *handlers) loadDashboardLayout(ctx context.Context, key string) (layout dashboardLayout, ok bool, err error) {
+	raw, err := h.d.Store.Q.GetSetting(ctx, key)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return dashboardLayout{}, false, nil
+		}
+		return dashboardLayout{}, false, err
+	}
+	var saved dashboardLayout
+	if err := json.Unmarshal([]byte(raw), &saved); err != nil || saved.Version != dashboardLayoutVersion {
+		// A document this panel no longer understands is treated as absent, not as an error:
+		// the page then shows the built-in layout and the next save overwrites it.
+		return dashboardLayout{}, false, nil
+	}
+	saved.Widgets = h.dashWidgetsValid(saved.Widgets)
+	return saved, true, nil
+}
+
 func (h *handlers) putDashboardLayout(ctx context.Context, in *dashboardLayoutInput) (*dashboardLayoutOutput, error) {
-	layout := in.Body
-	if layout.Version != dashboardLayoutVersion {
+	write := in.Body
+	if write.Version != dashboardLayoutVersion {
 		return nil, huma.NewError(http.StatusBadRequest, "unsupported layout version")
 	}
+	layout := dashboardLayout{Version: write.Version, Widgets: write.Widgets}
 	if len(layout.Widgets) > dashboardMaxWidgets {
 		return nil, huma.NewError(http.StatusBadRequest, fmt.Sprintf("too many widgets: %d (max %d)", len(layout.Widgets), dashboardMaxWidgets))
 	}
@@ -117,10 +142,15 @@ func (h *handlers) putDashboardLayout(ctx context.Context, in *dashboardLayoutIn
 		return nil, err
 	}
 	key := dashboardLayoutKey(sessionOf(ctx).AdminID)
+	action := "dashboard.layout"
+	if write.Global {
+		key = dashboardGlobalLayoutKey
+		action = "dashboard.layout.global"
+	}
 	if err := h.d.Store.Q.SetSetting(ctx, db.SetSettingParams{Key: key, Value: string(raw)}); err != nil {
 		return nil, err
 	}
-	h.audit(ctx, sessionOf(ctx).AdminID, "dashboard.layout", "settings", key, map[string]any{"widgets": len(layout.Widgets)})
+	h.audit(ctx, sessionOf(ctx).AdminID, action, "settings", key, map[string]any{"widgets": len(layout.Widgets)})
 	out := &dashboardLayoutOutput{}
 	out.Body = layout
 	return out, nil
