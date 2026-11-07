@@ -418,10 +418,22 @@ func NewPanel(st *store.Store, o Options) (*Panel, error) {
 	subHandler.SetReissuer(deps.Users)
 	subHandler.SetShop(p.Billing)
 	subHandler.SetPromo(promos)
-	subHandler.SetPages(pages)
 	// The public pages of addons live below the subscription path, next to the
 	// subscription page itself: /<sub>/addons-public/<id>/<file>.
 	publicPages := addonpages.NewPublic(addonpages.Deps{Addons: p.Addons, Store: st.Q, Log: o.Log, Now: o.Now})
+	subHandler.SetPages(pages)
+	// The subscription page links to them, so a subscriber finds the status page.
+	subHandler.SetPublicPages(func(ctx context.Context) ([]subsrc.PublicPage, error) {
+		links, err := publicPages.Links(ctx, subBase(ctx))
+		if err != nil {
+			return nil, err
+		}
+		out := make([]subsrc.PublicPage, 0, len(links))
+		for _, l := range links {
+			out = append(out, subsrc.PublicPage{ID: l.ID, Title: l.Title, URL: l.URL})
+		}
+		return out, nil
+	})
 	subMux := http.NewServeMux()
 	subMux.Handle(addonpages.PublicPrefix, publicPages)
 	subMux.Handle("/", subHandler)

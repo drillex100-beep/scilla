@@ -12,6 +12,8 @@ export type Info = {
   happ_link?: string;
   /** Ids of the catalog's apps (apps.ts) the admin turned away: they would get a stub, so the page does not offer them. */
   blocked_apps?: string[];
+  /** Pages of installed addons every visitor may open (an addon's ui:public grant), e.g. a network status page. */
+  public_pages?: { id: string; title: string; url: string }[];
   state: "active" | "expiring" | "limited" | "expired" | "disabled";
   used_up: number;
   used_down: number;

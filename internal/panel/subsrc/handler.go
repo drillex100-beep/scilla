@@ -81,10 +81,12 @@ type Handler struct {
 	shop       *billing.Service // nil: nothing on sale
 	promos     *promo.Service
 	pages      *subpage.Service // nil: the page as built, nothing of the admin's
-	balance    balancer         // nil: every node shows
-	happ       *HappLinks       // Happ crypt links, kept per subscription
-	log        *slog.Logger
-	promoLimit promoLimiter
+	// publicPages lists the addons' public pages for Info.PublicPages; nil: none.
+	publicPages func(ctx context.Context) ([]PublicPage, error)
+	balance     balancer   // nil: every node shows
+	happ        *HappLinks // Happ crypt links, kept per subscription
+	log         *slog.Logger
+	promoLimit  promoLimiter
 	// profiles answers the fetches of the subscriptions this handler is the Source of.
 	profiles *serve.Handler
 }
@@ -131,6 +133,11 @@ func (h *Handler) SetBalancer(b *domain.Balancer) {
 
 // SetPages gives the page what the admin made of it: its look, blocks, instructions, images.
 func (h *Handler) SetPages(s *subpage.Service) { h.pages = s }
+
+// SetPublicPages lets the subscription page link to the addons' public pages.
+func (h *Handler) SetPublicPages(f func(ctx context.Context) ([]PublicPage, error)) {
+	h.publicPages = f
+}
 
 func NewHandler(st *store.Store, cfg func(ctx context.Context) (Config, error), page http.Handler, now func() time.Time, devices Binder, trustProxy bool) *Handler {
 	h := &Handler{st: st, cfg: cfg, page: page, now: now, devices: devices, trustProxy: trustProxy, log: slog.New(slog.DiscardHandler), happ: NewHappLinks()}
@@ -247,6 +254,14 @@ func internalError(w http.ResponseWriter) {
 	http.Error(w, "internal error", http.StatusInternalServerError)
 }
 
+// PublicPage is a page of an installed addon every visitor may open: the admin approved
+// its ui:public grant. The subscription page links to it, e.g. to a network status page.
+type PublicPage struct {
+	ID    string `json:"id"`
+	Title string `json:"title"`
+	URL   string `json:"url"`
+}
+
 // Info is what the subscription page shows. Credentials are not included: the page
 // offers import buttons that point back at this subscription URL.
 type Info struct {
@@ -298,6 +313,9 @@ type Info struct {
 	// BlockedApps are the apps of the page's catalog the admin turned away (apps.Catalog
 	// ids): they would get a stub, so "Connect a device" does not offer them.
 	BlockedApps []string `json:"blocked_apps,omitempty"`
+	// PublicPages are the installed addons' pages every visitor may open; empty without
+	// the addons' ui:public grants.
+	PublicPages []PublicPage `json:"public_pages,omitempty"`
 }
 
 // DeviceItem is a bound device as the subscription page lists it.
@@ -340,6 +358,13 @@ func (h *Handler) info(ctx context.Context, w http.ResponseWriter, sub *subscrip
 		out.HappLink = link
 	} else {
 		h.warn("happ_link", "subscription: no Happ crypt link", "err", err)
+	}
+	if h.publicPages != nil {
+		if pages, err := h.publicPages(ctx); err == nil {
+			out.PublicPages = pages
+		} else {
+			h.warn("public_pages", "subscription: addon pages not listed", "err", err)
+		}
 	}
 	if cfg.Binding {
 		devs, err := h.st.Q.ListBoundDevices(ctx, u.ID)

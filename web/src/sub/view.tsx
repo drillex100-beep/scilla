@@ -158,18 +158,32 @@ function Status({ info, selling }: { info: Info; selling: boolean }) {
   // Links from the server are followed only when they are http(s) (or Telegram's own).
   const support = safeHref(info.support_url, { tg: true });
   return (
-    <section className="glass sub-card reveal p-4">
-      <h1 className="font-display text-xl leading-7 font-medium tracking-tight">{t(`sub.status.${info.state}`, { name: firstName })}</h1>
-      <div className="mt-2 flex items-center justify-between gap-2 text-[13px] text-[var(--ink-600)]">
-        <span>{info.expires_at ? t("sub.until", { date: dateLong(info.expires_at) }) : t("sub.forever")}</span>
-        {left && left.tone !== "bad" ? <Pill tone={tone}>{left.text}</Pill> : null}
-      </div>
-      {(info.state === "expired" || info.state === "limited" || info.state === "disabled") && support && !selling ? (
-        <a className="btn btn-primary btn-block mt-4" href={support} target="_blank" rel="noreferrer noopener" {...outside(support)}>
-          {t("sub.renew")}
-        </a>
+    <>
+      <section className="glass sub-card reveal p-4">
+        <h1 className="font-display text-xl leading-7 font-medium tracking-tight">{t(`sub.status.${info.state}`, { name: firstName })}</h1>
+        <div className="mt-2 flex items-center justify-between gap-2 text-[13px] text-[var(--ink-600)]">
+          <span>{info.expires_at ? t("sub.until", { date: dateLong(info.expires_at) }) : t("sub.forever")}</span>
+          {left && left.tone !== "bad" ? <Pill tone={tone}>{left.text}</Pill> : null}
+        </div>
+        {(info.state === "expired" || info.state === "limited" || info.state === "disabled") && support && !selling ? (
+          <a className="btn btn-primary btn-block mt-4" href={support} target="_blank" rel="noreferrer noopener" {...outside(support)}>
+            {t("sub.renew")}
+          </a>
+        ) : null}
+      </section>
+      {/* The public pages of installed addons: a network status page, a knowledge base. */}
+      {info.public_pages && info.public_pages.length > 0 ? (
+        <section className="glass sub-card reveal p-4">
+          <div className="flex flex-col gap-2">
+            {info.public_pages.map((p) => (
+              <a key={p.id} className="btn btn-block" href={p.url} target="_blank" rel="noreferrer noopener" {...outside(p.url)}>
+                {p.title}
+              </a>
+            ))}
+          </div>
+        </section>
       ) : null}
-    </section>
+    </>
   );
 }
 

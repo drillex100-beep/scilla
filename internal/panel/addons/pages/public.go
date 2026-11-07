@@ -4,8 +4,11 @@ import (
 	"context"
 	"errors"
 	"net/http"
+	"sort"
 	"strconv"
 	"strings"
+	"sync"
+	"time"
 
 	"scilla/internal/panel/addons"
 	"scilla/internal/panel/server"
@@ -36,9 +39,74 @@ const PublicCSP = "default-src 'none'; style-src 'self' 'unsafe-inline'; img-src
 	"font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'"
 
 // Public serves the pages of an addon the admin approved for everyone.
-type Public struct{ d Deps }
+type Public struct {
+	d Deps
+	// The links the subscription page shows, kept for a few seconds: it asks on every
+	// view, while installs and removals of addons are rare.
+	mu      sync.Mutex
+	linksAt time.Time
+	links   []Link
+}
 
 func NewPublic(d Deps) *Public { return &Public{d: d} }
+
+// Link is a public page of an installed addon, for the subscription page to link to.
+type Link struct {
+	ID    string `json:"id"`
+	Title string `json:"title"`
+	URL   string `json:"url"`
+}
+
+// linksTTL is how long the list of public pages is kept.
+const linksTTL = 10 * time.Second
+
+// Links lists the addons whose public pages visitors may open, each with the address of
+// its entry below the subscription path. An empty subBase means the panel has no
+// subscription path, so no public page is reachable and there is nothing to link.
+func (p *Public) Links(ctx context.Context, subBase string) ([]Link, error) {
+	if p == nil || p.d.Addons == nil || subBase == "" {
+		return nil, nil
+	}
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	if p.links != nil && p.d.Now().Sub(p.linksAt) < linksTTL {
+		return p.links, nil
+	}
+	st, err := p.d.Addons.State()
+	if err != nil {
+		return nil, err
+	}
+	ids := make([]string, 0, len(st.Adapters))
+	for id := range st.Adapters {
+		ids = append(ids, id)
+	}
+	sort.Strings(ids)
+	out := []Link{}
+	for _, id := range ids {
+		a, err := p.allowed(ctx, id)
+		if err != nil {
+			continue
+		}
+		info, err := p.d.Addons.InfoV2(ctx, id, a)
+		if err != nil || info.UI == nil {
+			continue
+		}
+		out = append(out, Link{ID: id, Title: pickText(info.UI.Title), URL: subBase + PublicPrefix + id + "/"})
+	}
+	p.links, p.linksAt = out, p.d.Now()
+	return out, nil
+}
+
+// pickText is the addon's title in English when it has one, in any of its languages last.
+func pickText(t addons.Text) string {
+	if s := t["en"]; s != "" {
+		return s
+	}
+	for _, s := range t {
+		return s
+	}
+	return ""
+}
 
 // allowed is Allowed for the public permission: the addon runs, serves HTTP, speaks
 // protocol 2 and the admin approved ui:public.
