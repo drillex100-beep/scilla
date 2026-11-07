@@ -11,7 +11,7 @@
 //!   addons/state.json    this: what runs where, with its tokens, the addresses of the panel's
 //!                        API for addons, and how the last request went
 //!
-//! An addon comes from the signed catalog (official: ghcr.io/getmikan/, the host's network,
+//! An addon comes from the signed catalog (official: ghcr.io/drillex100-beep/, the host's network,
 //! loopback), is an image the admin named by its digest (custom: on the bridge network
 //! scilla-addons, its port published on loopback, the panel's API at the bridge's gateway), or
 //! is a process of the admin's own on a loopback port (external: no container, only tokens).
@@ -272,7 +272,7 @@ fn valid_digest(d: &str) -> bool {
 
 /// Where the marketplace's adapters live. A signed catalog could name another registry, but
 /// what root runs from a state the panel once wrote must come from this organization.
-const IMAGE_PREFIX: &str = "ghcr.io/getmikan/";
+const IMAGE_PREFIX: &str = "ghcr.io/drillex100-beep/";
 
 fn valid_image(i: &str) -> bool {
     i.strip_prefix(IMAGE_PREFIX).is_some_and(|r| {
@@ -1345,13 +1345,13 @@ mod tests {
         for ok in [
             json!({}),
             json!({"org.opencontainers.image.ref.name": "0.5.1.0-rc.6"}),
-            json!({"io.containerd.image.name": "ghcr.io/getmikan/tool-telegram:0.5.1.0"}),
+            json!({"io.containerd.image.name": "ghcr.io/drillex100-beep/tool-telegram:0.5.1.0"}),
         ] {
             assert!(names_ours(&ok), "{ok}");
         }
         for bad in [
             json!({"io.containerd.image.name": "postgres:18-alpine"}),
-            json!({"io.containerd.image.name": "ghcr.io/drillex100-beep/scilla:latest"}),
+            json!({"io.containerd.image.name": "ghcr.io/getmikan/tool-telegram:0.5.1.0"}),
             json!({"org.opencontainers.image.ref.name": "postgres:18"}),
             json!({"org.opencontainers.image.ref.name": "docker.io/library/postgres"}),
         ] {
@@ -1383,12 +1383,12 @@ mod tests {
         let (data, sig) = signed(
             &signer,
             &[
-                entry("yookassa", 1, "ghcr.io/getmikan/adapter-yookassa", &d, "0.4.3"),
-                entry("future", 2, "ghcr.io/getmikan/adapter-future", &d, ""),
+                entry("yookassa", 1, "ghcr.io/drillex100-beep/adapter-yookassa", &d, "0.4.3"),
+                entry("future", 2, "ghcr.io/drillex100-beep/adapter-future", &d, ""),
                 entry("hub", 1, "docker.io/someone/adapter", &d, ""),
-                entry("tagged", 1, "ghcr.io/getmikan/adapter-x", "latest", ""),
-                entry("Bad", 1, "ghcr.io/getmikan/adapter-x", &d, ""),
-                entry("newer", 1, "ghcr.io/getmikan/adapter-x", &d, "9.0.0"),
+                entry("tagged", 1, "ghcr.io/drillex100-beep/adapter-x", "latest", ""),
+                entry("Bad", 1, "ghcr.io/drillex100-beep/adapter-x", &d, ""),
+                entry("newer", 1, "ghcr.io/drillex100-beep/adapter-x", &d, "9.0.0"),
             ],
         );
         let got = parse_catalog(&data, &format!("{sig}\n"), &key, "0.4.3").unwrap();
@@ -1512,7 +1512,7 @@ fe80::1 21355/tcp on scilla-addons ALLOW       Anywhere (v6)
             "yookassa".into(),
             Installed {
                 version: "1.0.0".into(),
-                image: "ghcr.io/getmikan/adapter-yookassa".into(),
+                image: "ghcr.io/drillex100-beep/adapter-yookassa".into(),
                 digest: "sha256:1".into(),
                 listen: "127.0.0.1:41873".into(),
                 token: "t".into(),
@@ -1567,7 +1567,7 @@ fe80::1 21355/tcp on scilla-addons ALLOW       Anywhere (v6)
     fn only_sound_entries() {
         let good = Installed {
             version: "1.0.1".into(),
-            image: "ghcr.io/getmikan/adapter-yookassa".into(),
+            image: "ghcr.io/drillex100-beep/adapter-yookassa".into(),
             digest: format!("sha256:{}", "c".repeat(64)),
             listen: "127.0.0.1:45615".into(),
             token: "a".repeat(48),
@@ -1595,7 +1595,7 @@ fe80::1 21355/tcp on scilla-addons ALLOW       Anywhere (v6)
             ),
             ("image elsewhere", bad(&|a| a.image = "docker.io/library/alpine".into())),
             ("another organization", bad(&|a| a.image = "ghcr.io/someone/adapter-yookassa".into())),
-            ("a way out of the organization", bad(&|a| a.image = "ghcr.io/getmikan/../someone/x".into())),
+            ("a way out of the organization", bad(&|a| a.image = "ghcr.io/drillex100-beep/../someone/x".into())),
             (
                 "digest",
                 bad(&|a| {
@@ -1681,10 +1681,10 @@ fe80::1 21355/tcp on scilla-addons ALLOW       Anywhere (v6)
         };
         let state = format!(
             r#"{{"adapters":{{"yookassa":{},"loaded":{},"elsewhere":{},"failed":{}}}}}"#,
-            entry("ghcr.io/getmikan/adapter-yookassa", "running", ""),
-            entry("ghcr.io/getmikan/adapter-cryptobot", "running", &format!(r#","image_id":"sha256:{}","error":"x""#, "e".repeat(64))),
+            entry("ghcr.io/drillex100-beep/adapter-yookassa", "running", ""),
+            entry("ghcr.io/drillex100-beep/adapter-cryptobot", "running", &format!(r#","image_id":"sha256:{}","error":"x""#, "e".repeat(64))),
             entry("docker.io/library/alpine", "running", ""),
-            entry("ghcr.io/getmikan/adapter-stars", "failed", "")
+            entry("ghcr.io/drillex100-beep/adapter-stars", "failed", "")
         );
         fs::write(&root_state, state).unwrap();
         let s = load_from(&root_state).unwrap();
@@ -1705,7 +1705,7 @@ fe80::1 21355/tcp on scilla-addons ALLOW       Anywhere (v6)
         m.insert(
             "yookassa".to_owned(),
             Installed {
-                image: "ghcr.io/getmikan/adapter-yookassa".into(),
+                image: "ghcr.io/drillex100-beep/adapter-yookassa".into(),
                 digest: format!("sha256:{}", "c".repeat(64)),
                 listen: "127.0.0.1:41873".into(),
                 token: "tok".into(),
@@ -1717,7 +1717,7 @@ fe80::1 21355/tcp on scilla-addons ALLOW       Anywhere (v6)
         for want in [
             "name: scilla-addons",
             "  yookassa:\n",
-            &format!("image: \"ghcr.io/getmikan/adapter-yookassa@sha256:{}\"", "c".repeat(64)),
+            &format!("image: \"ghcr.io/drillex100-beep/adapter-yookassa@sha256:{}\"", "c".repeat(64)),
             "user: \"65532:65532\"",
             "cap_drop: [ALL]",
             "read_only: true",
@@ -1740,7 +1740,7 @@ fe80::1 21355/tcp on scilla-addons ALLOW       Anywhere (v6)
         let signer = SigningKey::from_bytes(&[9; 32]);
         let d = format!("sha256:{}", "c".repeat(64));
         let e = |id: &str, protocol: u32, extra: &str| {
-            format!(r#"{{"id":"{id}","version":"1.0.0","protocol":{protocol},"image":"ghcr.io/getmikan/{id}","digest":"{d}"{extra}}}"#)
+            format!(r#"{{"id":"{id}","version":"1.0.0","protocol":{protocol},"image":"ghcr.io/drillex100-beep/{id}","digest":"{d}"{extra}}}"#)
         };
         let entries = [
             e("telegram", 2, r#","kind":"bot","mode":"http","permissions":["bot","kv"],"resources":{"mem_mb":128}"#),
@@ -1768,7 +1768,7 @@ fe80::1 21355/tcp on scilla-addons ALLOW       Anywhere (v6)
     fn bot() -> Installed {
         Installed {
             version: "1.0.0".into(),
-            image: "ghcr.io/getmikan/telegram".into(),
+            image: "ghcr.io/drillex100-beep/telegram".into(),
             digest: format!("sha256:{}", "c".repeat(64)),
             listen: "127.0.0.1:45616".into(),
             token: "a".repeat(48),
@@ -2156,7 +2156,7 @@ fe80::1 21355/tcp on scilla-addons ALLOW       Anywhere (v6)
             mode: "http".into(),
             permissions: vec![],
             resources: Resources::default(),
-            image: format!("ghcr.io/getmikan/{id}"),
+            image: format!("ghcr.io/drillex100-beep/{id}"),
             digest: digest.into(),
             min_panel: String::new(),
             name: BTreeMap::new(),
