@@ -34,7 +34,7 @@ use crate::lock::{self, Wait};
 use crate::panelfs::Dir;
 use crate::{clock, docker, net, panelfs, release, setup};
 
-pub const CATALOG_URL: &str = "https://github.com/getmikan/marketplace/releases/latest/download/index.json";
+pub const CATALOG_URL: &str = "https://github.com/drillex100-beep/marketplace/releases/latest/download/index.json";
 /// The payment adapters' protocol (internal/panel/addons).
 const PROTOCOL: u32 = 1;
 /// That of every other kind.
