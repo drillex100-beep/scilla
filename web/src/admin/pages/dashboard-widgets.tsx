@@ -1,19 +1,20 @@
 import { Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { ShieldCheck } from "lucide-react";
 import { useMemo, useState } from "react";
-import { errorText, type User } from "../../api/client";
+import { api, errorText, unwrap, type User } from "../../api/client";
 import { onePeriod, useInbounds, useNode, useNodes, useNodeShares, useOverview, userActions, useServerTraffic, useUserMutation, useUsers } from "../../api/hooks";
 import { buckets, TrafficChart, type Range } from "../../components/chart";
 import { QueryBoundary, StaleNotice } from "../../components/query";
 import { useToast } from "../../components/toast";
 import { Avatar, Bar, Button, ErrorState, Pill, Segmented, Skeleton, StatePill } from "../../components/ui";
 import { getLocale, t } from "../../i18n";
-import { bits, bytes, dateShort, expiryText, maskedAs, num, uptime } from "../../lib/format";
+import { bits, bytes, dateShort, expiryText, maskedAs, num, time, uptime } from "../../lib/format";
 import { nodeLabel } from "../../lib/node-label";
 import { CardHead } from "../../components/layout";
 
 /** The widget kinds the builder offers; the API accepts the same list (plus a few reserved). */
-export type WidgetType = "stat" | "traffic" | "shares" | "server" | "attention" | "top";
+export type WidgetType = "stat" | "traffic" | "shares" | "server" | "attention" | "top" | "payments" | "audit";
 
 export type WidgetConfig = {
   /** stat: which counter of the overview to show. */
@@ -448,6 +449,92 @@ export function TopWidget() {
   );
 }
 
+function paymentMoney(amount: number, currency: string): string {
+  if (currency === "XTR") return `${num(amount)} ⭐`;
+  return `${(amount / 100).toLocaleString(getLocale(), { minimumFractionDigits: 0, maximumFractionDigits: 2 })} ${currency}`;
+}
+
+export function PaymentsWidget() {
+  const q = useQuery({ queryKey: ["dash-payments"], queryFn: ({ signal }) => unwrap(api.GET("/api/v1/payments", { params: { query: { limit: 8 } }, signal })), refetchInterval: 60_000 });
+  const items = q.data?.items ?? [];
+  return (
+    <section className="card glass flex h-full flex-col overflow-hidden" aria-labelledby="pay-title">
+      <CardHead title={t("dashboard.builder.widgetPayments")} id="pay-title" />
+      {q.data === undefined && q.isError ? (
+        <CardError error={q.error} onRetry={() => void q.refetch()} />
+      ) : q.isPending ? (
+        <div className="space-y-3">
+          {[0, 1, 2].map((i) => (
+            <Skeleton key={i} style={{ height: 28 }} />
+          ))}
+        </div>
+      ) : items.length === 0 ? (
+        <p className="flex flex-1 items-center justify-center py-6 text-center text-[13px] text-[var(--ink-500)]">{t("dashboard.builder.paymentsEmpty")}</p>
+      ) : (
+        <div className="row-list min-h-0 flex-1 overflow-y-auto">
+          {items.map((p) => (
+            <div key={p.id} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 py-2.5">
+              <div className="min-w-0">
+                <div className="truncate text-[13px] font-medium">{p.user_name || p.tg_username || `#${p.tg_id}`}</div>
+                <div className="truncate text-xs text-[var(--ink-500)]">
+                  {time(p.created_at)} · {p.tariff_name || p.kind}
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="num text-[13px] font-medium">{paymentMoney(p.amount, p.currency)}</span>
+                {p.status === "paid" || p.status === "applied" ? (
+                  <Pill tone="ok">{t("dashboard.builder.paid")}</Pill>
+                ) : p.status === "pending" ? (
+                  <Pill tone="off">{t("dashboard.builder.pending")}</Pill>
+                ) : (
+                  <Pill tone="bad">{p.status}</Pill>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
+export function AuditWidget() {
+  const q = useQuery({ queryKey: ["dash-audit"], queryFn: ({ signal }) => unwrap(api.GET("/api/v1/audit", { params: { query: { limit: 10 } }, signal })), refetchInterval: 60_000 });
+  const items = q.data?.items ?? [];
+  return (
+    <section className="card glass flex h-full flex-col overflow-hidden" aria-labelledby="audit-title">
+      <CardHead title={t("dashboard.builder.widgetAudit")} id="audit-title" />
+      {q.data === undefined && q.isError ? (
+        <CardError error={q.error} onRetry={() => void q.refetch()} />
+      ) : q.isPending ? (
+        <div className="space-y-3">
+          {[0, 1, 2, 3].map((i) => (
+            <Skeleton key={i} style={{ height: 24 }} />
+          ))}
+        </div>
+      ) : items.length === 0 ? (
+        <p className="flex flex-1 items-center justify-center py-6 text-center text-[13px] text-[var(--ink-500)]">{t("dashboard.builder.auditEmpty")}</p>
+      ) : (
+        <div className="row-list min-h-0 flex-1 overflow-y-auto">
+          {items.map((a) => (
+            <div key={a.id} className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 py-2.5">
+              <span className="num text-xs text-[var(--ink-400)]">{time(a.at)}</span>
+              <div className="min-w-0">
+                <div className="truncate text-[13px] font-medium">{a.action}</div>
+                <div className="truncate text-xs text-[var(--ink-500)]">
+                  {a.target_type}
+                  {a.target_id ? ` · ${a.target_id}` : ""}
+                </div>
+              </div>
+              <span className="max-w-[40%] truncate text-xs text-[var(--ink-500)]">{a.ip}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
 export const WIDGETS: Record<WidgetType, { w: number; h: number; minW: number; minH: number; title: () => string; component: (config?: WidgetConfig) => React.ReactNode }> = {
   stat: { w: 3, h: 2, minW: 3, minH: 2, title: () => t("dashboard.builder.widgetStat"), component: (config) => <StatWidget config={config} /> },
   traffic: { w: 8, h: 5, minW: 6, minH: 4, title: () => t("dashboard.traffic"), component: () => <TrafficWidget /> },
@@ -455,6 +542,8 @@ export const WIDGETS: Record<WidgetType, { w: number; h: number; minW: number; m
   server: { w: 4, h: 6, minW: 4, minH: 4, title: () => t("shell.server"), component: () => <ServerWidget /> },
   attention: { w: 4, h: 5, minW: 4, minH: 4, title: () => t("dashboard.attention"), component: () => <AttentionWidget /> },
   top: { w: 4, h: 4, minW: 3, minH: 3, title: () => t("dashboard.top"), component: () => <TopWidget /> },
+  payments: { w: 4, h: 5, minW: 4, minH: 4, title: () => t("dashboard.builder.widgetPayments"), component: () => <PaymentsWidget /> },
+  audit: { w: 4, h: 5, minW: 4, minH: 4, title: () => t("dashboard.builder.widgetAudit"), component: () => <AuditWidget /> },
 };
 
 export const WIDGET_TYPES = Object.keys(WIDGETS) as WidgetType[];

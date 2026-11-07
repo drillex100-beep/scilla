@@ -807,7 +807,13 @@
       "resize": "Изменить размер",
       "duplicate": "Дублировать",
       "remove": "Удалить",
-      "widgetStat": "Счётчик"
+      "widgetStat": "Счётчик",
+      "widgetPayments": "Последние платежи",
+      "widgetAudit": "Журнал действий",
+      "paymentsEmpty": "Платежей пока нет",
+      "auditEmpty": "Записей пока нет",
+      "paid": "Оплачен",
+      "pending": "Ожидает"
     }
   },
   "users": {
