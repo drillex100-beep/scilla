@@ -119,7 +119,7 @@
               "UoTVersion": 2,
               "address": "vpn.example.com",
               "method": "2022-blake3-aes-128-gcm",
-              "password": "AAECAwQFBgcICQoLDA0ODw==:rkvHPGi04pBDvWELP95stw==",
+              "password": "AAECAwQFBgcICQoLDA0ODw==:uoLqvdrruTFohkvtbZLFcQ==",
               "port": 8388,
               "uot": true
             }
@@ -536,7 +536,7 @@
               "UoTVersion": 2,
               "address": "vpn.example.com",
               "method": "2022-blake3-aes-128-gcm",
-              "password": "AAECAwQFBgcICQoLDA0ODw==:rkvHPGi04pBDvWELP95stw==",
+              "password": "AAECAwQFBgcICQoLDA0ODw==:uoLqvdrruTFohkvtbZLFcQ==",
               "port": 8388,
               "uot": true
             }
