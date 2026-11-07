@@ -3,6 +3,14 @@
 Each release has a section in English and in Russian; the release workflow puts them in
 the signed manifest, and the panel shows the one in its language.
 
+## 0.5.3.1
+### en
+- **The status page addon is in the catalog again**: the panel's permission whitelist did not know `ui:public`, so the catalog entry of the status page was dropped as unsound and the Addons page showed six addons instead of seven; the permission is whitelisted in the panel and the installer now, with its words on the grant screen.
+- **Dashboard builder fixes**: the palette in Customize lists only the widget types not on the dashboard yet (the copy button stays for deliberate duplicates); on phones it opens right under the toolbar instead of below the whole dashboard; and mobile cards size to their content, so counters and short lists no longer stretch into tall boxes of empty space.
+### ru
+- **Аддон страницы статуса снова в каталоге**: белый список прав панели не знал `ui:public`, поэтому запись страницы статуса отбрасывалась как некорректная и на странице аддонов было шесть аддонов вместо семи; право добавлено в панель и в установщик, с пояснением на экране выдачи прав.
+- **Правки конструктора дашборда**: палитра в «Настроить» показывает только те типы виджетов, которых на дашборде ещё нет (кнопка копирования остаётся для осознанных дубликатов); на телефоне она открывается сразу под панелью инструментов, а не внизу всего дашборда; мобильные карточки подстраиваются под содержимое, и счётчики с короткими списками больше не растягиваются в высокие пустые коробки.
+
 ## 0.5.3.0
 ### en
 - **Dashboard builder** (Overview → Customize): the overview is a canvas now — widgets on a 12-column grid that you drag and resize, each with its own settings (the counter's metric, the charts' period, a threshold that turns the number red), duplicate, delete, export and import as JSON, with autosave and a mobile stack; past 15 widgets the off-screen ones mount lazily. The palette has ten widgets: counters, traffic, the nodes' shares, server state, what needs attention, top users, the latest payments, the audit feed, the nodes and the inbounds. A layout can be saved as the default for every admin, and an admin's own layout always wins. In the API: `GET` and `PUT /api/v1/dashboard/layout` (per admin, with `global: true` for the default).
