@@ -2,7 +2,7 @@
 # this folder and builds the wheel and the sdist there; nothing generated is kept in git.
 [build-system]
 # The same pin as requirements.in: the build runs without isolation, with what that file installs.
-requires = ["hatchling==1.32.4"]
+requires = ["hatchling==1.33.0"]
 build-backend = "hatchling.build"
 
 [project]
